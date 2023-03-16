@@ -17,24 +17,9 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'scala'
 apply plugin: 'idea'
 
-ext.configFile = file "build.properties"
-configFile.withReader {
-	def prop = new Properties()
-	prop.load(it)
-	project.ext.config = new ConfigSlurper().parse prop
-}
-
-version = config.mod_ver
-group = config.mod_group 
-archivesBaseName = config.mod_name
-if(System.getenv()['BRANCH']!=null && System.getenv()['BRANCH']!='master')
-{
-    archivesBaseName+=("-"+System.getenv()['BRANCH'])
-    ext.subver=System.getenv()['TRAVIS_COMMIT'][0..6]
-    version+=('-'+ext.subver)
-}
-ext.usr = "$System.env.USR"
-ext.pswd = "$System.env.PSWD"
+version = project.mod_ver
+group = project.mod_group
+archivesBaseName = project.mod_name
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {
@@ -45,7 +30,7 @@ compileJava.options.encoding = "UTF-8"
 compileScala.options.encoding = "UTF-8"
 
 minecraft {
-    version = "1.12.2-14.23.4.2705"
+    version = "1.12.2-14.23.5.2846"
     runDir = "run"
 
     // the mappings can be changed at any time, and must be in the following format.
@@ -58,9 +43,9 @@ minecraft {
 
     // Replacing stuff in the source
     // Currently stale, see mySourcesJava task
-	replace "@VERSION@", config.mod_ver
-    replace "@LAMBDA_LIB_VERSION@", config.lambdalib_ver
-    replace "@MC_VERSION@", config.mc_ver
+    replace "@VERSION@", project.mod_ver
+    replace "@LAMBDA_LIB_VERSION@", project.lambdalib_ver
+    replace "@MC_VERSION@", project.mc_ver
 
 }
 
@@ -77,16 +62,12 @@ repositories {
     }
     maven {
         name = "ic2"
-        url = "https://maven.cil.li"
+        url = "http://maven.ic2.player.to"
     }
     maven {
         // location of the maven that hosts JEI files
         name = "Progwml6 maven"
         url = "http://dvs1.progwml6.com/files/maven"
-    }
-    maven {
-        name = "CoFH Maven"
-        url = "http://maven.covers1624.net"
     }
     maven {
         // The main host of CraftTweaker related libs
@@ -104,7 +85,7 @@ configurations {
 // sourceSets.main.compileClasspath += [configurations.provided]
 
 idea {
-    module{
+    module {
         scopes.PROVIDED.plus += [configurations.provided]
     }
 }
@@ -112,22 +93,16 @@ idea {
 
 dependencies {
     // Shade dependencies
-    shade "com.github.LambdaInnovation:LambdaLib2:${config.lambdalib_ver}"
+    shade "com.github.LambdaInnovation:LambdaLib2:${project.lambdalib_ver}"
 
     // Optional dependencies
-    deobfCompile "codechicken:CodeChickenLib:1.12.2-${config.ccl_ver}:universal"
-    deobfCompile "mezz.jei:jei_1.12.2:4.8.0.119"
-    //deobfCompile "codechicken:NotEnoughItems:1.12.2-${config.nei_ver}:universal"
+    deobfCompile "codechicken:CodeChickenLib:1.12.2-${project.ccl_ver}:universal"
+    deobfCompile "mezz.jei:jei_1.12.2:4.16.1.302"
     deobfCompile "cofh:RedstoneFlux:1.12-2.0.0.1:universal"
-    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.9.6"
-    deobfCompile "CraftTweaker2:CraftTweaker2-API:4.1.9.6"
-    deobfCompile "CraftTweaker2:ZenScript:4.1.9.6"
-    deobfCompile "net.industrial-craft:industrialcraft-2:2.8.91-ex112"
-
-    // shade "org.apache.httpcomponents:httpclient:4.3.3"
-    // shade "org.apache.httpcomponents:httpcore:4.3.2" // dependency of httpclient
-    // shade "commons-logging:commons-logging:1.1.3" // dependency of httpclient
-    // shade "commons-codec:commons-codec:1.6" // dependency of commons-logging
+    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.685"
+    deobfCompile "CraftTweaker2:CraftTweaker2-API:4.1.20.685"
+    deobfCompile "CraftTweaker2:ZenScript:4.1.20.685"
+    deobfCompile "net.industrial-craft:industrialcraft-2:2.8.222-ex112"
 }
 
 //sourceSets.main.compileClasspath += [configurations.provided]
@@ -138,7 +113,7 @@ sourceSets.main {
 }
 
 idea {
-    module{
+    module {
         scopes.PROVIDED.plus += [configurations.provided]
         sourceDirs = [file('src/main/java'), file('src/main/scala')]
     }
@@ -154,7 +129,7 @@ processResources {
         include 'mcmod.info'
 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': project.version, 'mcversion': project.minecraft.version
     }
 
     // copy everything else except the mcmod.info
@@ -170,22 +145,22 @@ task deobfJar(type: Jar, dependsOn: 'jar') {
     classifier 'dev'
     from sourceSets.main.output
     manifest {
-        attributes 'FMLCorePluginContainsFMLMod' : 'true'
-        attributes 'FMLCorePlugin' : 'cn.lambdalib2.CorePlugin'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+        attributes 'FMLCorePlugin': 'cn.lambdalib2.CorePlugin'
     }
 }
 
 jar {
     configurations.shade.each { dep ->
-        from(project.zipTree(dep)){
+        from(project.zipTree(dep)) {
             exclude 'META-INF', 'META-INF/**'
             exclude 'mcmod.info'
             exclude 'pack.mcmeta'
         }
     }
     manifest {
-        attributes 'FMLCorePluginContainsFMLMod' : 'true'
-        attributes 'FMLCorePlugin' : 'cn.lambdalib2.CorePlugin'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+        attributes 'FMLCorePlugin': 'cn.lambdalib2.CorePlugin'
     }
 }
 
@@ -211,9 +186,9 @@ task mySourcesJava(type: Copy) {
     from 'src/main/java'
     into 'build/tempSourcesJava'
     filteringCharset = 'UTF-8'
-    filter(ReplaceTokens, tokens: [VERSION: config.mod_ver])
-    filter(ReplaceTokens, tokens: [LAMBDA_LIB_VERSION: "[" + config.lambdalib_ver + "]"])
-    filter(ReplaceTokens, tokens: [MC_VERSION: config.mc_ver])
+    filter(ReplaceTokens, tokens: [VERSION: project.mod_ver])
+    filter(ReplaceTokens, tokens: [LAMBDA_LIB_VERSION: "[" + project.lambdalib_ver + "]"])
+    filter(ReplaceTokens, tokens: [MC_VERSION: project.mc_ver])
 }
 
 compileScala.dependsOn mySourcesJava
@@ -222,16 +197,4 @@ extractRangemapReplacedMain.dependsOn compileScala
 
 artifacts {
     archives deobfJar
-}
-
-uploadArchives {
-    repositories {
-        maven {
-            url "http://git.project-gearbox.net:9010/content/repositories/thirdparty"
-            credentials {
-                username usr
-                password pswd
-            }
-        }
-    }
 }
