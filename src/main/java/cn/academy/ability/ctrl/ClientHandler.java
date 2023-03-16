@@ -74,7 +74,12 @@ public final class ClientHandler {
     public static int getKeyCount() {
         return keyIDsInit.length;
     }
-    
+
+    public static boolean isSpectator() {
+        return Minecraft.getMinecraft().player.isSpectator();
+    }
+
+
     /**
      * The key to activate and deactivate the ability, might have other uses in certain circumstances,
      *  e.g. quit charging when using ability.
@@ -86,6 +91,7 @@ public final class ClientHandler {
 
         @Override
         public void onKeyUp() {
+            if (isSpectator()) return;
             double delta = GameTimer.getTime() - lastKeyDown;
             if (delta < 0.300) {
                 EntityPlayer player = getPlayer();
@@ -104,13 +110,14 @@ public final class ClientHandler {
             lastKeyDown = GameTimer.getTime();
             CPBar.instance.startDisplayNumbers();
         }
-        
+
     };
     
     @RegACKeyHandler(name = KEY_EDIT_PRESET, keyID = Keyboard.KEY_N)
     public static KeyHandler keyEditPreset = new KeyHandler() {
         @Override
         public void onKeyDown() {
+            if (isSpectator()) return;
             if(AbilityData.get(getPlayer()).hasCategory()) {
                 Minecraft.getMinecraft().displayGuiScreen(new PresetEditUI());
             }
