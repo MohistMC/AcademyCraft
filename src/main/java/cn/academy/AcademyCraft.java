@@ -36,8 +36,7 @@ import java.util.Map.Entry;
  * @author acaly, WeathFolD, KS
  *
  */
-@Mod(modid = "academy", name = "AcademyCraft", version = AcademyCraft.VERSION,
-     dependencies = "required-after:lambdalib2@@LAMBDA_LIB_VERSION@")
+@Mod(modid = "academy", name = "AcademyCraft", version = AcademyCraft.VERSION)
 @RegistryMod(rootPackage = "cn.academy.", resourceDomain = "academy")
 public class AcademyCraft {
 

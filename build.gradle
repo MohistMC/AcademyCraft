@@ -1,7 +1,7 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = "https://maven.minecraftforge.net/" }
         maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots"
@@ -73,12 +73,11 @@ repositories {
     }
     maven {
         name = "private"
-        //url = "http://139.199.206.70:8081/nexus/content/groups/public"
-        url = "http://git.project-gearbox.net:9010/content/repositories/thirdparty"
+        url = "https://jitpack.io"
     }
     maven {
         name = "ic2"
-        url = "http://maven.ic2.player.to"
+        url = "https://maven.cil.li"
     }
     maven {
         // location of the maven that hosts JEI files
@@ -113,7 +112,7 @@ idea {
 
 dependencies {
     // Shade dependencies
-    shade "cn.lambdalib2:LambdaLib2:${config.lambdalib_ver}"
+    shade "com.github.LambdaInnovation:LambdaLib2:${config.lambdalib_ver}"
 
     // Optional dependencies
     deobfCompile "codechicken:CodeChickenLib:1.12.2-${config.ccl_ver}:universal"
@@ -123,7 +122,7 @@ dependencies {
     deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.9.6"
     deobfCompile "CraftTweaker2:CraftTweaker2-API:4.1.9.6"
     deobfCompile "CraftTweaker2:ZenScript:4.1.9.6"
-    deobfCompile "net.industrial-craft:industrialcraft-2:2.8.90-ex112"
+    deobfCompile "net.industrial-craft:industrialcraft-2:2.8.91-ex112"
 
     // shade "org.apache.httpcomponents:httpclient:4.3.3"
     // shade "org.apache.httpcomponents:httpcore:4.3.2" // dependency of httpclient

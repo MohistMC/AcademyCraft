@@ -30,7 +30,12 @@ public class EntityDiamondShield extends EntityAdvanced
         ignoreFrustumCheck = true;
         updatePos();
     }
-    
+
+    @Override
+    protected void entityInit() {
+
+    }
+
     @Override
     public void onUpdate() {
         super.onUpdate();

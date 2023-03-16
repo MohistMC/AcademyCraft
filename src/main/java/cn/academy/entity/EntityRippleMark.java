@@ -25,7 +25,12 @@ public class EntityRippleMark extends EntityAdvanced
         super(world);
         setSize(2, 2);
     }
-    
+
+    @Override
+    protected void entityInit() {
+
+    }
+
     @Override
     public boolean shouldRenderInPass(int pass) {
         return pass == 1;

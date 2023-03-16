@@ -103,7 +103,6 @@ public class EntityMagHook extends EntityAdvanced
     
     @Override
     public void entityInit() {
-        super.entityInit();
         dataManager.register(HIT_SIDE, EnumFacing.DOWN);
         dataManager.register(IS_HIT, false);
         dataManager.register(HOOK_X, 0);

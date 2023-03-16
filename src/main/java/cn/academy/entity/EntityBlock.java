@@ -101,7 +101,6 @@ public class EntityBlock extends EntityAdvanced {
 
     @Override
     public void entityInit() {
-        super.entityInit();
         dataManager.register(BLOCKID, 0);
         dataManager.register(META,  0);
         

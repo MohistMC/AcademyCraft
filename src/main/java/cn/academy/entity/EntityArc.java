@@ -77,7 +77,12 @@ public class EntityArc extends EntityAdvanced implements ViewOptimize.IAssociate
     public EntityArc(EntityPlayer _player) {
         this(_player, defaultPatterns);
     }
-    
+
+    @Override
+    protected void entityInit() {
+
+    }
+
     @Override
     public void onUpdate() {
         super.onUpdate();

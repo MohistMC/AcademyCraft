@@ -31,7 +31,12 @@ public class EntityMdShield extends EntityAdvanced
         ignoreFrustumCheck = true;
         updatePos();
     }
-    
+
+    @Override
+    protected void entityInit() {
+
+    }
+
     @Override
     public void onUpdate() {
         super.onUpdate();
