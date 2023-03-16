@@ -264,35 +264,25 @@ public class TerminalUI extends AuxGui {
         createTime = GameTimer.getTime();
         
         root.getWidget("arrow_up").listen(FrameEvent.class, 
-        (w, e) -> {
-            w.getComponent(DrawTexture.class).enabled = scroll > 0;
-        });
+        (w, e) -> w.getComponent(DrawTexture.class).enabled = scroll > 0);
         
         root.getWidget("arrow_up").listen(FrameEvent.class,
-        (w, e) -> {
-            w.getComponent(DrawTexture.class).enabled = scroll > 0;
-        });
+        (w, e) -> w.getComponent(DrawTexture.class).enabled = scroll > 0);
         
         root.getWidget("arrow_down").listen(FrameEvent.class,
-        (w, e) -> {
-            w.getComponent(DrawTexture.class).enabled = scroll < getMaxScroll();
-        });
+        (w, e) -> w.getComponent(DrawTexture.class).enabled = scroll < getMaxScroll());
         
         root.getWidget("icon_loading").listen(FrameEvent.class,
-        (w, e) -> {
-            w.getComponent(DrawTexture.class).color.setAlpha(
-                Colors.f2i(0.1f + 0.45f * (1 + MathHelper.sin((float) GameTimer.getTime() * 5)))
-            );
-        });
+        (w, e) -> w.getComponent(DrawTexture.class).color.setAlpha(
+            Colors.f2i(0.1f + 0.45f * (1 + MathHelper.sin((float) GameTimer.getTime() * 5)))
+        ));
         
         root.getWidget("text_loading").listen(FrameEvent.class,
-        (w, e) -> {
-            w.getComponent(TextBox.class).option.color.setAlpha(
-                Colors.f2i(
-                    0.1f + ( 0.45f * (1 + MathHelper.sin( (float) GameTimer.getTime() * 5 ) ) )
-                )
-            );
-        });
+        (w, e) -> w.getComponent(TextBox.class).option.color.setAlpha(
+            Colors.f2i(
+                0.1f + ( 0.45f * (1 + MathHelper.sin( (float) GameTimer.getTime() * 5 ) ) )
+            )
+        ));
     }
 
     private String wrapTime(int val) {

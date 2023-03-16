@@ -71,7 +71,7 @@ public class PresetData extends DataPart<EntityPlayer> {
         NetworkS11n.addDirect(Preset.class, new NetS11nAdaptor<Preset>() {
             @Override
             public void write(ByteBuf buf, Preset obj) {
-                int count = (int) IntStream.range(0, MAX_KEYS).filter(idx -> obj.hasMapping(idx)).count();
+                int count = (int) IntStream.range(0, MAX_KEYS).filter(obj::hasMapping).count();
                 buf.writeByte(count);
 
                 IntStream.range(0, MAX_KEYS).forEach(idx -> {

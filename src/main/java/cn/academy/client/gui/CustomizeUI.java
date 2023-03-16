@@ -27,9 +27,7 @@ public class CustomizeUI extends CGuiScreen {
 
     @StateEventCallback
     private static void init(FMLInitializationEvent event) {
-        SettingsUI.addCallback("edit_ui", "misc", () -> {
-            Minecraft.getMinecraft().displayGuiScreen(new CustomizeUI());
-        }, false);
+        SettingsUI.addCallback("edit_ui", "misc", () -> Minecraft.getMinecraft().displayGuiScreen(new CustomizeUI()), false);
 
         doc = CGUIDocument.read(new ResourceLocation("academy:guis/ui_edit.xml"));
     }
@@ -55,9 +53,7 @@ public class CustomizeUI extends CGuiScreen {
             TextBox textBox = elem.getComponent(TextBox.class);
             textBox.localized = true;
             textBox.setContent("ac.gui.uiedit.elm." + n.getName());
-            elem.listen(LeftClickEvent.class, (w, evt) -> {
-                changeEditFocus(w, n);
-            });
+            elem.listen(LeftClickEvent.class, (w, evt) -> changeEditFocus(w, n));
 
             list.addWidget(elem);
         }

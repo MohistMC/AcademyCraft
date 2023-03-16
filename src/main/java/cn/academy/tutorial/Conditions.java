@@ -149,9 +149,7 @@ public class Conditions {
             map.get(stack.getItem())
                     .stream()
                     .filter(info -> !info.metaSensitive() || stack.getItemDamage() == info.meta)
-                    .forEach(info -> {
-                        tdata.setCondActivate(info.cond.index);
-                    });
+                    .forEach(info -> tdata.setCondActivate(info.cond.index));
         }
     }
 

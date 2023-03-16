@@ -125,8 +125,8 @@ public class KeyHintUI extends Widget {
                 });
 
                 int availIdx = 0;
-                for (int i = 0; i < groups.size(); ++i) {
-                    Collection<DelegateNode> nodes = map.get(groups.get(i));
+                for (String group : groups) {
+                    Collection<DelegateNode> nodes = map.get(group);
                     if (!nodes.isEmpty()) {
                         final double x = -200 - availIdx * 200;
                         double y = 0;

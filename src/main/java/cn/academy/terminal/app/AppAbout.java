@@ -153,9 +153,7 @@ public class AppAbout extends App {
             _btnCredits.listen(LeftClickEvent.class, (w, e) -> onTabTypeChanged(TabType.Credits));
             _btnDonate.listen(LeftClickEvent.class, (w, e) -> onTabTypeChanged(TabType.Donate));
 
-            _dragBar.widget.listen(DragBar.DraggedEvent.class, (w, e) -> {
-                Debug.log("Dragged: " + _dragBar.getProgress());
-            });
+            _dragBar.widget.listen(DragBar.DraggedEvent.class, (w, e) -> Debug.log("Dragged: " + _dragBar.getProgress()));
 
             _scrollArea = root.getWidget("area/scroll_area");
 
@@ -320,8 +318,7 @@ public class AppAbout extends App {
 
                 float y = 100;
                 float x = -280;
-                for (int i = 0; i < l.size(); ++i) {
-                    String s = l.get(i);
+                for (String s : l) {
                     if (s.startsWith("!!")) {
                         int ix = s.indexOf('|');
                         String url = s.substring(ix + 1);
@@ -329,8 +326,8 @@ public class AppAbout extends App {
 
                         y += 10;
                         DonateTexts.add(
-                            new LinkItem(x, y, text, url, FontAlign.LEFT)
-                                .setFontSize(40)
+                                new LinkItem(x, y, text, url, FontAlign.LEFT)
+                                        .setFontSize(40)
                         );
                         y += 50;
                     } else {
@@ -340,9 +337,9 @@ public class AppAbout extends App {
                             s = s.substring(1);
                         }
                         DonateTexts.add(
-                            rightAlign ?
-                                new TextItem(-x, y, s, FontAlign.RIGHT) :
-                                new TextItem(x, y, s, FontAlign.LEFT)
+                                rightAlign ?
+                                        new TextItem(-x, y, s, FontAlign.RIGHT) :
+                                        new TextItem(x, y, s, FontAlign.LEFT)
                         );
                         y += 30;
                     }

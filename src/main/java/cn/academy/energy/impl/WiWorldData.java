@@ -38,14 +38,9 @@ public class WiWorldData extends WorldSavedData {
     
     //-----WEN-----
     
-    private IBlockSelector filterWirelessBlocks = new IBlockSelector() {
-
-        @Override
-        public boolean accepts(World world, int x, int y, int z, Block block) {
-            TileEntity te = world.getTileEntity(new net.minecraft.util.math.BlockPos(x, y, z));
-            return te instanceof IWirelessMatrix || te instanceof IWirelessNode;
-        }
-        
+    private IBlockSelector filterWirelessBlocks = (world, x, y, z, block) -> {
+        TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
+        return te instanceof IWirelessMatrix || te instanceof IWirelessNode;
     };
     
     /***
@@ -64,11 +59,9 @@ public class WiWorldData extends WorldSavedData {
             this.doRemoveNetwork(net);
         }
         toRemove.clear();
-        
-        Iterator<WirelessNet> iter = netList.iterator();
-        while (iter.hasNext()) {
-            WirelessNet net = iter.next();
-            if(net.isDisposed()) {
+
+        for (WirelessNet net : netList) {
+            if (net.isDisposed()) {
                 toRemove.add(net);
             } else {
                 net.world = world;
@@ -209,11 +202,9 @@ public class WiWorldData extends WorldSavedData {
             doRemoveNode(nc);
         }
         nToRemove.clear();
-        
-        Iterator<NodeConn> iter = nodeList.iterator();
-        while(iter.hasNext()) {
-            NodeConn conn = iter.next();
-            if(conn.isDisposed()) {
+
+        for (NodeConn conn : nodeList) {
+            if (conn.isDisposed()) {
                 nToRemove.add(conn);
             } else {
                 conn.tick();

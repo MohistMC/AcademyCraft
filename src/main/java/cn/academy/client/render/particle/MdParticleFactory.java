@@ -22,16 +22,11 @@ public class MdParticleFactory extends ParticleFactory
     private MdParticleFactory(Particle _template) {
         super(_template);
         
-        this.addDecorator(new ParticleDecorator() {
-
-            @Override
-            public void decorate(Particle particle) {
-                int life = RandUtils.rangei(25, 55);
-                particle.fadeAfter(life, 20);
-                particle.color.setAlpha(RandUtils.rangei(76, 152));
-                particle.size = RandUtils.rangef(0.05f, 0.07f);
-            }
-            
+        this.addDecorator(particle -> {
+            int life = RandUtils.rangei(25, 55);
+            particle.fadeAfter(life, 20);
+            particle.color.setAlpha(RandUtils.rangei(76, 152));
+            particle.size = RandUtils.rangef(0.05f, 0.07f);
         });
     }
 

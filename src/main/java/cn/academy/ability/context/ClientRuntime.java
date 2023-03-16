@@ -107,13 +107,7 @@ public class ClientRuntime extends DataPart<EntityPlayer> {
 
         // Remove dead keys
         {
-            Iterator<Entry<Integer, KeyState>> iter = keyStates.entrySet().iterator();
-            while (iter.hasNext()) {
-                Entry<Integer, KeyState> ent = iter.next();
-                if (!ent.getValue().realState && !delegates.containsKey(ent.getKey())) {
-                    iter.remove();
-                }
-            }
+            keyStates.entrySet().removeIf(ent -> !ent.getValue().realState && !delegates.containsKey(ent.getKey()));
         }
 
         // Update override

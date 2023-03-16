@@ -58,19 +58,19 @@ public class RippleMarkRender extends Render<EntityRippleMark> {
         GL11.glPushMatrix();
         
         GL11.glTranslated(x, y, z);
-        
-        for(int i = 0; i < timeOffsets.length; ++i) {
+
+        for (double timeOffset : timeOffsets) {
             GL11.glPushMatrix();
-            
-            double mod = (dt - timeOffsets[i]) % CYCLE;
+
+            double mod = (dt - timeOffset) % CYCLE;
             float size = getSize(mod);
-            
+
             GL11.glTranslatef(0, getHeight(mod), 0);
             GL11.glScalef(size, 1, size);
             material.color = new Color(mark.color);
             material.color.setAlpha(Colors.f2i(getAlpha(mod)));
             mesh.draw(material);
-            
+
             GL11.glPopMatrix();
         }
         

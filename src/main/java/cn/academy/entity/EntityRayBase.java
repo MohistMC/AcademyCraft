@@ -78,12 +78,7 @@ public class EntityRayBase extends EntityAdvanced implements IRay {
     
     @Override
     protected void onFirstUpdate() {
-        executeAfter(new EntityCallback() {
-            @Override
-            public void execute(Entity target) {
-                setDead();
-            }
-        }, life);
+        executeAfter(target -> setDead(), life);
     }
     
     protected long getDeltaTime() {

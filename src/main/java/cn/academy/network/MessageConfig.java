@@ -52,8 +52,6 @@ public class MessageConfig implements IMessage
             bw.close();
             config=ConfigFactory.parseFile(file);
             file.delete();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

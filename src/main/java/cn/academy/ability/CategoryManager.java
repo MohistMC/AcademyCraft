@@ -55,7 +55,7 @@ public class CategoryManager {
 
     private void bake() {
         _baked = true;
-        catList.sort(Comparator.comparing(it -> it.getName()));
+        catList.sort(Comparator.comparing(Category::getName));
         for (int idx = 0; idx < catList.size(); ++idx) {
             catList.get(idx).catID = idx;
         }

@@ -53,9 +53,7 @@ public class SettingsUI extends CGuiScreen {
     }
 
     private static void add(String cat, UIProperty prop) {
-        List<UIProperty> list = properties.get(cat);
-        if(list == null)
-            properties.put(cat, list = new ArrayList<>());
+        List<UIProperty> list = properties.computeIfAbsent(cat, k -> new ArrayList<>());
         list.add(prop);
     }
 
@@ -97,9 +95,7 @@ public class SettingsUI extends CGuiScreen {
 
         Widget bar = main.getWidget("scrollbar");
         bar.listen(DragEvent.class, (w, e) ->
-        {
-            list.setProgress((int) (list.getMaxProgress() * DragBar.get(w).getProgress()));
-        });
+                list.setProgress((int) (list.getMaxProgress() * DragBar.get(w).getProgress())));
 
         gui.addWidget(main);
     }

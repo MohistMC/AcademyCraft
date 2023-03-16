@@ -124,7 +124,7 @@ public class CooldownData extends DataPart<EntityPlayer> {
      */
     public SkillCooldown getSub(Controllable ctrl, int id) {
         int sid = toID(ctrl, id);
-        return cooldownMap.containsKey(sid) ? cooldownMap.get(sid) : EMPTY_COOLDOWN;
+        return cooldownMap.getOrDefault(sid, EMPTY_COOLDOWN);
     }
 
     public void clear() {

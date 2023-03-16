@@ -115,7 +115,7 @@ public class LightShield extends Skill
         ctx.addSkillExp(1e-6f);
 
         // Find the entities that are 'colliding' with the shield.
-        List<Entity> candidates = WorldUtils.getEntities(player, 3, basicSelector.and(t -> isEntityReachable(t)).and(EntitySelectors.exclude(player)));
+        List<Entity> candidates = WorldUtils.getEntities(player, 3, basicSelector.and(this::isEntityReachable).and(EntitySelectors.exclude(player)));
         for (Entity e : candidates) {
             if (e.hurtResistantTime <= 0 && ctx.consume(getAbsorbOverload(), getAbsorbConsumption()))
             {

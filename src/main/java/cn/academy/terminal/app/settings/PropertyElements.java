@@ -104,9 +104,7 @@ public class PropertyElements {
             });
             
             listen(GainFocusEvent.class, (w, e) ->
-            {
-                startEditing();
-            });
+                    startEditing());
         }
         
         @Override
@@ -128,9 +126,7 @@ public class PropertyElements {
             textBox.option.color = CRL_EDIT;
             
             widget.getGui().listen(MouseClickEvent.class,
-            gMouseHandler = (w, event) -> {
-                endEditing(event.button - 100);
-            });
+            gMouseHandler = (w, event) -> endEditing(event.button - 100));
         }
         
         private void endEditing(int key) {

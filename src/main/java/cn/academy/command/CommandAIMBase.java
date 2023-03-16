@@ -277,7 +277,7 @@ public abstract class CommandAIMBase extends ACCommand {
             } else {
                 try
                 {
-                    int lv = Integer.valueOf(pars[1]);
+                    int lv = Integer.parseInt(pars[1]);
                     if(lv > 0 && lv <= 5) {
                         aData.setLevel(lv);
                         sendChat(ics, locSuccessful());

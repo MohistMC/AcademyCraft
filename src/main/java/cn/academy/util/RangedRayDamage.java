@@ -112,7 +112,7 @@ public class RangedRayDamage {
             targets.sort((lhs, rhs) -> {
                 double dist1 = ctx.player.getDistanceSq(lhs.posX, lhs.posY, lhs.posZ);
                 double dist2 = ctx.player.getDistanceSq(rhs.posX, rhs.posY, rhs.posZ);
-                return Double.valueOf(dist1).compareTo(dist2);
+                return Double.compare(dist1, dist2);
             });
 
             for(Entity e : targets) {

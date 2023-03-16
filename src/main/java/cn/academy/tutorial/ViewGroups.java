@@ -39,12 +39,7 @@ public final class ViewGroups {
 
     private static Random random = new Random();
 
-    private static final ViewGroup nothing = new ViewGroup() {
-        @Override
-        public Tag getTag() {
-            return null;
-        }
-    };
+    private static final ViewGroup nothing = () -> null;
 
     public static ViewGroup drawsBlock(Block block) {
         return drawsBlock(block, 0);

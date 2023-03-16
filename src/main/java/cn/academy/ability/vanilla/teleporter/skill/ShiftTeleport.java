@@ -52,7 +52,7 @@ public class ShiftTeleport extends Skill
     @SideOnly(Side.CLIENT)
     public void activate(ClientRuntime rt, int keyID)
     {
-      activateSingleKey2(rt, keyID, p -> new STContext(p));
+      activateSingleKey2(rt, keyID, STContext::new);
     }
 
     @Override
@@ -218,15 +218,10 @@ public class ShiftTeleport extends Skill
             Vec3d v0= new Vec3d(player.posX, player.posY, player.posZ);
             Vec3d v1 = new Vec3d(dest[0] + .5, dest[1] + .5, dest[2] + .5);
             AxisAlignedBB area = WorldUtils.minimumBounds(v0, v1);
-            Predicate<Entity> pred = EntitySelectors.living().and(EntitySelectors.exclude(player)).and(new Predicate<Entity>() {
-
-              @Override
-              public boolean test(Entity entity){
-                      double hw = entity.width / 2;
-                      return VecUtils.checkLineBox(new Vec3d(entity.posX - hw, entity.posY, entity.posZ - hw),
-                              new Vec3d(entity.posX + hw, entity.posY + entity.height, entity.posZ + hw), v0, v1) != null;
-              }
-
+            Predicate<Entity> pred = EntitySelectors.living().and(EntitySelectors.exclude(player)).and(entity -> {
+                    double hw = entity.width / 2;
+                    return VecUtils.checkLineBox(new Vec3d(entity.posX - hw, entity.posY, entity.posZ - hw),
+                            new Vec3d(entity.posX + hw, entity.posY + entity.height, entity.posZ + hw), v0, v1) != null;
             });
             return WorldUtils.getEntities(player.world, area, pred);
         }

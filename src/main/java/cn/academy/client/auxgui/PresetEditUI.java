@@ -351,10 +351,8 @@ public class PresetEditUI extends GuiScreen {
         public TransitPage(int _id) {
             super(_id);
             
-            listen(FrameEvent.class, (w, e) -> 
-            {
-                DrawTexture.get(w).color.setAlpha(alpha);
-            });
+            listen(FrameEvent.class, (w, e) ->
+                    DrawTexture.get(w).color.setAlpha(alpha));
         }
         
         @Override

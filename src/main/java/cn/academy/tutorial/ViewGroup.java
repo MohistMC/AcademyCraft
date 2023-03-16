@@ -19,7 +19,7 @@ public interface ViewGroup {
     @SideOnly(Side.CLIENT)
     default Widget withDraw(Runnable action) {
         Widget ret = new Widget();
-        ret.listen(ViewRenderEvent.class, (w, e) -> { action.run(); });
+        ret.listen(ViewRenderEvent.class, (w, e) -> action.run());
         return ret;
     }
 
