@@ -25,8 +25,8 @@ If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
  - OS: [e.g. Windows, MacOS, Linux]
- - MC Version and Forge version: [e.g. 14.23.4.2705-1.12.2]
- - Version [e.g. 1.1.0beta1]
+ - MC Version and Forge version: [e.g. 14.23.5.2846-1.12.2]
+ - Version [e.g. 1.1.3]
 
 **Additional context**
 Add any other context about the problem here.
