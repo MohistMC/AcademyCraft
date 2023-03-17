@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
         maven { url = "https://maven.minecraftforge.net/" }
         maven {
             name = "sonatype"
@@ -21,13 +22,15 @@ version = project.mod_ver
 group = project.mod_group
 archivesBaseName = project.mod_name
 
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
 compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
 }
 
 compileJava.options.encoding = "UTF-8"
 compileScala.options.encoding = "UTF-8"
+compileJava.options.deprecation = false
+compileScala.options.deprecation = false
 
 minecraft {
     version = "1.12.2-14.23.5.2846"
@@ -82,15 +85,6 @@ configurations {
     deobfCompile.extendsFrom shade
 }
 
-// sourceSets.main.compileClasspath += [configurations.provided]
-
-idea {
-    module {
-        scopes.PROVIDED.plus += [configurations.provided]
-    }
-}
-
-
 dependencies {
     // Shade dependencies
     shade "com.github.LambdaInnovation:LambdaLib2:${project.lambdalib_ver}"
@@ -137,9 +131,6 @@ processResources {
         exclude 'mcmod.info'
     }
 }
-
-compileJava.options.encoding = "UTF-8"
-compileScala.options.encoding = "UTF-8"
 
 task deobfJar(type: Jar, dependsOn: 'jar') {
     classifier 'dev'

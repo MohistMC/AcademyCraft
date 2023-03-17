@@ -1,6 +1,4 @@
-![](https://raw.githubusercontent.com/LambdaInnovation/AcademyCraft/master/blob/logo.png)  
-
-[![Build Status](https://travis-ci.org/LambdaInnovation/AcademyCraft.svg?branch=master)](https://travis-ci.org/LambdaInnovation/AcademyCraft)
+![](https://raw.githubusercontent.com/MohistMC/AcademyCraft/master/blob/logo.png)
 
 A Minecraft mod about superability. The inspiration of AcademyCraft comes from [A Certain Scientific Railgun (とある科学の超電磁砲)](https://en.wikipedia.org/wiki/A_Certain_Scientific_Railgun) but the mod content is not limited of the background.
 
@@ -9,7 +7,7 @@ Visit [AcademyCraft's Website](https://ac.li-dev.cn/) to get the latest release 
 Issue(Idea, Bug) Submission
 ============
 
-Please go to [Issues](https://github.com/LambdaInnovation/AcademyCraft/issues) and submit a new ticket.
+Please go to [Issues](https://github.com/MohistMC/AcademyCraft/issues) and submit a new ticket.
 
 Developement
 ===========
@@ -46,14 +44,6 @@ Misc
 You can support developement of AcademyCraft by donating. This will secure us more time to make the mod more intriguing! 
 
 You would also be able to be in our donator list, both on website and in-game :beer:
-
-### Continuous
-
-* [Patreon][patreon]
-
-### One-Time
-
-* Alipay: ![](https://raw.githubusercontent.com/LambdaInnovation/AcademyCraft/master/blob/qr.jpg)
 
 ## License
 
