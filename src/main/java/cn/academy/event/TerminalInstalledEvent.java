@@ -1,7 +1,7 @@
 package cn.academy.event;
 
-import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
  * Fired both at client and server when player installed data terminal.

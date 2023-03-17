@@ -1,7 +1,5 @@
 package cn.academy.entity;
 
-import cn.academy.client.render.entity.RippleMarkRender;
-import cn.lambdalib2.registry.mc.RegEntity;
 import cn.lambdalib2.util.Colors;
 import cn.lambdalib2.util.GameTimer;
 import cn.lambdalib2.util.entityx.EntityAdvanced;

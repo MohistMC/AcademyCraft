@@ -2,7 +2,24 @@ package cn.academy.ability.vanilla.vecmanip;
 
 import cn.academy.ability.Category;
 import cn.academy.ability.vanilla.VanillaCategories;
-import cn.academy.ability.vanilla.vecmanip.skill.*;
+import cn.academy.ability.vanilla.vecmanip.skill.BloodRetrograde;
+import cn.academy.ability.vanilla.vecmanip.skill.BloodRetrograde$;
+import cn.academy.ability.vanilla.vecmanip.skill.DirectedBlastwave;
+import cn.academy.ability.vanilla.vecmanip.skill.DirectedBlastwave$;
+import cn.academy.ability.vanilla.vecmanip.skill.DirectedShock;
+import cn.academy.ability.vanilla.vecmanip.skill.DirectedShock$;
+import cn.academy.ability.vanilla.vecmanip.skill.Groundshock;
+import cn.academy.ability.vanilla.vecmanip.skill.Groundshock$;
+import cn.academy.ability.vanilla.vecmanip.skill.PlasmaCannon;
+import cn.academy.ability.vanilla.vecmanip.skill.PlasmaCannon$;
+import cn.academy.ability.vanilla.vecmanip.skill.StormWing;
+import cn.academy.ability.vanilla.vecmanip.skill.StormWing$;
+import cn.academy.ability.vanilla.vecmanip.skill.VecAccel;
+import cn.academy.ability.vanilla.vecmanip.skill.VecAccel$;
+import cn.academy.ability.vanilla.vecmanip.skill.VecDeviation;
+import cn.academy.ability.vanilla.vecmanip.skill.VecDeviation$;
+import cn.academy.ability.vanilla.vecmanip.skill.VecReflection;
+import cn.academy.ability.vanilla.vecmanip.skill.VecReflection$;
 
 public class CatVecManip extends Category {
 

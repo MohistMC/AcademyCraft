@@ -1,8 +1,8 @@
 package cn.academy.event;
 
 import cn.academy.terminal.App;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
  * Fired in both client and server when any app is installed, disregarding pre-installed apps.

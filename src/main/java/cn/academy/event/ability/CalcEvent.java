@@ -1,10 +1,10 @@
 package cn.academy.event.ability;
 
 import cn.academy.ability.Skill;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class CalcEvent<T> extends Event {
 

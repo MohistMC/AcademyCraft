@@ -1,6 +1,10 @@
 package cn.academy.energy.impl;
 
-import cn.academy.energy.api.block.*;
+import cn.academy.energy.api.block.IWirelessGenerator;
+import cn.academy.energy.api.block.IWirelessMatrix;
+import cn.academy.energy.api.block.IWirelessNode;
+import cn.academy.energy.api.block.IWirelessReceiver;
+import cn.academy.energy.api.block.IWirelessTile;
 import cn.lambdalib2.util.MathUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;

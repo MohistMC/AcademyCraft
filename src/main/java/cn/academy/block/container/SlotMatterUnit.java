@@ -1,7 +1,6 @@
 package cn.academy.block.container;
 
 import cn.academy.ACItems;
-import cn.academy.worldgen.WorldGenInit;
 import cn.academy.item.ItemMatterUnit.MatterMaterial;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;

@@ -6,7 +6,6 @@ import cn.academy.crafting.MetalFormerRecipes.RecipeObject;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.recipe.IRecipeWrapper;
-import cn.lambdalib2.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;

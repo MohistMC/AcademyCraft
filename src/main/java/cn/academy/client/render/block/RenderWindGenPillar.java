@@ -2,7 +2,6 @@ package cn.academy.client.render.block;
 
 import cn.academy.Resources;
 import cn.academy.block.tileentity.TileWindGenPillar;
-import cn.lambdalib2.multiblock.RenderBlockMulti;
 import cn.lambdalib2.registry.mc.RegTileEntityRender;
 import cn.lambdalib2.render.obj.ObjLegacyRender;
 import cn.lambdalib2.util.RenderUtils;

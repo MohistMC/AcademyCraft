@@ -29,13 +29,17 @@ object MagMovement extends Skill("mag_movement", 2) {
   def getMaxDistance(data: AbilityData) = 25
 
   def toTarget(aData: AbilityData, world: World, pos: RayTraceResult): Target = {
-    if(pos.typeOfHit == RayTraceResult.Type.BLOCK) {
+    if (pos.typeOfHit == RayTraceResult.Type.BLOCK) {
       val block = world.getBlockState(pos.getBlockPos).getBlock
-      if(aData.getSkillExp(this) < 0.6f && !CatElectromaster.isMetalBlock(block)) { return null }
-      if(!CatElectromaster.isWeakMetalBlock(block) && !CatElectromaster.isMetalBlock(block)) { return null }
+      if (aData.getSkillExp(this) < 0.6f && !CatElectromaster.isMetalBlock(block)) {
+        return null
+      }
+      if (!CatElectromaster.isWeakMetalBlock(block) && !CatElectromaster.isMetalBlock(block)) {
+        return null
+      }
       new PointTarget(pos.hitVec.x, pos.hitVec.y, pos.hitVec.z)
     } else {
-      if(pos.entityHit != null && CatElectromaster.isEntityMetallic(pos.entityHit)) {
+      if (pos.entityHit != null && CatElectromaster.isEntityMetallic(pos.entityHit)) {
         return new EntityTarget(pos.entityHit)
       }
       null

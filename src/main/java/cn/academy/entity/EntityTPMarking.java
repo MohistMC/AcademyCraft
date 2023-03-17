@@ -1,9 +1,7 @@
 package cn.academy.entity;
 
-import cn.academy.datapart.AbilityData;
-import cn.academy.client.render.entity.MarkRender;
 import cn.academy.client.render.misc.TPParticleFactory;
-import cn.lambdalib2.registry.mc.RegEntity;
+import cn.academy.datapart.AbilityData;
 import cn.lambdalib2.util.RandUtils;
 import cn.lambdalib2.util.entityx.EntityAdvanced;
 import net.minecraft.entity.player.EntityPlayer;

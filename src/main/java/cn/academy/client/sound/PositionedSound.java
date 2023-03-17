@@ -2,7 +2,6 @@ package cn.academy.client.sound;
 
 import cn.academy.Resources;
 import net.minecraft.client.audio.MovingSound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 
 /**

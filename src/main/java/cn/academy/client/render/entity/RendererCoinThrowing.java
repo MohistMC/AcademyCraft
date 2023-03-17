@@ -3,15 +3,13 @@ package cn.academy.client.render.entity;
 import cn.academy.Resources;
 import cn.academy.entity.EntityCoinThrowing;
 import cn.lambdalib2.registry.mc.RegEntityRender;
-import cn.lambdalib2.util.RenderUtils;
 import cn.lambdalib2.util.GameTimer;
+import cn.lambdalib2.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 

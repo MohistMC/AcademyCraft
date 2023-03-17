@@ -1,7 +1,7 @@
 package cn.academy.block.container;
 
-import cn.academy.energy.api.IFItemManager;
 import cn.academy.block.tileentity.TileSolarGen;
+import cn.academy.energy.api.IFItemManager;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerSolarGen extends TechUIContainer<TileSolarGen> {

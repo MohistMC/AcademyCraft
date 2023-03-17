@@ -1,14 +1,13 @@
 package cn.academy.ability.vanilla.teleporter.client;
 
-import cn.academy.client.render.particle.FormulaParticleFactory;
 import cn.academy.ability.vanilla.teleporter.util.TPSkillHelper.TPCritHitEvent;
+import cn.academy.client.render.particle.FormulaParticleFactory;
 import cn.lambdalib2.registry.mc.RegEventHandler;
 import cn.lambdalib2.util.RandUtils;
 import cn.lambdalib2.util.VecUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

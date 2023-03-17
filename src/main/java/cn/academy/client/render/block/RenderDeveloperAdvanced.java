@@ -6,7 +6,6 @@ import cn.lambdalib2.multiblock.RenderBlockMulti;
 import cn.lambdalib2.registry.mc.RegTileEntityRender;
 import cn.lambdalib2.render.obj.ObjLegacyRender;
 import cn.lambdalib2.util.RenderUtils;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 

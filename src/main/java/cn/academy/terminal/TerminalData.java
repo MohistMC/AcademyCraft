@@ -2,17 +2,17 @@ package cn.academy.terminal;
 
 import cn.academy.event.AppInstalledEvent;
 import cn.academy.event.TerminalInstalledEvent;
+import cn.lambdalib2.datapart.DataPart;
+import cn.lambdalib2.datapart.EntityData;
+import cn.lambdalib2.datapart.RegDataPart;
 import cn.lambdalib2.s11n.SerializeIncluded;
 import cn.lambdalib2.s11n.nbt.NBTS11n;
 import cn.lambdalib2.s11n.network.NetworkMessage;
 import cn.lambdalib2.s11n.network.NetworkMessage.Listener;
-import cn.lambdalib2.datapart.DataPart;
-import cn.lambdalib2.datapart.EntityData;
-import cn.lambdalib2.datapart.RegDataPart;
-import net.minecraftforge.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
 import java.util.List;

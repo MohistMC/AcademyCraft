@@ -1,6 +1,5 @@
 package cn.academy.entity;
 
-import cn.lambdalib2.registry.mc.RegEntity;
 import cn.lambdalib2.util.VecUtils;
 import cn.lambdalib2.util.entityx.EntityAdvanced;
 import net.minecraft.entity.player.EntityPlayer;

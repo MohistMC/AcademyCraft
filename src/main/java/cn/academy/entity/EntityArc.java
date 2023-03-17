@@ -2,12 +2,6 @@ package cn.academy.entity;
 
 import cn.academy.client.render.util.ArcFactory;
 import cn.academy.client.render.util.ArcFactory.Arc;
-import cn.lambdalib2.registry.mc.RegEntity;
-/*
-import cn.lambdalib2.util.deprecated.ViewOptimize;
-import cn.lambdalib2.util.deprecated.ViewOptimize.IAssociatePlayer;
-import cn.lambdalib2.util.Motion3D;
-import cn.lambdalib2.util.entityx.EntityAdvanced;*/
 import cn.lambdalib2.registry.mc.RegEntityRender;
 import cn.lambdalib2.util.EntityLook;
 import cn.lambdalib2.util.MathUtils;
@@ -15,7 +9,6 @@ import cn.lambdalib2.util.ViewOptimize;
 import cn.lambdalib2.util.entityx.EntityAdvanced;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;

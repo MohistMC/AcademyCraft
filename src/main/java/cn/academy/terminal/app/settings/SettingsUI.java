@@ -10,12 +10,12 @@ import cn.lambdalib2.cgui.component.TextBox;
 import cn.lambdalib2.cgui.event.DragEvent;
 import cn.lambdalib2.cgui.loader.CGUIDocument;
 import cn.lambdalib2.registry.StateEventCallback;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.HashMap;

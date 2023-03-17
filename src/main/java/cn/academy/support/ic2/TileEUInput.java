@@ -1,6 +1,5 @@
 package cn.academy.support.ic2;
 
-import cn.academy.AcademyCraft;
 import cn.academy.block.tileentity.TileGeneratorBase;
 import cn.lambdalib2.registry.mc.RegTileEntity;
 import ic2.api.energy.event.EnergyTileLoadEvent;

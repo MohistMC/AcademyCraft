@@ -4,7 +4,8 @@ import cn.academy.block.tileentity.TileMetalFormer;
 import cn.academy.support.EnergyItemHelper;
 import net.minecraft.entity.player.EntityPlayer;
 
-import static cn.academy.block.tileentity.TileMetalFormer.*;
+import static cn.academy.block.tileentity.TileMetalFormer.SLOT_BATTERY;
+import static cn.academy.block.tileentity.TileMetalFormer.SLOT_IN;
 
 /**
  * @author WeAthFolD

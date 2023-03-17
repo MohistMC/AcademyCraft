@@ -5,11 +5,11 @@ import cn.lambdalib2.particle.Particle;
 import cn.lambdalib2.particle.ParticleFactory;
 import cn.lambdalib2.util.RandUtils;
 import cn.lambdalib2.util.entityx.MotionHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 

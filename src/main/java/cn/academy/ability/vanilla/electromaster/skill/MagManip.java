@@ -11,7 +11,10 @@ import cn.academy.client.sound.FollowEntitySound;
 import cn.academy.entity.MagManipEntityBlock;
 import cn.lambdalib2.multiblock.BlockMulti;
 import cn.lambdalib2.s11n.network.NetworkMessage.Listener;
-import cn.lambdalib2.util.*;
+import cn.lambdalib2.util.EntitySelectors;
+import cn.lambdalib2.util.MathUtils;
+import cn.lambdalib2.util.Raytrace;
+import cn.lambdalib2.util.VecUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.state.IBlockState;
@@ -25,7 +28,12 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import static cn.lambdalib2.util.VecUtils.*;
+
+import static cn.lambdalib2.util.VecUtils.add;
+import static cn.lambdalib2.util.VecUtils.entityHeadPos;
+import static cn.lambdalib2.util.VecUtils.multiply;
+import static cn.lambdalib2.util.VecUtils.setMotion;
+import static cn.lambdalib2.util.VecUtils.subtract;
 
 
 /**

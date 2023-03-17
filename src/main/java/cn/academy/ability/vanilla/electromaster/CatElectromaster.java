@@ -1,20 +1,32 @@
 package cn.academy.ability.vanilla.electromaster;
 
+import cn.academy.AcademyCraft;
 import cn.academy.ability.Category;
 import cn.academy.ability.Skill;
-import cn.academy.AcademyCraft;
 import cn.academy.ability.vanilla.VanillaCategories;
-import cn.academy.ability.vanilla.electromaster.skill.*;
+import cn.academy.ability.vanilla.electromaster.skill.ArcGen;
+import cn.academy.ability.vanilla.electromaster.skill.BodyIntensify$;
+import cn.academy.ability.vanilla.electromaster.skill.CurrentCharging$;
+import cn.academy.ability.vanilla.electromaster.skill.MagManip;
+import cn.academy.ability.vanilla.electromaster.skill.MagMovement$;
+import cn.academy.ability.vanilla.electromaster.skill.MineDetect$;
+import cn.academy.ability.vanilla.electromaster.skill.Railgun$;
+import cn.academy.ability.vanilla.electromaster.skill.ThunderBolt$;
+import cn.academy.ability.vanilla.electromaster.skill.ThunderClap$;
+import cn.academy.entity.EntityMagHook;
 import cn.lambdalib2.registry.StateEventCallback;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.BlockRedstoneOre;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -168,7 +180,6 @@ public class CatElectromaster extends Category {
             "hopper_minecart",
             "spawner_minecart",
             "commandblock_minecart",
-            "academy:EntityMagHook",
             "villager_golem"
         };
         String[] cfgEntities = AcademyCraft.config.getStringList(
@@ -179,8 +190,9 @@ public class CatElectromaster extends Category {
         );
         for (String entityName : cfgEntities) {
             Class<? extends Entity> c = EntityList.getClass(new ResourceLocation(entityName));
-            if (c == null)
+            if (c == null) {
                 throw new RuntimeException("Invalid entity name: " + entityName + " at academy.cfg.");
+            }
 
             metalEntities.add(c);
         }
@@ -200,6 +212,7 @@ public class CatElectromaster extends Category {
     }
 
     public static boolean isEntityMetallic(Entity ent) {
+        if (ent instanceof EntityMagHook) return true;
         if(metalEntities.isEmpty()) return false;
         for (Class<? extends Entity> cl : metalEntities) {
             if (cl.isInstance(ent))

@@ -1,8 +1,8 @@
 package cn.academy.event.ability;
 
 import cn.academy.datapart.AbilityData;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
  * @author WeAthFolD

@@ -11,7 +11,11 @@ import cn.lambdalib2.s11n.network.NetworkS11n;
 import cn.lambdalib2.s11n.network.NetworkS11n.ContextException;
 import cn.lambdalib2.s11n.network.NetworkS11n.NetS11nAdaptor;
 import cn.lambdalib2.s11n.network.NetworkS11nType;
-import cn.lambdalib2.util.*;
+import cn.lambdalib2.util.ClientUtils;
+import cn.lambdalib2.util.EntitySelectors;
+import cn.lambdalib2.util.GameTimer;
+import cn.lambdalib2.util.SideUtils;
+import cn.lambdalib2.util.WorldUtils;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import io.netty.buffer.ByteBuf;
@@ -28,7 +32,15 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**

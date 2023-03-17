@@ -1,14 +1,8 @@
 package cn.academy.block.tileentity;
 
-import cn.academy.client.render.block.RenderCatEngine;
 import cn.lambdalib2.registry.mc.RegTileEntity;
-import cn.lambdalib2.s11n.network.TargetPoints;
-import cn.lambdalib2.s11n.network.NetworkMessage;
-import cn.lambdalib2.s11n.network.NetworkMessage.Listener;
 import cn.lambdalib2.util.TickScheduler;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Cat Engine!

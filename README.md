@@ -14,7 +14,7 @@ Developement
 
 ## Build
 
-Simply use `gradlew build`. If you encounter `Unknown constant: 18` error, `gradlew build` again and it should be fine.
+Simply use `gradlew build`. If you encounter `Unknown constant: 9` error, `gradlew build` again and it should be fine.
 
 ## Workspace
 

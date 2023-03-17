@@ -3,7 +3,6 @@ package cn.academy.client.render.particle;
 import cn.academy.Resources;
 import cn.lambdalib2.particle.Particle;
 import cn.lambdalib2.particle.ParticleFactory;
-import cn.lambdalib2.particle.decorators.ParticleDecorator;
 import cn.lambdalib2.util.RandUtils;
 import net.minecraft.util.ResourceLocation;
 

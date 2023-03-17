@@ -16,7 +16,8 @@ import org.lwjgl.util.vector.Vector3f;
 
 import java.nio.FloatBuffer;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW_MATRIX;
+import static org.lwjgl.opengl.GL11.glGetFloat;
 
 /**
  * This class stores render camera position in world space each frame.

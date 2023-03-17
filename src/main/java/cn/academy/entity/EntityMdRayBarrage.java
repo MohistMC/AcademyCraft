@@ -1,7 +1,6 @@
 package cn.academy.entity;
 
 import cn.academy.client.sound.ACSounds;
-import cn.lambdalib2.registry.mc.RegEntity;
 import cn.lambdalib2.registry.mc.RegEntityRender;
 import cn.lambdalib2.util.RandUtils;
 import net.minecraft.client.renderer.entity.RenderManager;

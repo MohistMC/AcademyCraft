@@ -3,14 +3,18 @@ package cn.academy.block.container;
 import cn.academy.ACItems;
 import cn.academy.block.tileentity.TileImagFusor;
 import cn.academy.crafting.ImagFusorRecipes;
-import cn.academy.item.ItemMatterUnit;
 import cn.academy.energy.api.IFItemManager;
+import cn.academy.item.ItemMatterUnit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import static cn.academy.block.tileentity.TileImagFusor.*;
+import static cn.academy.block.tileentity.TileImagFusor.SLOT_ENERGY_INPUT;
+import static cn.academy.block.tileentity.TileImagFusor.SLOT_IMAG_INPUT;
+import static cn.academy.block.tileentity.TileImagFusor.SLOT_IMAG_OUTPUT;
+import static cn.academy.block.tileentity.TileImagFusor.SLOT_INPUT;
+import static cn.academy.block.tileentity.TileImagFusor.SLOT_OUTPUT;
 
 /**
  * @author WeAthFolD

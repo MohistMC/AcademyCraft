@@ -2,16 +2,19 @@ package cn.academy.network;
 
 import cn.academy.ACConfig;
 import com.google.common.base.Charsets;
-import com.typesafe.config.ConfigFactory;
-
-import io.netty.buffer.ByteBuf;
 import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by Paindar on 2016/8/31.

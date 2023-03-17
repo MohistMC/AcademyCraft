@@ -1,8 +1,6 @@
 package cn.academy.item;
 
 import cn.academy.AcademyCraft;
-import cn.academy.ability.Category;
-import cn.academy.ability.CategoryManager;
 import cn.academy.misc.media.Media;
 import cn.academy.misc.media.MediaAcquireData;
 import cn.academy.misc.media.MediaApp$;

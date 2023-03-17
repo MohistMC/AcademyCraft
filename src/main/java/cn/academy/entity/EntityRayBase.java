@@ -3,8 +3,6 @@ package cn.academy.entity;
 import cn.lambdalib2.util.GameTimer;
 import cn.lambdalib2.util.RandUtils;
 import cn.lambdalib2.util.entityx.EntityAdvanced;
-import cn.lambdalib2.util.entityx.EntityCallback;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;

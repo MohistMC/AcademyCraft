@@ -1,31 +1,31 @@
 package cn.academy.ability.ctrl;
 
+import cn.academy.AcademyCraft;
 import cn.academy.ability.context.ClientRuntime;
+import cn.academy.client.auxgui.CPBar;
+import cn.academy.client.auxgui.PresetEditUI;
 import cn.academy.datapart.AbilityData;
 import cn.academy.datapart.CPData;
 import cn.academy.datapart.PresetData;
+import cn.academy.event.ConfigModifyEvent;
 import cn.academy.event.ability.FlushControlEvent;
 import cn.academy.event.ability.PresetSwitchEvent;
-import cn.academy.client.auxgui.CPBar;
-import cn.academy.client.auxgui.PresetEditUI;
-import cn.academy.AcademyCraft;
-import cn.academy.event.ConfigModifyEvent;
-import cn.academy.util.RegACKeyHandler;
 import cn.academy.terminal.app.settings.PropertyElements;
 import cn.academy.terminal.app.settings.SettingsUI;
+import cn.academy.util.RegACKeyHandler;
+import cn.lambdalib2.input.KeyHandler;
+import cn.lambdalib2.input.KeyManager;
 import cn.lambdalib2.registry.StateEventCallback;
 import cn.lambdalib2.registry.mc.RegEventHandler;
 import cn.lambdalib2.util.GameTimer;
-import cn.lambdalib2.input.KeyHandler;
-import cn.lambdalib2.input.KeyManager;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 /**

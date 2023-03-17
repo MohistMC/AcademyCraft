@@ -2,9 +2,9 @@ package cn.academy.ability.develop.action;
 
 import cn.academy.ACItems;
 import cn.academy.ability.Category;
-import cn.academy.datapart.AbilityData;
 import cn.academy.ability.develop.DeveloperType;
 import cn.academy.ability.develop.IDeveloper;
+import cn.academy.datapart.AbilityData;
 import cn.academy.event.ability.TransformCategoryEvent;
 import cn.academy.item.ItemInductionFactor;
 import net.minecraft.entity.player.EntityPlayer;

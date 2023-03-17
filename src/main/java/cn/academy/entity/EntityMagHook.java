@@ -1,18 +1,13 @@
 package cn.academy.entity;
 
 import cn.academy.ACItems;
-import cn.academy.AcademyCraft;
 import cn.academy.Resources;
-import cn.academy.ability.vanilla.VanillaCategories;
-import cn.academy.client.render.entity.RendererMagHook;
-import cn.academy.client.sound.ACSounds;
 import cn.lambdalib2.registry.mc.RegEntity;
 import cn.lambdalib2.util.EntitySelectors;
 import cn.lambdalib2.util.entityx.EntityAdvanced;
 import cn.lambdalib2.util.entityx.MotionHandler;
 import cn.lambdalib2.util.entityx.event.CollideEvent;
 import cn.lambdalib2.util.entityx.handlers.Rigidbody;
-import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -26,8 +21,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author WeathFolD

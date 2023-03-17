@@ -1,12 +1,15 @@
 package cn.academy.entity;
 
-import cn.academy.client.render.util.ACRenderingHelper;
 import cn.academy.Resources;
 import cn.lambdalib2.registry.mc.RegEntity;
 import cn.lambdalib2.registry.mc.RegEntityRender;
 import cn.lambdalib2.render.legacy.ShaderSimple;
 import cn.lambdalib2.template.client.render.RenderIcon;
-import cn.lambdalib2.util.*;
+import cn.lambdalib2.util.Colors;
+import cn.lambdalib2.util.GameTimer;
+import cn.lambdalib2.util.MathUtils;
+import cn.lambdalib2.util.RandUtils;
+import cn.lambdalib2.util.RenderUtils;
 import cn.lambdalib2.util.entityx.EntityAdvanced;
 import cn.lambdalib2.util.entityx.EntityCallback;
 import net.minecraft.client.Minecraft;

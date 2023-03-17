@@ -6,19 +6,18 @@ import cn.academy.energy.api.block.IWirelessNode;
 import cn.academy.event.energy.LinkUserEvent;
 import cn.academy.event.energy.UnlinkUserEvent;
 import cn.lambdalib2.util.RandUtils;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

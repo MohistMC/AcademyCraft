@@ -1,7 +1,7 @@
 package cn.academy.block.container;
 
-import cn.academy.energy.api.IFItemManager;
 import cn.academy.block.tileentity.TileWindGenBase;
+import cn.academy.energy.api.IFItemManager;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**

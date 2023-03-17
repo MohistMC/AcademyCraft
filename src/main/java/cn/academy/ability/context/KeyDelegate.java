@@ -1,12 +1,11 @@
 package cn.academy.ability.context;
 
 import cn.academy.ability.Skill;
-//import net.minecraftforge.fml.common.registry.RegistryDelegate.Delegate;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * {@link KeyDelegate} is provided by a skill and handles key delegation of ONE key.

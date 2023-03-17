@@ -1,11 +1,18 @@
 package cn.academy.energy.impl;
 
 import cn.academy.AcademyCraft;
-import cn.academy.energy.api.block.*;
-import cn.academy.energy.impl.VBlocks.*;
+import cn.academy.energy.api.block.IWirelessGenerator;
+import cn.academy.energy.api.block.IWirelessMatrix;
+import cn.academy.energy.api.block.IWirelessNode;
+import cn.academy.energy.api.block.IWirelessReceiver;
+import cn.academy.energy.api.block.IWirelessUser;
+import cn.academy.energy.impl.VBlocks.VNGenerator;
+import cn.academy.energy.impl.VBlocks.VNNode;
+import cn.academy.energy.impl.VBlocks.VNReceiver;
+import cn.academy.energy.impl.VBlocks.VWMatrix;
+import cn.academy.energy.impl.VBlocks.VWNode;
 import cn.lambdalib2.util.IBlockSelector;
 import cn.lambdalib2.util.WorldUtils;
-import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
@@ -13,9 +20,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.WorldSavedData;
-//import net.minecraft.world.WorldSavedData;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author WeAthFolD

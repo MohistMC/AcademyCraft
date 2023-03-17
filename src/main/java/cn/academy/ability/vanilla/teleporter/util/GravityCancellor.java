@@ -3,8 +3,6 @@ package cn.academy.ability.vanilla.teleporter.util;
 import cn.academy.ability.vanilla.util.HandlerLifePeroidEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 /**
  * @author WeAthFolD

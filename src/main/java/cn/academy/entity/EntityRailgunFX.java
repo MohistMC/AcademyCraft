@@ -1,11 +1,9 @@
 package cn.academy.entity;
 
 import cn.academy.client.render.entity.ray.RendererRayComposite;
-import cn.academy.client.sound.ACSounds;
 import cn.academy.client.render.util.ArcFactory;
 import cn.academy.client.render.util.ArcFactory.Arc;
 import cn.academy.client.render.util.SubArcHandler;
-import cn.lambdalib2.registry.mc.RegEntity;
 import cn.lambdalib2.registry.mc.RegEntityRender;
 import cn.lambdalib2.util.MathUtils;
 import cn.lambdalib2.util.RandUtils;
@@ -14,7 +12,6 @@ import cn.lambdalib2.util.ViewOptimize;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;

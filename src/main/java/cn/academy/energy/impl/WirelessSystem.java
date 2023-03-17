@@ -2,20 +2,23 @@ package cn.academy.energy.impl;
 
 import cn.academy.energy.api.block.IWirelessGenerator;
 import cn.academy.energy.api.block.IWirelessReceiver;
-import cn.academy.event.WirelessUserEvent.UserType;
-import cn.academy.event.energy.LinkUserEvent;
-import cn.academy.event.energy.UnlinkUserEvent;
-import cn.academy.event.energy.*;
 import cn.academy.energy.impl.VBlocks.VNGenerator;
 import cn.academy.energy.impl.VBlocks.VNReceiver;
 import cn.academy.energy.impl.VBlocks.VWNode;
+import cn.academy.event.WirelessUserEvent.UserType;
+import cn.academy.event.energy.ChangePassEvent;
+import cn.academy.event.energy.CreateNetworkEvent;
+import cn.academy.event.energy.DestroyNetworkEvent;
+import cn.academy.event.energy.LinkNodeEvent;
+import cn.academy.event.energy.LinkUserEvent;
+import cn.academy.event.energy.UnlinkNodeEvent;
+import cn.academy.event.energy.UnlinkUserEvent;
 import cn.lambdalib2.registry.mc.RegEventHandler;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.WorldServer;
 
 /**
  * @author WeAthFolD

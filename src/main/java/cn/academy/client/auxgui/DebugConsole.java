@@ -1,11 +1,11 @@
 package cn.academy.client.auxgui;
 
+import cn.academy.Resources;
 import cn.academy.ability.Category;
 import cn.academy.ability.Skill;
 import cn.academy.datapart.AbilityData;
 import cn.academy.datapart.CPData;
 import cn.academy.util.ACKeyManager;
-import cn.academy.Resources;
 import cn.lambdalib2.auxgui.AuxGui;
 import cn.lambdalib2.auxgui.AuxGuiHandler;
 import cn.lambdalib2.input.KeyHandler;

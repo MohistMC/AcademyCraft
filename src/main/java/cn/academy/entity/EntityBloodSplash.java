@@ -1,14 +1,12 @@
 package cn.academy.entity;
 
 import cn.academy.Resources;
-import cn.lambdalib2.registry.mc.RegEntity;
 import cn.lambdalib2.registry.mc.RegEntityRender;
 import cn.lambdalib2.template.client.render.RenderIcon;
 import cn.lambdalib2.util.MathUtils;
 import cn.lambdalib2.util.RandUtils;
 import cn.lambdalib2.util.entityx.EntityAdvanced;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;

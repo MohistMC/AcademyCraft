@@ -1,10 +1,8 @@
 package cn.academy.support.jei;
 
 import cn.academy.ACBlocks;
-import cn.academy.AcademyCraft;
 import cn.academy.crafting.ImagFusorRecipes;
 import cn.academy.crafting.ImagFusorRecipes.IFRecipe;
-import cn.lambdalib2.util.RenderUtils;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.recipe.IRecipeWrapper;

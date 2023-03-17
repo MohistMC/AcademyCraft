@@ -8,19 +8,19 @@ import cn.academy.crafting.MetalFormerRecipes.RecipeObject;
 import cn.academy.energy.IFConstants;
 import cn.academy.support.EnergyItemHelper;
 import cn.lambdalib2.registry.mc.RegTileEntity;
-import cn.lambdalib2.s11n.network.TargetPoints;
 import cn.lambdalib2.s11n.network.NetworkMessage;
 import cn.lambdalib2.s11n.network.NetworkMessage.Listener;
 import cn.lambdalib2.s11n.network.NetworkMessage.NullablePar;
 import cn.lambdalib2.s11n.network.NetworkS11nType;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import cn.lambdalib2.s11n.network.TargetPoints;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author WeAthFolD

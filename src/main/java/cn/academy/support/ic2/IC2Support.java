@@ -10,21 +10,21 @@ import cn.lambdalib2.registry.RegistryCallback;
 import cn.lambdalib2.registry.StateEventCallback;
 import cn.lambdalib2.util.SideUtils;
 import com.google.common.base.Preconditions;
+import ic2.api.item.ElectricItem;
+import ic2.api.item.IC2Items;
+import ic2.api.item.IElectricItem;
+import ic2.api.item.IElectricItemManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import ic2.api.item.ElectricItem;
-import ic2.api.item.IC2Items;
-import ic2.api.item.IElectricItem;
-import ic2.api.item.IElectricItemManager;
-import net.minecraft.item.ItemStack;
 
 /**
  * 

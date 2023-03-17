@@ -1,10 +1,10 @@
 package cn.academy.ability.develop.condition;
 
-import cn.academy.ability.Skill;
-import cn.academy.datapart.AbilityData;
 import cn.academy.ability.AbilityLocalization;
+import cn.academy.ability.Skill;
 import cn.academy.ability.develop.DeveloperType;
 import cn.academy.ability.develop.IDeveloper;
+import cn.academy.datapart.AbilityData;
 import net.minecraft.util.ResourceLocation;
 
 /**

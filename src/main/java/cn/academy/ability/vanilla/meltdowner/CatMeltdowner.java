@@ -4,7 +4,16 @@ import cn.academy.ability.Category;
 import cn.academy.ability.Skill;
 import cn.academy.ability.vanilla.VanillaCategories;
 import cn.academy.ability.vanilla.meltdowner.passiveskill.RadiationIntensify$;
-import cn.academy.ability.vanilla.meltdowner.skill.*;
+import cn.academy.ability.vanilla.meltdowner.skill.ElectronBomb;
+import cn.academy.ability.vanilla.meltdowner.skill.ElectronMissile$;
+import cn.academy.ability.vanilla.meltdowner.skill.JetEngine$;
+import cn.academy.ability.vanilla.meltdowner.skill.LightShield;
+import cn.academy.ability.vanilla.meltdowner.skill.Meltdowner$;
+import cn.academy.ability.vanilla.meltdowner.skill.MineRayBasic$;
+import cn.academy.ability.vanilla.meltdowner.skill.MineRayExpert$;
+import cn.academy.ability.vanilla.meltdowner.skill.MineRayLuck$;
+import cn.academy.ability.vanilla.meltdowner.skill.RayBarrage$;
+import cn.academy.ability.vanilla.meltdowner.skill.ScatterBomb$;
 
 /**
  * @author WeAthFolD

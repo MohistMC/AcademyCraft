@@ -1,13 +1,15 @@
 package cn.academy.energy.api;
 
-import cn.academy.energy.api.block.*;
+import cn.academy.energy.api.block.IWirelessGenerator;
+import cn.academy.energy.api.block.IWirelessMatrix;
+import cn.academy.energy.api.block.IWirelessNode;
+import cn.academy.energy.api.block.IWirelessReceiver;
+import cn.academy.energy.api.block.IWirelessUser;
 import cn.academy.energy.impl.NodeConn;
 import cn.academy.energy.impl.WiWorldData;
 import cn.academy.energy.impl.WirelessNet;
-import cn.lambdalib2.util.IBlockSelector;
 import cn.lambdalib2.util.MathUtils;
 import cn.lambdalib2.util.WorldUtils;
-import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

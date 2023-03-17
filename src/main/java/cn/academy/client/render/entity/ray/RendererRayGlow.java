@@ -3,17 +3,23 @@ package cn.academy.client.render.entity.ray;
 import cn.academy.Resources;
 import cn.academy.entity.IRay;
 import cn.lambdalib2.render.legacy.ShaderSimple;
+import cn.lambdalib2.render.legacy.Tessellator;
 import cn.lambdalib2.util.Colors;
 import cn.lambdalib2.util.RenderUtils;
 import cn.lambdalib2.util.VecUtils;
-import cn.lambdalib2.render.legacy.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.Color;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL11.GL_GEQUAL;
+import static org.lwjgl.opengl.GL11.GL_GREATER;
+import static org.lwjgl.opengl.GL11.glAlphaFunc;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
 
 /**
  * @author WeAthFolD

@@ -2,10 +2,10 @@ package cn.academy.tutorial.client;
 
 
 import cn.academy.Resources;
+import cn.academy.client.gui.EnergyUIHelper;
 import cn.academy.crafting.ImagFusorRecipes;
 import cn.academy.crafting.ImagFusorRecipes.IFRecipe;
 import cn.academy.crafting.MetalFormerRecipes;
-import cn.academy.client.gui.EnergyUIHelper;
 import cn.lambdalib2.cgui.Widget;
 import cn.lambdalib2.cgui.WidgetContainer;
 import cn.lambdalib2.cgui.component.DrawTexture;
@@ -13,37 +13,51 @@ import cn.lambdalib2.cgui.component.TextBox;
 import cn.lambdalib2.cgui.event.FrameEvent;
 import cn.lambdalib2.cgui.loader.CGUIDocument;
 import cn.lambdalib2.registry.StateEventCallback;
-import cn.lambdalib2.util.Colors;
-import cn.lambdalib2.util.HudUtils;
 import cn.lambdalib2.render.font.IFont.FontAlign;
 import cn.lambdalib2.render.font.IFont.FontOption;
-import cn.lambdalib2.util.RandUtils;
+import cn.lambdalib2.util.Colors;
 import cn.lambdalib2.util.GameTimer;
-import net.minecraft.client.renderer.OpenGlHelper;
+import cn.lambdalib2.util.HudUtils;
+import cn.lambdalib2.util.RandUtils;
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.ShapedRecipes;
+import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.*;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_LIGHTING;
+import static org.lwjgl.opengl.GL11.glColor4d;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glScaled;
+import static org.lwjgl.opengl.GL11.glTranslated;
+import static org.lwjgl.opengl.GL11.glTranslatef;
 
 // TODO Add ImagFusor and MetalFormer handlers
 @SideOnly(Side.CLIENT)

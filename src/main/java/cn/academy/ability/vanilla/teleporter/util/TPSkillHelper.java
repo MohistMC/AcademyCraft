@@ -1,12 +1,11 @@
 package cn.academy.ability.vanilla.teleporter.util;
 
 import cn.academy.ability.AbilityContext;
+import cn.academy.ability.vanilla.teleporter.CatTeleporter;
 import cn.academy.ability.vanilla.teleporter.passiveskill.DimFoldingTheorem;
 import cn.academy.ability.vanilla.teleporter.passiveskill.SpaceFluctuation;
-import cn.academy.advancements.ACAdvancements;
 import cn.academy.datapart.AbilityData;
 import cn.academy.event.ability.AbilityEvent;
-import cn.academy.ability.vanilla.teleporter.CatTeleporter;
 import cn.lambdalib2.s11n.network.NetworkMessage;
 import cn.lambdalib2.s11n.network.NetworkMessage.Listener;
 import cn.lambdalib2.s11n.network.NetworkS11nType;

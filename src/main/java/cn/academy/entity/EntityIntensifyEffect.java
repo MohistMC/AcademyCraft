@@ -1,7 +1,6 @@
 package cn.academy.entity;
 
 import cn.academy.client.render.util.SubArc;
-import cn.lambdalib2.registry.mc.RegEntity;
 import cn.lambdalib2.util.RandUtils;
 import cn.lambdalib2.util.entityx.EntityCallback;
 import net.minecraft.entity.player.EntityPlayer;

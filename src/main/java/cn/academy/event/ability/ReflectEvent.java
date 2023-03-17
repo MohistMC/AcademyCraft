@@ -1,9 +1,9 @@
 package cn.academy.event.ability;
 
 import cn.academy.ability.Skill;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.eventhandler.Cancelable;
 
 /**
  * If this event is canceled, a reflection to this attack event happens.

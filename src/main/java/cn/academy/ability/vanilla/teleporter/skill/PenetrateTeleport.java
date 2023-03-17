@@ -7,7 +7,6 @@ import cn.academy.ability.context.Context;
 import cn.academy.ability.vanilla.teleporter.util.TPSkillHelper;
 import cn.academy.client.sound.ACSounds;
 import cn.academy.entity.EntityTPMarking;
-import cn.lambdalib2.s11n.network.NetworkMessage;
 import cn.lambdalib2.s11n.network.NetworkMessage.Listener;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;

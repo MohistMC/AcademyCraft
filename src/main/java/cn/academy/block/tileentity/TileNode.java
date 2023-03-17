@@ -1,27 +1,25 @@
 package cn.academy.block.tileentity;
 
 import cn.academy.block.block.BlockNode;
-import cn.academy.client.render.block.RenderDynamicBlock;
+import cn.academy.block.block.BlockNode.NodeType;
 import cn.academy.energy.api.IFItemManager;
 import cn.academy.energy.api.WirelessHelper;
 import cn.academy.energy.api.block.IWirelessNode;
-import cn.academy.block.block.BlockNode.NodeType;
 import cn.academy.energy.impl.WirelessNet;
 import cn.lambdalib2.registry.mc.RegTileEntity;
-import cn.lambdalib2.s11n.network.TargetPoints;
 import cn.lambdalib2.s11n.network.NetworkMessage;
 import cn.lambdalib2.s11n.network.NetworkMessage.Listener;
+import cn.lambdalib2.s11n.network.TargetPoints;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * @author WeathFolD

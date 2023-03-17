@@ -1,13 +1,10 @@
 package cn.academy.ability.vanilla.electromaster.skill;
 
-import cn.academy.AcademyCraft;
 import cn.academy.ability.Skill;
 import cn.academy.ability.context.ClientContext;
 import cn.academy.ability.context.ClientRuntime;
 import cn.academy.ability.context.Context;
 import cn.academy.ability.context.RegClientContext;
-import cn.academy.advancements.ACAdvancements;
-import cn.academy.advancements.ACAdvancements;
 import cn.academy.client.render.util.ArcPatterns;
 import cn.academy.client.sound.ACSounds;
 import cn.academy.entity.EntityArc;

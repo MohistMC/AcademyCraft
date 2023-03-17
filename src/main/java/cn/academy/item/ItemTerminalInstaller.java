@@ -1,22 +1,22 @@
 package cn.academy.item;
 
 import cn.academy.advancements.ACAdvancements;
-import cn.academy.terminal.TerminalData;
 import cn.academy.client.auxgui.TerminalInstallEffect;
+import cn.academy.terminal.TerminalData;
+import cn.lambdalib2.auxgui.AuxGuiHandler;
 import cn.lambdalib2.s11n.network.NetworkMessage;
 import cn.lambdalib2.s11n.network.NetworkMessage.Listener;
 import cn.lambdalib2.s11n.network.NetworkS11nType;
-import cn.lambdalib2.auxgui.AuxGuiHandler;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 /**
  * @author WeAthFolD

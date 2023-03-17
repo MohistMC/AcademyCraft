@@ -1,7 +1,6 @@
 package cn.academy.block.container;
 
 import cn.academy.ACItems;
-import cn.academy.worldgen.WorldGenInit;
 import cn.academy.block.tileentity.TileMatrix;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

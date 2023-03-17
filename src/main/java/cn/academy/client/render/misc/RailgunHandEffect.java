@@ -6,17 +6,27 @@ import cn.lambdalib2.render.legacy.LegacyMeshUtils;
 import cn.lambdalib2.render.legacy.ShaderSimple;
 import cn.lambdalib2.renderhook.PlayerRenderHook;
 import cn.lambdalib2.util.RenderUtils;
-/*
-import cn.lambdalib2.util.renderhook.PlayerRenderHook;
-import cn.lambdalib2.util.shader.GLSLMesh;
-import cn.lambdalib2.util.shader.ShaderSimple;
-import cn.lambdalib2.util.deprecated.LegacyMeshUtils;*/
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL20;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_ALPHA_TEST;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL11.GL_GEQUAL;
+import static org.lwjgl.opengl.GL11.GL_GREATER;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.glAlphaFunc;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRotated;
+import static org.lwjgl.opengl.GL11.glScalef;
+import static org.lwjgl.opengl.GL11.glTranslated;
 
 /**
  * @author WeAthFolD

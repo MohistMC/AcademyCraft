@@ -4,7 +4,11 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.entity.player.EntityPlayer;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**

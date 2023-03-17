@@ -18,7 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static cn.lambdalib2.util.VecUtils.*;
+import static cn.lambdalib2.util.VecUtils.add;
+import static cn.lambdalib2.util.VecUtils.crossProduct;
+import static cn.lambdalib2.util.VecUtils.multiply;
+import static cn.lambdalib2.util.VecUtils.subtract;
 
 /**
  * Used the concept of L-system and recursion to generate a lightning pattern.

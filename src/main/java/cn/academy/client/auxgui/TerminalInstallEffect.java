@@ -1,6 +1,7 @@
 package cn.academy.client.auxgui;
 
 import cn.academy.util.ACKeyManager;
+import cn.lambdalib2.auxgui.AuxGui;
 import cn.lambdalib2.cgui.CGui;
 import cn.lambdalib2.cgui.Widget;
 import cn.lambdalib2.cgui.WidgetContainer;
@@ -10,17 +11,16 @@ import cn.lambdalib2.cgui.component.TextBox;
 import cn.lambdalib2.cgui.event.FrameEvent;
 import cn.lambdalib2.cgui.event.IGuiEventHandler;
 import cn.lambdalib2.cgui.loader.CGUIDocument;
-import cn.lambdalib2.auxgui.AuxGui;
 import cn.lambdalib2.input.KeyManager;
 import cn.lambdalib2.registry.StateEventCallback;
 import cn.lambdalib2.util.Colors;
 import cn.lambdalib2.util.PlayerUtils;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author WeAthFolD

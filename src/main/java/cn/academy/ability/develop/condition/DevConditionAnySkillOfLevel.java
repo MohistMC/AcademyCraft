@@ -1,9 +1,9 @@
 package cn.academy.ability.develop.condition;
 
-import cn.academy.ability.Skill;
-import cn.academy.datapart.AbilityData;
-import cn.academy.ability.develop.IDeveloper;
 import cn.academy.Resources;
+import cn.academy.ability.Skill;
+import cn.academy.ability.develop.IDeveloper;
+import cn.academy.datapart.AbilityData;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 

@@ -3,8 +3,15 @@ package cn.academy.ability.vanilla.teleporter;
 import cn.academy.ability.Category;
 import cn.academy.ability.Skill;
 import cn.academy.ability.vanilla.VanillaCategories;
-import cn.academy.ability.vanilla.teleporter.passiveskill.*;
-import cn.academy.ability.vanilla.teleporter.skill.*;
+import cn.academy.ability.vanilla.teleporter.passiveskill.DimFoldingTheorem;
+import cn.academy.ability.vanilla.teleporter.passiveskill.SpaceFluctuation;
+import cn.academy.ability.vanilla.teleporter.skill.Flashing;
+import cn.academy.ability.vanilla.teleporter.skill.FleshRipping;
+import cn.academy.ability.vanilla.teleporter.skill.LocationTeleport$;
+import cn.academy.ability.vanilla.teleporter.skill.MarkTeleport$;
+import cn.academy.ability.vanilla.teleporter.skill.PenetrateTeleport;
+import cn.academy.ability.vanilla.teleporter.skill.ShiftTeleport;
+import cn.academy.ability.vanilla.teleporter.skill.ThreateningTeleport;
 
 /**
  * @author WeAthFolD

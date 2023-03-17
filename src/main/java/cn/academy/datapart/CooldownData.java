@@ -2,6 +2,9 @@ package cn.academy.datapart;
 
 import cn.academy.ability.Controllable;
 import cn.academy.event.ability.CategoryChangeEvent;
+import cn.lambdalib2.datapart.DataPart;
+import cn.lambdalib2.datapart.EntityData;
+import cn.lambdalib2.datapart.RegDataPart;
 import cn.lambdalib2.registry.StateEventCallback;
 import cn.lambdalib2.registry.mc.RegEventHandler;
 import cn.lambdalib2.s11n.SerializeIncluded;
@@ -9,16 +12,13 @@ import cn.lambdalib2.s11n.network.NetworkMessage.Listener;
 import cn.lambdalib2.s11n.network.NetworkS11n;
 import cn.lambdalib2.s11n.network.NetworkS11n.ContextException;
 import cn.lambdalib2.s11n.network.NetworkS11n.NetS11nAdaptor;
-import cn.lambdalib2.datapart.DataPart;
-import cn.lambdalib2.datapart.EntityData;
-import cn.lambdalib2.datapart.RegDataPart;
 import cn.lambdalib2.util.TickScheduler;
 import com.google.common.base.Preconditions;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.HashMap;
 import java.util.Iterator;

@@ -5,13 +5,12 @@ import cn.academy.entity.EntityMagHook;
 import cn.lambdalib2.registry.mc.RegEntityRender;
 import cn.lambdalib2.render.obj.ObjLegacyRender;
 import cn.lambdalib2.util.RenderUtils;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-//import net.minecraftforge.client.model.IModelCustom;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)

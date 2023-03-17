@@ -1,11 +1,9 @@
 package cn.academy.block.container;
 
-import cn.academy.ACBlocks;
 import cn.academy.ACItems;
-import cn.academy.item.ItemMatterUnit;
-import cn.academy.worldgen.WorldGenInit;
-import cn.academy.energy.api.IFItemManager;
 import cn.academy.block.tileentity.TilePhaseGen;
+import cn.academy.energy.api.IFItemManager;
+import cn.academy.item.ItemMatterUnit;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**

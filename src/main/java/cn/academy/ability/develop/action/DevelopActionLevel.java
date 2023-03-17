@@ -2,16 +2,14 @@ package cn.academy.ability.develop.action;
 
 import cn.academy.ability.Category;
 import cn.academy.ability.CategoryManager;
-import cn.academy.datapart.AbilityData;
 import cn.academy.ability.develop.IDeveloper;
 import cn.academy.ability.develop.LearningHelper;
+import cn.academy.datapart.AbilityData;
 import cn.academy.item.ItemInductionFactor;
 import cn.lambdalib2.util.RandUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Optional;
 
 /**

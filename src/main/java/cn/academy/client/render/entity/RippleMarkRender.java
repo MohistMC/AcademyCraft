@@ -10,7 +10,6 @@ import cn.lambdalib2.util.GameTimer;
 import cn.lambdalib2.util.MathUtils;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Color;
