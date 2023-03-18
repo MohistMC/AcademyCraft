@@ -103,7 +103,7 @@ dependencies {
 
 sourceSets.main {
     java.srcDirs = []
-    scala.srcDirs = ['src/main/scala', 'build/tempSourcesJava']
+    scala.srcDirs = ['src/main/scala', 'src/main/java']
 }
 
 idea {
