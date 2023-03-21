@@ -22,7 +22,9 @@ public class CatEngineRender implements BlockEntityRenderer<CatEngineBlockEntity
     @Override
     public void render(CatEngineBlockEntity p_112307_, float p_112308_, PoseStack p_112309_, MultiBufferSource p_112310_, int p_112311_, int p_112312_) {
         p_112309_.pushPose();
-
+        if (p_112307_.rH >= 360) {
+            p_112307_.rH = 0;
+        }
         float f1;
         for (f1 = p_112307_.rot - p_112307_.oRot; f1 >= (float) Math.PI; f1 -= ((float) Math.PI * 2F)) {
 
