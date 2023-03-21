@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "academy:block/metal_former",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "academy:block/metal_former"
+    },
+    "facing=south": {
+      "model": "academy:block/metal_former",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "academy:block/metal_former",
+      "y": 270
+    }
+  }
+}

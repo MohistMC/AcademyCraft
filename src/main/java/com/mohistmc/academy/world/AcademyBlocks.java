@@ -23,6 +23,10 @@ public class AcademyBlocks {
     public static final RegistryObject<Block> IMAGSIL_ORE = BLOCKS.register("imagsil_ore", ImagsilOre::new);
     public static final RegistryObject<Block> IMAG_FUSOR = BLOCKS.register("imag_fusor", ImagFusor::new);
     public static final RegistryObject<Block> MACHINE_FRAME = BLOCKS.register("machine_frame", MachineFrame::new);
+    public static final RegistryObject<Block> METAL_FORMER = BLOCKS.register("metal_former", MetalFomer::new);
+    public static final RegistryObject<Block> NODE_BASIC = BLOCKS.register("node_basic", NodeBasic::new);
+    public static final RegistryObject<Block> NODE_ADVANCED = BLOCKS.register("node_advanced", NodeAdvanced::new);
+    public static final RegistryObject<Block> NODE_STANDARD = BLOCKS.register("node_standard", NodeStandard::new);
 
 
 }

@@ -24,6 +24,10 @@ public class AcademyItems {
     public static final RegistryObject<Item> IMAGSIL_ORE = ITEMS.register("imagsil_ore", () -> new BlockItem(AcademyBlocks.IMAGSIL_ORE.get(), new Item.Properties()));
     public static final RegistryObject<Item> IMAG_FUSOR = ITEMS.register("imag_fusor", () -> new BlockItem(AcademyBlocks.IMAG_FUSOR.get(), new Item.Properties()));
     public static final RegistryObject<Item> MACHINE_FRAME = ITEMS.register("machine_frame", () -> new BlockItem(AcademyBlocks.MACHINE_FRAME.get(), new Item.Properties()));
+    public static final RegistryObject<Item> METAL_FORMER = ITEMS.register("metal_former", () -> new BlockItem(AcademyBlocks.METAL_FORMER.get(), new Item.Properties()));
+    public static final RegistryObject<Item> NODE_BASIC = ITEMS.register("node_basic", () -> new BlockItem(AcademyBlocks.NODE_BASIC.get(), new Item.Properties()));
+    public static final RegistryObject<Item> NODE_ADVANCED = ITEMS.register("node_advanced", () -> new BlockItem(AcademyBlocks.NODE_ADVANCED.get(), new Item.Properties()));
+    public static final RegistryObject<Item> NODE_STANDARD = ITEMS.register("node_standard", () -> new BlockItem(AcademyBlocks.NODE_STANDARD.get(), new Item.Properties()));
     public static final RegistryObject<Item> TUTORIAL = ITEMS.register("tutorial", Tutorial::new);
     public static final RegistryObject<Item> LOGO = ITEMS.register("logo", Logo::new);
     public static final RegistryObject<Item> CRYSTAL_LOW = ITEMS.register("crystal_low", CrystalLow::new);
