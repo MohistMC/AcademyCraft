@@ -1,1 +1,6 @@
-{"parent":"block/cube_all","textures":{"all":"academy:blocks/constraint_metal"},"__xconfgen":true}
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "academy:block/constraint_metal"
+  }
+}

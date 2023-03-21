@@ -1,1 +1,5 @@
-{"variants":{"normal":{"model":"academy:reso_ore"}},"__xconfgen":true}
+{
+  "variants": {
+    "": { "model": "academy:block/reso_ore" }
+  }
+}

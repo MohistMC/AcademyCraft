@@ -1,1 +1,5 @@
-{"variants":{"normal":{"model":"academy:constraint_metal"}},"__xconfgen":true}
+{
+  "variants": {
+    "": { "model": "academy:block/constraint_metal" }
+  }
+}

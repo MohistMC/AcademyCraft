@@ -1,1 +1,5 @@
-{"variants":{"normal":{"model":"academy:cat_engine"}},"__xconfgen":true}
+{
+  "variants": {
+    "": { "model": "academy:block/cat_engine" }
+  }
+}

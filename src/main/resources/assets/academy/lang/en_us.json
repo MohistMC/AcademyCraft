@@ -1,0 +1,16 @@
+{
+  "block.academy.cat_engine": "Toast and Cat",
+  "block.academy.ability_interferer": "Ability Interferer",
+  "block.academy.crystal_ore": "Crystal Ore",
+  "block.academy.reso_ore": "Reso Ore",
+  "block.academy.imagsil_ore": "Imagsil Ore",
+  "block.academy.constraint_metal": "Constraint Metal",
+  "block.academy.imag_fusor": "Imag Fusor",
+  "block.academy.machine_frame": "Machine Frame",
+  "item.academy.reso_crystal": "Reso Crystal",
+  "item.academy.crystal_low": "Low Quality Crystal",
+  "item.academy.crystal_normal": "Normal Quality Crystal",
+  "item.academy.crystal_pure": "High Quality Crystal",
+  "item.academy.tutorial": "MisakaCloud Terminal",
+  "itemGroup.academy": "AcademyCraft"
+}

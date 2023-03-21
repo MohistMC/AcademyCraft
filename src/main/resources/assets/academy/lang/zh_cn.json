@@ -1,0 +1,16 @@
+{
+  "block.academy.cat_engine": "吐司猫",
+  "block.academy.ability_interferer": "能力干涉方块",
+  "block.academy.constraint_metal": "束能金属矿",
+  "block.academy.crystal_ore": "虚能水晶矿",
+  "block.academy.reso_ore": "谐振水晶矿",
+  "block.academy.imagsil_ore": "虚像硅矿",
+  "block.academy.imag_fusor": "虚能融合机",
+  "block.academy.machine_frame": "机械框架",
+  "item.academy.reso_crystal": "谐振水晶",
+  "item.academy.tutorial": "御坂云终端",
+  "item.academy.crystal_low": "低纯度虚能水晶",
+  "item.academy.crystal_normal": "中纯度虚能水晶",
+  "item.academy.crystal_pure": "高纯度虚能水晶",
+  "itemGroup.academy": "学园都市"
+}

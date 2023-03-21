@@ -1,1 +1,64 @@
-{"defaults":{"model":"cube","textures":{"down":"academy:blocks/machine_bottom","east":"#side","front":"academy:blocks/ief_off","north":"#front","particle":"#side","side":"academy:blocks/machine_side","south":"#side","up":"academy:blocks/machine_top","west":"#side"}},"forge_marker":1,"variants":{"facing":{"east":{"y":90},"north":{"y":0},"south":{"y":180},"west":{"y":270}},"frame":{"0":{},"1":{"textures":{"front":"academy:blocks/ief_working_1"}},"2":{"textures":{"front":"academy:blocks/ief_working_2"}},"3":{"textures":{"front":"academy:blocks/ief_working_3"}},"4":{"textures":{"front":"academy:blocks/ief_working_4"}}},"inventory":[{}]},"__xconfgen":true}
+{
+  "variants": {
+    "facing=east,working=1": {
+      "model": "academy:block/imag_fusor_1",
+      "y": 90
+    },
+    "facing=east,working=2": {
+      "model": "academy:block/imag_fusor_2",
+      "y": 90
+    },
+    "facing=east,working=3": {
+      "model": "academy:block/imag_fusor_3",
+      "y": 90
+    },
+    "facing=east,working=4": {
+      "model": "academy:block/imag_fusor_4",
+      "y": 90
+    },
+    "facing=north,working=1": {
+      "model": "academy:block/imag_fusor_1"
+    },
+    "facing=north,working=2": {
+      "model": "academy:block/imag_fusor_2"
+    },
+    "facing=north,working=3": {
+      "model": "academy:block/imag_fusor_3"
+    },
+    "facing=north,working=4": {
+      "model": "academy:block/imag_fusor_4"
+    },
+    "facing=south,working=1": {
+      "model": "academy:block/imag_fusor_1",
+      "y": 180
+    },
+    "facing=south,working=2": {
+      "model": "academy:block/imag_fusor_2",
+      "y": 180
+    },
+    "facing=south,working=3": {
+      "model": "academy:block/imag_fusor_3",
+      "y": 180
+    },
+    "facing=south,working=4": {
+      "model": "academy:block/imag_fusor_4",
+      "y": 180
+    },
+    "facing=west,working=1": {
+      "model": "academy:block/imag_fusor_1",
+      "y": 270
+    },
+    "facing=west,working=2": {
+      "model": "academy:block/imag_fusor_2",
+      "y": 270
+    },
+    "facing=west,working=3": {
+      "model": "academy:block/imag_fusor_3",
+      "y": 270
+    },
+    "facing=west,working=4": {
+      "model": "academy:block/imag_fusor_4",
+      "y": 270
+    }
+  }
+}
