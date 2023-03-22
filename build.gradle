@@ -143,7 +143,7 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    implementation "cn.lambdalib2:LambdaLib2:0.2.0"
+    //implementation "cn.lambdalib2:LambdaLib2:0.2.0"
 }
 
 // Example for how to get properties into the manifest for reading at runtime.

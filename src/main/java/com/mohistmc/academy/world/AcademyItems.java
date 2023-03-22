@@ -28,6 +28,7 @@ public class AcademyItems {
     public static final RegistryObject<Item> NODE_BASIC = ITEMS.register("node_basic", () -> new BlockItem(AcademyBlocks.NODE_BASIC.get(), new Item.Properties()));
     public static final RegistryObject<Item> NODE_ADVANCED = ITEMS.register("node_advanced", () -> new BlockItem(AcademyBlocks.NODE_ADVANCED.get(), new Item.Properties()));
     public static final RegistryObject<Item> NODE_STANDARD = ITEMS.register("node_standard", () -> new BlockItem(AcademyBlocks.NODE_STANDARD.get(), new Item.Properties()));
+    public static final RegistryObject<Item> DEV_NORMAL = ITEMS.register("dev_normal", () -> new BlockItem(AcademyBlocks.DEV_NORMAL.get(), new Item.Properties()));
     public static final RegistryObject<Item> TUTORIAL = ITEMS.register("tutorial", Tutorial::new);
     public static final RegistryObject<Item> LOGO = ITEMS.register("logo", Logo::new);
     public static final RegistryObject<Item> CRYSTAL_LOW = ITEMS.register("crystal_low", CrystalLow::new);

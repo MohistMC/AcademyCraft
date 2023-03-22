@@ -5,6 +5,13 @@
     "academy:constraint_metal",
     "academy:crystal_ore",
     "academy:reso_ore",
-    "academy:imagsil_ore"
+    "academy:imagsil_ore",
+    "academy:imag_fusor",
+    "academy:machine_frame",
+    "academy:metal_former",
+    "academy:node_basic",
+    "academy:node_advanced",
+    "academy:node_standard",
+    "academy:dev_normal"
   ]
 }

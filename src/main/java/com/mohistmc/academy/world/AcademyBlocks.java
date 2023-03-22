@@ -27,6 +27,7 @@ public class AcademyBlocks {
     public static final RegistryObject<Block> NODE_BASIC = BLOCKS.register("node_basic", NodeBasic::new);
     public static final RegistryObject<Block> NODE_ADVANCED = BLOCKS.register("node_advanced", NodeAdvanced::new);
     public static final RegistryObject<Block> NODE_STANDARD = BLOCKS.register("node_standard", NodeStandard::new);
+    public static final RegistryObject<Block> DEV_NORMAL = BLOCKS.register("dev_normal", DevNormal::new);
 
 
 }
