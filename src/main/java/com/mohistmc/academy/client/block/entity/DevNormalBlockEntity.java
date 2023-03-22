@@ -14,7 +14,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 public class DevNormalBlockEntity extends BlockEntity {
     public DevNormalBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
         super(AcademyBlockEntities.DEV_NORMAL.get(), p_155229_, p_155230_);
-
     }
 
 }

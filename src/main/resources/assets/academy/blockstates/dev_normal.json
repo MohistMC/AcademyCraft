@@ -1,5 +1,19 @@
 {
   "variants": {
-    "": { "model": "academy:block/dev_normal" }
+    "facing=east": {
+      "model": "academy:block/dev_normal",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "academy:block/dev_normal"
+    },
+    "facing=south": {
+      "model": "academy:block/dev_normal",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "academy:block/dev_normal",
+      "y": 270
+    }
   }
 }
