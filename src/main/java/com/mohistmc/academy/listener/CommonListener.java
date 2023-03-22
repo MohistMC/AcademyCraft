@@ -3,6 +3,8 @@ package com.mohistmc.academy.listener;
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyItems;
+import com.mohistmc.academy.world.block.DevAdvancedSubBlock;
+import com.mohistmc.academy.world.block.DevNormalSubBlock;
 import com.mohistmc.academy.world.item.Logo;
 import com.mohistmc.academy.world.provider.AcademyBlockTagsProvider;
 import com.mojang.logging.LogUtils;
@@ -11,13 +13,11 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
@@ -80,8 +80,17 @@ public class CommonListener {
                 builder.title(Component.translatable("itemGroup.academy"))
                         .icon(() -> new ItemStack(AcademyItems.LOGO.get()))
                         .displayItems((params, output) -> {
-                            AcademyItems.ITEMS.getEntries().stream().filter(item -> !(item.get() instanceof Logo)).forEach(item -> output.accept(item.get()));
-                            AcademyBlocks.BLOCKS.getEntries().forEach(block -> output.accept(block.get()));
+                            AcademyItems.ITEMS.getEntries().stream().filter(item -> {
+                                        if (!(item.get() instanceof Logo)
+                                                || item.get().getDescriptionId().equals("dev_normal_sub")
+                                                || item.get().getDescriptionId().equals("dev_advanced_sub")
+                                        ) {
+                                            item.get();
+                                        }
+                                        return false;
+                                    }
+                            ).forEach(item -> output.accept(item.get()));
+                            AcademyBlocks.BLOCKS.getEntries().stream().filter(block -> !(block.get() instanceof DevNormalSubBlock) && !(block.get() instanceof DevAdvancedSubBlock)).forEach(block -> output.accept(block.get()));
                         }));
     }
 

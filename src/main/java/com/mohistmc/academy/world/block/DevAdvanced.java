@@ -1,19 +1,16 @@
 package com.mohistmc.academy.world.block;
 
+import com.mohistmc.academy.client.block.entity.DevAdvancedBlockEntity;
 import com.mohistmc.academy.client.block.entity.DevNormalBlockEntity;
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyItems;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,18 +18,15 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DevNormal extends BaseEntityBlock {
+public class DevAdvanced extends BaseEntityBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
-    public DevNormal() {
+    public DevAdvanced() {
         super(Properties.of(Material.STONE)
                 .sound(SoundType.STONE)
                 .noOcclusion()
@@ -66,7 +60,7 @@ public class DevNormal extends BaseEntityBlock {
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState p_60569_, boolean p_60570_) {
         Direction direction = state.getValue(HorizontalDirectionalBlock.FACING).getOpposite();
-        Block subBlock = AcademyBlocks.DEV_NORMAL_SUB.get();
+        Block subBlock = AcademyBlocks.DEV_ADVANCED_SUB.get();
         switch (direction) {
             case NORTH -> {
                 level.setBlock(pos.north(1), subBlock.defaultBlockState(), 19);
@@ -137,7 +131,7 @@ public class DevNormal extends BaseEntityBlock {
     @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos neighbor, boolean p_60514_) {
         //Block block = level.getBlockState(pos).getBlock();
-        if ((block instanceof DevNormalSubBlock || block instanceof DevNormal) && level.getBlockState(neighbor).getBlock() instanceof AirBlock) {
+        if ((block instanceof DevAdvancedSubBlock || block instanceof DevAdvanced) && level.getBlockState(neighbor).getBlock() instanceof AirBlock) {
             level.destroyBlock(pos, false);
         }
         super.neighborChanged(state, level, pos, block, neighbor, p_60514_);
@@ -147,7 +141,7 @@ public class DevNormal extends BaseEntityBlock {
     @Override
     public List<ItemStack> getDrops(BlockState p_60537_, LootContext.Builder p_60538_) {
         return new ArrayList<>() {{
-            add(new ItemStack(AcademyItems.DEV_NORMAL.get()));
+            add(new ItemStack(AcademyItems.DEV_ADVANCED.get()));
         }};
     }
 
@@ -159,7 +153,7 @@ public class DevNormal extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-        return new DevNormalBlockEntity(p_153215_, p_153216_);
+        return new DevAdvancedBlockEntity(p_153215_, p_153216_);
     }
 
     @Override

@@ -5,9 +5,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class DevSubBlockEntity extends BlockEntity {
-    public DevSubBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
-        super(AcademyBlockEntities.DEV_SUB.get(), p_155229_, p_155230_);
+public class DevAdvancedSubBlockEntity extends BlockEntity {
+    public DevAdvancedSubBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
+        super(AcademyBlockEntities.DEV_ADVANCED_SUB.get(), p_155229_, p_155230_);
     }
+
+
 
 }
