@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "academy:block/matrix_sub"
+    }
+  }
+}

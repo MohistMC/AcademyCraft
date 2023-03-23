@@ -31,7 +31,9 @@ public class AcademyItems {
     public static final RegistryObject<Item> DEV_NORMAL = ITEMS.register("dev_normal", () -> new BlockItem(AcademyBlocks.DEV_NORMAL.get(), new Item.Properties()));
     public static final RegistryObject<Item> DEV_ADVANCED = ITEMS.register("dev_advanced", () -> new BlockItem(AcademyBlocks.DEV_ADVANCED.get(), new Item.Properties()));
     public static final RegistryObject<Item> DEV_NORMAL_SUB = ITEMS.register("dev_normal_sub", () -> new BlockItem(AcademyBlocks.DEV_NORMAL_SUB.get(), new Item.Properties()));
-    public static final RegistryObject<Item> DEV_ADVANCED_SUB = ITEMS.register("dev_advancedsub", () -> new BlockItem(AcademyBlocks.DEV_NORMAL_SUB.get(), new Item.Properties()));
+    public static final RegistryObject<Item> DEV_ADVANCED_SUB = ITEMS.register("dev_advanced_sub", () -> new BlockItem(AcademyBlocks.DEV_NORMAL_SUB.get(), new Item.Properties()));
+    public static final RegistryObject<Item> MATRIX = ITEMS.register("matrix", () -> new BlockItem(AcademyBlocks.MATRIX.get(), new Item.Properties()));
+    public static final RegistryObject<Item> MATRIX_SUB = ITEMS.register("matrix_sub", () -> new BlockItem(AcademyBlocks.MATRIX_SUB.get(), new Item.Properties()));
     public static final RegistryObject<Item> TUTORIAL = ITEMS.register("tutorial", Tutorial::new);
     public static final RegistryObject<Item> LOGO = ITEMS.register("logo", Logo::new);
     public static final RegistryObject<Item> CRYSTAL_LOW = ITEMS.register("crystal_low", CrystalLow::new);

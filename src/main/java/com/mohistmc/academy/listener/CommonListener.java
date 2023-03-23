@@ -5,6 +5,7 @@ import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyItems;
 import com.mohistmc.academy.world.block.DevAdvancedSubBlock;
 import com.mohistmc.academy.world.block.DevNormalSubBlock;
+import com.mohistmc.academy.world.block.MatrixSubBlock;
 import com.mohistmc.academy.world.item.Logo;
 import com.mohistmc.academy.world.provider.AcademyBlockTagsProvider;
 import com.mojang.logging.LogUtils;
@@ -84,13 +85,18 @@ public class CommonListener {
                                         if (!(item.get() instanceof Logo)
                                                 || item.get().getDescriptionId().equals("dev_normal_sub")
                                                 || item.get().getDescriptionId().equals("dev_advanced_sub")
+                                                || item.get().getDescriptionId().equals("matrix_sub")
                                         ) {
                                             item.get();
                                         }
                                         return false;
                                     }
                             ).forEach(item -> output.accept(item.get()));
-                            AcademyBlocks.BLOCKS.getEntries().stream().filter(block -> !(block.get() instanceof DevNormalSubBlock) && !(block.get() instanceof DevAdvancedSubBlock)).forEach(block -> output.accept(block.get()));
+                            AcademyBlocks.BLOCKS.getEntries().stream().filter(block ->
+                                    !(block.get() instanceof DevNormalSubBlock)
+                                            && !(block.get() instanceof DevAdvancedSubBlock)
+                                            && !(block.get() instanceof MatrixSubBlock)
+                            ).forEach(block -> output.accept(block.get()));
                         }));
     }
 

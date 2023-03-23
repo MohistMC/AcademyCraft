@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "academy:block/matrix",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "academy:block/matrix"
+    },
+    "facing=south": {
+      "model": "academy:block/matrix",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "academy:block/matrix",
+      "y": 270
+    }
+  }
+}

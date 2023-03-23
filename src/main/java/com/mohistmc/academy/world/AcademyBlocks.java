@@ -31,5 +31,7 @@ public class AcademyBlocks {
     public static final RegistryObject<Block> DEV_ADVANCED = BLOCKS.register("dev_advanced", DevAdvanced::new);
     public static final RegistryObject<Block> DEV_NORMAL_SUB = BLOCKS.register("dev_normal_sub", DevNormalSubBlock::new);
     public static final RegistryObject<Block> DEV_ADVANCED_SUB = BLOCKS.register("dev_advanced_sub", DevAdvancedSubBlock::new);
+    public static final RegistryObject<Block> MATRIX = BLOCKS.register("matrix", Matrix::new);
+    public static final RegistryObject<Block> MATRIX_SUB = BLOCKS.register("matrix_sub", MatrixSubBlock::new);
 
 }
