@@ -23,4 +23,5 @@ public class AcademyBlockEntities {
     public static final RegistryObject<BlockEntityType<DevAdvancedBlockEntity>> DEV_ADVANCED_SUB = BLOCK_ENTITIES.register("dev_advanced_sub", () -> BlockEntityType.Builder.of(DevAdvancedBlockEntity::new, AcademyBlocks.DEV_ADVANCED_SUB.get()).build(null));
     public static final RegistryObject<BlockEntityType<MatrixBlockEntity>> MATRIX = BLOCK_ENTITIES.register("matrix", () -> BlockEntityType.Builder.of(MatrixBlockEntity::new, AcademyBlocks.MATRIX.get()).build(null));
     public static final RegistryObject<BlockEntityType<MatrixSubBlockEntity>> MATRIX_SUB = BLOCK_ENTITIES.register("matrix_sub", () -> BlockEntityType.Builder.of(MatrixSubBlockEntity::new, AcademyBlocks.MATRIX_SUB.get()).build(null));
+    public static final RegistryObject<BlockEntityType<PhaseGenBlockEntity>> PHASE_GEN = BLOCK_ENTITIES.register("phase_gen", () -> BlockEntityType.Builder.of(PhaseGenBlockEntity::new, AcademyBlocks.PHASE_GEN.get()).build(null));
 }

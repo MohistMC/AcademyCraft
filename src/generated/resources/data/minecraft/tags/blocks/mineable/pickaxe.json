@@ -12,6 +12,12 @@
     "academy:node_basic",
     "academy:node_advanced",
     "academy:node_standard",
-    "academy:dev_normal"
+    "academy:dev_normal",
+    "academy:dev_advanced",
+    "academy:dev_normal_sub",
+    "academy:dev_advanced_sub",
+    "academy:matrix",
+    "academy:matrix_sub",
+    "academy:phase_gen"
   ]
 }
