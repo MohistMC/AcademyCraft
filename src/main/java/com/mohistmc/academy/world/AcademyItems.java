@@ -43,4 +43,74 @@ public class AcademyItems {
     public static final RegistryObject<Item> RESO_CRYSTAL = ITEMS.register("reso_crystal", ResoCrystal::new);
 
 
+
+
+    public static final RegistryObject<Item> APP_FREQ_TRANSMITTER = ITEMS.register("app_freq_transmitter", AppFreqTransmitter::new);
+
+    public static final RegistryObject<Item> APP_MEDIA_PLAYER = ITEMS.register("app_media_player", AppMediaPlayer::new);
+
+    public static final RegistryObject<Item> APP_SETTINGS = ITEMS.register("app_settings", AppSettings::new);
+
+    public static final RegistryObject<Item> APP_SKILL_TREE = ITEMS.register("app_skill_tree", AppSkillTree::new);
+
+    public static final RegistryObject<Item> BRAIN_COMPONENT = ITEMS.register("brain_component", BrainComponent::new);
+
+    public static final RegistryObject<Item> CALC_CHIP = ITEMS.register("calc_chip", CalcChip::new);
+
+    public static final RegistryObject<Item> COIN = ITEMS.register("coin", Coin::new);
+
+    public static final RegistryObject<Item> CONSTRAINT_INGOT = ITEMS.register("constraint_ingot", ConstraintIngot::new);
+
+    public static final RegistryObject<Item> CONSTRAINT_PLATE = ITEMS.register("constraint_plate", ConstraintPlate::new);
+
+    public static final RegistryObject<Item> DATA_CHIP = ITEMS.register("data_chip", DataChip::new);
+
+    public static final RegistryObject<Item> DEVELOPER_PORTABLE = ITEMS.register("developer_portable", DeveloperPortable::new);
+
+    public static final RegistryObject<Item> ENERGY_CONVERT_COMPONENT = ITEMS.register("energy_convert_component", EnergyConvertComponent::new);
+
+    public static final RegistryObject<Item> ENERGY_UNIT = ITEMS.register("energy_unit", EnergyUnit::new);
+
+    public static final RegistryObject<Item> FACTOR_ELECTROMASTER = ITEMS.register("factor_electromaster", FactorElectromaster::new);
+
+    public static final RegistryObject<Item> FACTOR_MELTDOWNER = ITEMS.register("factor_meltdowner", FactorMeltdowner::new);
+
+    public static final RegistryObject<Item> FACTOR_TELEPORTER = ITEMS.register("factor_teleporter", FactorTeleporter::new);
+
+    public static final RegistryObject<Item> FACTOR_VECMANIP = ITEMS.register("factor_vecmanip", FactorVecmanip::new);
+
+    public static final RegistryObject<Item> INFO_COMPONENT = ITEMS.register("info_component", InfoComponent::new);
+
+    public static final RegistryObject<Item> MAGNETIC_COIL = ITEMS.register("magnetic_coil", MagneticCoil::new);
+
+    public static final RegistryObject<Item> MAG_HOOK = ITEMS.register("mag_hook", MagHook::new);
+
+    public static final RegistryObject<Item> MATTER_UNIT = ITEMS.register("matter_unit", MatterUnit::new);
+
+    public static final RegistryObject<Item> MAT_CORE_0 = ITEMS.register("mat_core_0", MatCore0::new);
+
+    public static final RegistryObject<Item> MAT_CORE_1 = ITEMS.register("mat_core_1", MatCore1::new);
+
+    public static final RegistryObject<Item> MAT_CORE_2 = ITEMS.register("mat_core_2", MatCore2::new);
+
+    public static final RegistryObject<Item> MEDIA_LEVEL5_JUDGELIGHT = ITEMS.register("media_level5_judgelight", MediaLevel5Judgelight::new);
+
+    public static final RegistryObject<Item> MEDIA_ONLY_MY_RAILGUN = ITEMS.register("media_only_my_railgun", MediaOnlyMyRailgun::new);
+
+    public static final RegistryObject<Item> MEDIA_SISTERS_NOISE = ITEMS.register("media_sisters_noise", MediaSistersNoise::new);
+
+    public static final RegistryObject<Item> NEEDLE = ITEMS.register("needle", Needle::new);
+
+    public static final RegistryObject<Item> REINFORCED_IRON_PLATE = ITEMS.register("reinforced_iron_plate", ReinforcedIronPlate::new);
+
+    public static final RegistryObject<Item> RESONANCE_COMPONENT = ITEMS.register("resonance_component", ResonanceComponent::new);
+
+    public static final RegistryObject<Item> SILBARN = ITEMS.register("silbarn", Silbarn::new);
+
+    public static final RegistryObject<Item> TERMINAL_INSTALLER = ITEMS.register("terminal_installer", TerminalInstaller::new);
+
+    public static final RegistryObject<Item> WAFER = ITEMS.register("wafer", Wafer::new);
+
+    public static final RegistryObject<Item> WINDGEN_FAN = ITEMS.register("windgen_fan", WindgenFan::new);
+
 }

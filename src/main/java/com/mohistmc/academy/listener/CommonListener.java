@@ -81,16 +81,11 @@ public class CommonListener {
                 builder.title(Component.translatable("itemGroup.academy"))
                         .icon(() -> new ItemStack(AcademyItems.LOGO.get()))
                         .displayItems((params, output) -> {
-                            AcademyItems.ITEMS.getEntries().stream().filter(item -> {
-                                        if (!(item.get() instanceof Logo)
-                                                || item.get().getDescriptionId().equals("dev_normal_sub")
-                                                || item.get().getDescriptionId().equals("dev_advanced_sub")
-                                                || item.get().getDescriptionId().equals("matrix_sub")
-                                        ) {
-                                            item.get();
-                                        }
-                                        return false;
-                                    }
+                            AcademyItems.ITEMS.getEntries().stream().filter(item ->
+                                    !((item.get() instanceof Logo)
+                                            || item.get().getDescriptionId().contains("dev_normal_sub")
+                                            || item.get().getDescriptionId().contains("dev_advanced_sub")
+                                            || item.get().getDescriptionId().contains("matrix_sub"))
                             ).forEach(item -> output.accept(item.get()));
                             AcademyBlocks.BLOCKS.getEntries().stream().filter(block ->
                                     !(block.get() instanceof DevNormalSubBlock)
