@@ -3,6 +3,11 @@ package com.mohistmc.academy.world;
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.world.block.*;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -35,5 +40,6 @@ public class AcademyBlocks {
     public static final RegistryObject<Block> WINDGEN_MAIN = BLOCKS.register("windgen_main", WindGenMain::new);
     public static final RegistryObject<Block> WINDGEN_PILLAR = BLOCKS.register("windgen_pillar", WindGenPillar::new);
     public static final RegistryObject<Block> WINDGEN_FAN = BLOCKS.register("windgen_fan_block", WindGenFan::new);
+    public static final RegistryObject<Block> PHASE_LIQUID = BLOCKS.register("phase_liquid", () -> new LiquidBlock(AcademyFluids.PHASE_LIQUID,BlockBehaviour.Properties.of(Material.WATER).noCollission().strength(100.0F).noLootTable()));
 
 }
