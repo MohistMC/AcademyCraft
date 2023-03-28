@@ -1,8 +1,6 @@
 package com.mohistmc.academy.world.item;
 
-import net.minecraft.world.item.Item;
-
-public class MagHook extends Item {
+public class MagHook extends AcademyItem {
     public MagHook() {
         super(new Properties());
     }

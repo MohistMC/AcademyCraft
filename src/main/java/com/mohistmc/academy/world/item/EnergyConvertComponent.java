@@ -1,8 +1,6 @@
 package com.mohistmc.academy.world.item;
 
-import net.minecraft.world.item.Item;
-
-public class EnergyConvertComponent extends Item {
+public class EnergyConvertComponent extends AcademyItem {
     public EnergyConvertComponent() {
         super(new Properties());
     }

@@ -1,8 +1,6 @@
 package com.mohistmc.academy.world.item;
 
-import net.minecraft.world.item.Item;
-
-public class DeveloperPortable extends Item {
+public class DeveloperPortable extends AcademyItem {
     public DeveloperPortable() {
         super(new Properties());
     }

@@ -35,14 +35,17 @@ public class AcademyItems {
     public static final RegistryObject<Item> MATRIX = ITEMS.register("matrix", () -> new BlockItem(AcademyBlocks.MATRIX.get(), new Item.Properties()));
     public static final RegistryObject<Item> MATRIX_SUB = ITEMS.register("matrix_sub", () -> new BlockItem(AcademyBlocks.MATRIX_SUB.get(), new Item.Properties()));
     public static final RegistryObject<Item> PHASE_GEN = ITEMS.register("phase_gen", () -> new BlockItem(AcademyBlocks.PHASE_GEN.get(), new Item.Properties()));
+    public static final RegistryObject<Item> SOLAR_GEN = ITEMS.register("solar_gen", () -> new BlockItem(AcademyBlocks.SOLAR_GEN.get(), new Item.Properties()));
+    public static final RegistryObject<Item> WINDGEN_BASE = ITEMS.register("windgen_base", () -> new BlockItem(AcademyBlocks.WINDGEN_BASE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> WINDGEN_MAIN = ITEMS.register("windgen_main", () -> new BlockItem(AcademyBlocks.WINDGEN_MAIN.get(), new Item.Properties()));
+    public static final RegistryObject<Item> WINDGEN_PILLAR = ITEMS.register("windgen_pillar", () -> new BlockItem(AcademyBlocks.WINDGEN_PILLAR.get(), new Item.Properties()));
+    public static final RegistryObject<Item> WINDGEN_FAN_BLOCK = ITEMS.register("windgen_fan_block", () -> new BlockItem(AcademyBlocks.WINDGEN_FAN.get(), new Item.Properties()));
     public static final RegistryObject<Item> TUTORIAL = ITEMS.register("tutorial", Tutorial::new);
     public static final RegistryObject<Item> LOGO = ITEMS.register("logo", Logo::new);
     public static final RegistryObject<Item> CRYSTAL_LOW = ITEMS.register("crystal_low", CrystalLow::new);
     public static final RegistryObject<Item> CRYSTAL_NORMAL = ITEMS.register("crystal_normal", CrystalNormal::new);
     public static final RegistryObject<Item> CRYSTAL_PURE = ITEMS.register("crystal_pure", CrystalPure::new);
     public static final RegistryObject<Item> RESO_CRYSTAL = ITEMS.register("reso_crystal", ResoCrystal::new);
-
-
 
 
     public static final RegistryObject<Item> APP_FREQ_TRANSMITTER = ITEMS.register("app_freq_transmitter", AppFreqTransmitter::new);

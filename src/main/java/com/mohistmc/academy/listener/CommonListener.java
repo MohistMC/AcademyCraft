@@ -6,6 +6,8 @@ import com.mohistmc.academy.world.AcademyItems;
 import com.mohistmc.academy.world.block.DevAdvancedSubBlock;
 import com.mohistmc.academy.world.block.DevNormalSubBlock;
 import com.mohistmc.academy.world.block.MatrixSubBlock;
+import com.mohistmc.academy.world.block.WindGenFan;
+import com.mohistmc.academy.world.item.AppSettings;
 import com.mohistmc.academy.world.item.Logo;
 import com.mohistmc.academy.world.provider.AcademyBlockTagsProvider;
 import com.mojang.logging.LogUtils;
@@ -14,6 +16,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -83,14 +86,17 @@ public class CommonListener {
                         .displayItems((params, output) -> {
                             AcademyItems.ITEMS.getEntries().stream().filter(item ->
                                     !((item.get() instanceof Logo)
+                                            || (item.get() instanceof AppSettings)
                                             || item.get().getDescriptionId().contains("dev_normal_sub")
                                             || item.get().getDescriptionId().contains("dev_advanced_sub")
+                                            || item.get().getDescriptionId().contains("windgen_fan_block")
                                             || item.get().getDescriptionId().contains("matrix_sub"))
                             ).forEach(item -> output.accept(item.get()));
                             AcademyBlocks.BLOCKS.getEntries().stream().filter(block ->
                                     !(block.get() instanceof DevNormalSubBlock)
                                             && !(block.get() instanceof DevAdvancedSubBlock)
                                             && !(block.get() instanceof MatrixSubBlock)
+                                            && !(block.get() instanceof WindGenFan)
                             ).forEach(block -> output.accept(block.get()));
                         }));
     }

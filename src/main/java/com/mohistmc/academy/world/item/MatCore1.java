@@ -1,8 +1,6 @@
 package com.mohistmc.academy.world.item;
 
-import net.minecraft.world.item.Item;
-
-public class MatCore1 extends Item {
+public class MatCore1 extends AcademyItem {
     public MatCore1() {
         super(new Properties());
     }

@@ -1,8 +1,6 @@
 package com.mohistmc.academy.world.item;
 
-import net.minecraft.world.item.Item;
-
-public class ReinforcedIronPlate extends Item {
+public class ReinforcedIronPlate extends AcademyItem {
     public ReinforcedIronPlate() {
         super(new Properties());
     }

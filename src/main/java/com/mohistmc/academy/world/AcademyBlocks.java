@@ -34,5 +34,10 @@ public class AcademyBlocks {
     public static final RegistryObject<Block> MATRIX = BLOCKS.register("matrix", Matrix::new);
     public static final RegistryObject<Block> MATRIX_SUB = BLOCKS.register("matrix_sub", MatrixSubBlock::new);
     public static final RegistryObject<Block> PHASE_GEN = BLOCKS.register("phase_gen", PhaseGen::new);
+    public static final RegistryObject<Block> SOLAR_GEN = BLOCKS.register("solar_gen", SolarGen::new);
+    public static final RegistryObject<Block> WINDGEN_BASE = BLOCKS.register("windgen_base", WindGenBase::new);
+    public static final RegistryObject<Block> WINDGEN_MAIN = BLOCKS.register("windgen_main", WindGenMain::new);
+    public static final RegistryObject<Block> WINDGEN_PILLAR = BLOCKS.register("windgen_pillar", WindGenPillar::new);
+    public static final RegistryObject<Block> WINDGEN_FAN = BLOCKS.register("windgen_fan_block", WindGenFan::new);
 
 }
