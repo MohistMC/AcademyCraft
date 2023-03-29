@@ -40,6 +40,6 @@ public class AcademyBlocks {
     public static final RegistryObject<Block> WINDGEN_MAIN = BLOCKS.register("windgen_main", WindGenMain::new);
     public static final RegistryObject<Block> WINDGEN_PILLAR = BLOCKS.register("windgen_pillar", WindGenPillar::new);
     public static final RegistryObject<Block> WINDGEN_FAN = BLOCKS.register("windgen_fan_block", WindGenFan::new);
-    public static final RegistryObject<Block> PHASE_LIQUID = BLOCKS.register("phase_liquid", () -> new LiquidBlock(AcademyFluids.PHASE_LIQUID,BlockBehaviour.Properties.of(Material.WATER).noCollission().strength(100.0F).noLootTable()));
+    public static final RegistryObject<Block> PHASE_LIQUID = BLOCKS.register("phase_liquid", PhaseFluidBlock::new);
 
 }

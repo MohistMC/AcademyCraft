@@ -41,7 +41,7 @@
     "block.academy.imagsil_ore": "Imag Silicon Ore",
     "block.academy.reso_ore": "Resonant Crystal Ore",
     "block.academy.machine_frame": "Machine Frame",
-    "block.academy.imag_phase": "Imag Phase Liquid",
+    "item.academy.imag_phase": "Imag Phase Liquid",
     "block.academy.imag_fusor": "Imag Fusor",
     "block.academy.matrix": "Wireless Imag Matrix",
     "block.academy.node_basic": "Basic Wireless Imag Node",

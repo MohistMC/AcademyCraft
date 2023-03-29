@@ -41,7 +41,7 @@
     "block.academy.imagsil_ore": "Имаг кремниевая руда",
     "block.academy.reso_ore": "Резонирующая кристальная руда",
     "block.academy.machine_frame": "Машинный корпус",
-    "block.academy.imag_phase": "Переходник в имаг жидкость",
+    "item.academy.imag_phase": "Переходник в имаг жидкость",
     "block.academy.imag_fusor": "Имаг Термоблок",
     "block.academy.matrix": "Беспроводная Имаг Матрица",
     "block.academy.node_basic": "Базовая беспроводная имаг нода",

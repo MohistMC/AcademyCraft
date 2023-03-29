@@ -45,7 +45,7 @@ public class AcademyItems {
     public static final RegistryObject<Item> CRYSTAL_NORMAL = ITEMS.register("crystal_normal", CrystalNormal::new);
     public static final RegistryObject<Item> CRYSTAL_PURE = ITEMS.register("crystal_pure", CrystalPure::new);
     public static final RegistryObject<Item> RESO_CRYSTAL = ITEMS.register("reso_crystal", ResoCrystal::new);
-    public static final RegistryObject<Item> PHASE_BUCKET = ITEMS.register("phase_bucket", () -> new BucketItem(AcademyFluids.PHASE_LIQUID, (new Item.Properties()).craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final RegistryObject<Item> PHASE_BUCKET = ITEMS.register("imag_phase", () -> new BucketItem(AcademyFluids.PHASE_LIQUID, (new Item.Properties()).craftRemainder(Items.BUCKET).stacksTo(1)));
 
 
     public static final RegistryObject<Item> APP_FREQ_TRANSMITTER = ITEMS.register("app_freq_transmitter", AppFreqTransmitter::new);

@@ -18,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.CreativeModeTabEvent;
@@ -97,6 +98,7 @@ public class CommonListener {
                                             && !(block.get() instanceof DevAdvancedSubBlock)
                                             && !(block.get() instanceof MatrixSubBlock)
                                             && !(block.get() instanceof WindGenFan)
+                                            && !(block.get() instanceof LiquidBlock)
                             ).forEach(block -> output.accept(block.get()));
                         }));
     }
