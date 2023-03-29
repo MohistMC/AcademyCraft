@@ -6,6 +6,7 @@ import com.mohistmc.academy.utils.*;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.LiquidBlockRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -34,17 +35,15 @@ public class PhaseLiquidRender implements BlockEntityRenderer<PhaseLiquidBlockEn
 
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glPushMatrix();
-        GL11.glTranslated(p.getX(), p.getY(), p.getZ());
+        p_112309_.pushPose();
+        p_112309_.translate(p.getX(), p.getY(), p.getZ());
 
         GL11.glDepthMask(false);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glDisable(GL11.GL_CULL_FACE);
-
-        GL11.glColor4d(1, 1, 1, alpha);
-
+        p_112310_.getBuffer(RenderType.translucent()).color(1, 1, 1, (int) alpha);
         RenderHelper.disableStandardItemLighting();
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.defaultTexUnit, 240f, 240f);
+        //OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.defaultTexUnit, 240f, 240f);
 
         double ht = 1.2 * Math.sqrt(
                 1
@@ -61,7 +60,7 @@ public class PhaseLiquidRender implements BlockEntityRenderer<PhaseLiquidBlockEn
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glDepthMask(true);
 
-        GL11.glPopMatrix();
+        p_112309_.popPose();
     }
 
     private void drawLayer(int layer, double height, double vx, double vz, double density) {
@@ -69,7 +68,7 @@ public class PhaseLiquidRender implements BlockEntityRenderer<PhaseLiquidBlockEn
         double du = (time * vx) % 1;
         double dv = (time * vz) % 1;
         RenderUtils.loadTexture(layers[layer]);
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+        //OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
         t.startDrawingQuads();
         t.addVertexWithUV(0, height, 0, du, dv);
         t.addVertexWithUV(1, height, 0, du + density, dv);

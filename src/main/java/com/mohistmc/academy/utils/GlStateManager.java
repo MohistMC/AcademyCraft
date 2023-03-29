@@ -6,11 +6,20 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.FloatBuffer;
+
 @OnlyIn(Dist.CLIENT)
 public class GlStateManager {
 
     private static final BooleanState lightingState = new BooleanState(2896);
     private static final BooleanState[] lightState = new BooleanState[8];
+
+    static {
+        int lvt_0_2_;
+        for (lvt_0_2_ = 0; lvt_0_2_ < 8; ++lvt_0_2_) {
+            lightState[lvt_0_2_] = new BooleanState(16384 + lvt_0_2_);
+        }
+    }
+
     private static final ColorMaterialState colorMaterialState = new ColorMaterialState();
     private static int activeShadeModel = 7425;
 
