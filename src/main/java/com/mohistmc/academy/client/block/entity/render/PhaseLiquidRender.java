@@ -2,7 +2,10 @@ package com.mohistmc.academy.client.block.entity.render;
 
 import com.mohistmc.academy.client.block.entity.PhaseLiquidBlockEntity;
 import com.mohistmc.academy.client.block.entity.model.CatEngineModel;
-import com.mohistmc.academy.utils.*;
+import com.mohistmc.academy.utils.Resources;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -18,62 +21,51 @@ public class PhaseLiquidRender implements BlockEntityRenderer<PhaseLiquidBlockEn
     private final CatEngineModel model;
     private LiquidBlockRenderer _renderer = new LiquidBlockRenderer();
     private ResourceLocation[] layers = Resources.getEffectSeq("imag_proj_liquid", 3);
-    private Tessellator t = Tessellator.instance;
 
     public PhaseLiquidRender(BlockEntityRendererProvider.Context ctx) {
         this.model = new CatEngineModel(ctx.bakeLayer(CatEngineModel.LAYER_LOCATION));
     }
 
     @Override
-    public void render(PhaseLiquidBlockEntity p_112307_, float p_112308_, PoseStack p_112309_, MultiBufferSource p_112310_, int p_112311_, int p_112312_) {
+    public void render(PhaseLiquidBlockEntity p_112307_, float p_112308_, PoseStack p_112309_, MultiBufferSource souce, int p_112311_, int p_112312_) {
         BlockPos p = p_112307_.getBlockPos();
         double distSq = Minecraft.getInstance().player.distanceToSqr(p.getX() + .5, p.getY() + .5, p.getZ() + .5);
-        double alpha = 1 / (1 + 0.2 * Math.pow(distSq, 0.5));
+        float alpha = (float) (1 / (1 + 0.2 * Math.pow(distSq, 0.5)));
 
         if (alpha < 1E-1)
             return;
-
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager._enableBlend();
+        GlStateManager._blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         p_112309_.pushPose();
         p_112309_.translate(p.getX(), p.getY(), p.getZ());
-
-        GL11.glDepthMask(false);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glDisable(GL11.GL_CULL_FACE);
-        p_112310_.getBuffer(RenderType.translucent()).color(1, 1, 1, (int) alpha);
-        RenderHelper.disableStandardItemLighting();
-        //OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.defaultTexUnit, 240f, 240f);
-
+        GlStateManager._depthMask(false);
+        GlStateManager._disableDepthTest();
+        GlStateManager._disableCull();
         double ht = 1.2 * Math.sqrt(
-                1
+                3
         );
-
-        GL11.glEnable(GL11.GL_BLEND);
-        drawLayer(0, -0.3 * ht, 0.3, 0.2, 0.7);
-        drawLayer(1, 0.35 * ht, 0.3, 0.05, 0.7);
+        GlStateManager._enableBlend();
+        drawLayer(souce, 0, -0.3 * ht, 0.3f, 0.2f, 0.7f, alpha);
+        drawLayer(souce, 1, 0.35 * ht, 0.3f, 0.05f, 0.7f, alpha);
         if (ht > 0.5)
-            drawLayer(2, 0.7 * ht, 0.1, 0.25, 0.7);
-
-        RenderHelper.enableStandardItemLighting();
-        GL11.glEnable(GL11.GL_CULL_FACE);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GL11.glDepthMask(true);
-
+            drawLayer(souce, 2, 0.7 * ht, 0.1f, 0.25f, 0.7f, alpha);
+        GlStateManager._depthMask(true);
+        GlStateManager._enableDepthTest();
+        GlStateManager._enableCull();
         p_112309_.popPose();
     }
 
-    private void drawLayer(int layer, double height, double vx, double vz, double density) {
-        double time = GameTimer.getTime();
-        double du = (time * vx) % 1;
-        double dv = (time * vz) % 1;
-        RenderUtils.loadTexture(layers[layer]);
-        //OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-        t.startDrawingQuads();
-        t.addVertexWithUV(0, height, 0, du, dv);
-        t.addVertexWithUV(1, height, 0, du + density, dv);
-        t.addVertexWithUV(1, height, 1, du + density, dv + density);
-        t.addVertexWithUV(0, height, 1, du, dv + density);
-        t.draw();
+    private void drawLayer(MultiBufferSource souce, int layer, double height, float vx, float vz, float density, float alpha) {
+        float time = System.currentTimeMillis();
+        float du = (time * vx) % 1;
+        float dv = (time * vz) % 1;
+        ResourceLocation location = layers[layer];
+        BufferBuilder consumer = (BufferBuilder) souce.getBuffer(RenderType.entityTranslucent(location));
+        consumer.vertex(0, height, 0).color(1f, 1f, 1f, alpha).uv(du, dv).uv2(15728880).endVertex();
+        consumer.vertex(1, height, 0).color(1f, 1f, 1f, alpha).uv(du + density, dv).uv2(15728880).endVertex();
+        consumer.vertex(1, height, 1).color(1f, 1f, 1f, alpha).uv(du + density, dv + density).uv2(15728880).endVertex();
+        consumer.vertex(0, height, 1).color(1f, 1f, 1f, alpha).uv(du, dv + density).uv2(15728880).endVertex();
+        BufferUploader.draw(consumer.end());
+
     }
 }

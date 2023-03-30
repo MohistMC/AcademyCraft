@@ -1,7 +1,6 @@
 package com.mohistmc.academy;
 
 import com.mohistmc.academy.listener.CommonListener;
-import com.mohistmc.academy.utils.OpenGlHelper;
 import com.mohistmc.academy.world.*;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.fml.common.Mod;
