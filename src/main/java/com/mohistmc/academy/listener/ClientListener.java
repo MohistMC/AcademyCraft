@@ -1,12 +1,15 @@
 package com.mohistmc.academy.listener;
 
 import com.mohistmc.academy.AcademyCraft;
+import com.mohistmc.academy.client.block.entity.PhaseLiquidBlockEntity;
 import com.mohistmc.academy.client.block.entity.model.CatEngineModel;
 import com.mohistmc.academy.client.block.entity.render.CatEngineRender;
 import com.mohistmc.academy.client.block.entity.render.PhaseLiquidRender;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

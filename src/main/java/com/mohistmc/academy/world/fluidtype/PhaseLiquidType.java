@@ -47,45 +47,39 @@ public class PhaseLiquidType extends FluidType {
     @Override
     public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
         consumer.accept(new IClientFluidTypeExtensions() {
-            private static final ResourceLocation UNDERWATER_LOCATION = new ResourceLocation(AcademyCraft.MODID,"textures/block/black.png"),
-                    WATER_STILL = new ResourceLocation(AcademyCraft.MODID,"block/black"),
-                    WATER_FLOW = new ResourceLocation(AcademyCraft.MODID,"block/black"),
-                    WATER_OVERLAY = new ResourceLocation(AcademyCraft.MODID,"block/black");
+            private static final ResourceLocation UNDERWATER_LOCATION = new ResourceLocation(AcademyCraft.MODID, "textures/block/black.png"),
+                    WATER_STILL = new ResourceLocation(AcademyCraft.MODID, "block/black"),
+                    WATER_FLOW = new ResourceLocation(AcademyCraft.MODID, "block/black"),
+                    WATER_OVERLAY = new ResourceLocation(AcademyCraft.MODID, "block/black");
 
             @Override
-            public ResourceLocation getStillTexture()
-            {
+            public ResourceLocation getStillTexture() {
                 return WATER_STILL;
             }
 
             @Override
-            public ResourceLocation getFlowingTexture()
-            {
+            public ResourceLocation getFlowingTexture() {
                 return WATER_FLOW;
             }
 
             @Nullable
             @Override
-            public ResourceLocation getOverlayTexture()
-            {
+            public ResourceLocation getOverlayTexture() {
                 return WATER_OVERLAY;
             }
 
             @Override
-            public ResourceLocation getRenderOverlayTexture(Minecraft mc)
-            {
+            public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
                 return UNDERWATER_LOCATION;
             }
 
             @Override
-            public int getTintColor()
-            {
+            public int getTintColor() {
                 return 0xFF3F76E4;
             }
 
             @Override
-            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos)
-            {
+            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
                 return BiomeColors.getAverageWaterColor(getter, pos) | 0xFF000000;
             }
 
