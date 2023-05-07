@@ -1,1 +1,6 @@
-{"__xconfgen":true,"parent":"item/generated","textures":{"layer0":"academy:items/app_media_player"}}
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "academy:item/app_media_player"
+    }
+}

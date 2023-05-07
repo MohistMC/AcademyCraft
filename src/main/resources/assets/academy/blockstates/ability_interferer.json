@@ -1,1 +1,10 @@
-{"defaults":{"model":"cube_all","textures":{"all":"academy:blocks/ability_interf_off"}},"forge_marker":1,"variants":{"inventory":[{}],"on":{"false":{},"true":{"textures":{"all":"academy:blocks/ability_interf_on"}}}},"__xconfgen":true}
+{
+  "variants": {
+    "status=0": {
+      "model": "academy:block/ability_interferer_off"
+    },
+    "status=1": {
+      "model": "academy:block/ability_interferer_on"
+    }
+  }
+}

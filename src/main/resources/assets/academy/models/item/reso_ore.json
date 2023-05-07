@@ -1,1 +1,3 @@
-{"__xconfgen":true,"parent":"academy:block/reso_ore"}
+{
+  "parent": "academy:block/reso_ore"
+}

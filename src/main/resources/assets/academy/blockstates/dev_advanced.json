@@ -1,1 +1,19 @@
-{"variants":{"normal":{"model":"academy:dev_advanced"}},"__xconfgen":true}
+{
+  "variants": {
+    "facing=east": {
+      "model": "academy:block/dev_advanced",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "academy:block/dev_advanced"
+    },
+    "facing=south": {
+      "model": "academy:block/dev_advanced",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "academy:block/dev_advanced",
+      "y": 270
+    }
+  }
+}

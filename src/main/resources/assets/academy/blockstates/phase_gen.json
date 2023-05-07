@@ -1,1 +1,19 @@
-{"variants":{"normal":{"model":"academy:phase_gen"}},"__xconfgen":true}
+{
+  "variants": {
+    "working=0": {
+      "model": "academy:block/phase_gen_0"
+    },
+    "working=1": {
+      "model": "academy:block/phase_gen_1"
+    },
+    "working=2": {
+      "model": "academy:block/phase_gen_2"
+    },
+    "working=3": {
+      "model": "academy:block/phase_gen_3"
+    },
+    "working=4": {
+      "model": "academy:block/phase_gen_4"
+    }
+  }
+}

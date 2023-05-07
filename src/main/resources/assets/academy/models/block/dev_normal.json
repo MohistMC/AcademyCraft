@@ -1,1 +1,9 @@
-{"parent":"block/cube_all","textures":{"all":"academy:blocks/dev_normal"},"__xconfgen":true}
+{
+  "loader": "forge:obj",
+  "model": "academy:models/dev_normal.obj",
+  "flip-v": true,
+  "textures": {
+    "texture0": "academy:block/dev_normal",
+    "particle": "academy:block/dev_normal"
+  }
+}

@@ -1,0 +1,6 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "academy:item/media_only_my_railgun"
+    }
+}

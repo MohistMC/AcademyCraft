@@ -1,1 +1,3 @@
-{"__xconfgen":true,"parent":"academy:block/machine_frame"}
+{
+  "parent": "academy:block/machine_frame"
+}

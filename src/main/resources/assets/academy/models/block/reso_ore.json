@@ -1,1 +1,6 @@
-{"parent":"block/cube_all","textures":{"all":"academy:blocks/reso_ore"},"__xconfgen":true}
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "academy:block/reso_ore"
+  }
+}

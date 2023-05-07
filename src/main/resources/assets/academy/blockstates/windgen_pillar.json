@@ -1,1 +1,19 @@
-{"variants":{"normal":{"model":"academy:windgen_pillar"}},"__xconfgen":true}
+{
+  "variants": {
+    "facing=east": {
+      "model": "academy:block/windgen_pillar",
+      "y": -90
+    },
+    "facing=north": {
+      "model": "academy:block/windgen_pillar"
+    },
+    "facing=south": {
+      "model": "academy:block/windgen_pillar",
+      "y": -180
+    },
+    "facing=west": {
+      "model": "academy:block/windgen_pillar",
+      "y": -270
+    }
+  }
+}

@@ -1,78 +1,25 @@
-*.class
-*.bat
-*.setting
-
-libs/
-lib/
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.war
-*.ear
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-
-# =========================
-# Operating System Files
-# =========================
-
-# OSX
-# =========================
-
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Icon must ends with two \r.
-Icon
-# Thumbnails
-._*
-
-# Files that might appear on external disk
-.Spotlight-V100
-.Trashes
-
-# Windows
-# =========================
-
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
-
-# Folder config file
-Desktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-
-# Gradle
-build/
-.gradle/
-/bin/
-
-# Eclipse
-.project
+# eclipse
+bin
+*.launch
+.settings
+.metadata
 .classpath
-.settings/
+.project
 
-# IDEA
-.idea/
-out/
+# idea
+out
 *.ipr
-*.iml
 *.iws
+*.iml
+.idea
 
-# Runtime Generic
-eclipse/
-logs/
-run/
-imgui.ini
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run
+
+# Files from Forge MDK
+forge*changelog.txt

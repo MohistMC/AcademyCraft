@@ -1,1 +1,19 @@
-{"variants":{"normal":{"model":"academy:solar_gen"}},"__xconfgen":true}
+{
+  "variants": {
+    "facing=east": {
+      "model": "academy:block/solar_gen",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "academy:block/solar_gen"
+    },
+    "facing=south": {
+      "model": "academy:block/solar_gen",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "academy:block/solar_gen",
+      "y": 270
+    }
+  }
+}

@@ -1,1 +1,3 @@
-{"__xconfgen":true,"parent":"academy:block/imagsil_ore"}
+{
+  "parent": "academy:block/imagsil_ore"
+}

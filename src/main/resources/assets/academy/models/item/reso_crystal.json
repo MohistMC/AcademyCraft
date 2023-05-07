@@ -1,1 +1,6 @@
-{"__xconfgen":true,"parent":"item/generated","textures":{"layer0":"academy:items/reso_crystal"}}
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "academy:item/reso_crystal"
+  }
+}

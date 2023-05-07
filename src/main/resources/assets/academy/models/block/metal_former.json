@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "academy:block/metal_former_front",
+    "down": "academy:block/metal_former_bottom",
+    "up": "academy:block/metal_former_top",
+    "west": "academy:block/metal_former_left",
+    "east": "academy:block/metal_former_right",
+    "south": "academy:block/metal_former_back",
+    "north": "academy:block/metal_former_front"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "loader": "forge:obj",
+  "model": "academy:models/phase_gen_4.obj",
+  "flip-v": true,
+  "textures": {
+    "texture0": "academy:block/phase_gen_4",
+    "particle": "academy:block/phase_gen_4"
+  }
+}

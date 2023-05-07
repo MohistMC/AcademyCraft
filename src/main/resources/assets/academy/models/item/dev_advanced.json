@@ -1,1 +1,6 @@
-{"parent":"item/generated","textures":{"layer0":"academy:blocks/dev_advanced"},"__xconfgen":true}
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "academy:item/dev_advanced"
+  }
+}

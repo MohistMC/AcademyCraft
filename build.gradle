@@ -1,191 +1,185 @@
-buildscript {
-    repositories {
-        jcenter()
-        mavenCentral()
-        maven { url = "https://maven.minecraftforge.net/" }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots"
+plugins {
+    id 'eclipse'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '5.1.+'
+}
+
+version = '1.0'
+group = 'com.mohistmc.academy' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'academy'
+
+// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
+minecraft {
+    // The mappings can be changed at any time and must be in the following format.
+    // Channel:   Version:
+    // official   MCVersion             Official field/method names from Mojang mapping files
+    // parchment  YYYY.MM.DD-MCVersion  Open community-sourced parameter names and javadocs layered on top of official
+    //
+    // You must be aware of the Mojang license when using the 'official' or 'parchment' mappings.
+    // See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
+    //
+    // Parchment is an unofficial project maintained by ParchmentMC, separate from MinecraftForge
+    // Additional setup is needed to use their mappings: https://parchmentmc.org/docs/getting-started
+    //
+    // Use non-default mappings at your own risk. They may not always work.
+    // Simply re-run your setup task after changing the mappings to update your workspace.
+    mappings channel: 'official', version: '1.19.4'
+
+    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
+
+    // Default run configurations.
+    // These can be tweaked, removed, or duplicated as needed.
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            // The markers can be added/remove as needed separated by commas.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            // Recommended logging level for the console
+            // You can set various levels here.
+            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+            property 'forge.logging.console.level', 'debug'
+
+            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            property 'forge.enabledGameTestNamespaces', 'academy'
+
+            mods {
+                academy {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            property 'forge.logging.console.level', 'debug'
+
+            property 'forge.enabledGameTestNamespaces', 'academy'
+
+            mods {
+                academy {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        // This run config launches GameTestServer and runs all registered gametests, then exits.
+        // By default, the server will crash when no gametests are provided.
+        // The gametest system is also enabled by default for other run configs under the /test command.
+        gameTestServer {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            property 'forge.logging.console.level', 'debug'
+
+            property 'forge.enabledGameTestNamespaces', 'academy'
+
+            mods {
+                academy {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            property 'forge.logging.console.level', 'debug'
+
+            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+            args '--mod', 'academy', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+            mods {
+                academy {
+                    source sourceSets.main
+                }
+            }
         }
     }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-    }
-}
-apply plugin: 'net.minecraftforge.gradle.forge'
-//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-
-apply plugin: 'scala'
-apply plugin: 'idea'
-
-version = project.mod_ver
-group = project.mod_group
-archivesBaseName = project.mod_name
-
-
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
 }
 
-compileJava.options.encoding = "UTF-8"
-compileScala.options.encoding = "UTF-8"
-compileJava.options.deprecation = false
-compileScala.options.deprecation = false
-
-minecraft {
-    version = "1.12.2-14.23.5.2846"
-    runDir = "run"
-
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not always work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "snapshot_20180814"
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-
-    // Replacing stuff in the source
-    // Currently stale, see mySourcesJava task
-    replace "@VERSION@", project.mod_ver
-    replace "@LAMBDA_LIB_VERSION@", project.lambdalib_ver
-    replace "@MC_VERSION@", project.mc_ver
-
-}
+// Include resources generated by data generators.
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    mavenCentral()
-    mavenLocal()
-    maven {
-        name = "chickenbones"
-        url = "http://chickenbones.net/maven"
-    }
-    maven {
-        name = "private"
-        url = "https://jitpack.io"
-    }
-    maven {
-        name = "ic2"
-        url = "http://maven.ic2.player.to"
-    }
-    maven {
-        // location of the maven that hosts JEI files
-        name = "Progwml6 maven"
-        url = "http://dvs1.progwml6.com/files/maven"
-    }
-    maven {
-        // The main host of CraftTweaker related libs
-        name = "jared"
-        url = "http://maven.blamejared.com"
-    }
-}
+    // Put repositories for dependencies here
+    // ForgeGradle automatically adds the Forge maven and Maven Central for you
 
-configurations {
-    provided
-    shade
-    deobfCompile.extendsFrom shade
+    // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
+    // flatDir {
+    //     dir 'libs'
+    // }
+    mavenLocal()
+
 }
 
 dependencies {
-    // Shade dependencies
-    shade "com.github.LambdaInnovation:LambdaLib2:${project.lambdalib_ver}"
+    // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
+    // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
+    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
+    minecraft 'net.minecraftforge:forge:1.19.4-45.0.6'
 
-    // Optional dependencies
-    deobfCompile "codechicken:CodeChickenLib:1.12.2-${project.ccl_ver}:universal"
-    deobfCompile "mezz.jei:jei_1.12.2:4.16.1.302"
-    deobfCompile "cofh:RedstoneFlux:1.12-2.0.0.1:universal"
-    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.685"
-    deobfCompile "CraftTweaker2:CraftTweaker2-API:4.1.20.685"
-    deobfCompile "CraftTweaker2:ZenScript:4.1.20.685"
-    deobfCompile "net.industrial-craft:industrialcraft-2:2.8.222-ex112"
+    // Real mod deobf dependency examples - these get remapped to your current mappings
+    // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
+
+    // Examples using mod jars from ./libs
+    // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
+
+    // For more info...
+    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
+    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+
+    //implementation "cn.lambdalib2:LambdaLib2:0.2.0"
 }
 
-//sourceSets.main.compileClasspath += [configurations.provided]
-
-sourceSets.main {
-    java.srcDirs = []
-    scala.srcDirs = ['src/main/scala', 'src/main/java']
-}
-
-idea {
-    module {
-        scopes.PROVIDED.plus += [configurations.provided]
-        sourceDirs = [file('src/main/java'), file('src/main/scala')]
-    }
-}
-
-processResources {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-
-        // replace version and mcversion
-        expand 'version': project.version, 'mcversion': project.minecraft.version
-    }
-
-    // copy everything else except the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
-
-task deobfJar(type: Jar, dependsOn: 'jar') {
-    classifier 'dev'
-    from sourceSets.main.output
-    manifest {
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
-        attributes 'FMLCorePlugin': 'cn.lambdalib2.CorePlugin'
-    }
-}
-
+// Example for how to get properties into the manifest for reading at runtime.
 jar {
-    configurations.shade.each { dep ->
-        from(project.zipTree(dep)) {
-            exclude 'META-INF', 'META-INF/**'
-            exclude 'mcmod.info'
-            exclude 'pack.mcmeta'
+    manifest {
+        attributes([
+                "Specification-Title"     : "academy",
+                "Specification-Vendor"    : "academysareus",
+                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : project.jar.archiveVersion,
+                "Implementation-Vendor"   : "academysareus",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+// Example configuration to allow publishing using the maven-publish plugin
+// This is the preferred method to reobfuscate your jar file
+jar.finalizedBy('reobfJar')
+// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
+// publish.dependsOn('reobfJar')
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
         }
     }
-    manifest {
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
-        attributes 'FMLCorePlugin': 'cn.lambdalib2.CorePlugin'
+    repositories {
+        maven {
+            url "file://${project.projectDir}/mcmodsrepo"
+        }
     }
 }
 
-// http://www.minecraftforge.net/forum/topic/36791-trying-to-shade-dependencies-into-jar/
-reobf {
-    jar {
-        // WARN: You can't shade apache httplib for several reasons
-        // 1. it introduces some transitive dependencies, including logging, which is no good
-        // 2. logging exploits a bug for srg (all .class calls' package names aren't transformed at all)
-
-        // extraLines "PK: org/apache/commons/codec cn/academy/shade/org/apache/commons/codec"
-        // extraLines "PK: org/apache/http cn/academy/shade/org/apache/http"
-        // extraLines "PK: org/apache/commons/logging cn/academy/shade/org/apache/commons/logging"
-    }
-}
-
-import org.apache.tools.ant.filters.ReplaceTokens
-
-// see: https://stackoverflow.com/questions/30038540/replace-token-in-file-before-building-but-keep-token-in-sources
-// Currently scala compilation task doesn't respect minecraft.replace options. We have to manually replace the tokens by ourselves.
-// That also mean currently minecraft { replace ... } are all useless, but they are kept for future reference.
-task mySourcesJava(type: Copy) {
-    from 'src/main/java'
-    into 'build/tempSourcesJava'
-    filteringCharset = 'UTF-8'
-    filter(ReplaceTokens, tokens: [VERSION: project.mod_ver])
-    filter(ReplaceTokens, tokens: [LAMBDA_LIB_VERSION: "[" + project.lambdalib_ver + "]"])
-    filter(ReplaceTokens, tokens: [MC_VERSION: project.mc_ver])
-}
-
-compileScala.dependsOn mySourcesJava
-retromapReplacedMain.dependsOn compileScala
-extractRangemapReplacedMain.dependsOn compileScala
-
-artifacts {
-    archives deobfJar
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }

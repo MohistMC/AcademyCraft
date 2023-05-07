@@ -1,1 +1,6 @@
-{"__xconfgen":true,"parent":"item/generated","textures":{"layer0":"academy:items/factor_meltdowner"}}
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "academy:item/factor_meltdowner"
+    }
+}

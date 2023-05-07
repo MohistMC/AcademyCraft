@@ -1,0 +1,10 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "particle": "academy:block/node_standard_side_4",
+    "bottom": "academy:block/node_top_0",
+    "top": "academy:block/node_top_0",
+    "side": "academy:block/node_standard_side_4",
+    "front": "academy:block/node_standard_side_4"
+  }
+}

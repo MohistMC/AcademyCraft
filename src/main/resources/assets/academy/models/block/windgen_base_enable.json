@@ -1,0 +1,9 @@
+{
+  "loader": "forge:obj",
+  "model": "academy:models/windgen_base.obj",
+  "flip-v": true,
+  "textures": {
+    "texture0": "academy:block/windgen_base",
+    "particle": "academy:block/windgen_base"
+  }
+}
