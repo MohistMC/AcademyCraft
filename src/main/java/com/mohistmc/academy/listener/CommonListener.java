@@ -3,10 +3,7 @@ package com.mohistmc.academy.listener;
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyItems;
-import com.mohistmc.academy.world.block.DevAdvancedSubBlock;
-import com.mohistmc.academy.world.block.DevNormalSubBlock;
-import com.mohistmc.academy.world.block.MatrixSubBlock;
-import com.mohistmc.academy.world.block.WindGenFan;
+import com.mohistmc.academy.world.block.*;
 import com.mohistmc.academy.world.item.AppSettings;
 import com.mohistmc.academy.world.item.Logo;
 import com.mohistmc.academy.world.provider.AcademyBlockTagsProvider;
@@ -91,12 +88,14 @@ public class CommonListener {
                                             || item.get().getDescriptionId().contains("dev_normal_sub")
                                             || item.get().getDescriptionId().contains("dev_advanced_sub")
                                             || item.get().getDescriptionId().contains("windgen_fan_block")
+                                            || item.get().getDescriptionId().contains("wingen_base_sub")
                                             || item.get().getDescriptionId().contains("matrix_sub"))
                             ).forEach(item -> output.accept(item.get()));
                             AcademyBlocks.BLOCKS.getEntries().stream().filter(block ->
                                     !(block.get() instanceof DevNormalSubBlock)
                                             && !(block.get() instanceof DevAdvancedSubBlock)
                                             && !(block.get() instanceof MatrixSubBlock)
+                                            && !(block.get() instanceof WindGenBaseSubBlock)
                                             && !(block.get() instanceof WindGenFan)
                                             && !(block.get() instanceof LiquidBlock)
                             ).forEach(block -> output.accept(block.get()));
