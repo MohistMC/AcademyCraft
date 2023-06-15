@@ -12,23 +12,14 @@ import net.minecraft.resources.ResourceLocation;
 
 public abstract class AcademyBaseUI extends Screen {
 
-    private static final ResourceLocation PARENT_BACKGROUND = new ResourceLocation(AcademyCraft.MODID, "textures/guis/parent/parent_background.png");
+    public static final ResourceLocation PARENT_BACKGROUND = new ResourceLocation(AcademyCraft.MODID, "textures/guis/parent/parent_background.png");
+    public static final ResourceLocation UI_INV = new ResourceLocation(AcademyCraft.MODID, "textures/guis/ui/ui_inventory.png");
+
 
     protected AcademyBaseUI(Component p_96550_) {
         super(p_96550_);
     }
 
 
-    @Override
-    public void renderBackground(PoseStack stack) {
-        super.renderBackground(stack);
-        RenderSystem.setShaderTexture(0, PARENT_BACKGROUND);
-        RenderSystem.enableDepthTest();
 
-        int imageWidth = 176;
-        int imageHeight = 187;
-        int x = (this.width - imageWidth) / 2;
-        int y = (this.height - imageHeight) / 2;
-        GuiComponent.blit(stack, x,y, 0, 0.0F, 0.0F, this.width, this.height, imageWidth, imageHeight);
-    }
 }

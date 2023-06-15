@@ -1,8 +1,16 @@
 package com.mohistmc.academy.utils;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.SpriteContents;
+import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
+import net.minecraft.client.resources.metadata.animation.FrameSize;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
@@ -51,4 +59,40 @@ public class RenderUtils {
     public static void addVertex(Matrix4f p_253955_, Matrix3f p_253713_, VertexConsumer p_253894_, float p_253871_, float p_253841_, float p_254568_, float p_254361_, int p_254357_, float p_254451_, float p_254240_, float p_254117_, float p_253698_) {
         p_253894_.vertex(p_253955_, p_254451_, (float) p_254357_, p_254240_).color(p_253871_, p_253841_, p_254568_, p_254361_).uv(p_254117_, p_253698_).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(p_253713_, 0.0F, 1.0F, 0.0F).endVertex();
     }
+
+    public static void render(int imageWidth, int imageHeight, int x, int y, int width, int height, PoseStack stack, ResourceLocation resource) {
+
+        /*
+        int x = (width - drawWidth) / 2;
+        int y = (height - drawHeight) / 2;
+        RenderSystem.setShaderColor(255.0f, 255.0f, 255.0f, 255.0f);
+        RenderSystem.enableDepthTest();
+        RenderSystem.setShaderTexture(0, resource);
+
+
+        GuiComponent.blit(stack, x, y, 0, 0, drawWidth, drawHeight);
+          */
+    }
+
+    public static void renderCenter(int drawWidth, int drawHeight, int width, int height, PoseStack poseStack, ResourceLocation resource) {
+        renderCenter(0, 0, drawWidth, drawHeight, width, height, poseStack, resource);
+    }
+
+    public static void renderCenter(int x, int y, int drawWidth, int drawHeight, int width, int height, PoseStack poseStack, ResourceLocation resource) {
+        int left = (width - drawWidth) / 2;
+        int top = (height - drawHeight) / 2;
+        render(drawWidth, drawHeight, left + x, top + y, poseStack, resource);
+    }
+
+    public static void renderCenterTop(int x, int y, int drawWidth, int drawHeight, int width, int top, PoseStack poseStack, ResourceLocation resource) {
+        int left = (width - drawWidth) / 2;
+        render(drawWidth, drawHeight, left + x, top + y, poseStack, resource);
+    }
+
+    public static void render(int drawWidth, int drawHeight, int left, int top, PoseStack poseStack, ResourceLocation resource) {
+        RenderSystem.setShaderTexture(0, resource);
+        RenderSystem.enableDepthTest();
+        GuiComponent.blit(poseStack, left, top, 0, 0, 0, drawWidth, drawHeight, drawWidth, drawHeight);
+    }
+
 }
