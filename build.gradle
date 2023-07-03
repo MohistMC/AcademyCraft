@@ -85,11 +85,10 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     mavenLocal()
-
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19.4-45.0.57'
+    minecraft 'net.minecraftforge:forge:1.19.4-45.1.0'
 }
 
 jar {

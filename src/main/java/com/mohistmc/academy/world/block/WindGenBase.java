@@ -1,15 +1,23 @@
 package com.mohistmc.academy.world.block;
 
 import com.mohistmc.academy.client.block.entity.WindGenBaseBlockEntity;
+import com.mohistmc.academy.client.block.gui.WindBaseGui;
+import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyItems;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,6 +28,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -29,6 +38,7 @@ public class WindGenBase extends BaseEntityBlock {
 
     private static final BooleanProperty ENABLE = BooleanProperty.create("enable");
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    private boolean validBlock = false;
 
 
     public WindGenBase() {
@@ -54,6 +64,7 @@ public class WindGenBase extends BaseEntityBlock {
         return this.defaultBlockState().setValue(FACING, p_49820_.getHorizontalDirection().getOpposite());
     }
 
+
     @Override
     public List<ItemStack> getDrops(BlockState p_60537_, LootContext.Builder p_60538_) {
         return new ArrayList<>() {{
@@ -62,11 +73,38 @@ public class WindGenBase extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState p_60503_, Level p_60504_, BlockPos p_60505_, Player player, InteractionHand p_60507_, BlockHitResult p_60508_) {
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState p_60569_, boolean p_60570_) {
+        Block subBlock = AcademyBlocks.WIND_GEN_BASE_SUB.get();
+        level.setBlock(pos.above(1), subBlock.defaultBlockState(), 19);
+    }
+
+    @Override
+    public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
+        level.destroyBlock(pos.above(1), false);
+    }
+
+    @Override
+    public InteractionResult use(BlockState p_60503_, Level level, BlockPos pos, Player player, InteractionHand p_60507_, BlockHitResult p_60508_) {
 
         // TODO: 打开GUI
-        return InteractionResult.CONSUME;
+        if (this.validBlock) {
+            if (level.isClientSide()) {
+                Minecraft.getInstance().setScreen(new WindBaseGui(Component.empty()));
+                return InteractionResult.CONSUME;
+            }
+        }
+        return InteractionResult.PASS;
 
+    }
+
+
+    @Override
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos neighbor, boolean p_60514_) {
+        //Block block = level.getBlockState(pos).getBlock();
+        if (block instanceof WindGenBaseSubBlock && level.getBlockState(neighbor).getBlock() instanceof AirBlock) {
+            level.destroyBlock(pos, false);
+        }
+        super.neighborChanged(state, level, pos, block, neighbor, p_60514_);
     }
 
 
@@ -83,7 +121,7 @@ public class WindGenBase extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-        return new WindGenBaseBlockEntity(p_153215_,p_153216_);
+        return new WindGenBaseBlockEntity(p_153215_, p_153216_);
     }
 
     @Override
@@ -91,4 +129,19 @@ public class WindGenBase extends BaseEntityBlock {
         return RenderShape.MODEL;
     }
 
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource randomSource) {
+
+        if (level.getBlockState(pos.above(2)).getBlock() instanceof WindGenPillar
+                && level.getBlockState(pos.above(3)).getBlock() instanceof WindGenPillar
+                && level.getBlockState(pos.above(4)).getBlock() instanceof WindGenPillar
+                && level.getBlockState(pos.above(5)).getBlock() instanceof WindGenPillar
+                && level.getBlockState(pos.above(6)).getBlock() instanceof WindGenMain) {
+            // 满足条件
+            this.validBlock = true;
+        } else {
+            this.validBlock = false;
+        }
+
+    }
 }

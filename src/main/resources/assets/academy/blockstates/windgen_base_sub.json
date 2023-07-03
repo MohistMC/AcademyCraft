@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "academy:block/windgen_base_sub" }
+  }
+}
