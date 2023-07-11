@@ -1,19 +1,24 @@
 package com.mohistmc.academy.world.block;
 
 import com.mohistmc.academy.client.block.entity.WindGenBaseBlockEntity;
-import com.mohistmc.academy.client.block.gui.WindBaseGui;
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyItems;
+import com.mohistmc.academy.world.menu.WindBaseMenu;
+import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.Minecart;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -24,7 +29,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
@@ -39,6 +43,7 @@ public class WindGenBase extends BaseEntityBlock {
     private static final BooleanProperty ENABLE = BooleanProperty.create("enable");
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     private boolean validBlock = false;
+    private int mainHeight = 0;
 
 
     public WindGenBase() {
@@ -85,16 +90,35 @@ public class WindGenBase extends BaseEntityBlock {
 
     @Override
     public InteractionResult use(BlockState p_60503_, Level level, BlockPos pos, Player player, InteractionHand p_60507_, BlockHitResult p_60508_) {
-
         // TODO: 打开GUI
-        if (this.validBlock) {
-            if (level.isClientSide()) {
-                Minecraft.getInstance().setScreen(new WindBaseGui(Component.empty()));
-                return InteractionResult.CONSUME;
-            }
+        //if (this.validBlock) {
+        if (player instanceof ServerPlayer) {
+            ServerPlayer p = (ServerPlayer) player;
+            NetworkHooks.openScreen(p, new MenuProvider() {
+                @Override
+                public Component getDisplayName() {
+                    return Component.literal("");
+                }
+
+                @Override
+                public AbstractContainerMenu createMenu(int p_39954_, Inventory p_39955_, Player p_39956_) {
+                    return new WindBaseMenu(p_39954_, p_39955_, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos));
+                }
+            }, pos);
+            return InteractionResult.CONSUME;
         }
+        //  }
         return InteractionResult.PASS;
 
+    }
+
+    @Override
+    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        BlockEntity entity = level.getBlockEntity(pos);
+        if (entity instanceof MenuProvider) {
+            return (MenuProvider) entity;
+        }
+        return null;
     }
 
 
@@ -132,16 +156,26 @@ public class WindGenBase extends BaseEntityBlock {
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource randomSource) {
 
-        if (level.getBlockState(pos.above(2)).getBlock() instanceof WindGenPillar
-                && level.getBlockState(pos.above(3)).getBlock() instanceof WindGenPillar
-                && level.getBlockState(pos.above(4)).getBlock() instanceof WindGenPillar
-                && level.getBlockState(pos.above(5)).getBlock() instanceof WindGenPillar
-                && level.getBlockState(pos.above(6)).getBlock() instanceof WindGenMain) {
-            // 满足条件
-            this.validBlock = true;
-        } else {
-            this.validBlock = false;
-        }
 
+    }
+
+    @Override
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource p_222948_) {
+        mainHeight = 0;
+        for (int i = 2; i < 20; i++) {
+            Block block = level.getBlockState(pos.above(i)).getBlock();
+            if (block instanceof WindGenPillar) {
+                mainHeight++;
+                continue;
+            } else if (block instanceof WindGenMain) {
+                if (mainHeight > 3) {
+                    this.validBlock = true;
+                    break;
+                }
+                continue;
+            }
+            this.validBlock = false;
+            break;
+        }
     }
 }

@@ -1,13 +1,16 @@
 package com.mohistmc.academy.listener;
 
 import com.mohistmc.academy.AcademyCraft;
+import com.mohistmc.academy.client.block.gui.WindBaseGui;
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyItems;
+import com.mohistmc.academy.world.AcademyMenus;
 import com.mohistmc.academy.world.block.*;
 import com.mohistmc.academy.world.item.AppSettings;
 import com.mohistmc.academy.world.item.Logo;
 import com.mohistmc.academy.world.provider.AcademyBlockTagsProvider;
 import com.mojang.logging.LogUtils;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -20,6 +23,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
@@ -53,6 +57,7 @@ public class CommonListener {
         this.modEventBus.addListener(this::addCreative);
         this.modEventBus.addListener(this::commonSetup);
         this.modEventBus.addListener(this::gatherData);
+        this.modEventBus.addListener(this::clientSetup);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -72,8 +77,13 @@ public class CommonListener {
      * @param event
      */
     private void commonSetup(final FMLCommonSetupEvent event) {
-
         LOGGER.info("HELLO FROM COMMON SETUP");
+    }
+
+    private void clientSetup(final FMLClientSetupEvent event) {
+        event.enqueueWork(() -> {
+            MenuScreens.register(AcademyMenus.WIND_BASE.get(), WindBaseGui::new);
+        });
     }
 
 

@@ -1,11 +1,6 @@
 package com.mohistmc.academy.gui;
 
 import com.mohistmc.academy.AcademyCraft;
-import com.mohistmc.academy.utils.RenderUtils;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

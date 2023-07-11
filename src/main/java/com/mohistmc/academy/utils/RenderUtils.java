@@ -91,7 +91,6 @@ public class RenderUtils {
 
     public static void render(int drawWidth, int drawHeight, int left, int top, PoseStack poseStack, ResourceLocation resource) {
         RenderSystem.setShaderTexture(0, resource);
-        RenderSystem.enableDepthTest();
         GuiComponent.blit(poseStack, left, top, 0, 0, 0, drawWidth, drawHeight, drawWidth, drawHeight);
     }
 
