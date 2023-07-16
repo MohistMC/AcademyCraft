@@ -1,25 +1,38 @@
 package com.mohistmc.academy.world.block;
 
 import com.mohistmc.academy.client.block.entity.WindGenBaseBlockEntity;
+import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyItems;
+import com.mohistmc.academy.world.menu.WindBaseMenu;
+import io.netty.buffer.Unpooled;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -29,6 +42,8 @@ public class WindGenBase extends BaseEntityBlock {
 
     private static final BooleanProperty ENABLE = BooleanProperty.create("enable");
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    private boolean validBlock = false;
+    private int mainHeight = 0;
 
 
     public WindGenBase() {
@@ -54,6 +69,7 @@ public class WindGenBase extends BaseEntityBlock {
         return this.defaultBlockState().setValue(FACING, p_49820_.getHorizontalDirection().getOpposite());
     }
 
+
     @Override
     public List<ItemStack> getDrops(BlockState p_60537_, LootContext.Builder p_60538_) {
         return new ArrayList<>() {{
@@ -62,11 +78,57 @@ public class WindGenBase extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState p_60503_, Level p_60504_, BlockPos p_60505_, Player player, InteractionHand p_60507_, BlockHitResult p_60508_) {
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState p_60569_, boolean p_60570_) {
+        Block subBlock = AcademyBlocks.WIND_GEN_BASE_SUB.get();
+        level.setBlock(pos.above(1), subBlock.defaultBlockState(), 19);
+    }
 
+    @Override
+    public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
+        level.destroyBlock(pos.above(1), false);
+    }
+
+    @Override
+    public InteractionResult use(BlockState p_60503_, Level level, BlockPos pos, Player player, InteractionHand p_60507_, BlockHitResult p_60508_) {
         // TODO: 打开GUI
-        return InteractionResult.CONSUME;
+        //if (this.validBlock) {
+        if (player instanceof ServerPlayer) {
+            ServerPlayer p = (ServerPlayer) player;
+            NetworkHooks.openScreen(p, new MenuProvider() {
+                @Override
+                public Component getDisplayName() {
+                    return Component.literal("");
+                }
 
+                @Override
+                public AbstractContainerMenu createMenu(int p_39954_, Inventory p_39955_, Player p_39956_) {
+                    return new WindBaseMenu(p_39954_, p_39955_, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos));
+                }
+            }, pos);
+            return InteractionResult.CONSUME;
+        }
+        //  }
+        return InteractionResult.PASS;
+
+    }
+
+    @Override
+    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        BlockEntity entity = level.getBlockEntity(pos);
+        if (entity instanceof MenuProvider) {
+            return (MenuProvider) entity;
+        }
+        return null;
+    }
+
+
+    @Override
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos neighbor, boolean p_60514_) {
+        //Block block = level.getBlockState(pos).getBlock();
+        if (block instanceof WindGenBaseSubBlock && level.getBlockState(neighbor).getBlock() instanceof AirBlock) {
+            level.destroyBlock(pos, false);
+        }
+        super.neighborChanged(state, level, pos, block, neighbor, p_60514_);
     }
 
 
@@ -83,7 +145,7 @@ public class WindGenBase extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-        return new WindGenBaseBlockEntity(p_153215_,p_153216_);
+        return new WindGenBaseBlockEntity(p_153215_, p_153216_);
     }
 
     @Override
@@ -91,4 +153,29 @@ public class WindGenBase extends BaseEntityBlock {
         return RenderShape.MODEL;
     }
 
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource randomSource) {
+
+
+    }
+
+    @Override
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource p_222948_) {
+        mainHeight = 0;
+        for (int i = 2; i < 20; i++) {
+            Block block = level.getBlockState(pos.above(i)).getBlock();
+            if (block instanceof WindGenPillar) {
+                mainHeight++;
+                continue;
+            } else if (block instanceof WindGenMain) {
+                if (mainHeight > 3) {
+                    this.validBlock = true;
+                    break;
+                }
+                continue;
+            }
+            this.validBlock = false;
+            break;
+        }
+    }
 }

@@ -16,12 +16,14 @@ public class AcademyCraft {
 
         CommonListener listener = CommonListener.getInstance();
         listener.init();
+        AcademyMenus.MENUS.register(listener.getModEventBus());
         AcademyItems.ITEMS.register(listener.getModEventBus());
         AcademyBlocks.BLOCKS.register(listener.getModEventBus());
         AcademyFluidTypes.FLUID_TYPES.register(listener.getModEventBus());
         AcademyFluids.FLUIDS.register(listener.getModEventBus());
         AcademyEntities.ENTITIES.register(listener.getModEventBus());
         AcademyBlockEntities.BLOCK_ENTITIES.register(listener.getModEventBus());
+
     }
 
 
