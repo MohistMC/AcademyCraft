@@ -74,7 +74,7 @@ public class WindGenBase extends BaseEntityBlock {
     @Override
     public List<ItemStack> getDrops(BlockState p_60537_, LootContext.Builder p_60538_) {
         return new ArrayList<>() {{
-            add(new ItemStack(AcademyItems.IMAG_FUSOR.get()));
+            add(new ItemStack(AcademyItems.WINDGEN_BASE.get()));
         }};
     }
 

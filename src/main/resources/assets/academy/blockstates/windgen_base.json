@@ -8,17 +8,17 @@
       "model": "academy:block/windgen_base_disable",
       "y": -90
     },
-    "facing=north,enable=true": {
+    "facing=south,enable=true": {
       "model": "academy:block/windgen_base_enable"
     },
-    "facing=north,enable=false": {
+    "facing=south,enable=false": {
       "model": "academy:block/windgen_base_disable"
     },
-    "facing=south,enable=true": {
+    "facing=north,enable=true": {
       "model": "academy:block/windgen_base_enable",
       "y": -180
     },
-    "facing=south,enable=false": {
+    "facing=north,enable=false": {
       "model": "academy:block/windgen_base_disable",
       "y": -180
     },

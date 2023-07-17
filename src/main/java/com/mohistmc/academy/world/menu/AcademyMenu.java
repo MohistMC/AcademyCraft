@@ -102,7 +102,6 @@ public abstract class AcademyMenu extends AbstractContainerMenu {
             AcademyContainerBlockEntity blockEntity = getBlockEntity(this.menu);
             if (blockEntity != null) {
                 blockEntity.setItems(items);
-                blockEntity.saveItems();
             }
         }
 
