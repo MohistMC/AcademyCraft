@@ -2,7 +2,9 @@ package com.mohistmc.academy.client.block.gui;
 
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.utils.RenderUtils;
-import com.mohistmc.academy.world.menu.WindBaseMenu;
+import com.mohistmc.academy.world.AcademyMenus;
+import com.mohistmc.academy.world.menu.AcademyMenu;
+import com.mohistmc.academy.world.menu.WindGenBaseMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -16,7 +18,7 @@ import static com.mohistmc.academy.gui.AcademyBaseUI.PARENT_BACKGROUND;
 import static com.mohistmc.academy.gui.AcademyBaseUI.UI_INV;
 
 @OnlyIn(Dist.CLIENT)
-public class WindBaseGui extends AbstractContainerScreen<WindBaseMenu> {
+public class WindBaseGui extends AbstractContainerScreen<WindGenBaseMenu> {
 
     private static final ResourceLocation UI_WIN_BASE = new ResourceLocation(AcademyCraft.MODID, "textures/guis/ui/ui_windbase.png");
     private static final ResourceLocation IC_WIN_BASE = new ResourceLocation(AcademyCraft.MODID, "textures/guis/icons/icon_wind_base.png");
@@ -24,7 +26,7 @@ public class WindBaseGui extends AbstractContainerScreen<WindBaseMenu> {
     private static final ResourceLocation IC_WIN_MAIN = new ResourceLocation(AcademyCraft.MODID, "textures/guis/icons/icon_wind_main.png");
     private final Inventory inv;
 
-    public WindBaseGui(WindBaseMenu menu, Inventory inv, Component p_97743_) {
+    public WindBaseGui(WindGenBaseMenu menu, Inventory inv, Component p_97743_) {
         super(menu, inv, p_97743_);
         this.inv = inv;
     }
@@ -40,7 +42,7 @@ public class WindBaseGui extends AbstractContainerScreen<WindBaseMenu> {
     public void render(PoseStack p_97795_, int p_97796_, int p_97797_, float p_97798_) {
         super.renderBackground(p_97795_);
         super.render(p_97795_, p_97796_, p_97797_, p_97798_);
-        this.renderTooltip(p_97795_, p_97796_, p_97797_);
+        super.renderTooltip(p_97795_, p_97796_, p_97797_);
     }
 
     @Override

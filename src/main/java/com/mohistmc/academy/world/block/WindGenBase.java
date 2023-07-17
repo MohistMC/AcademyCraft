@@ -3,9 +3,8 @@ package com.mohistmc.academy.world.block;
 import com.mohistmc.academy.client.block.entity.WindGenBaseBlockEntity;
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyItems;
-import com.mohistmc.academy.world.menu.WindBaseMenu;
+import com.mohistmc.academy.world.menu.WindGenBaseMenu;
 import io.netty.buffer.Unpooled;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -89,22 +88,12 @@ public class WindGenBase extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState p_60503_, Level level, BlockPos pos, Player player, InteractionHand p_60507_, BlockHitResult p_60508_) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand p_60507_, BlockHitResult p_60508_) {
         // TODO: 打开GUI
         //if (this.validBlock) {
         if (player instanceof ServerPlayer) {
             ServerPlayer p = (ServerPlayer) player;
-            NetworkHooks.openScreen(p, new MenuProvider() {
-                @Override
-                public Component getDisplayName() {
-                    return Component.literal("");
-                }
-
-                @Override
-                public AbstractContainerMenu createMenu(int p_39954_, Inventory p_39955_, Player p_39956_) {
-                    return new WindBaseMenu(p_39954_, p_39955_, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos));
-                }
-            }, pos);
+            NetworkHooks.openScreen(p, getMenuProvider(state, level, pos), pos);
             return InteractionResult.CONSUME;
         }
         //  }
@@ -114,11 +103,18 @@ public class WindGenBase extends BaseEntityBlock {
 
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
-        BlockEntity entity = level.getBlockEntity(pos);
-        if (entity instanceof MenuProvider) {
-            return (MenuProvider) entity;
-        }
-        return null;
+
+        return new MenuProvider() {
+            @Override
+            public Component getDisplayName() {
+                return Component.empty();
+            }
+
+            @Override
+            public AbstractContainerMenu createMenu(int p_39954_, Inventory inv, Player p_39956_) {
+                return new WindGenBaseMenu(p_39954_, inv, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos));
+            }
+        };
     }
 
 
@@ -177,5 +173,10 @@ public class WindGenBase extends BaseEntityBlock {
             this.validBlock = false;
             break;
         }
+    }
+
+    @Override
+    public void playerDestroy(Level p_49827_, Player p_49828_, BlockPos p_49829_, BlockState p_49830_, @Nullable BlockEntity p_49831_, ItemStack p_49832_) {
+        super.playerDestroy(p_49827_, p_49828_, p_49829_, p_49830_, p_49831_, p_49832_);
     }
 }

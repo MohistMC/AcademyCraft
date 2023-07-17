@@ -82,7 +82,7 @@ public class CommonListener {
 
     private void clientSetup(final FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            MenuScreens.register(AcademyMenus.WIND_BASE.get(), WindBaseGui::new);
+            MenuScreens.register(AcademyMenus.WINDBASE_MENU.get(), WindBaseGui::new);
         });
     }
 
