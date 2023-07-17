@@ -184,7 +184,6 @@ public class WindGenBase extends BaseEntityBlock {
                 blockEntity
                         .getItems()
                         .forEach(item -> {
-                            System.out.println("掉落物品: " + item);
                             world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, item));
                         });
             }
