@@ -1,5 +1,6 @@
 package com.mohistmc.academy.world.block;
 
+import com.mohistmc.academy.client.block.entity.AcademyContainerBlockEntity;
 import com.mohistmc.academy.client.block.entity.WindGenBaseBlockEntity;
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyItems;
@@ -15,6 +16,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -91,9 +93,8 @@ public class WindGenBase extends BaseEntityBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand p_60507_, BlockHitResult p_60508_) {
         // TODO: 打开GUI
         //if (this.validBlock) {
-        if (player instanceof ServerPlayer) {
-            ServerPlayer p = (ServerPlayer) player;
-            NetworkHooks.openScreen(p, getMenuProvider(state, level, pos), pos);
+        if (!level.isClientSide()) {
+            player.openMenu(getMenuProvider(state, level, pos));
             return InteractionResult.CONSUME;
         }
         //  }
@@ -176,7 +177,19 @@ public class WindGenBase extends BaseEntityBlock {
     }
 
     @Override
-    public void playerDestroy(Level p_49827_, Player p_49828_, BlockPos p_49829_, BlockState p_49830_, @Nullable BlockEntity p_49831_, ItemStack p_49832_) {
-        super.playerDestroy(p_49827_, p_49828_, p_49829_, p_49830_, p_49831_, p_49832_);
+    public void onRemove(BlockState p_60515_, Level world, BlockPos pos, BlockState p_60518_, boolean p_60519_) {
+        if (!p_60515_.is(p_60518_.getBlock())) {
+            BlockEntity entity = world.getBlockEntity(pos);
+            if (entity instanceof AcademyContainerBlockEntity blockEntity) {
+                blockEntity
+                        .getItems()
+                        .forEach(item -> {
+                            System.out.println("掉落物品: " + item);
+                            world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, item));
+                        });
+            }
+            super.onRemove(p_60515_, world, pos, p_60518_, p_60519_);
+        }
+
     }
 }

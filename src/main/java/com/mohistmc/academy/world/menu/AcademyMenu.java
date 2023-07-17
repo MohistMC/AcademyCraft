@@ -12,6 +12,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.StackedContentsCompatible;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -91,6 +92,7 @@ public abstract class AcademyMenu extends AbstractContainerMenu {
         @Override
         public ItemStack removeItem(int p_18942_, int p_18943_) {
             ItemStack stack = getItem(p_18942_);
+            // System.out.println("移除物品: " + p_18942_);
             items.set(p_18942_, ItemStack.EMPTY);
             saveItems();
             return stack;
@@ -115,7 +117,7 @@ public abstract class AcademyMenu extends AbstractContainerMenu {
         public AcademyContainerBlockEntity getBlockEntity(AcademyMenu menu) {
             if (menu != null && menu.pos != null) {
                 BlockEntity entity = menu.inv.player.level.getBlockEntity(menu.pos);
-                if (entity instanceof AcademyContainerBlockEntity blockEntity) {
+                if (entity instanceof AcademyContainerBlockEntity blockEntity && !blockEntity.isRemoved()) {
                     return blockEntity;
                 }
             }
@@ -129,6 +131,7 @@ public abstract class AcademyMenu extends AbstractContainerMenu {
 
         @Override
         public void setItem(int p_18944_, ItemStack p_18945_) {
+            if (p_18945_ == ItemStack.EMPTY) return;
             if (items.size() > p_18944_) {
                 items.set(p_18944_, p_18945_);
                 saveItems();
@@ -145,7 +148,7 @@ public abstract class AcademyMenu extends AbstractContainerMenu {
 
         @Override
         public boolean stillValid(Player p_18946_) {
-            return true;
+            return getBlockEntity(this.menu) != null;
         }
 
         @Override
