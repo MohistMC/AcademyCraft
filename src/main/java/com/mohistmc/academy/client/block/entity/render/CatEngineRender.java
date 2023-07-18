@@ -35,7 +35,9 @@ public class CatEngineRender implements BlockEntityRenderer<CatEngineBlockEntity
         float f2 = p_112307_.oRot + f1 * p_112308_;
         p_112309_.rotateAround(Axis.YN.rotation(f2), 0.5f, 0.5f, 0.5f);
         p_112309_.rotateAround(Axis.YN.rotation(90), 0.5f, 0.5f, 0.5f);
-        p_112309_.rotateAround(Axis.XN.rotation(p_112307_.rH += 0.2), 0.5f, 0.5f, 0.5f);
+        if (p_112307_.enable) {
+            p_112309_.rotateAround(Axis.XN.rotation(p_112307_.rH += 0.2), 0.5f, 0.5f, 0.5f);
+        }
         ResourceLocation location = new ResourceLocation(AcademyCraft.MODID, "textures/block/cat_engine.png");
         VertexConsumer vertexconsumer = p_112310_.getBuffer(RenderType.entityTranslucentCull(location));
         this.model.renderToBuffer(p_112309_, vertexconsumer, p_112311_, p_112312_, 1.0F, 1.0F, 1.0F, 1.0F);

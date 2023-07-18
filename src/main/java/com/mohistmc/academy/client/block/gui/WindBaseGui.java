@@ -28,25 +28,10 @@ public class WindBaseGui extends AcademyBaseUI<WindGenBaseMenu> {
         this.inv = inv;
     }
 
-
-    @Override
-    protected void init() {
-        super.init();
-    }
-
-
-    @Override
-    public void render(PoseStack p_97795_, int p_97796_, int p_97797_, float p_97798_) {
-        super.renderBackground(p_97795_);
-        super.render(p_97795_, p_97796_, p_97797_, p_97798_);
-        super.renderTooltip(p_97795_, p_97796_, p_97797_);
-    }
-
     @Override
     protected void renderLabels(PoseStack p_97808_, int p_97809_, int p_97810_) {
         //TODO: nothing
     }
-
 
     @Override
     public void renderBackground(PoseStack stack, float p_97788_, int mouseX, int mouseY) {

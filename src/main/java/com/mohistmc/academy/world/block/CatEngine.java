@@ -5,6 +5,8 @@ import com.mohistmc.academy.client.block.entity.CatEngineBlockEntity;
 import com.mohistmc.academy.world.AcademyItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PickaxeItem;
@@ -17,6 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -41,6 +44,16 @@ public class CatEngine extends BaseEntityBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
         return new CatEngineBlockEntity(p_153215_, p_153216_);
+    }
+
+    @Override
+    public InteractionResult use(BlockState p_60503_, Level level, BlockPos pos, Player p_60506_, InteractionHand p_60507_, BlockHitResult p_60508_) {
+        BlockEntity entity = level.getBlockEntity(pos);
+        if (entity instanceof CatEngineBlockEntity blockEntity) {
+            blockEntity.enable = !blockEntity.enable;
+            // TODO: 自动链接到周围节点
+        }
+        return InteractionResult.PASS;
     }
 
     @Nullable

@@ -35,16 +35,18 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
     private static final ResourceLocation ELEMENT_BG_300_32_I = new ResourceLocation(AcademyCraft.MODID, "textures/guis/element/element_background300x32_input.png");
     private static final ResourceLocation BTN_ARROW_UP = new ResourceLocation(AcademyCraft.MODID, "textures/guis/button/button_arrowupb.png");
     private static final ResourceLocation BTN_ARROW_DOWN = new ResourceLocation(AcademyCraft.MODID, "textures/guis/button/button_arrowdownb.png");
+    public final Inventory inv;
     private boolean wireless = false;
     private boolean renderInv = true;
     private boolean renderBg = true;
     private boolean renderWireless = true;
-    private int activeNode = -1;
+    public int activeNode = -1;
     private int waitPass = -1;
     private StringBuilder inputPass = new StringBuilder();
 
-    protected AcademyBaseUI(T t, Inventory inv, Component p_97743_) {
+    public AcademyBaseUI(T t, Inventory inv, Component p_97743_) {
         super(t, inv, p_97743_);
+        this.inv = inv;
         addOrSetNode(null, null);
         addOrSetNode(null, null);
         addOrSetNode(null, null);
@@ -128,6 +130,8 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
     public void render(PoseStack stack, int mouseX, int mouseY, float p_97798_) {
         if (!this.wireless)
             super.render(stack, mouseX, mouseY, p_97798_);
+        super.renderBackground(stack);
+        super.renderTooltip(stack, mouseX, mouseY);
         this.renderBg(stack, p_97798_, mouseX, mouseY);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -294,6 +298,9 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
     @Override
     public boolean keyPressed(int p_97765_, int p_97766_, int p_97767_) {
         if (!this.wireless) {
+            return super.keyPressed(p_97765_, p_97766_, p_97767_);
+        }
+        if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 256)) {
             return super.keyPressed(p_97765_, p_97766_, p_97767_);
         }
         if (inputPass.length() < 11) {

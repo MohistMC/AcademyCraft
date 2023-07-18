@@ -20,6 +20,7 @@ public class CatEngineBlockEntity extends BlockEntity {
     public float rot;
     public float oRot;
     public float tRot;
+    public boolean enable = false;
     public float rH = 0;
 
     public CatEngineBlockEntity(BlockPos p_155229_, BlockState p_155230_) {

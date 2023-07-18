@@ -21,8 +21,6 @@ public class WindGenBaseBlockEntity extends AcademyContainerBlockEntity {
 
     public WindGenBaseBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
         super(AcademyBlockEntities.WINDGEN_BASE.get(), p_155229_, p_155230_);
-
-
     }
 
 

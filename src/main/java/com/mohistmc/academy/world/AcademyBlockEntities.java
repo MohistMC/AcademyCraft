@@ -26,4 +26,5 @@ public class AcademyBlockEntities {
     public static final RegistryObject<BlockEntityType<WindGenMainBlockEntity>> WINDGEN_MAIN = BLOCK_ENTITIES.register("windgen_main", () -> BlockEntityType.Builder.of(WindGenMainBlockEntity::new, AcademyBlocks.WINDGEN_MAIN.get()).build(null));
     public static final RegistryObject<BlockEntityType<WindGenPillarBlockEntity>> WINDGEN_PILLAR = BLOCK_ENTITIES.register("windgen_pillar", () -> BlockEntityType.Builder.of(WindGenPillarBlockEntity::new, AcademyBlocks.WINDGEN_PILLAR.get()).build(null));
     public static final RegistryObject<BlockEntityType<PhaseLiquidBlockEntity>> PHASE_LIQUID = BLOCK_ENTITIES.register("phase_liquid", () -> BlockEntityType.Builder.of(PhaseLiquidBlockEntity::new, AcademyBlocks.PHASE_LIQUID.get()).build(null));
+    public static final RegistryObject<BlockEntityType<NodeBasicBlockEntity>> NODE_BASIC = BLOCK_ENTITIES.register("node_basic", () -> BlockEntityType.Builder.of(NodeBasicBlockEntity::new, AcademyBlocks.NODE_BASIC.get()).build(null));
 }

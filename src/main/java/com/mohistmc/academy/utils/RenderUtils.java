@@ -88,6 +88,12 @@ public class RenderUtils {
         render(drawWidth, drawHeight, left + x, top + y, poseStack, resource);
     }
 
+    public static void renderCenter(int x, int y, int drawWidth, int drawHeight,int drawTextureWidth, int drawTextureHeight, int width, int height, PoseStack poseStack, ResourceLocation resource, int textureStartX, int textureStartY, int textureWidth, int textureHeight) {
+        int left = (width - drawWidth) / 2;
+        int top = (height - drawHeight) / 2;
+        render(drawWidth, drawHeight,drawTextureWidth,drawTextureHeight, left + x, top + y, poseStack, resource, textureStartX, textureStartY, textureWidth, textureHeight);
+    }
+
     public static void renderCenterTop(int x, int y, int drawWidth, int drawHeight, int width, int top, PoseStack poseStack, ResourceLocation resource) {
         int left = (width - drawWidth) / 2;
         render(drawWidth, drawHeight, left + x, top + y, poseStack, resource);
@@ -96,7 +102,13 @@ public class RenderUtils {
 
     public static void render(int drawWidth, int drawHeight, int left, int top, PoseStack poseStack, ResourceLocation resource) {
         RenderSystem.setShaderTexture(0, resource);
+        //drawWidth和drawHeight名字反了，值没反
         GuiComponent.blit(poseStack, left, top, 0, 0, 0, drawWidth, drawHeight, drawWidth, drawHeight);
+    }
+
+    public static void render(int drawWidth, int drawHeight,int drawTextureWidth, int drawTextureHeight, int left, int top, PoseStack poseStack, ResourceLocation resource, int textureStartX, int textureStartY, int textureWidth, int textureHeight) {
+        RenderSystem.setShaderTexture(0, resource);
+        GuiComponent.blit(poseStack, left, top, drawWidth, drawHeight, textureStartY, textureStartX, drawTextureWidth, drawTextureHeight, textureWidth, textureHeight);
     }
 
     public static void renderText(PoseStack stack, String text, int x, int y) {
@@ -114,4 +126,6 @@ public class RenderUtils {
                         source);
         source.endBatch();
     }
+
+
 }

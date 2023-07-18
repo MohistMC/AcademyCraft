@@ -1,6 +1,7 @@
 package com.mohistmc.academy.listener;
 
 import com.mohistmc.academy.AcademyCraft;
+import com.mohistmc.academy.client.block.gui.NodeBasicGui;
 import com.mohistmc.academy.client.block.gui.WindBaseGui;
 import com.mohistmc.academy.client.block.gui.WindMainGui;
 import com.mohistmc.academy.world.AcademyBlocks;
@@ -85,6 +86,7 @@ public class CommonListener {
         event.enqueueWork(() -> {
             MenuScreens.register(AcademyMenus.WIND_BASE_MENU.get(), WindBaseGui::new);
             MenuScreens.register(AcademyMenus.WIND_MAIN_MENU.get(), WindMainGui::new);
+            MenuScreens.register(AcademyMenus.NODE_BASIC.get(), NodeBasicGui::new);
         });
     }
 
