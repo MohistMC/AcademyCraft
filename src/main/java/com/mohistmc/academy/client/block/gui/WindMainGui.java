@@ -21,6 +21,7 @@ public class WindMainGui extends AcademyBaseUI<WindGenMainMenu> {
     public WindMainGui(WindGenMainMenu menu, Inventory inv, Component p_97743_) {
         super(menu, inv, p_97743_);
         this.inv = inv;
+        setRenderWireless(false);
     }
 
 

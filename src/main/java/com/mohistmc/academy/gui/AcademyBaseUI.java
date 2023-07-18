@@ -31,6 +31,7 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
     private boolean wireless = false;
     private boolean renderInv = true;
     private boolean renderBg = true;
+    private boolean renderWireless = true;
 
     protected AcademyBaseUI(T t, Inventory inv, Component p_97743_) {
         super(t, inv, p_97743_);
@@ -42,6 +43,10 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
 
     public void setRenderBg(boolean renderBg) {
         this.renderBg = renderBg;
+    }
+
+    public void setRenderWireless(boolean wireless) {
+        this.renderWireless = wireless;
     }
 
     @Override
@@ -61,6 +66,7 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
             this.renderBackground(stack, p_97788_, p_97789_, p_97790_);
             RenderSystem.disableBlend();
         } else {
+
             RenderSystem.setShaderColor(1, 1, 1, 0.7f);
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
@@ -71,8 +77,8 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
             RenderUtils.renderCenterTop((160 / 2) - 16, 39, 11, 11, this.width, (this.height - 187) / 2, stack, IC_UNCONNECTED);
 
             // TODO: 鼠标悬浮这俩按钮上高亮/点击
-            RenderUtils.renderCenterTop((160 / 2)-5, 65, 15, 15, this.width, (this.height - 187) / 2, stack, BTN_ARROW_UP);
-            RenderUtils.renderCenterTop((160 / 2)-5, 65 + (7 * 13), 15, 15, this.width, (this.height - 187) / 2, stack, BTN_ARROW_DOWN);
+            RenderUtils.renderCenterTop((160 / 2) - 5, 65, 15, 15, this.width, (this.height - 187) / 2, stack, BTN_ARROW_UP);
+            RenderUtils.renderCenterTop((160 / 2) - 5, 65 + (7 * 13), 15, 15, this.width, (this.height - 187) / 2, stack, BTN_ARROW_DOWN);
 
             RenderSystem.disableBlend();
             RenderUtils.renderText(stack, "Connected", ((this.width - 176) / 2) + 13, ((this.height - 187) / 2) + 30);
@@ -114,15 +120,17 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
             RenderSystem.setShaderColor(1, 1, 1, 0.8f);
 
         }
-        RenderUtils.renderCenterTop(-(176 / 2) - 10, 0, 18, 18, this.width, (this.height - 187) / 2, stack, IC_INV);
-        if (this.isHoveringButton(((this.width - 176) / 2) - 20, ((this.height - 187) / 2) + 20, 18, 18, mouseX, mouseY) || wireless) {
-            //System.out.println("wireless");
-            RenderSystem.setShaderColor(1, 1, 1, 1);
-        } else {
-            RenderSystem.setShaderColor(1, 1, 1, 0.8f);
+        if (this.renderWireless) {
+            if (this.isHoveringButton(((this.width - 176) / 2) - 20, ((this.height - 187) / 2) + 20, 18, 18, mouseX, mouseY) || wireless) {
+                //System.out.println("wireless");
+                RenderSystem.setShaderColor(1, 1, 1, 1);
+            } else {
+                RenderSystem.setShaderColor(1, 1, 1, 0.8f);
+            }
+            // TODO: 高亮列表连接按钮
+            RenderUtils.renderCenterTop(-(176 / 2) - 10, 20, 18, 18, this.width, (this.height - 187) / 2, stack, IC_WIRELESS);
         }
-        // TODO: 高亮列表连接按钮
-        RenderUtils.renderCenterTop(-(176 / 2) - 10, 20, 18, 18, this.width, (this.height - 187) / 2, stack, IC_WIRELESS);
+        RenderUtils.renderCenterTop(-(176 / 2) - 10, 0, 18, 18, this.width, (this.height - 187) / 2, stack, IC_INV);
         RenderSystem.disableBlend();
     }
 
@@ -139,8 +147,10 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
         if (this.isHoveringButton(((this.width - 176) / 2) - 20, ((this.height - 187) / 2), 18, 18, mouseX, mouseY)) {
             this.wireless = false;
         }
-        if (this.isHoveringButton(((this.width - 176) / 2) - 20, ((this.height - 187) / 2) + 20, 18, 18, mouseX, mouseY)) {
-            this.wireless = true;
+        if (this.renderWireless) {
+            if (this.isHoveringButton(((this.width - 176) / 2) - 20, ((this.height - 187) / 2) + 20, 18, 18, mouseX, mouseY)) {
+                this.wireless = true;
+            }
         }
         if (!this.wireless)
             return super.mouseClicked(mouseX, mouseY, p_97750_);
