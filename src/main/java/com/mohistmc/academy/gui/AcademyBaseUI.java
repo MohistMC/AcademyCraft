@@ -1,17 +1,21 @@
 package com.mohistmc.academy.gui;
 
 import com.mohistmc.academy.AcademyCraft;
+import com.mohistmc.academy.capability.AcademyNode;
 import com.mohistmc.academy.utils.RenderUtils;
 import com.mohistmc.academy.world.menu.AcademyMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
+import java.util.Objects;
 
 public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractContainerScreen<T> {
 
@@ -32,9 +36,22 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
     private boolean renderInv = true;
     private boolean renderBg = true;
     private boolean renderWireless = true;
+    private int activeNode = -1;
 
     protected AcademyBaseUI(T t, Inventory inv, Component p_97743_) {
         super(t, inv, p_97743_);
+        addOrSetNode(null, null);
+        addOrSetNode(null, null);
+        addOrSetNode(null, null);
+        addOrSetNode(null, null);
+        addOrSetNode(null, null);
+        addOrSetNode(null, null);
+        addOrSetNode(null, null);
+        addOrSetNode(null, null);
+        addOrSetNode(null, null);
+        addOrSetNode(null, null);
+        addOrSetNode(null, null);
+        addOrSetNode(null, null);
     }
 
     public void setRenderInv(boolean renderInv) {
@@ -51,7 +68,7 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
 
     @Override
     public void renderBg(PoseStack stack, float p_97788_, int p_97789_, int p_97790_) {
-        RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.setShaderColor(1, 1, 1, 0.7f);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         if (renderBg)
@@ -74,34 +91,19 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
             RenderUtils.renderCenterTop(-(176 / 2) + 20, 10, 18, 18, this.width, (this.height - 187) / 2, stack, IC_TOMATRIX);
             RenderUtils.renderCenterTop(0, 37, 160, 16, this.width, (this.height - 187) / 2, stack, ELEMENT_BG_300_32);
             RenderUtils.renderCenterTop(-(160 / 2) + 16, 39, 11, 11, this.width, (this.height - 187) / 2, stack, IC_MATRIX);
-            RenderUtils.renderCenterTop((160 / 2) - 16, 39, 11, 11, this.width, (this.height - 187) / 2, stack, IC_UNCONNECTED);
 
-            // TODO: 鼠标悬浮这俩按钮上高亮/点击
-            RenderUtils.renderCenterTop((160 / 2) - 5, 65, 15, 15, this.width, (this.height - 187) / 2, stack, BTN_ARROW_UP);
-            RenderUtils.renderCenterTop((160 / 2) - 5, 65 + (7 * 13), 15, 15, this.width, (this.height - 187) / 2, stack, BTN_ARROW_DOWN);
-
-            RenderSystem.disableBlend();
             RenderUtils.renderText(stack, "Connected", ((this.width - 176) / 2) + 13, ((this.height - 187) / 2) + 30);
-            RenderUtils.renderText(stack, "未连接", ((this.width - 176) / 2) + 32, ((this.height - 187) / 2) + 41);
             RenderUtils.renderText(stack, "Available", ((this.width - 176) / 2) + 13, ((this.height - 187) / 2) + 55);
-            addOrSetNode(stack, "TestNode", 0, null);
-            addOrSetNode(stack, "TestNode1", 1, null);
+
         }
 
     }
 
+    private NonNullList<AcademyNode> nodes = NonNullList.create();
+    private int page = 1;
 
-    private void addOrSetNode(PoseStack stack, String name, int index, BlockPos pos) {
-        // TODO: 记录节点所在位置，限制绘制行数
-        RenderSystem.setShaderColor(1, 1, 1, 0.7f);
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderUtils.renderCenterTop(-5, 62 + (index * 13), 150, 16, this.width, (this.height - 187) / 2, stack, ELEMENT_BG_300_32);
-        RenderUtils.renderCenterTop(-(160 / 2) + 16 - 4, 65 + (index * 13), 11, 11, this.width, (this.height - 187) / 2, stack, IC_MATRIX);
-        RenderUtils.renderCenterTop((160 / 2) - 16 - 6, 65 + (index * 13), 11, 11, this.width, (this.height - 187) / 2, stack, IC_UNCONNECTED);
-        RenderSystem.disableBlend();
-        RenderUtils.renderText(stack, name, ((this.width - 176) / 2) + 32 - 4, ((this.height - 187) / 2) + 67 + (index * 13));
-
+    private void addOrSetNode(BlockPos pos, Level level) {
+        nodes.add(new AcademyNode(nodes.size() + "Node", null, null, true));
     }
 
 
@@ -118,8 +120,8 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
             RenderSystem.setShaderColor(1, 1, 1, 1);
         } else {
             RenderSystem.setShaderColor(1, 1, 1, 0.8f);
-
         }
+        RenderUtils.renderCenterTop(-(176 / 2) - 10, 0, 18, 18, this.width, (this.height - 187) / 2, stack, IC_INV);
         if (this.renderWireless) {
             if (this.isHoveringButton(((this.width - 176) / 2) - 20, ((this.height - 187) / 2) + 20, 18, 18, mouseX, mouseY) || wireless) {
                 //System.out.println("wireless");
@@ -127,23 +129,78 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
             } else {
                 RenderSystem.setShaderColor(1, 1, 1, 0.8f);
             }
-            // TODO: 高亮列表连接按钮
             RenderUtils.renderCenterTop(-(176 / 2) - 10, 20, 18, 18, this.width, (this.height - 187) / 2, stack, IC_WIRELESS);
+            if (this.wireless) {
+                if (this.isHoveringButton(((this.width - 176) / 2) + (160 / 2) * 2 - 5, ((this.height - 187) / 2) + 65, 15, 15, mouseX, mouseY)) {
+                    //System.out.println("wireless");
+                    RenderSystem.setShaderColor(1, 1, 1, 1);
+                } else {
+                    RenderSystem.setShaderColor(1, 1, 1, 0.8f);
+                }
+                RenderUtils.renderCenterTop((160 / 2) - 5, 65, 15, 15, this.width, (this.height - 187) / 2, stack, BTN_ARROW_UP);
+                if (this.isHoveringButton(((this.width - 176) / 2) + (160 / 2) * 2 - 5, ((this.height - 187) / 2) + 65 + (7 * 13), 15, 15, mouseX, mouseY)) {
+                    //System.out.println("wireless");
+                    RenderSystem.setShaderColor(1, 1, 1, 1);
+                } else {
+                    RenderSystem.setShaderColor(1, 1, 1, 0.8f);
+                }
+                RenderUtils.renderCenterTop((160 / 2) - 5, 65 + (7 * 13), 15, 15, this.width, (this.height - 187) / 2, stack, BTN_ARROW_DOWN);
+                if (this.isHoveringButton(((this.width - 176) / 2) + (160 / 2) * 2 - 16, ((this.height - 187) / 2) + 39, 15, 15, mouseX, mouseY)) {
+                    //System.out.println("wireless");
+                    RenderSystem.setShaderColor(1, 1, 1, 1);
+                } else {
+                    RenderSystem.setShaderColor(1, 1, 1, 0.8f);
+                }
+                if (activeNode != -1) {
+                    RenderUtils.renderCenterTop((160 / 2) - 16, 39, 11, 11, this.width, (this.height - 187) / 2, stack, IC_CONNECTED);
+                    RenderSystem.disableBlend();
+                    RenderUtils.renderText(stack, nodes.get(activeNode).getName(), ((this.width - 176) / 2) + 32, ((this.height - 187) / 2) + 41);
+                } else {
+                    RenderUtils.renderCenterTop((160 / 2) - 16, 39, 11, 11, this.width, (this.height - 187) / 2, stack, IC_UNCONNECTED);
+                    RenderSystem.disableBlend();
+                    RenderUtils.renderText(stack, "未连接", ((this.width - 176) / 2) + 32, ((this.height - 187) / 2) + 41);
+                }
+                for (int i = 0; i < nodes.size(); i++) {
+                    int index = i;
+                    if (page > 1) {
+                        // 多于一页
+                        index = i + (page - 1) * 8;
+                    }
+                    if (i >= 8 || index >= nodes.size()) break;
+                    AcademyNode node = nodes.get(index);
+                    String name = node.getName();
+                    RenderSystem.setShaderColor(1, 1, 1, 0.7f);
+                    RenderSystem.enableBlend();
+                    RenderSystem.defaultBlendFunc();
+                    RenderUtils.renderCenterTop(-5, 62 + (i * 13), 150, 16, this.width, (this.height - 187) / 2, stack, ELEMENT_BG_300_32);
+                    RenderUtils.renderCenterTop(-(160 / 2) + 16 - 4, 65 + (i * 13), 11, 11, this.width, (this.height - 187) / 2, stack, IC_MATRIX);
+                    // TODO: 加密节点的绘制
+                    if (this.isHoveringButton(((this.width - 176) / 2) + (160 / 2) * 2 - 16 - 6, ((this.height - 187) / 2) + 65 + (i * 13), 15, 15, mouseX, mouseY)) {
+                        RenderSystem.setShaderColor(1, 1, 1, 1);
+                    } else {
+                        RenderSystem.setShaderColor(1, 1, 1, 0.7f);
+                    }
+                    if (activeNode == index) {
+                        RenderUtils.renderCenterTop((160 / 2) - 16 - 6, 65 + (i * 13), 11, 11, this.width, (this.height - 187) / 2, stack, IC_CONNECTED);
+                    } else {
+                        RenderUtils.renderCenterTop((160 / 2) - 16 - 6, 65 + (i * 13), 11, 11, this.width, (this.height - 187) / 2, stack, IC_UNCONNECTED);
+                    }
+                    RenderSystem.disableBlend();
+                    RenderUtils.renderText(stack, name, ((this.width - 176) / 2) + 32 - 4, ((this.height - 187) / 2) + 67 + (i * 13));
+                }
+            }
         }
-        RenderUtils.renderCenterTop(-(176 / 2) - 10, 0, 18, 18, this.width, (this.height - 187) / 2, stack, IC_INV);
         RenderSystem.disableBlend();
     }
 
 
     public boolean isHoveringButton(int x, int y, int w, int h, double mx, double my) {
-        //System.out.println("mx: " + mx + " x:" + x + " cx:" + (x + w) + " w:" + w + " h:" + h);
-        //System.out.println("my: " + my + " y:" + y + " cx:" + (y + h) + " w:" + w + " h:" + h);
+
         return ((x + w) > mx && mx > x) && ((y + h) > my && my > y);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int p_97750_) {
-        // TODO: 列表连接按钮点击
         if (this.isHoveringButton(((this.width - 176) / 2) - 20, ((this.height - 187) / 2), 18, 18, mouseX, mouseY)) {
             this.wireless = false;
         }
@@ -151,9 +208,39 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
             if (this.isHoveringButton(((this.width - 176) / 2) - 20, ((this.height - 187) / 2) + 20, 18, 18, mouseX, mouseY)) {
                 this.wireless = true;
             }
+            if (wireless) {
+                if (this.isHoveringButton(((this.width - 176) / 2) + (160 / 2) * 2 - 5, ((this.height - 187) / 2) + 65, 15, 15, mouseX, mouseY)) {
+                    if (page > 1) {
+                        page--;
+                    }
+                }
+                if (this.isHoveringButton(((this.width - 176) / 2) + (160 / 2) * 2 - 5, ((this.height - 187) / 2) + 65 + (7 * 13), 15, 15, mouseX, mouseY)) {
+                    if (page * 8 < nodes.size()) {
+                        page++;
+                    }
+                }
+                if (this.isHoveringButton(((this.width - 176) / 2) + (160 / 2) * 2 - 16, ((this.height - 187) / 2) + 39, 15, 15, mouseX, mouseY)) {
+                    if (activeNode != -1) {
+                        activeNode = -1;
+                    }
+                }
+                for (int i = 0; i < nodes.size(); i++) {
+                    int index = i;
+                    if (page > 1) {
+                        // 多于一页
+                        index = i + (page - 1) * 8;
+                    }
+                    if (i >= 8 || index >= nodes.size()) break;
+                    if (this.isHoveringButton(((this.width - 176) / 2) + (160 / 2) * 2 - 16 - 6, ((this.height - 187) / 2) + 65 + (i * 13), 15, 15, mouseX, mouseY) && activeNode != index) {
+                        activeNode = index;
+                    }
+                }
+
+            }
         }
         if (!this.wireless)
             return super.mouseClicked(mouseX, mouseY, p_97750_);
+
         return true;
     }
 }

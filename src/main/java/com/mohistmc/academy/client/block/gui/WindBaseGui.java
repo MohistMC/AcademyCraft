@@ -56,21 +56,20 @@ public class WindBaseGui extends AcademyBaseUI<WindGenBaseMenu> {
         RenderSystem.defaultBlendFunc();
 
         RenderUtils.renderCenter(176, 187, this.width, this.height, stack, UI_WIN_BASE);
-        if (this.menu.pos!=null){
+        if (this.menu.pos != null) {
             BlockEntity entity = inv.player.level.getBlockEntity(this.menu.pos);
             if (entity instanceof WindGenBaseBlockEntity blockEntity) {
                 RenderUtils.renderCenterTop(0, 49, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_BASE);// 基座
                 if (blockEntity.isValidMiddle()) {
                     RenderSystem.setShaderColor(1, 1, 1, 1);
                 } else {
-                    RenderSystem.setShaderColor(1, 1, 1, -.8f);
-
-                    RenderUtils.renderCenterTop(0, 31, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_MIDDLE);// 中部
+                    RenderSystem.setShaderColor(1, 1, 1, 0.7f);
                 }
+                RenderUtils.renderCenterTop(0, 31, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_MIDDLE);// 中部
                 if (blockEntity.isValidMain()) {
                     RenderSystem.setShaderColor(1, 1, 1, 1);
                 } else {
-                    RenderSystem.setShaderColor(1, 1, 1, -.8f);
+                    RenderSystem.setShaderColor(1, 1, 1, 0.7f);
                 }
                 RenderUtils.renderCenterTop(0, 13, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_MAIN);// 头部
                 RenderSystem.disableBlend();
