@@ -31,5 +31,6 @@ public class AcademyItem extends Item {
              */
             components.add(Component.translatable(key).withStyle(ChatFormatting.GRAY));
         }
+        super.appendHoverText(itemStack, level, components, tooltipFlag);
     }
 }

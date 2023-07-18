@@ -11,6 +11,8 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
@@ -28,17 +30,17 @@ public class WindGenFan extends BaseEntityBlock {
         super(Properties.of(Material.STONE)
                 .sound(SoundType.STONE)
                 .noOcclusion()
-                .strength(4.0f)
-                .requiresCorrectToolForDrops()
+                .instabreak()
         );
         this.registerDefaultState(this.getStateDefinition().any()
                 .setValue(FACING, Direction.NORTH));
     }
 
     @Override
-    public void animateTick(BlockState p_220827_, Level p_220828_, BlockPos p_220829_, RandomSource p_220830_) {
+    public void animateTick(BlockState state, Level p_220828_, BlockPos p_220829_, RandomSource p_220830_) {
 
     }
+
 
     @Nullable
     @Override
@@ -53,6 +55,7 @@ public class WindGenFan extends BaseEntityBlock {
 
     @Override
     public List<ItemStack> getDrops(BlockState p_60537_, LootContext.Builder p_60538_) {
+
         return new ArrayList<>() {{
             add(new ItemStack(AcademyItems.WINDGEN_FAN.get()));
         }};
@@ -79,5 +82,6 @@ public class WindGenFan extends BaseEntityBlock {
     public BlockState getStateForPlacement(BlockPlaceContext p_49820_) {
         return this.defaultBlockState().setValue(FACING, p_49820_.getHorizontalDirection().getOpposite());
     }
+
 
 }

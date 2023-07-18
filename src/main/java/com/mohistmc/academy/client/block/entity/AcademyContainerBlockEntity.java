@@ -46,7 +46,7 @@ public abstract class AcademyContainerBlockEntity extends BlockEntity {
     public void serializeContentItems(CompoundTag tag) {
         CompoundTag contentItems = new CompoundTag();
         if (items.isEmpty()) {
-            items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
+            items =NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
         }
         for (int i = 0; i < getContainerSize(); i++) {
             contentItems.put(String.valueOf(i), items.get(i).serializeNBT());
@@ -78,4 +78,6 @@ public abstract class AcademyContainerBlockEntity extends BlockEntity {
         serializeContentItems(tag);
         return tag;
     }
+
+
 }

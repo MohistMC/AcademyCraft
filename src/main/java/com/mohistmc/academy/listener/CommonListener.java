@@ -2,6 +2,7 @@ package com.mohistmc.academy.listener;
 
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.client.block.gui.WindBaseGui;
+import com.mohistmc.academy.client.block.gui.WindMainGui;
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyItems;
 import com.mohistmc.academy.world.AcademyMenus;
@@ -82,7 +83,8 @@ public class CommonListener {
 
     private void clientSetup(final FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            MenuScreens.register(AcademyMenus.WINDBASE_MENU.get(), WindBaseGui::new);
+            MenuScreens.register(AcademyMenus.WIND_BASE_MENU.get(), WindBaseGui::new);
+            MenuScreens.register(AcademyMenus.WIND_MAIN_MENU.get(), WindMainGui::new);
         });
     }
 

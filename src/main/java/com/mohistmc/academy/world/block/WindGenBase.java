@@ -11,7 +11,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -26,6 +25,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -33,7 +35,6 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ public class WindGenBase extends BaseEntityBlock {
         super(Properties.of(Material.STONE)
                 .sound(SoundType.STONE)
                 .noOcclusion()
+                .randomTicks()
                 .strength(4.0f)
                 .requiresCorrectToolForDrops()
         );
@@ -82,6 +84,35 @@ public class WindGenBase extends BaseEntityBlock {
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState p_60569_, boolean p_60570_) {
         Block subBlock = AcademyBlocks.WIND_GEN_BASE_SUB.get();
         level.setBlock(pos.above(1), subBlock.defaultBlockState(), 19);
+
+
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState p_153213_, BlockEntityType<T> p_153214_) {
+        return (level, pos, p_155255_, p_155256_) -> {
+            mainHeight = 0;
+            for (int i = 2; i < 200; i++) {
+                Block block = level.getBlockState(pos.above(i)).getBlock();
+                if (block instanceof WindGenPillar) {
+                    mainHeight++;
+                    continue;
+                } else if (block instanceof WindGenMain mainBlock) {
+                    if (mainHeight > 4) {
+                        this.validBlock = mainBlock.hasFan();
+                        break;
+                    }
+                }
+                this.validBlock = false;
+                break;
+            }
+
+            BlockEntity entity = level.getBlockEntity(pos);
+            if (entity instanceof WindGenBaseBlockEntity blockEntity) {
+                blockEntity.tick(this.validBlock);
+            }
+        };
     }
 
     @Override
@@ -148,32 +179,6 @@ public class WindGenBase extends BaseEntityBlock {
     @Override
     public RenderShape getRenderShape(BlockState p_49232_) {
         return RenderShape.MODEL;
-    }
-
-    @Override
-    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource randomSource) {
-
-
-    }
-
-    @Override
-    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource p_222948_) {
-        mainHeight = 0;
-        for (int i = 2; i < 20; i++) {
-            Block block = level.getBlockState(pos.above(i)).getBlock();
-            if (block instanceof WindGenPillar) {
-                mainHeight++;
-                continue;
-            } else if (block instanceof WindGenMain) {
-                if (mainHeight > 3) {
-                    this.validBlock = true;
-                    break;
-                }
-                continue;
-            }
-            this.validBlock = false;
-            break;
-        }
     }
 
     @Override
