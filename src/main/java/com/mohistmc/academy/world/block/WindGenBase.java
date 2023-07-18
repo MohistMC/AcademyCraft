@@ -110,7 +110,7 @@ public class WindGenBase extends BaseEntityBlock {
 
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof WindGenBaseBlockEntity blockEntity) {
-                blockEntity.tick(this.validBlock);
+                blockEntity.tick(this.validBlock,mainHeight>0);
             }
         };
     }

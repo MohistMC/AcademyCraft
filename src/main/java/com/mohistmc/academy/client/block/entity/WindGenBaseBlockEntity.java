@@ -16,6 +16,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class WindGenBaseBlockEntity extends AcademyContainerBlockEntity {
+    private boolean validBlock = false;
+    private boolean validMiddle = false;
+
     public WindGenBaseBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
         super(AcademyBlockEntities.WINDGEN_BASE.get(), p_155229_, p_155230_);
 
@@ -23,7 +26,9 @@ public class WindGenBaseBlockEntity extends AcademyContainerBlockEntity {
     }
 
 
-    public void tick(boolean validBlock) {
+    public void tick(boolean validBlock, boolean validMiddle) {
+        this.validBlock = validBlock;
+        this.validMiddle = validMiddle;
         if (!validBlock) return;
         getItems().forEach((item) -> {
             if (item.is(AcademyItems.ENERGY_UNIT.get())) {
@@ -54,4 +59,11 @@ public class WindGenBaseBlockEntity extends AcademyContainerBlockEntity {
         return LazyOptional.empty();
     }
 
+    public boolean isValidMiddle() {
+        return validMiddle;
+    }
+
+    public boolean isValidMain() {
+        return validBlock;
+    }
 }
