@@ -4,10 +4,10 @@
       "model": "academy:block/windgen_main",
       "y": -90
     },
-    "facing=north": {
+    "facing=south": {
       "model": "academy:block/windgen_main"
     },
-    "facing=south": {
+    "facing=north": {
       "model": "academy:block/windgen_main",
       "y": -180
     },

@@ -5,6 +5,7 @@ import com.mohistmc.academy.client.block.entity.PhaseLiquidBlockEntity;
 import com.mohistmc.academy.client.block.entity.model.CatEngineModel;
 import com.mohistmc.academy.client.block.entity.render.CatEngineRender;
 import com.mohistmc.academy.client.block.entity.render.PhaseLiquidRender;
+import com.mohistmc.academy.client.block.entity.render.WindGenFanRender;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
@@ -46,6 +47,7 @@ public class ClientListener {
     public static void onRegisterRenderer(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(AcademyBlockEntities.CAT_ENGINE.get(), CatEngineRender::new);
         event.registerBlockEntityRenderer(AcademyBlockEntities.PHASE_LIQUID.get(), PhaseLiquidRender::new);
+        event.registerBlockEntityRenderer(AcademyBlockEntities.WINDGEN_FAN.get(), WindGenFanRender::new);
     }
 
 

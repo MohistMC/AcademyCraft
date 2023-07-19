@@ -4,23 +4,21 @@ import com.mohistmc.academy.client.block.entity.PhaseLiquidBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
 import net.minecraft.core.Direction;
 import org.joml.Matrix4f;
 
-public class PhaseLiquidRender extends TheEndPortalRenderer<PhaseLiquidBlockEntity> {
+public class PhaseLiquidRender implements BlockEntityRenderer<PhaseLiquidBlockEntity> {
 
     public PhaseLiquidRender(BlockEntityRendererProvider.Context ctx) {
-        super(ctx);
-        //this.render = new TheEndGatewayRenderer(ctx);
+
     }
 
     @Override
     public void render(PhaseLiquidBlockEntity entity, float p_112308_, PoseStack stack, MultiBufferSource source, int p_112311_, int p_112312_) {
         //参考: TheEndGatewayRenderer
-        Matrix4f matrix4f = stack.last().pose();
-        this.renderCube(matrix4f, source.getBuffer(this.renderType()));
+        //TODO: 粒子效果
     }
 
     private void renderCube(Matrix4f p_254024_, VertexConsumer p_173693_) {

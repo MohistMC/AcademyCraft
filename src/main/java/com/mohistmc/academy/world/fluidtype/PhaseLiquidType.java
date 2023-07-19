@@ -48,9 +48,9 @@ public class PhaseLiquidType extends FluidType {
     public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
         consumer.accept(new IClientFluidTypeExtensions() {
             private static final ResourceLocation UNDERWATER_LOCATION = new ResourceLocation(AcademyCraft.MODID, "textures/block/black.png"),
-                    WATER_STILL = new ResourceLocation(AcademyCraft.MODID, "block/black"),
-                    WATER_FLOW = new ResourceLocation(AcademyCraft.MODID, "block/black"),
-                    WATER_OVERLAY = new ResourceLocation(AcademyCraft.MODID, "block/black");
+                    WATER_STILL = new ResourceLocation(AcademyCraft.MODID, "block/phase_liquid"),
+                    WATER_FLOW = new ResourceLocation(AcademyCraft.MODID, "block/phase_liquid"),
+                    WATER_OVERLAY = new ResourceLocation(AcademyCraft.MODID, "block/phase_liquid");
 
             @Override
             public ResourceLocation getStillTexture() {
