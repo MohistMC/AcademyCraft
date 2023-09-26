@@ -32,11 +32,6 @@ public class EntityBloodSplash extends EntityAdvanced
         setSize(RandUtils.rangef(0.8f, 1.3f));
     }
 
-    @Override
-    protected void entityInit() {
-
-    }
-
     public void setSize(float size) {
         this.width = this.height = size;
     }

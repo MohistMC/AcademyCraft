@@ -54,11 +54,6 @@ public class EntityRayBase extends EntityAdvanced implements IRay {
         ignoreFrustumCheck = true;
     }
 
-    @Override
-    protected void entityInit() {
-
-    }
-
     public void setFromTo(Vec3d from, Vec3d to) {
         setFromTo(from.x, from.y, from.z, to.x, to.y, to.z);
     }

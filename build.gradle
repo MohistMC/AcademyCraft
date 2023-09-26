@@ -64,10 +64,6 @@ repositories {
         url = "https://jitpack.io"
     }
     maven {
-        name = "ic2"
-        url = "http://maven.ic2.player.to"
-    }
-    maven {
         // location of the maven that hosts JEI files
         name = "Progwml6 maven"
         url = "http://dvs1.progwml6.com/files/maven"
@@ -77,6 +73,7 @@ repositories {
         name = "jared"
         url = "http://maven.blamejared.com"
     }
+    maven { url 'https://maven.mohistmc.com/' }
 }
 
 configurations {

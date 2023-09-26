@@ -162,7 +162,6 @@ class HandlerEntity(_target: EntityPlayer, _time: Int, _range: Double, _advanced
 
   override def writeEntityToNBT(p_70014_1_ : NBTTagCompound) = {}
   override def readEntityFromNBT(p_70037_1_ : NBTTagCompound) = {}
-  override def entityInit(): Unit = {}
 }
 
 @RegEntityRender(classOf[HandlerEntity])

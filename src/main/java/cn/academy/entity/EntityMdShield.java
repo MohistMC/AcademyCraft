@@ -32,11 +32,6 @@ public class EntityMdShield extends EntityAdvanced
     }
 
     @Override
-    protected void entityInit() {
-
-    }
-
-    @Override
     public void onUpdate() {
         super.onUpdate();
         updatePos();

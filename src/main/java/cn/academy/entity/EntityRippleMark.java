@@ -25,11 +25,6 @@ public class EntityRippleMark extends EntityAdvanced
     }
 
     @Override
-    protected void entityInit() {
-
-    }
-
-    @Override
     public boolean shouldRenderInPass(int pass) {
         return pass == 1;
     }

@@ -102,6 +102,7 @@ public class EntityMdBall extends EntityAdvanced
     
     @Override
     public void entityInit() {
+        super.entityInit();
         this.dataManager.register(SPAWNER_ID,0);
         this.dataManager.register(SUB_X,0F);
         this.dataManager.register(SUB_Y,0F);
