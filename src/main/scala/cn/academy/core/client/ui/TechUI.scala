@@ -227,9 +227,6 @@ object TechUI {
     xSize += 31
     ySize += 20
 
-    override protected def drawGuiContainerBackgroundLayer(partialTicks: Float, mouseX: Int, mouseY: Int): Unit = {
-    }
-
     class InfoArea extends Widget {
       this :+ new BlendQuad()
 
