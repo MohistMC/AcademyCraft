@@ -146,6 +146,7 @@ public class ACItems {
         event.getRegistry().register(energy_convert_component);
         energy_unit.setRegistryName("academy:energy_unit");
         energy_unit.setTranslationKey("ac_energy_unit");
+        energy_unit.setNoRepair();
         energy_unit.setCreativeTab(cn.academy.AcademyCraft.cct);
         event.getRegistry().register(energy_unit);
         imag_silicon_ingot.setRegistryName("academy:imag_silicon_ingot");
