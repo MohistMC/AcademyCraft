@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.IWorldGenerator;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * AC Ore Generator
@@ -27,14 +28,16 @@ public class ACWorldGen implements IWorldGenerator {
     }
     
     private List<CustomWorldGen> generators = Arrays.asList(
-            new CustomWorldGen(new WorldGenMinable(ACBlocks.reso_ore.getDefaultState(), 9), 60, 8),
-            new CustomWorldGen(new WorldGenMinable(ACBlocks.constraint_metal.getDefaultState(),  12), 60, 8),
-            new CustomWorldGen(new WorldGenMinable(ACBlocks.crystal_ore.getDefaultState(), 12), 60, 12),
-            new CustomWorldGen(new WorldGenMinable(ACBlocks.imagsil_ore.getDefaultState(),  11), 60, 8));
+            new CustomWorldGen("reso_ore", new WorldGenMinable(ACBlocks.reso_ore.getDefaultState(), 9), 60, 8),
+            new CustomWorldGen("constraint_metal", new WorldGenMinable(ACBlocks.constraint_metal.getDefaultState(),  12), 60, 8),
+            new CustomWorldGen("crystal_ore", new WorldGenMinable(ACBlocks.crystal_ore.getDefaultState(), 12), 60, 12),
+            new CustomWorldGen("imagsil_ore", new WorldGenMinable(ACBlocks.imagsil_ore.getDefaultState(),  11), 60, 8));
     
     private void genOverworld(World world, Random random, int x, int z) {
         for(CustomWorldGen gen : generators) {
-            gen.generate(world, random, x, z);
+            if (ArrayUtils.contains(WorldGenInit.ORES_WHITELISTED, gen.getKey())) {
+                gen.generate(world, random, x, z);
+            }
         }
     }
 }

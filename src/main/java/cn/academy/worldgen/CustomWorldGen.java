@@ -18,12 +18,18 @@ public class CustomWorldGen {
     int yLimit;
     int densityPerChunk;
     Biome[] biomeIds;
+    String key;
     
-    public CustomWorldGen(WorldGenerator _gen, int _yLimit, int _density, Biome... _biomeIds) {
+    public CustomWorldGen(String _key, WorldGenerator _gen, int _yLimit, int _density, Biome... _biomeIds) {
+        key = _key;
         gen = _gen;
         yLimit = _yLimit;
         densityPerChunk = _density;
         biomeIds = _biomeIds;
+    }
+
+    public String getKey() {
+        return this.key;
     }
     
     public void generate(World world, Random rand, int chunkMinX, int chunkMinZ) {
