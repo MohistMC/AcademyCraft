@@ -9,6 +9,7 @@ import cn.academy.ability.context.ContextManager;
 import cn.academy.ability.context.DelegateState;
 import cn.academy.ability.context.IStateProvider;
 import cn.academy.ability.context.KeyDelegate;
+import cn.academy.ability.ctrl.ClientHandler;
 import cn.academy.ability.develop.DeveloperType;
 import cn.academy.ability.develop.condition.DevConditionDep;
 import cn.academy.ability.develop.condition.DevConditionDeveloperType;
@@ -18,6 +19,7 @@ import cn.academy.datapart.AbilityData;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.typesafe.config.Config;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
@@ -353,8 +355,13 @@ public abstract class Skill extends Controllable {
             this((Function<EntityPlayer, Context>) supplier::apply);
         }
 
+        public boolean isSpectator() {
+            return Minecraft.getMinecraft().player.isSpectator();
+        }
+
         @Override
         public void onKeyDown() {
+            if (isSpectator()) return;
             context = contextSupplier.apply(getPlayer());
             ContextManager.instance.activate(context);
 

@@ -2,8 +2,8 @@
 # 文件主要按内容分类和分节 (以需要和minecraft做交互的本地化名称作为例外).
 
 # 常规
-itemGroup.AcademyCraft=AcademyCraft
-ac.data_config_parse_fail=[AcademyCraft] 解析自定义数据配置文件失败。错误:
+itemGroup.AcademyCraft=超能力/学园都市
+ac.data_config_parse_fail=[超能力/学园都市] 解析自定义数据配置文件失败。错误:
 
 # 物品名称
 item.ac_crystal_low.name=低纯度虚能水晶
