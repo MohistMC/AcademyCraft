@@ -8,20 +8,17 @@ on:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 8
-      uses: actions/setup-java@v3
-      with:
-        java-version: 8
-        distribution: 'temurin'
-    - name: Build 1.12.2
-      run: |
-        chmod +x ./gradlew
-        ./gradlew build
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: AcademyCraft
-        path: build/libs/
+      - uses: actions/checkout@v3
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+        with:
+          arguments: build
