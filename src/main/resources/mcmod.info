@@ -3,7 +3,7 @@
   "modid": "academy",
   "name": "Academy Craft",
   "description": "A mod about superability. Become an ESPer and alter your reality in Minecraft!",
-  "version": "${version}",
+  "version": "1.1.5",
   "url": "https://ac.li-dev.cn/",
   "updateUrl": "",
   "authorList": ["Lambda Innovation"],
