@@ -2,9 +2,9 @@ name: Test and build 1.12.2
 
 on:
   push:
-    branches: [ 1.12.2 ]
+    branches: [1.12.2]
   pull_request:
-    branches: [ 1.12.2 ]
+    branches: [1.12.2]
 
 jobs:
   build:
@@ -16,10 +16,10 @@ jobs:
       with:
         java-version: 8
         distribution: 'temurin'
-    - name: Build mohist 1.12.2
+    - name: Build 1.12.2
       run: |
         chmod +x ./gradlew
-        ./gradlew clean build
+        ./gradlew build
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3
       with:
