@@ -94,6 +94,7 @@ public class AbilityPipeline {
     private static Property propDestroyBlocks;
     private static Property propWorldsDestroyingBlocks;
     private static Property propUseMouseWheel;
+    public static boolean renderImagPhaseLiquid;
 
     @StateEventCallback
     private static void _init(FMLInitializationEvent event) {
@@ -104,6 +105,7 @@ public class AbilityPipeline {
         propWorldsDestroyingBlocks = conf.get("generic", "worldsWhitelistedDestroyingBlocks", new String[]{},
                 "The worlds which whitelisted destroying blocks. World IDs, sub folder names and world names are all supported.");
         propUseMouseWheel = conf.get("generic","useMouseWheel",false,"Whether teleporter can use mouse wheel to control the destination.");
+        renderImagPhaseLiquid = conf.getBoolean("renderImagPhaseLiquid", "generic",true,"Whether to allow rendering of ImagPhaseLiquid particles.");
         MinecraftForge.EVENT_BUS.register(new AbilityPipeline());
     }
 

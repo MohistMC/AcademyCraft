@@ -1,6 +1,7 @@
 package cn.academy.client.render.block;
 
 import cn.academy.Resources;
+import cn.academy.ability.AbilityPipeline;
 import cn.academy.block.tileentity.TileImagPhase;
 import cn.lambdalib2.registry.mc.RegTileEntityRender;
 import cn.lambdalib2.render.legacy.Tessellator;
@@ -57,10 +58,12 @@ public class RenderImagPhaseLiquid extends TileEntitySpecialRenderer {
     }
 
     @Override
-    public void render(TileEntity te, double x,
-            double y, double z, float w, int destroyStage, float alpha_) {
+    public void render(TileEntity te, double x, double y, double z, float w, int destroyStage, float alpha_) {
         if(!(te.getBlockType() instanceof BlockFluidClassic))
             return;
+        if (!AbilityPipeline.renderImagPhaseLiquid) {
+            return;
+        }
 
         BlockPos p = te.getPos();
         double distSq = Minecraft.getMinecraft().player.getDistanceSq(p.getX() + .5, p.getY() + .5, p.getZ() + .5);
