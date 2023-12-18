@@ -7,7 +7,6 @@ import cn.academy.item.ItemCoin;
 import cn.lambdalib2.registry.StateEventCallback;
 import cn.lambdalib2.registry.mc.RegEntity;
 import cn.lambdalib2.s11n.network.NetworkS11n;
-import cn.lambdalib2.util.PlayerUtils;
 import cn.lambdalib2.util.RandUtils;
 import cn.lambdalib2.util.entityx.EntityAdvanced;
 import cn.lambdalib2.util.entityx.MotionHandler;
@@ -18,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
@@ -92,6 +92,7 @@ public class EntityCoinThrowing extends EntityAdvanced
     public EntityPlayer player;
     
     public ItemStack stack;
+    public EnumHand hand = EnumHand.MAIN_HAND;
     public Vec3d axis;
     public boolean isSync = false;
     
@@ -101,10 +102,11 @@ public class EntityCoinThrowing extends EntityAdvanced
         setup();
     }
     
-    public EntityCoinThrowing(EntityPlayer player, ItemStack is) {
+    public EntityCoinThrowing(EntityPlayer player, ItemStack is, EnumHand hand) {
         super(player.getEntityWorld());
         this.stack = is;
         this.player = player;
+        this.hand = hand;
         this.initHt = (float) player.posY;
         setPosition(player.posX, player.posY, player.posZ);
         this.motionY = player.motionY;
@@ -134,28 +136,35 @@ public class EntityCoinThrowing extends EntityAdvanced
     
     void finishThrowing() {
         //try merge
-        if(!getEntityWorld().isRemote && !player.capabilities.isCreativeMode) {
-            ItemStack equipped = player.getHeldItemMainhand();
-            if (equipped.isEmpty()) {
-                player.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ACItems.coin));
-            } else if (equipped.getItem() == ACItems.coin && equipped.getCount() < equipped.getMaxStackSize()) {
-                equipped.setCount(equipped.getCount()+1);
-//                player.inventory.inventoryChanged = true;
-                player.inventory.markDirty();
-            } else if (PlayerUtils.mergeStackable(player.inventory, new ItemStack(
-                    ACItems.coin)) == 0) {
-                ;
+        if (!getEntityWorld().isRemote && !player.capabilities.isCreativeMode) {
+            if (isMainHand()) {
+                ItemStack equipped = player.getHeldItemMainhand();
+                finishItem(equipped, EntityEquipmentSlot.MAINHAND);
             } else {
-                //if fail...
-                world.spawnEntity(new EntityItem(world, player.posX, player.posY
-                    + yOffset, player.posZ, new ItemStack(ACItems.coin)));
+                ItemStack equipped = player.getHeldItemOffhand();
+                finishItem(equipped, EntityEquipmentSlot.OFFHAND);
             }
         }
         if (getEntityWorld().isRemote && PLAY_HEADS_OR_TAILS) {
-            player.sendMessage(new TextComponentTranslation(
-                "ac.headsOrTails." + RandUtils.nextInt(2)));
+            player.sendMessage(new TextComponentTranslation("ac.headsOrTails." + RandUtils.nextInt(2)));
         }
         setDead();
+    }
+
+    public void finishItem(ItemStack equipped, EntityEquipmentSlot equipmentSlot) {
+        if (equipped.isEmpty()) {
+            player.setItemStackToSlot(equipmentSlot, new ItemStack(ACItems.coin));
+        } else if (equipped.getItem() == ACItems.coin && equipped.getCount() < equipped.getMaxStackSize()) {
+            equipped.setCount(equipped.getCount() + 1);
+            player.inventory.markDirty();
+        } else {
+            //if fail...
+            world.spawnEntity(new EntityItem(world, player.posX, player.posY + yOffset, player.posZ, new ItemStack(ACItems.coin)));
+        }
+    }
+
+    public boolean isMainHand() {
+        return this.hand == EnumHand.MAIN_HAND;
     }
     
     public double getProgress() {
@@ -177,8 +186,7 @@ public class EntityCoinThrowing extends EntityAdvanced
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         setDead();
-        getEntityWorld().spawnEntity(new EntityItem(world, posX, posY, posZ, new ItemStack(
-                ACItems.coin)));
+        getEntityWorld().spawnEntity(new EntityItem(world, posX, posY, posZ, new ItemStack(ACItems.coin)));
     }
 
     @Override
@@ -196,15 +204,13 @@ public class EntityCoinThrowing extends EntityAdvanced
 
         @StateEventCallback
         private static void init(FMLInitializationEvent event) {
-            PLAY_HEADS_OR_TAILS = AcademyCraft.config.getBoolean("headsOrTails",
-                "generic", false, "Show heads or tails after throwing a coin.");
+            PLAY_HEADS_OR_TAILS = AcademyCraft.config.getBoolean("headsOrTails", "generic", false, "Show heads or tails after throwing a coin.");
             MinecraftForge.EVENT_BUS.register(instance);
         }
 
         @SubscribeEvent
         public void onConfigModified(ConfigModifyEvent e) {
-            PLAY_HEADS_OR_TAILS = AcademyCraft.config.getBoolean("headsOrTails",
-                "generic", false, "Show heads or tails after throwing a coin.");
+            PLAY_HEADS_OR_TAILS = AcademyCraft.config.getBoolean("headsOrTails", "generic", false, "Show heads or tails after throwing a coin.");
         }
     }
 

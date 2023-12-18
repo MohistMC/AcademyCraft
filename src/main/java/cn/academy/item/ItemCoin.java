@@ -109,7 +109,7 @@ public class ItemCoin extends Item {
         }
 
         //Spawn at both side, not syncing for render effect purpose
-        EntityCoinThrowing etc = new EntityCoinThrowing(player, stack);
+        EntityCoinThrowing etc = new EntityCoinThrowing(player, stack, hand);
         world.spawnEntity(etc);
 
         player.playSound(Resources.sound("entity.flipcoin"), 0.5f, 1.0f);
