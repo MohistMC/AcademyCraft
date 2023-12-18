@@ -82,10 +82,12 @@ public class AcademyCraft {
 
         config = new Configuration(event.getSuggestedConfigurationFile());
         config.load();
-        Boolean analyticFlag = config.getBoolean("analysis","generic",true,"switch for analytic system");
+        /*
+        boolean analyticFlag = config.getBoolean("analysis","generic",false,"switch for analytic system");
         if(analyticFlag){
             analyticDataListener = AnalyticDataListener.instance;
         }
+        */
     }
 
     @EventHandler
