@@ -1,7 +1,13 @@
 package com.mohistmc.academy;
 
 import com.mohistmc.academy.listener.CommonListener;
-import com.mohistmc.academy.world.*;
+import com.mohistmc.academy.world.AcademyBlockEntities;
+import com.mohistmc.academy.world.AcademyBlocks;
+import com.mohistmc.academy.world.AcademyEntities;
+import com.mohistmc.academy.world.AcademyFluidTypes;
+import com.mohistmc.academy.world.AcademyFluids;
+import com.mohistmc.academy.world.AcademyItems;
+import com.mohistmc.academy.world.AcademyMenus;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.fml.common.Mod;
 import org.slf4j.Logger;

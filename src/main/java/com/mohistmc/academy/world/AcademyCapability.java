@@ -5,7 +5,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 
-
 public class AcademyCapability {
 
     public static Capability<IIFCapability> IF_CAPABILITY = CapabilityManager.get(new CapabilityToken<IIFCapability>() {

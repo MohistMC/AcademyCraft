@@ -7,6 +7,7 @@ import com.mohistmc.academy.utils.RenderUtils;
 import com.mohistmc.academy.world.menu.WindGenBaseMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -29,12 +30,12 @@ public class WindBaseGui extends AcademyBaseUI<WindGenBaseMenu> {
     }
 
     @Override
-    protected void renderLabels(PoseStack p_97808_, int p_97809_, int p_97810_) {
+    protected void renderLabels(GuiGraphics p_97808_, int p_97809_, int p_97810_) {
         //TODO: nothing
     }
 
     @Override
-    public void renderBackground(PoseStack stack, float p_97788_, int mouseX, int mouseY) {
+    public void renderBackground(GuiGraphics stack, float p_97788_, int mouseX, int mouseY) {
 
         RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.enableBlend();
@@ -42,7 +43,7 @@ public class WindBaseGui extends AcademyBaseUI<WindGenBaseMenu> {
 
         RenderUtils.renderCenter(176, 187, this.width, this.height, stack, UI_WIN_BASE);
         if (this.menu.pos != null) {
-            BlockEntity entity = inv.player.level.getBlockEntity(this.menu.pos);
+            BlockEntity entity = inv.player.level().getBlockEntity(this.menu.pos);
             if (entity instanceof WindGenBaseBlockEntity blockEntity) {
                 RenderUtils.renderCenterTop(0, 49, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_BASE);// 基座
                 if (blockEntity.isValidMiddle()) {

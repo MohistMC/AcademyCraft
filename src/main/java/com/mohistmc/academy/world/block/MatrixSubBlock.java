@@ -1,27 +1,25 @@
 package com.mohistmc.academy.world.block;
 
-import com.mohistmc.academy.client.block.entity.DevNormalSubBlockEntity;
 import com.mohistmc.academy.client.block.entity.MatrixSubBlockEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import org.jetbrains.annotations.Nullable;
 
 public class MatrixSubBlock extends BaseEntityBlock {
+    public static final MapCodec<MatrixSubBlock> CODEC = simpleCodec(MatrixSubBlock::new);
+    public MatrixSubBlock(Properties properties) {
+        super(properties);
+    }
 
-    public MatrixSubBlock() {
-        super(Properties.of(Material.STONE)
-                .sound(SoundType.STONE)
-                .noOcclusion()
-                .strength(4.0f)
-                .requiresCorrectToolForDrops()
-        );
+    @Override
+    protected MapCodec<MatrixSubBlock> codec() {
+        return CODEC;
     }
 
     @Override

@@ -1,17 +1,36 @@
 package com.mohistmc.academy.world;
 
 import com.mohistmc.academy.AcademyCraft;
-import com.mohistmc.academy.world.block.*;
+import com.mohistmc.academy.world.block.AbilityInterferer;
+import com.mohistmc.academy.world.block.CatEngine;
+import com.mohistmc.academy.world.block.ConstraintMetal;
+import com.mohistmc.academy.world.block.CrystalOre;
+import com.mohistmc.academy.world.block.DevAdvanced;
+import com.mohistmc.academy.world.block.DevAdvancedSubBlock;
+import com.mohistmc.academy.world.block.DevNormal;
+import com.mohistmc.academy.world.block.DevNormalSubBlock;
+import com.mohistmc.academy.world.block.ImagFusor;
+import com.mohistmc.academy.world.block.ImagsilOre;
+import com.mohistmc.academy.world.block.MachineFrame;
+import com.mohistmc.academy.world.block.Matrix;
+import com.mohistmc.academy.world.block.MatrixSubBlock;
+import com.mohistmc.academy.world.block.MetalFomer;
+import com.mohistmc.academy.world.block.NodeAdvanced;
+import com.mohistmc.academy.world.block.NodeBasic;
+import com.mohistmc.academy.world.block.NodeStandard;
+import com.mohistmc.academy.world.block.PhaseFluidBlock;
+import com.mohistmc.academy.world.block.PhaseGen;
+import com.mohistmc.academy.world.block.ResoOre;
+import com.mohistmc.academy.world.block.SolarGen;
+import com.mohistmc.academy.world.block.WindGenBase;
+import com.mohistmc.academy.world.block.WindGenBaseSubBlock;
+import com.mohistmc.academy.world.block.WindGenFan;
+import com.mohistmc.academy.world.block.WindGenMain;
+import com.mohistmc.academy.world.block.WindGenPillar;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.LiquidBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.FlowingFluid;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Material;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-
 
 public class AcademyBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, AcademyCraft.MODID);

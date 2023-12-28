@@ -1,11 +1,8 @@
 package com.mohistmc.academy.world.block;
 
 import com.mohistmc.academy.client.block.entity.NodeBasicBlockEntity;
-import com.mohistmc.academy.client.block.entity.PhaseLiquidBlockEntity;
-import com.mohistmc.academy.client.block.gui.NodeBasicGui;
-import com.mohistmc.academy.world.AcademyItems;
 import com.mohistmc.academy.world.menu.NodeBasicMenu;
-import com.mohistmc.academy.world.menu.WindGenBaseMenu;
+import com.mojang.serialization.MapCodec;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,43 +14,42 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class NodeBasic extends BaseEntityBlock {
-
+    public static final MapCodec<NodeBasic> CODEC = simpleCodec(NodeBasic::new);
     private static final IntegerProperty WORKING = IntegerProperty.create("working", 0, 4);
     private static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
 
-    public NodeBasic() {
-        super(Properties.of(Material.STONE)
-                .sound(SoundType.STONE)
-                .noOcclusion()
-                .strength(4.0f)
-                .requiresCorrectToolForDrops()
-        );
+    public NodeBasic(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.getStateDefinition().any()
                 .setValue(CONNECTED, false)
                 .setValue(WORKING, 0)
                 .setValue(FACING, Direction.NORTH));
 
+    }
+
+    @Override
+    protected MapCodec<NodeBasic> codec() {
+        return CODEC;
     }
 
     @Override
@@ -66,13 +62,6 @@ public class NodeBasic extends BaseEntityBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext p_49820_) {
         return this.defaultBlockState().setValue(FACING, p_49820_.getHorizontalDirection().getOpposite());
-    }
-
-    @Override
-    public List<ItemStack> getDrops(BlockState p_60537_, LootContext.Builder p_60538_) {
-        return new ArrayList<>() {{
-            add(new ItemStack(AcademyItems.NODE_BASIC.get()));
-        }};
     }
 
     @Override

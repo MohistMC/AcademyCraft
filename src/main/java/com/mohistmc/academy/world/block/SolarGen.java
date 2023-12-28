@@ -1,36 +1,36 @@
 package com.mohistmc.academy.world.block;
 
 import com.mohistmc.academy.client.block.entity.SolarGenBlockEntity;
-import com.mohistmc.academy.world.AcademyItems;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SolarGen extends BaseEntityBlock {
+    public static final MapCodec<SolarGen> CODEC = simpleCodec(SolarGen::new);
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-    public SolarGen() {
-        super(Properties.of(Material.STONE)
-                .sound(SoundType.STONE)
-                .noOcclusion()
-                .strength(4.0f)
-                .requiresCorrectToolForDrops()
-        );
+    public SolarGen(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.getStateDefinition().any()
                 .setValue(FACING, Direction.NORTH));
+    }
+
+    @Override
+    protected MapCodec<SolarGen> codec() {
+        return CODEC;
     }
 
     @Override
@@ -47,13 +47,6 @@ public class SolarGen extends BaseEntityBlock {
     @Override
     public RenderShape getRenderShape(BlockState p_49232_) {
         return RenderShape.MODEL;
-    }
-
-    @Override
-    public List<ItemStack> getDrops(BlockState p_60537_, LootContext.Builder p_60538_) {
-        return new ArrayList<>() {{
-            add(new ItemStack(AcademyItems.SOLAR_GEN.get()));
-        }};
     }
 
     @Override

@@ -1,41 +1,39 @@
 package com.mohistmc.academy.world.block;
 
-import com.mohistmc.academy.client.block.entity.DevNormalBlockEntity;
 import com.mohistmc.academy.client.block.entity.MatrixBlockEntity;
 import com.mohistmc.academy.world.AcademyBlocks;
-import com.mohistmc.academy.world.AcademyItems;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.AirBlock;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Matrix extends BaseEntityBlock {
+    public static final MapCodec<Matrix> CODEC = simpleCodec(Matrix::new);
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
-    public Matrix() {
-        super(Properties.of(Material.STONE)
-                .sound(SoundType.STONE)
-                .noOcclusion()
-                .strength(5.0f)
-                .requiresCorrectToolForDrops()
-        );
-        this.registerDefaultState(this.getStateDefinition().any()
-                .setValue(FACING, Direction.NORTH));
+    public Matrix(Properties properties) {
+        super(properties);
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
+    }
 
+    @Override
+    protected MapCodec<Matrix> codec() {
+        return CODEC;
     }
 
 
@@ -120,15 +118,6 @@ public class Matrix extends BaseEntityBlock {
         }
         super.neighborChanged(state, level, pos, block, neighbor, p_60514_);
     }
-
-
-    @Override
-    public List<ItemStack> getDrops(BlockState p_60537_, LootContext.Builder p_60538_) {
-        return new ArrayList<>() {{
-            add(new ItemStack(AcademyItems.DEV_NORMAL.get()));
-        }};
-    }
-
     @Override
     public RenderShape getRenderShape(BlockState p_49232_) {
         return RenderShape.MODEL;

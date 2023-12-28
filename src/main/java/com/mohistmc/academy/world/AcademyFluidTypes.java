@@ -1,10 +1,7 @@
 package com.mohistmc.academy.world;
 
 import com.mohistmc.academy.AcademyCraft;
-import com.mohistmc.academy.world.fluid.PhaseFluid;
 import com.mohistmc.academy.world.fluidtype.PhaseLiquidType;
-import net.minecraft.world.level.material.FlowingFluid;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;

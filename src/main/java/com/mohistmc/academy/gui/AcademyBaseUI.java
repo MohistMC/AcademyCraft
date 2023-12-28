@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -15,9 +16,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.Level;
-
-import java.util.List;
-import java.util.Objects;
 
 public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractContainerScreen<T> {
 
@@ -78,14 +76,14 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
     }
 
     @Override
-    public void renderBg(PoseStack stack, float p_97788_, int p_97789_, int p_97790_) {
+    public void renderBg(GuiGraphics var1, float var2, int var3, int var4) {
         RenderSystem.setShaderColor(1, 1, 1, 0.7f);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         if (renderBg)
-            RenderUtils.renderCenter(176, 187, this.width, this.height, stack, PARENT_BACKGROUND);
+            RenderUtils.renderCenter(176, 187, this.width, this.height, var1, PARENT_BACKGROUND);
         if (this.renderInv && !this.wireless)
-            RenderUtils.renderCenter(176, 187, this.width, this.height, stack, UI_INV);
+            RenderUtils.renderCenter(176, 187, this.width, this.height, var1, UI_INV);
         RenderSystem.disableBlend();
         if (!this.wireless) {
             // 背包页面
@@ -93,20 +91,20 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             // 机器ui
-            this.renderBackground(stack, p_97788_, p_97789_, p_97790_);
+            this.renderBackground(var1, var3, var4, var2);
             RenderSystem.disableBlend();
         } else {
             // 无线ui
             RenderSystem.setShaderColor(1, 1, 1, 0.7f);
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
-            RenderUtils.renderCenter(176, 187, this.width, this.height, stack, PARENT_BACKGROUND);
-            RenderUtils.renderCenterTop(-(176 / 2) + 20, 10, 18, 18, this.width, (this.height - 187) / 2, stack, IC_TOMATRIX);
-            RenderUtils.renderCenterTop(0, 37, 160, 16, this.width, (this.height - 187) / 2, stack, ELEMENT_BG_300_32);
-            RenderUtils.renderCenterTop(-(160 / 2) + 16, 39, 11, 11, this.width, (this.height - 187) / 2, stack, IC_MATRIX);
+            RenderUtils.renderCenter(176, 187, this.width, this.height, var1, PARENT_BACKGROUND);
+            RenderUtils.renderCenterTop(-(176 / 2) + 20, 10, 18, 18, this.width, (this.height - 187) / 2, var1, IC_TOMATRIX);
+            RenderUtils.renderCenterTop(0, 37, 160, 16, this.width, (this.height - 187) / 2, var1, ELEMENT_BG_300_32);
+            RenderUtils.renderCenterTop(-(160 / 2) + 16, 39, 11, 11, this.width, (this.height - 187) / 2, var1, IC_MATRIX);
 
-            RenderUtils.renderText(stack, "Connected", ((this.width - 176) / 2) + 13, ((this.height - 187) / 2) + 30);
-            RenderUtils.renderText(stack, "Available", ((this.width - 176) / 2) + 13, ((this.height - 187) / 2) + 55);
+            RenderUtils.renderText(var1, "Connected", ((this.width - 176) / 2) + 13, ((this.height - 187) / 2) + 30);
+            RenderUtils.renderText(var1, "Available", ((this.width - 176) / 2) + 13, ((this.height - 187) / 2) + 55);
 
         }
 
@@ -123,16 +121,14 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
         nodes.add(new AcademyNode(nodes.size() + "Node", pass, null, null));
     }
 
-
-    public abstract void renderBackground(PoseStack stack, float p_97788_, int mouseX, int mouseY);
+    public abstract void renderBackground(GuiGraphics stack, float p_97788_, int mouseX, int mouseY);
 
     @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float p_97798_) {
+    public void render(GuiGraphics stack, int mouseX, int mouseY, float p_97798_) {
         if (!this.wireless)
             super.render(stack, mouseX, mouseY, p_97798_);
-        super.renderBackground(stack);
         super.renderTooltip(stack, mouseX, mouseY);
-        this.renderBg(stack, p_97798_, mouseX, mouseY);
+        this.renderBackground(stack, mouseX, mouseY, p_97798_);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         if (this.isHoveringButton(((this.width - 176) / 2) - 20, ((this.height - 187) / 2), 18, 18, mouseX, mouseY) || !wireless) {

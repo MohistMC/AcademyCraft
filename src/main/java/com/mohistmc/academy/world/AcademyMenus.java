@@ -1,7 +1,6 @@
 package com.mohistmc.academy.world;
 
 import com.mohistmc.academy.AcademyCraft;
-import com.mohistmc.academy.world.menu.AcademyMenu;
 import com.mohistmc.academy.world.menu.NodeBasicMenu;
 import com.mohistmc.academy.world.menu.WindGenBaseMenu;
 import com.mohistmc.academy.world.menu.WindGenMainMenu;

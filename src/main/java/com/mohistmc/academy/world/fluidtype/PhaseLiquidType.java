@@ -3,11 +3,11 @@ package com.mohistmc.academy.world.fluidtype;
 import com.mohistmc.academy.AcademyCraft;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.function.Consumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.FogRenderer;
-import net.minecraft.client.renderer.ScreenEffectRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -17,12 +17,9 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Consumer;
 
 public class PhaseLiquidType extends FluidType {
     public PhaseLiquidType() {

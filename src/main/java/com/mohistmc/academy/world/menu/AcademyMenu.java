@@ -114,7 +114,7 @@ public abstract class AcademyMenu extends AbstractContainerMenu {
 
         public AcademyContainerBlockEntity getBlockEntity(AcademyMenu menu) {
             if (menu != null && menu.pos != null) {
-                BlockEntity entity = menu.inv.player.level.getBlockEntity(menu.pos);
+                BlockEntity entity = menu.inv.player.level().getBlockEntity(menu.pos);
                 if (entity instanceof AcademyContainerBlockEntity blockEntity && !blockEntity.isRemoved()) {
                     return blockEntity;
                 }

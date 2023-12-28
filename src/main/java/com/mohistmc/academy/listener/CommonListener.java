@@ -7,31 +7,33 @@ import com.mohistmc.academy.client.block.gui.WindMainGui;
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyItems;
 import com.mohistmc.academy.world.AcademyMenus;
-import com.mohistmc.academy.world.block.*;
+import com.mohistmc.academy.world.block.DevAdvancedSubBlock;
+import com.mohistmc.academy.world.block.DevNormalSubBlock;
+import com.mohistmc.academy.world.block.MatrixSubBlock;
+import com.mohistmc.academy.world.block.WindGenBaseSubBlock;
+import com.mohistmc.academy.world.block.WindGenFan;
 import com.mohistmc.academy.world.item.AppSettings;
 import com.mohistmc.academy.world.item.Logo;
 import com.mohistmc.academy.world.provider.AcademyBlockTagsProvider;
 import com.mojang.logging.LogUtils;
+import java.util.concurrent.CompletableFuture;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
-import net.minecraftforge.common.MinecraftForge;
-
-import java.util.concurrent.CompletableFuture;
 
 /**
  * 通用事件监听器
@@ -91,7 +93,7 @@ public class CommonListener {
     }
 
 
-    private void addCreative(CreativeModeTabEvent.Register event) {
+    private void addCreative(BuildCreativeModeTabContentsEvent event) {
         event.registerCreativeModeTab(new ResourceLocation(AcademyCraft.MODID, "academy_group"), builder ->
                 builder.title(Component.translatable("itemGroup.academy"))
                         .icon(() -> new ItemStack(AcademyItems.LOGO.get()))

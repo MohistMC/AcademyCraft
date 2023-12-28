@@ -1,7 +1,21 @@
 package com.mohistmc.academy.world;
 
 import com.mohistmc.academy.AcademyCraft;
-import com.mohistmc.academy.client.block.entity.*;
+import com.mohistmc.academy.client.block.entity.CatEngineBlockEntity;
+import com.mohistmc.academy.client.block.entity.DevAdvancedBlockEntity;
+import com.mohistmc.academy.client.block.entity.DevNormalBlockEntity;
+import com.mohistmc.academy.client.block.entity.DevNormalSubBlockEntity;
+import com.mohistmc.academy.client.block.entity.MatrixBlockEntity;
+import com.mohistmc.academy.client.block.entity.MatrixSubBlockEntity;
+import com.mohistmc.academy.client.block.entity.NodeBasicBlockEntity;
+import com.mohistmc.academy.client.block.entity.PhaseGenBlockEntity;
+import com.mohistmc.academy.client.block.entity.PhaseLiquidBlockEntity;
+import com.mohistmc.academy.client.block.entity.SolarGenBlockEntity;
+import com.mohistmc.academy.client.block.entity.WindGenBaseBlockEntity;
+import com.mohistmc.academy.client.block.entity.WindGenBaseSubBlockEntity;
+import com.mohistmc.academy.client.block.entity.WindGenFanBlockEntity;
+import com.mohistmc.academy.client.block.entity.WindGenMainBlockEntity;
+import com.mohistmc.academy.client.block.entity.WindGenPillarBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;

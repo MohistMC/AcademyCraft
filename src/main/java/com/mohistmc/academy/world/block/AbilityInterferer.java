@@ -1,33 +1,23 @@
 package com.mohistmc.academy.world.block;
 
-import com.mohistmc.academy.world.AcademyItems;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.PickaxeItem;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AbilityInterferer extends Block {
 
     private static final IntegerProperty STATUS = IntegerProperty.create("status", 0, 1);
 
     public AbilityInterferer() {
-        super(Properties.of(Material.STONE)
+        super(Properties.of()
                 .sound(SoundType.STONE)
                 .noOcclusion()
                 .strength(3.0f)
@@ -48,12 +38,5 @@ public class AbilityInterferer extends Block {
         // TODO: 打开GUI
         return InteractionResult.CONSUME;
 
-    }
-
-    @Override
-    public List<ItemStack> getDrops(BlockState p_60537_, LootContext.Builder p_60538_) {
-        return new ArrayList<>() {{
-            add(new ItemStack(AcademyItems.ABILITY_INTERFERER.get()));
-        }};
     }
 }

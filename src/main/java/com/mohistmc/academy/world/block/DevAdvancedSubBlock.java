@@ -1,28 +1,26 @@
 package com.mohistmc.academy.world.block;
 
-import com.mohistmc.academy.client.block.entity.DevAdvancedBlockEntity;
 import com.mohistmc.academy.client.block.entity.DevAdvancedSubBlockEntity;
-import com.mohistmc.academy.client.block.entity.DevNormalSubBlockEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import org.jetbrains.annotations.Nullable;
 
 public class DevAdvancedSubBlock extends BaseEntityBlock {
 
-    public DevAdvancedSubBlock() {
-        super(Properties.of(Material.STONE)
-                .sound(SoundType.STONE)
-                .noOcclusion()
-                .strength(4.0f)
-                .requiresCorrectToolForDrops()
-        );
+    public static final MapCodec<DevAdvancedSubBlock> CODEC = simpleCodec(DevAdvancedSubBlock::new);
+    public DevAdvancedSubBlock(Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    protected MapCodec<DevAdvancedSubBlock> codec() {
+        return CODEC;
     }
 
     @Override

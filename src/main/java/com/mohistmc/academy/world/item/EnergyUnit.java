@@ -1,15 +1,11 @@
 package com.mohistmc.academy.world.item;
 
-import com.mohistmc.academy.capability.IFCapabilityImpl;
+import java.util.List;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class EnergyUnit extends AcademyItem {
     public EnergyUnit() {
