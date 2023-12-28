@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -101,12 +100,12 @@ public class RenderUtils {
     public static void render(int drawWidth, int drawHeight, int left, int top, GuiGraphics poseStack, ResourceLocation resource) {
         RenderSystem.setShaderTexture(0, resource);
         //drawWidth和drawHeight名字反了，值没反
-        GuiComponent.blit(poseStack, left, top, 0, 0, 0, drawWidth, drawHeight, drawWidth, drawHeight);
+        //GuiComponent.blit(poseStack, left, top, 0, 0, 0, drawWidth, drawHeight, drawWidth, drawHeight); // TODO
     }
 
     public static void render(int drawWidth, int drawHeight,int drawTextureWidth, int drawTextureHeight, int left, int top, GuiGraphics poseStack, ResourceLocation resource, int textureStartX, int textureStartY, int textureWidth, int textureHeight) {
         RenderSystem.setShaderTexture(0, resource);
-        GuiComponent.blit(poseStack, left, top, drawWidth, drawHeight, textureStartY, textureStartX, drawTextureWidth, drawTextureHeight, textureWidth, textureHeight);
+        //GuiComponent.blit(poseStack, left, top, drawWidth, drawHeight, textureStartY, textureStartX, drawTextureWidth, drawTextureHeight, textureWidth, textureHeight); TODO
     }
 
     public static void renderText(GuiGraphics stack, String text, int x, int y) {

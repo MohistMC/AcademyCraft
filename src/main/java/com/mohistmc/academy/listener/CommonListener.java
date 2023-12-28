@@ -58,7 +58,6 @@ public class CommonListener {
         if (this.modEventBus == null) {
             this.modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         }
-        this.modEventBus.addListener(this::addCreative);
         this.modEventBus.addListener(this::commonSetup);
         this.modEventBus.addListener(this::gatherData);
         this.modEventBus.addListener(this::clientSetup);
@@ -90,32 +89,6 @@ public class CommonListener {
             MenuScreens.register(AcademyMenus.WIND_MAIN_MENU.get(), WindMainGui::new);
             MenuScreens.register(AcademyMenus.NODE_BASIC.get(), NodeBasicGui::new);
         });
-    }
-
-
-    private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        event.registerCreativeModeTab(new ResourceLocation(AcademyCraft.MODID, "academy_group"), builder ->
-                builder.title(Component.translatable("itemGroup.academy"))
-                        .icon(() -> new ItemStack(AcademyItems.LOGO.get()))
-                        .displayItems((params, output) -> {
-                            AcademyItems.ITEMS.getEntries().stream().filter(item ->
-                                    !((item.get() instanceof Logo)
-                                            || (item.get() instanceof AppSettings)
-                                            || item.get().getDescriptionId().contains("dev_normal_sub")
-                                            || item.get().getDescriptionId().contains("dev_advanced_sub")
-                                            || item.get().getDescriptionId().contains("windgen_fan_block")
-                                            || item.get().getDescriptionId().contains("wingen_base_sub")
-                                            || item.get().getDescriptionId().contains("matrix_sub"))
-                            ).forEach(item -> output.accept(item.get()));
-                            AcademyBlocks.BLOCKS.getEntries().stream().filter(block ->
-                                    !(block.get() instanceof DevNormalSubBlock)
-                                            && !(block.get() instanceof DevAdvancedSubBlock)
-                                            && !(block.get() instanceof MatrixSubBlock)
-                                            && !(block.get() instanceof WindGenBaseSubBlock)
-                                            && !(block.get() instanceof WindGenFan)
-                                            && !(block.get() instanceof LiquidBlock)
-                            ).forEach(block -> output.accept(block.get()));
-                        }));
     }
 
     public IEventBus getModEventBus() {

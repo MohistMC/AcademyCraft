@@ -35,7 +35,7 @@ public class WindBaseGui extends AcademyBaseUI<WindGenBaseMenu> {
     }
 
     @Override
-    public void renderBackground(GuiGraphics stack, float p_97788_, int mouseX, int mouseY) {
+    public void renderBackground(GuiGraphics stack, int mouseX, int mouseY, float p_97788_) {
 
         RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.enableBlend();

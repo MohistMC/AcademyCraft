@@ -121,8 +121,6 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
         nodes.add(new AcademyNode(nodes.size() + "Node", pass, null, null));
     }
 
-    public abstract void renderBackground(GuiGraphics stack, float p_97788_, int mouseX, int mouseY);
-
     @Override
     public void render(GuiGraphics stack, int mouseX, int mouseY, float p_97798_) {
         if (!this.wireless)

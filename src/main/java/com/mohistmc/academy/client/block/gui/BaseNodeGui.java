@@ -6,6 +6,7 @@ import com.mohistmc.academy.utils.RenderUtils;
 import com.mohistmc.academy.world.menu.BaseNodeMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -25,7 +26,7 @@ public abstract class BaseNodeGui<T extends BaseNodeMenu> extends AcademyBaseUI<
     private int animIndex = 0;
 
     @Override
-    public void renderBackground(PoseStack stack, float p_97788_, int mouseX, int mouseY) {
+    public void renderBackground(GuiGraphics stack,  int mouseX, int mouseY, float p_97788_) {
         RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();

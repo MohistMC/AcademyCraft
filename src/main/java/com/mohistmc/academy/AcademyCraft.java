@@ -24,6 +24,7 @@ public class AcademyCraft {
         listener.init();
         AcademyMenus.MENUS.register(listener.getModEventBus());
         AcademyItems.ITEMS.register(listener.getModEventBus());
+        AcademyItems.TABS.register(listener.getModEventBus());
         AcademyBlocks.BLOCKS.register(listener.getModEventBus());
         AcademyFluidTypes.FLUID_TYPES.register(listener.getModEventBus());
         AcademyFluids.FLUIDS.register(listener.getModEventBus());

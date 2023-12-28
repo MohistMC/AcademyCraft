@@ -1,6 +1,11 @@
 package com.mohistmc.academy.world;
 
 import com.mohistmc.academy.AcademyCraft;
+import com.mohistmc.academy.world.block.DevAdvancedSubBlock;
+import com.mohistmc.academy.world.block.DevNormalSubBlock;
+import com.mohistmc.academy.world.block.MatrixSubBlock;
+import com.mohistmc.academy.world.block.WindGenBaseSubBlock;
+import com.mohistmc.academy.world.block.WindGenFan;
 import com.mohistmc.academy.world.item.AppFreqTransmitter;
 import com.mohistmc.academy.world.item.AppMediaPlayer;
 import com.mohistmc.academy.world.item.AppSettings;
@@ -41,18 +46,52 @@ import com.mohistmc.academy.world.item.TerminalInstaller;
 import com.mohistmc.academy.world.item.Tutorial;
 import com.mohistmc.academy.world.item.Wafer;
 import com.mohistmc.academy.world.item.WindgenFan;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 
 public class AcademyItems {
+
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, AcademyCraft.MODID);
+    public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, AcademyCraft.MODID);
+
+    public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = TABS.register("academy_group", () -> CreativeModeTab.builder()
+            // Set name of tab to display
+            .title(Component.translatable("itemGroup." + AcademyCraft.MODID))
+            // Set icon of creative tab
+            .icon(() -> new ItemStack(AcademyItems.LOGO.get()))
+            // Add default items to tab
+            .displayItems((params, output) -> {
+                AcademyItems.ITEMS.getEntries().stream().filter(item ->
+                        !((item.get() instanceof Logo)
+                                || (item.get() instanceof AppSettings)
+                                || item.get().getDescriptionId().contains("dev_normal_sub")
+                                || item.get().getDescriptionId().contains("dev_advanced_sub")
+                                || item.get().getDescriptionId().contains("windgen_fan_block")
+                                || item.get().getDescriptionId().contains("wingen_base_sub")
+                                || item.get().getDescriptionId().contains("matrix_sub"))
+                ).forEach(item -> output.accept(item.get()));
+                AcademyBlocks.BLOCKS.getEntries().stream().filter(block ->
+                        !(block.get() instanceof DevNormalSubBlock)
+                                && !(block.get() instanceof DevAdvancedSubBlock)
+                                && !(block.get() instanceof MatrixSubBlock)
+                                && !(block.get() instanceof WindGenBaseSubBlock)
+                                && !(block.get() instanceof WindGenFan)
+                                && !(block.get() instanceof LiquidBlock)
+                ).forEach(block -> output.accept(block.get()));
+            })
+            .build()
+    );
 
     public static final RegistryObject<Item> CAT_ENGINE = ITEMS.register("cat_engine", () -> new BlockItem(AcademyBlocks.CAT_ENGINE.get(), new Item.Properties()));
     public static final RegistryObject<Item> ABILITY_INTERFERER = ITEMS.register("ability_interferer", () -> new BlockItem(AcademyBlocks.ABILITY_INTERFERER.get(), new Item.Properties()));
