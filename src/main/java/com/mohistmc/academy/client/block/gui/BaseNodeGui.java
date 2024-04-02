@@ -5,7 +5,6 @@ import com.mohistmc.academy.gui.AcademyBaseUI;
 import com.mohistmc.academy.utils.RenderUtils;
 import com.mohistmc.academy.world.menu.BaseNodeMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
