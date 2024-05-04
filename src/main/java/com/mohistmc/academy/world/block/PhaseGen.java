@@ -40,7 +40,7 @@ public class PhaseGen extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState p_60503_, Level p_60504_, BlockPos p_60505_, Player player, InteractionHand p_60507_, BlockHitResult p_60508_) {
+    public InteractionResult useWithoutItem(BlockState p_60503_, Level p_60504_, BlockPos p_60505_, Player player, BlockHitResult p_60508_) {
 
         // TODO: 打开GUI
         return InteractionResult.CONSUME;

@@ -33,7 +33,7 @@ public class AbilityInterferer extends Block {
 
 
     @Override
-    public InteractionResult use(BlockState p_60503_, Level p_60504_, BlockPos p_60505_, Player player, InteractionHand p_60507_, BlockHitResult p_60508_) {
+    public InteractionResult useWithoutItem(BlockState p_251703_, Level p_249080_, BlockPos p_250832_, Player p_251881_, BlockHitResult p_252293_) {
 
         // TODO: 打开GUI
         return InteractionResult.CONSUME;

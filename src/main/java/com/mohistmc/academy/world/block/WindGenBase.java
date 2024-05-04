@@ -109,7 +109,7 @@ public class WindGenBase extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand p_60507_, BlockHitResult p_60508_) {
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult p_60508_) {
         // TODO: 打开GUI
         //if (this.validBlock) {
         if (!level.isClientSide()) {

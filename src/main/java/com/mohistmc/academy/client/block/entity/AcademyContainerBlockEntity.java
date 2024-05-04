@@ -1,6 +1,7 @@
 package com.mohistmc.academy.client.block.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -20,30 +21,30 @@ public abstract class AcademyContainerBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        setItems(deserializeContentItems(tag));
+    public void loadAdditional(CompoundTag p_331149_, HolderLookup.Provider p_333170_) {
+        super.loadAdditional(p_331149_, p_333170_);
+        setItems(deserializeContentItems(p_331149_, p_333170_));
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        serializeContentItems(tag);
+    public void saveAdditional(CompoundTag p_187471_, HolderLookup.Provider p_327783_) {
+        super.saveAdditional(p_187471_, p_327783_);
+        serializeContentItems(p_187471_, p_327783_);
 
     }
 
-    public NonNullList<ItemStack> deserializeContentItems(CompoundTag tag) {
+    public NonNullList<ItemStack> deserializeContentItems(CompoundTag tag, HolderLookup.Provider provider) {
         NonNullList<ItemStack> items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
         CompoundTag contentItems = tag.getCompound("contentItems");
         for (int i = 0; i < getContainerSize(); i++) {
             if (contentItems.contains(String.valueOf(i))) {
-                items.set(i, ItemStack.of(contentItems.getCompound(String.valueOf(i))));
+                items.set(i, ItemStack.parseOptional(provider, contentItems.getCompound(String.valueOf(i))));
             }
         }
         return items;
     }
 
-    public void serializeContentItems(CompoundTag tag) {
+    public void serializeContentItems(CompoundTag tag, HolderLookup.Provider provider) {
         CompoundTag contentItems = new CompoundTag();
         if (items.isEmpty()) {
             items =NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
@@ -73,7 +74,7 @@ public abstract class AcademyContainerBlockEntity extends BlockEntity {
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
+    public CompoundTag getUpdateTag(HolderLookup.Provider p_329179_) {
         CompoundTag tag = new CompoundTag();
         serializeContentItems(tag);
         return tag;

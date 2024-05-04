@@ -16,7 +16,7 @@ public class AcademyItem extends Item {
 
 
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack p_41421_, Item.TooltipContext p_333372_, List<Component> p_41423_, TooltipFlag p_41424_) {
         String key = getDescriptionId() + ".desc";
         Component tag = Component.translatable(key);
         if (!key.equalsIgnoreCase(tag.getString())) {
@@ -26,8 +26,8 @@ public class AcademyItem extends Item {
                 compoundtag = itemStack.getOrCreateTagElement(this.getDescriptionId());
             }
              */
-            components.add(Component.translatable(key).withStyle(ChatFormatting.GRAY));
+            p_41423_.add(Component.translatable(key).withStyle(ChatFormatting.GRAY));
         }
-        super.appendHoverText(itemStack, level, components, tooltipFlag);
+        super.appendHoverText(p_41421_, p_333372_, p_41423_, p_41424_);
     }
 }

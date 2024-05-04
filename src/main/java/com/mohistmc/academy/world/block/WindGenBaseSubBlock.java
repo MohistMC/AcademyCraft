@@ -38,9 +38,9 @@ public class WindGenBaseSubBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState p_60503_, Level level, BlockPos pos, Player player, InteractionHand p_60507_, BlockHitResult p_60508_) {
+    public InteractionResult useWithoutItem(BlockState p_60503_, Level level, BlockPos pos, Player player, BlockHitResult p_60508_) {
         BlockState state = level.getBlockState(pos.below(1));
-        return state.getBlock().use(state, level, pos.below(1), player, p_60507_, p_60508_);
+        return super.useWithoutItem(state, level, pos.below(1), player, p_60508_);
     }
 
     @Nullable

@@ -41,7 +41,7 @@ public class CatEngine extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState p_60503_, Level level, BlockPos pos, Player p_60506_, InteractionHand p_60507_, BlockHitResult p_60508_) {
+    public InteractionResult useWithoutItem(BlockState p_60503_, Level level, BlockPos pos, Player p_60506_, BlockHitResult p_60508_) {
         BlockEntity entity = level.getBlockEntity(pos);
         if (entity instanceof CatEngineBlockEntity blockEntity) {
             blockEntity.enable = !blockEntity.enable;
