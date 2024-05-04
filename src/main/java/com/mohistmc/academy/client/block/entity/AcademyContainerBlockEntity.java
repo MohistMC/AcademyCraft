@@ -38,7 +38,7 @@ public abstract class AcademyContainerBlockEntity extends BlockEntity {
         CompoundTag contentItems = tag.getCompound("contentItems");
         for (int i = 0; i < getContainerSize(); i++) {
             if (contentItems.contains(String.valueOf(i))) {
-                items.set(i, ItemStack.parseOptional(provider, contentItems.getCompound(String.valueOf(i))));
+                items.set(i, ItemStack.parse(provider, contentItems.getCompound("SaddleItem")).orElse(ItemStack.EMPTY));
             }
         }
         return items;
