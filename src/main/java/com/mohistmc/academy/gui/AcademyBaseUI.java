@@ -124,8 +124,9 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
     public void render(GuiGraphics stack, int mouseX, int mouseY, float p_97798_) {
         if (!this.wireless)
             super.render(stack, mouseX, mouseY, p_97798_);
+        super.renderBackground(stack, mouseX, mouseY, p_97798_);
         super.renderTooltip(stack, mouseX, mouseY);
-        this.renderBackground(stack, mouseX, mouseY, p_97798_);
+        this.renderBg(stack, p_97798_, mouseX, mouseY);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         if (this.isHoveringButton(((this.width - 176) / 2) - 20, ((this.height - 187) / 2), 18, 18, mouseX, mouseY) || !wireless) {

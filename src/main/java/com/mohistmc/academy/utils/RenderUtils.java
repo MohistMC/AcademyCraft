@@ -97,14 +97,11 @@ public class RenderUtils {
 
 
     public static void render(int drawWidth, int drawHeight, int left, int top, GuiGraphics poseStack, ResourceLocation resource) {
-        RenderSystem.setShaderTexture(0, resource);
-        //drawWidth和drawHeight名字反了，值没反
-        //GuiComponent.blit(poseStack, left, top, 0, 0, 0, drawWidth, drawHeight, drawWidth, drawHeight); // TODO
+        poseStack.blit(resource, left, top, 0, 0, 0, drawWidth, drawHeight, drawWidth, drawHeight);
     }
 
     public static void render(int drawWidth, int drawHeight,int drawTextureWidth, int drawTextureHeight, int left, int top, GuiGraphics poseStack, ResourceLocation resource, int textureStartX, int textureStartY, int textureWidth, int textureHeight) {
-        RenderSystem.setShaderTexture(0, resource);
-        //GuiComponent.blit(poseStack, left, top, drawWidth, drawHeight, textureStartY, textureStartX, drawTextureWidth, drawTextureHeight, textureWidth, textureHeight); TODO
+        poseStack.blit(resource, left, top, drawWidth, drawHeight, textureStartY, textureStartX, drawTextureWidth, drawTextureHeight, textureWidth, textureHeight);
     }
 
     public static void renderText(GuiGraphics stack, String text, int x, int y) {
