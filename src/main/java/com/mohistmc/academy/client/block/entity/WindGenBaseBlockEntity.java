@@ -34,7 +34,7 @@ public class WindGenBaseBlockEntity extends AcademyContainerBlockEntity {
                     Object cap = optional.get();
                     if (cap instanceof IIFCapability ifPower) {
                         item.setDamageValue(item.getDamageValue() - ifPower.getIF());
-                        item.applyComponents(ifPower.serializeNBT(item.collectComponents()));
+                        // item.applyComponents(ifPower.serializeNBT(item.collectComponents())); TODO
                     }
                 }
             }

@@ -50,7 +50,7 @@ public abstract class AcademyContainerBlockEntity extends BlockEntity {
             items =NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
         }
         for (int i = 0; i < getContainerSize(); i++) {
-            contentItems.put(String.valueOf(i), items.get(i).serializeNBT());
+            // contentItems.put(String.valueOf(i), items.get(i).serializeNBT()); TODO
         }
         tag.put("contentItems", contentItems);
     }
@@ -76,7 +76,7 @@ public abstract class AcademyContainerBlockEntity extends BlockEntity {
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider p_329179_) {
         CompoundTag tag = new CompoundTag();
-        serializeContentItems(tag);
+        //serializeContentItems(tag); TODO
         return tag;
     }
 
