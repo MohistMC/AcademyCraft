@@ -72,8 +72,6 @@ public class WindGenBase extends BaseEntityBlock {
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState p_60569_, boolean p_60570_) {
         Block subBlock = AcademyBlocks.WIND_GEN_BASE_SUB.get();
         level.setBlock(pos.above(1), subBlock.defaultBlockState(), 19);
-
-
     }
 
     @Nullable

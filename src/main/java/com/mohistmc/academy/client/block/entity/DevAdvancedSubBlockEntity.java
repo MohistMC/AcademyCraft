@@ -9,7 +9,4 @@ public class DevAdvancedSubBlockEntity extends BlockEntity {
     public DevAdvancedSubBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
         super(AcademyBlockEntities.DEV_ADVANCED_SUB.get(), p_155229_, p_155230_);
     }
-
-
-
 }

@@ -3,6 +3,7 @@ package com.mohistmc.academy.world;
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.client.block.entity.CatEngineBlockEntity;
 import com.mohistmc.academy.client.block.entity.DevAdvancedBlockEntity;
+import com.mohistmc.academy.client.block.entity.DevAdvancedSubBlockEntity;
 import com.mohistmc.academy.client.block.entity.DevNormalBlockEntity;
 import com.mohistmc.academy.client.block.entity.DevNormalSubBlockEntity;
 import com.mohistmc.academy.client.block.entity.MatrixBlockEntity;
@@ -27,9 +28,9 @@ public class AcademyBlockEntities {
 
     public static final RegistryObject<BlockEntityType<CatEngineBlockEntity>> CAT_ENGINE = BLOCK_ENTITIES.register("cat_engine", () -> BlockEntityType.Builder.of(CatEngineBlockEntity::new, AcademyBlocks.CAT_ENGINE.get()).build(null));
     public static final RegistryObject<BlockEntityType<DevNormalBlockEntity>> DEV_NORMAL = BLOCK_ENTITIES.register("dev_normal", () -> BlockEntityType.Builder.of(DevNormalBlockEntity::new, AcademyBlocks.DEV_NORMAL.get()).build(null));
-    public static final RegistryObject<BlockEntityType<DevAdvancedBlockEntity>> DEV_ADVANCED = BLOCK_ENTITIES.register("dev_advanced", () -> BlockEntityType.Builder.of(DevAdvancedBlockEntity::new, AcademyBlocks.DEV_NORMAL.get()).build(null));
+    public static final RegistryObject<BlockEntityType<DevAdvancedBlockEntity>> DEV_ADVANCED = BLOCK_ENTITIES.register("dev_advanced", () -> BlockEntityType.Builder.of(DevAdvancedBlockEntity::new, AcademyBlocks.DEV_ADVANCED.get()).build(null));
     public static final RegistryObject<BlockEntityType<DevNormalSubBlockEntity>> DEV_NORMAL_SUB = BLOCK_ENTITIES.register("dev_normal_sub", () -> BlockEntityType.Builder.of(DevNormalSubBlockEntity::new, AcademyBlocks.DEV_NORMAL_SUB.get()).build(null));
-    public static final RegistryObject<BlockEntityType<DevAdvancedBlockEntity>> DEV_ADVANCED_SUB = BLOCK_ENTITIES.register("dev_advanced_sub", () -> BlockEntityType.Builder.of(DevAdvancedBlockEntity::new, AcademyBlocks.DEV_ADVANCED_SUB.get()).build(null));
+    public static final RegistryObject<BlockEntityType<DevAdvancedSubBlockEntity>> DEV_ADVANCED_SUB = BLOCK_ENTITIES.register("dev_advanced_sub", () -> BlockEntityType.Builder.of(DevAdvancedSubBlockEntity::new, AcademyBlocks.DEV_ADVANCED_SUB.get()).build(null));
     public static final RegistryObject<BlockEntityType<WindGenBaseSubBlockEntity>> WIND_GEN_BASE_SUB = BLOCK_ENTITIES.register("windgen_base_sub", () -> BlockEntityType.Builder.of(WindGenBaseSubBlockEntity::new, AcademyBlocks.WIND_GEN_BASE_SUB.get()).build(null));
     public static final RegistryObject<BlockEntityType<MatrixBlockEntity>> MATRIX = BLOCK_ENTITIES.register("matrix", () -> BlockEntityType.Builder.of(MatrixBlockEntity::new, AcademyBlocks.MATRIX.get()).build(null));
     public static final RegistryObject<BlockEntityType<MatrixSubBlockEntity>> MATRIX_SUB = BLOCK_ENTITIES.register("matrix_sub", () -> BlockEntityType.Builder.of(MatrixSubBlockEntity::new, AcademyBlocks.MATRIX_SUB.get()).build(null));

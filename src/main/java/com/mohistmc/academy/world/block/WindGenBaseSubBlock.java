@@ -1,9 +1,8 @@
 package com.mohistmc.academy.world.block;
 
-import com.mohistmc.academy.client.block.entity.DevAdvancedSubBlockEntity;
+import com.mohistmc.academy.client.block.entity.WindGenBaseSubBlockEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -46,7 +45,7 @@ public class WindGenBaseSubBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-        return new DevAdvancedSubBlockEntity(p_153215_, p_153216_);
+        return new WindGenBaseSubBlockEntity(p_153215_, p_153216_);
     }
 
 
