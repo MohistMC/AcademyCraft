@@ -15,7 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class WindMainGui extends AcademyBaseUI<WindGenMainMenu> {
 
-    private static final ResourceLocation UI_WIN_MAIN = new ResourceLocation(AcademyCraft.MODID, "textures/guis/ui/ui_windmain.png");
+    private static final ResourceLocation UI_WIN_MAIN = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/ui/ui_windmain.png");
     private final Inventory inv;
 
     public WindMainGui(WindGenMainMenu menu, Inventory inv, Component p_97743_) {

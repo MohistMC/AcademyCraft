@@ -39,9 +39,9 @@ public class CommonListener {
     /**
      * 初始化事件
      */
-    public void init() {
+    public void init(FMLJavaModLoadingContext context) {
         if (this.modEventBus == null) {
-            this.modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+            this.modEventBus = context.getModEventBus();
         }
         this.modEventBus.addListener(this::commonSetup);
         this.modEventBus.addListener(this::gatherData);

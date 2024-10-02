@@ -17,10 +17,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class WindBaseGui extends AcademyBaseUI<WindGenBaseMenu> {
 
-    private static final ResourceLocation UI_WIN_BASE = new ResourceLocation(AcademyCraft.MODID, "textures/guis/ui/ui_windbase.png");
-    private static final ResourceLocation IC_WIN_BASE = new ResourceLocation(AcademyCraft.MODID, "textures/guis/icons/icon_wind_base.png");
-    private static final ResourceLocation IC_WIN_MIDDLE = new ResourceLocation(AcademyCraft.MODID, "textures/guis/icons/icon_wind_middle.png");
-    private static final ResourceLocation IC_WIN_MAIN = new ResourceLocation(AcademyCraft.MODID, "textures/guis/icons/icon_wind_main.png");
+    private static final ResourceLocation UI_WIN_BASE = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/ui/ui_windbase.png");
+    private static final ResourceLocation IC_WIN_BASE = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/icons/icon_wind_base.png");
+    private static final ResourceLocation IC_WIN_MIDDLE = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/icons/icon_wind_middle.png");
+    private static final ResourceLocation IC_WIN_MAIN = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/icons/icon_wind_main.png");
     private final Inventory inv;
 
     public WindBaseGui(WindGenBaseMenu menu, Inventory inv, Component p_97743_) {

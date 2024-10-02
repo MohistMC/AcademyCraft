@@ -10,6 +10,7 @@ import com.mohistmc.academy.world.AcademyItems;
 import com.mohistmc.academy.world.AcademyMenus;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
 
@@ -18,10 +19,10 @@ public class AcademyCraft {
     public static final String MODID = "academy";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public AcademyCraft() {
+    public AcademyCraft(FMLJavaModLoadingContext context) {
 
         CommonListener listener = CommonListener.getInstance();
-        listener.init();
+        listener.init(context);
         AcademyMenus.MENUS.register(listener.getModEventBus());
         AcademyItems.ITEMS.register(listener.getModEventBus());
         AcademyItems.TABS.register(listener.getModEventBus());

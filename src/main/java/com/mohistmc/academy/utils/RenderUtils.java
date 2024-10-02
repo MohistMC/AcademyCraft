@@ -1,9 +1,12 @@
 package com.mohistmc.academy.utils;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -57,7 +60,7 @@ public class RenderUtils {
     }
 
     public static void addVertex(Matrix4f p_253955_, PoseStack.Pose p_334620_, VertexConsumer p_253894_, float p_253871_, float p_253841_, float p_254568_, float p_254361_, int p_254357_, float p_254451_, float p_254240_, float p_254117_, float p_253698_) {
-        p_253894_.vertex(p_253955_, p_254451_, (float) p_254357_, p_254240_).color(p_253871_, p_253841_, p_254568_, p_254361_).uv(p_254117_, p_253698_).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(p_334620_, 0.0F, 1.0F, 0.0F).endVertex();
+        p_253894_.addVertex(p_253955_, p_254451_, (float) p_254357_, p_254240_).setColor(p_253871_, p_253841_, p_254568_, p_254361_).setUv(p_254117_, p_253698_).setOverlay(OverlayTexture.NO_OVERLAY).setNormal(p_334620_, 0.0F, 1.0F, 0.0F);
     }
 
     public static void render(int imageWidth, int imageHeight, int x, int y, int width, int height, PoseStack stack, ResourceLocation resource) {
@@ -109,7 +112,7 @@ public class RenderUtils {
     }
 
     public static void renderText(GuiGraphics stack, String text, int x, int y, Style style) {
-        MultiBufferSource.BufferSource source = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+        MultiBufferSource.BufferSource source = MultiBufferSource.immediate(new ByteBufferBuilder(1536));
         ClientTooltipComponent.create(FormattedCharSequence.forward(text,
                         style))
                 .renderText(Minecraft.getInstance().font,

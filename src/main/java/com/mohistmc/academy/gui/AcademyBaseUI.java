@@ -18,20 +18,20 @@ import net.minecraft.world.level.Level;
 
 public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractContainerScreen<T> {
 
-    private static final ResourceLocation PARENT_BACKGROUND = new ResourceLocation(AcademyCraft.MODID, "textures/guis/parent/parent_background.png");
-    private static final ResourceLocation UI_INV = new ResourceLocation(AcademyCraft.MODID, "textures/guis/ui/ui_inventory.png");
+    private static final ResourceLocation PARENT_BACKGROUND = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/parent/parent_background.png");
+    private static final ResourceLocation UI_INV = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/ui/ui_inventory.png");
 
-    private static final ResourceLocation IC_INV = new ResourceLocation(AcademyCraft.MODID, "textures/guis/icons/icon_inv.png");
-    private static final ResourceLocation IC_WIRELESS = new ResourceLocation(AcademyCraft.MODID, "textures/guis/icons/icon_wireless.png");
-    private static final ResourceLocation IC_TOMATRIX = new ResourceLocation(AcademyCraft.MODID, "textures/guis/icons/icon_tomatrix.png");
-    private static final ResourceLocation IC_MATRIX = new ResourceLocation(AcademyCraft.MODID, "textures/guis/icons/icon_matrix.png");
-    private static final ResourceLocation IC_UNCONNECTED = new ResourceLocation(AcademyCraft.MODID, "textures/guis/icons/icon_unconnected.png");
-    private static final ResourceLocation IC_CONNECTED = new ResourceLocation(AcademyCraft.MODID, "textures/guis/icons/icon_connected.png");
-    private static final ResourceLocation IC_KEY = new ResourceLocation(AcademyCraft.MODID, "textures/guis/icons/icon_key.png");
-    private static final ResourceLocation ELEMENT_BG_300_32 = new ResourceLocation(AcademyCraft.MODID, "textures/guis/element/element_background300x32.png");
-    private static final ResourceLocation ELEMENT_BG_300_32_I = new ResourceLocation(AcademyCraft.MODID, "textures/guis/element/element_background300x32_input.png");
-    private static final ResourceLocation BTN_ARROW_UP = new ResourceLocation(AcademyCraft.MODID, "textures/guis/button/button_arrowupb.png");
-    private static final ResourceLocation BTN_ARROW_DOWN = new ResourceLocation(AcademyCraft.MODID, "textures/guis/button/button_arrowdownb.png");
+    private static final ResourceLocation IC_INV = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/icons/icon_inv.png");
+    private static final ResourceLocation IC_WIRELESS = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/icons/icon_wireless.png");
+    private static final ResourceLocation IC_TOMATRIX = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/icons/icon_tomatrix.png");
+    private static final ResourceLocation IC_MATRIX = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/icons/icon_matrix.png");
+    private static final ResourceLocation IC_UNCONNECTED = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/icons/icon_unconnected.png");
+    private static final ResourceLocation IC_CONNECTED = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/icons/icon_connected.png");
+    private static final ResourceLocation IC_KEY = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/icons/icon_key.png");
+    private static final ResourceLocation ELEMENT_BG_300_32 = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/element/element_background300x32.png");
+    private static final ResourceLocation ELEMENT_BG_300_32_I = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/element/element_background300x32_input.png");
+    private static final ResourceLocation BTN_ARROW_UP = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/button/button_arrowupb.png");
+    private static final ResourceLocation BTN_ARROW_DOWN = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/button/button_arrowdownb.png");
     public final Inventory inv;
     private boolean wireless = false;
     private boolean renderInv = true;

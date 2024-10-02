@@ -31,9 +31,9 @@ public class PhaseLiquidRender implements BlockEntityRenderer<PhaseLiquidBlockEn
     }
 
     private void renderFace(Matrix4f p_254247_, VertexConsumer p_254390_, float p_254147_, float p_253639_, float p_254107_, float p_254109_, float p_254021_, float p_254458_, float p_254086_, float p_254310_, Direction p_253619_) {
-        p_254390_.vertex(p_254247_, p_254147_, p_254107_, p_254021_).endVertex();
-        p_254390_.vertex(p_254247_, p_253639_, p_254107_, p_254458_).endVertex();
-        p_254390_.vertex(p_254247_, p_253639_, p_254109_, p_254086_).endVertex();
-        p_254390_.vertex(p_254247_, p_254147_, p_254109_, p_254310_).endVertex();
+        p_254390_.addVertex(p_254247_, p_254147_, p_254107_, p_254021_);
+        p_254390_.addVertex(p_254247_, p_253639_, p_254107_, p_254458_);
+        p_254390_.addVertex(p_254247_, p_253639_, p_254109_, p_254086_);
+        p_254390_.addVertex(p_254247_, p_254147_, p_254109_, p_254310_);
     }
 }

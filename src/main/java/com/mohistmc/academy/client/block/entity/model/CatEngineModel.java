@@ -22,7 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class CatEngineModel extends Model {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(AcademyCraft.MODID, "cat_engine"), "main");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "cat_engine"), "main");
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
     private final ModelPart bb_main;
 
@@ -40,11 +40,8 @@ public class CatEngineModel extends Model {
         return LayerDefinition.create(meshdefinition, 16, 16);
     }
 
-
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        bb_main.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int i, int i1, int i2) {
+        bb_main.render(poseStack, vertexConsumer, i, i1, i2);
     }
-
-
 }
