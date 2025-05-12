@@ -1,6 +1,5 @@
 package com.mohistmc.academy;
 
-import com.mohistmc.academy.listener.CommonListener;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyEntities;
@@ -22,8 +21,6 @@ public class AcademyCraft {
 
     public AcademyCraft(IEventBus modEventBus, ModContainer modContainer) {
 
-        CommonListener listener = CommonListener.getInstance();
-        listener.init(modEventBus);
         AcademyMenus.MENUS.register(modEventBus);
         AcademyItems.ITEMS.register(modEventBus);
         AcademyItems.TABS.register(modEventBus);

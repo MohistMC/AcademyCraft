@@ -1,7 +1,6 @@
 package com.mohistmc.academy.world.fluid;
 
 import com.mohistmc.academy.world.AcademyBlocks;
-import com.mohistmc.academy.world.AcademyFluidTypes;
 import com.mohistmc.academy.world.AcademyFluids;
 import com.mohistmc.academy.world.AcademyItems;
 import java.util.Optional;
@@ -22,7 +21,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.neoforged.neoforge.fluids.FluidType;
 
 public abstract class PhaseFluid extends FlowingFluid {
 
@@ -91,11 +89,6 @@ public abstract class PhaseFluid extends FlowingFluid {
     @Override
     public boolean isSame(Fluid p_76122_) {
         return p_76122_ == AcademyFluids.PHASE_LIQUID.get() || p_76122_ == AcademyFluids.FLOWING_PHASE_LIQUID.get();
-    }
-
-    @Override
-    public FluidType getFluidType() {
-        return AcademyFluidTypes.PHASE_LIQUID.get();
     }
 
 

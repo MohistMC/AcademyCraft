@@ -1,50 +1,31 @@
 package com.mohistmc.academy.listener;
 
+import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.client.block.gui.NodeBasicGui;
 import com.mohistmc.academy.client.block.gui.WindBaseGui;
 import com.mohistmc.academy.client.block.gui.WindMainGui;
 import com.mohistmc.academy.world.AcademyMenus;
 import com.mohistmc.academy.world.provider.AcademyBlockTagsProvider;
-import com.mojang.logging.LogUtils;
 import java.util.concurrent.CompletableFuture;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import org.slf4j.Logger;
 
 /**
  * 通用事件监听器
  *
  * @author lliiooll
  */
+@EventBusSubscriber(modid = AcademyCraft.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class CommonListener {
 
-    private static CommonListener INSTANCE = null;
-    private static final Logger LOGGER = LogUtils.getLogger();
-
-    public static CommonListener getInstance() {
-        if (INSTANCE == null) INSTANCE = new CommonListener();
-        return INSTANCE;
-    }
-
-    /**
-     * 初始化事件
-     */
-    public void init(IEventBus context) {
-        context.addListener(this::commonSetup);
-        context.addListener(this::gatherData);
-        context.addListener(this::clientSetup);
-        NeoForge.EVENT_BUS.register(this);
-    }
-
-    public void gatherData(GatherDataEvent event) {
+    @SubscribeEvent
+    public static void gatherData(GatherDataEvent event) {
         DataGenerator gen = event.getGenerator();
         PackOutput packOutput = gen.getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
@@ -54,21 +35,11 @@ public class CommonListener {
 
     }
 
-    /**
-     * 初始化事件
-     *
-     * @param event
-     */
-    private void commonSetup(final FMLCommonSetupEvent event) {
-        LOGGER.info("HELLO FROM COMMON SETUP");
-    }
-
-    private void clientSetup(final FMLClientSetupEvent event) {
-        event.enqueueWork(() -> {
-            MenuScreens.register(AcademyMenus.WIND_BASE_MENU.get(), WindBaseGui::new);
-            MenuScreens.register(AcademyMenus.WIND_MAIN_MENU.get(), WindMainGui::new);
-            MenuScreens.register(AcademyMenus.NODE_BASIC.get(), NodeBasicGui::new);
-        });
+    @SubscribeEvent
+    public static void registerMenuScreens(RegisterMenuScreensEvent event) {
+        event.register(AcademyMenus.WIND_BASE_MENU.get(), WindBaseGui::new);
+        event.register(AcademyMenus.WIND_MAIN_MENU.get(), WindMainGui::new);
+        event.register(AcademyMenus.NODE_BASIC.get(), NodeBasicGui::new);
     }
 
 }

@@ -1,16 +1,9 @@
 package com.mohistmc.academy.client.block.entity;
 
-import com.mohistmc.academy.capability.IFCapabilityImpl;
-import com.mohistmc.academy.capability.IIFCapability;
 import com.mohistmc.academy.world.AcademyBlockEntities;
-import com.mohistmc.academy.world.AcademyCapability;
 import com.mohistmc.academy.world.AcademyItems;
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class WindGenBaseBlockEntity extends AcademyContainerBlockEntity {
     private boolean validBlock = false;
@@ -27,6 +20,7 @@ public class WindGenBaseBlockEntity extends AcademyContainerBlockEntity {
         if (!validBlock) return;
         getItems().forEach((item) -> {
             if (item.is(AcademyItems.ENERGY_UNIT.get())) {
+                /*
                 Optional<?> optional = getCapability(AcademyCapability.IF_CAPABILITY).resolve();
                 if (optional.isPresent()) {
                     Object cap = optional.get();
@@ -35,6 +29,7 @@ public class WindGenBaseBlockEntity extends AcademyContainerBlockEntity {
                         // item.applyComponents(ifPower.serializeNBT(item.collectComponents())); TODO
                     }
                 }
+                 */
             }
         });
     }
@@ -42,16 +37,6 @@ public class WindGenBaseBlockEntity extends AcademyContainerBlockEntity {
     @Override
     public int getContainerSize() {
         return 1;
-    }
-
-    @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == AcademyCapability.IF_CAPABILITY) {
-            return LazyOptional.of(() ->
-                    new IFCapabilityImpl(1)
-            ).cast();
-        }
-        return LazyOptional.empty();
     }
 
     public boolean isValidMiddle() {
