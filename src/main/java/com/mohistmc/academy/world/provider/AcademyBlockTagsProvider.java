@@ -3,13 +3,13 @@ package com.mohistmc.academy.world.provider;
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.world.AcademyBlocks;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.data.BlockTagsProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.common.data.BlockTagsProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
 public class AcademyBlockTagsProvider extends BlockTagsProvider {
@@ -21,6 +21,6 @@ public class AcademyBlockTagsProvider extends BlockTagsProvider {
     protected void addTags(HolderLookup.Provider p_256380_) {
 
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
-                .add(AcademyBlocks.BLOCKS.getEntries().stream().map(RegistryObject::get).toList().toArray(new Block[0]));
+                .add(AcademyBlocks.BLOCKS.getEntries().stream().map(Supplier::get).toList().toArray(new Block[0]));
     }
 }

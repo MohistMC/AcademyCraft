@@ -10,8 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,15 +61,5 @@ public class CatEngineBlockEntity extends BlockEntity {
 
         e.rot += f2 * 0.4F;
         ++e.time;
-    }
-
-    @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == AcademyCapability.IF_CAPABILITY) {
-            return LazyOptional.of(() ->
-                    new IFCapabilityImpl(114514)
-            ).cast();
-        }
-        return LazyOptional.empty();
     }
 }

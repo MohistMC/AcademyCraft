@@ -1,9 +1,6 @@
 package com.mohistmc.academy.world;
 
 import com.mohistmc.academy.capability.IIFCapability;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
 
 public class AcademyCapability {
 

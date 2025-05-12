@@ -23,15 +23,15 @@ public class AcademyCraft {
     public AcademyCraft(IEventBus modEventBus, ModContainer modContainer) {
 
         CommonListener listener = CommonListener.getInstance();
-        listener.init(context);
-        AcademyMenus.MENUS.register(listener.getModEventBus());
-        AcademyItems.ITEMS.register(listener.getModEventBus());
-        AcademyItems.TABS.register(listener.getModEventBus());
-        AcademyBlocks.BLOCKS.register(listener.getModEventBus());
-        AcademyFluidTypes.FLUID_TYPES.register(listener.getModEventBus());
-        AcademyFluids.FLUIDS.register(listener.getModEventBus());
-        AcademyEntities.ENTITIES.register(listener.getModEventBus());
-        AcademyBlockEntities.BLOCK_ENTITIES.register(listener.getModEventBus());
+        listener.init(modEventBus);
+        AcademyMenus.MENUS.register(modEventBus);
+        AcademyItems.ITEMS.register(modEventBus);
+        AcademyItems.TABS.register(modEventBus);
+        AcademyBlocks.BLOCKS.register(modEventBus);
+        AcademyFluidTypes.FLUID_TYPES.register(modEventBus);
+        AcademyFluids.FLUIDS.register(modEventBus);
+        AcademyEntities.ENTITIES.register(modEventBus);
+        AcademyBlockEntities.BLOCK_ENTITIES.register(modEventBus);
 
     }
 

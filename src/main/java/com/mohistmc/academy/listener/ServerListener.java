@@ -2,10 +2,10 @@ package com.mohistmc.academy.listener;
 
 import com.mohistmc.academy.AcademyCraft;
 import com.mojang.logging.LogUtils;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.server.ServerStartingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.slf4j.Logger;
 
 /**
@@ -13,7 +13,7 @@ import org.slf4j.Logger;
  *
  * @author lliiooll
  */
-@Mod.EventBusSubscriber(modid = AcademyCraft.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.DEDICATED_SERVER)
+@EventBusSubscriber(modid = AcademyCraft.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.DEDICATED_SERVER)
 public class ServerListener {
 
     private static ServerListener INSTANCE = null;

@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class PhaseFluidBlock extends LiquidBlock implements EntityBlock {
     public PhaseFluidBlock() {
-        super(AcademyFluids.PHASE_LIQUID,
+        super(AcademyFluids.PHASE_LIQUID.get(),
                 BlockBehaviour.Properties
                         .of()
                         .noCollission()
