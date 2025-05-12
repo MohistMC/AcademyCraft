@@ -1,7 +1,6 @@
 package com.mohistmc.academy.capability;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
 @AutoRegisterCapability
 public interface IIFCapability {

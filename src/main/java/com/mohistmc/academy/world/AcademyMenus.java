@@ -5,10 +5,7 @@ import com.mohistmc.academy.world.menu.NodeBasicMenu;
 import com.mohistmc.academy.world.menu.WindGenBaseMenu;
 import com.mohistmc.academy.world.menu.WindGenMainMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraftforge.common.extensions.IForgeMenuType;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 
 public class AcademyMenus {

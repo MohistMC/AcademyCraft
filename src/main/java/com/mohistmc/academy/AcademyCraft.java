@@ -9,8 +9,9 @@ import com.mohistmc.academy.world.AcademyFluids;
 import com.mohistmc.academy.world.AcademyItems;
 import com.mohistmc.academy.world.AcademyMenus;
 import com.mojang.logging.LogUtils;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
 
 
@@ -19,7 +20,7 @@ public class AcademyCraft {
     public static final String MODID = "academy";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public AcademyCraft(FMLJavaModLoadingContext context) {
+    public AcademyCraft(IEventBus modEventBus, ModContainer modContainer) {
 
         CommonListener listener = CommonListener.getInstance();
         listener.init(context);
