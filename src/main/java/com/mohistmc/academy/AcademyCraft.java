@@ -1,5 +1,6 @@
 package com.mohistmc.academy;
 
+import com.mohistmc.academy.listener.ServerListener;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyEntities;
@@ -11,6 +12,7 @@ import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 
 
@@ -29,7 +31,7 @@ public class AcademyCraft {
         AcademyFluids.FLUIDS.register(modEventBus);
         AcademyEntities.ENTITIES.register(modEventBus);
         AcademyBlockEntities.BLOCK_ENTITIES.register(modEventBus);
-
+        NeoForge.EVENT_BUS.register(new ServerListener());
     }
 
 

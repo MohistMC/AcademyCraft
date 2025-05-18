@@ -13,10 +13,8 @@ import org.slf4j.Logger;
  *
  * @author lliiooll
  */
-@EventBusSubscriber(modid = AcademyCraft.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.DEDICATED_SERVER)
 public class ServerListener {
 
-    private static ServerListener INSTANCE = null;
     private static final Logger LOGGER = LogUtils.getLogger();
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
@@ -24,10 +22,5 @@ public class ServerListener {
     public void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
-    }
-
-    public static ServerListener getInstance() {
-        if (INSTANCE == null) INSTANCE = new ServerListener();
-        return INSTANCE;
     }
 }
