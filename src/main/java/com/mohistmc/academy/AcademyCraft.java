@@ -8,6 +8,7 @@ import com.mohistmc.academy.world.AcademyFluidTypes;
 import com.mohistmc.academy.world.AcademyFluids;
 import com.mohistmc.academy.world.AcademyItems;
 import com.mohistmc.academy.world.AcademyMenus;
+import com.mohistmc.academy.world.AcademySounds;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -31,6 +32,7 @@ public class AcademyCraft {
         AcademyFluids.FLUIDS.register(modEventBus);
         AcademyEntities.ENTITIES.register(modEventBus);
         AcademyBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+        AcademySounds.SOUND_EVENTS.register(modEventBus);
         NeoForge.EVENT_BUS.register(new ServerListener());
     }
 

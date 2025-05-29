@@ -1,8 +1,21 @@
 {
-  "parent": "block/cube_all",
+  "credit": "Made with Blockbench",
   "textures": {
-    "all": "academy:block/alpha",
     "particle": "academy:block/cat_engine"
   },
-  "render_type": "translucent"
+  "elements": [
+    {
+      "from": [0, 0, 8],
+      "to": [16, 16, 8],
+      "rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 8]},
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "texture": "#particle"},
+        "east": {"uv": [0, 0, 0, 16], "texture": "#particle"},
+        "south": {"uv": [0, 0, 16, 16], "texture": "#particle"},
+        "west": {"uv": [0, 0, 0, 16], "texture": "#particle"},
+        "up": {"uv": [0, 0, 16, 0], "texture": "#particle"},
+        "down": {"uv": [0, 0, 16, 0], "texture": "#particle"}
+      }
+    }
+  ]
 }
