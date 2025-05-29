@@ -1,5 +1,5 @@
 {
-  "loader": "forge:obj",
+  "loader": "neoforge:obj",
   "model": "academy:models/phase_gen_0.obj",
   "flip_v": true,
   "textures": {

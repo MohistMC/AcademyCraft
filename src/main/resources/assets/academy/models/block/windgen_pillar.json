@@ -1,5 +1,5 @@
 {
-  "loader": "forge:obj",
+  "loader": "neoforge:obj",
   "model": "academy:models/windgen_pillar.obj",
   "flip_v": true,
   "textures": {
