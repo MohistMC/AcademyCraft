@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "academy:developer_portable"
+    },
+    "B": {
+      "item": "academy:mat_core_0"
+    },
+    "C": {
+      "tag": "minecraft:beds"
+    },
+    "D": {
+      "item": "minecraft:piston"
+    },
+    "E": {
+      "item": "academy:crystal_normal"
+    },
+    "F": {
+      "item": "academy:machine_frame"
+    },
+    "G": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    " A ",
+    "BCD",
+    "EFG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "academy:dev_normal"
+  }
+}

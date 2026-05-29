@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "B": {
+      "item": "academy:reso_crystal"
+    },
+    "C": {
+      "item": "minecraft:ender_pearl"
+    },
+    "D": {
+      "item": "academy:mat_core_1"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "BCB",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "academy:mat_core_2"
+  }
+}

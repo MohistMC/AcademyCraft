@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "academy:calc_chip"
+    },
+    "B": {
+      "item": "academy:energy_unit"
+    },
+    "C": {
+      "item": "academy:reso_crystal"
+    }
+  },
+  "pattern": [
+    " A ",
+    " B ",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "academy:energy_convert_component"
+  }
+}

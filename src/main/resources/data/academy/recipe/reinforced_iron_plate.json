@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "pattern": [
+    " A ",
+    " A ",
+    " A "
+  ],
+  "result": {
+    "count": 2,
+    "id": "academy:reinforced_iron_plate"
+  }
+}

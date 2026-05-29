@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "academy:constraint_plate"
+    },
+    "B": {
+      "item": "academy:reso_crystal"
+    },
+    "C": {
+      "item": "academy:reinforced_iron_plate"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "ABA",
+    "CDC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "academy:magnetic_coil"
+  }
+}

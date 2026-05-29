@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "academy:wafer"
+    }
+  ],
+  "result": {
+    "count": 2,
+    "id": "academy:imag_silicon_piece"
+  }
+}

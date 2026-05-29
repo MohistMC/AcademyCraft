@@ -1,0 +1,42 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "academy:info_component"
+    },
+    "B": {
+      "item": "academy:mat_core_0"
+    },
+    "C": {
+      "tag": "minecraft:beds"
+    },
+    "D": {
+      "item": "minecraft:piston"
+    },
+    "E": {
+      "item": "academy:crystal_normal"
+    },
+    "F": {
+      "item": "academy:machine_frame"
+    },
+    "G": {
+      "item": "minecraft:redstone"
+    },
+    "H": {
+      "item": "academy:brain_component"
+    },
+    "I": {
+      "item": "academy:energy_convert_component"
+    }
+  },
+  "pattern": [
+    "HAI",
+    "BCD",
+    "EFG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "academy:dev_normal"
+  }
+}
