@@ -21,7 +21,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
  *
  * @author lliiooll
  */
-@EventBusSubscriber(modid = AcademyCraft.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = AcademyCraft.MODID)
 public class CommonListener {
 
     @SubscribeEvent

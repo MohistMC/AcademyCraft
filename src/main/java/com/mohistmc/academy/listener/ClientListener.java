@@ -19,7 +19,7 @@ import org.slf4j.Logger;
  *
  * @author lliiooll
  */
-@EventBusSubscriber(modid = AcademyCraft.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = AcademyCraft.MODID, value = Dist.CLIENT)
 public class ClientListener {
 
     private static final Logger LOGGER = LogUtils.getLogger();

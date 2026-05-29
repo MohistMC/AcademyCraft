@@ -16,7 +16,6 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 
-
 @Mod(AcademyCraft.MODID)
 public class AcademyCraft {
     public static final String MODID = "academy";
