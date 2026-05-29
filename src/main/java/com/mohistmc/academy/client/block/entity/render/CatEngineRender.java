@@ -1,8 +1,8 @@
 package com.mohistmc.academy.client.block.entity.render;
 
 import com.mohistmc.academy.AcademyCraft;
-import com.mohistmc.academy.world.block.entity.CatEngineBlockEntity;
 import com.mohistmc.academy.client.block.entity.model.CatEngineModel;
+import com.mohistmc.academy.world.block.entity.CatEngineBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;

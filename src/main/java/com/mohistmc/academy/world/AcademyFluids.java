@@ -2,9 +2,7 @@ package com.mohistmc.academy.world;
 
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.world.fluid.PhaseFluid;
-import java.util.function.Supplier;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.registries.DeferredHolder;

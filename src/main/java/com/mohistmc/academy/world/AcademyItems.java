@@ -46,7 +46,6 @@ import com.mohistmc.academy.world.item.TerminalInstaller;
 import com.mohistmc.academy.world.item.Tutorial;
 import com.mohistmc.academy.world.item.Wafer;
 import com.mohistmc.academy.world.item.WindgenFan;
-import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;

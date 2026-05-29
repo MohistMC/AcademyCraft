@@ -2,7 +2,6 @@ package com.mohistmc.academy.world;
 
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.world.entity.CoinEntity;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;

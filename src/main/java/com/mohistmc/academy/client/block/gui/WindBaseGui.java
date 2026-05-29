@@ -1,9 +1,9 @@
 package com.mohistmc.academy.client.block.gui;
 
 import com.mohistmc.academy.AcademyCraft;
-import com.mohistmc.academy.world.block.entity.WindGenBaseBlockEntity;
 import com.mohistmc.academy.gui.AcademyBaseUI;
 import com.mohistmc.academy.utils.RenderUtils;
+import com.mohistmc.academy.world.block.entity.WindGenBaseBlockEntity;
 import com.mohistmc.academy.world.menu.WindGenBaseMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
