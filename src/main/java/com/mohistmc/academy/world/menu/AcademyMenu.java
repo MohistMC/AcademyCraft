@@ -1,6 +1,6 @@
 package com.mohistmc.academy.world.menu;
 
-import com.mohistmc.academy.client.block.entity.AcademyContainerBlockEntity;
+import com.mohistmc.academy.world.block.entity.AcademyContainerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;

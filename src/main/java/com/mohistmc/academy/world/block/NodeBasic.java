@@ -1,6 +1,6 @@
 package com.mohistmc.academy.world.block;
 
-import com.mohistmc.academy.client.block.entity.NodeBasicBlockEntity;
+import com.mohistmc.academy.world.block.entity.NodeBasicBlockEntity;
 import com.mohistmc.academy.world.menu.NodeBasicMenu;
 import com.mojang.serialization.MapCodec;
 import io.netty.buffer.Unpooled;

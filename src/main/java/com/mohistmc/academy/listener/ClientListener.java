@@ -2,6 +2,7 @@ package com.mohistmc.academy.listener;
 
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.client.block.entity.model.CatEngineModel;
+import com.mohistmc.academy.client.block.entity.render.CatEngineRender;
 import com.mohistmc.academy.client.block.entity.render.PhaseLiquidRender;
 import com.mohistmc.academy.client.block.entity.render.WindGenFanRender;
 import com.mohistmc.academy.world.AcademyBlockEntities;
@@ -34,13 +35,13 @@ public class ClientListener {
     //将所有的生物的皮肤贴图信息写在这个函数里，有几个写几个
     @SubscribeEvent
     public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        //event.registerLayerDefinition(CatEngineModel.LAYER_LOCATION, CatEngineModel::createBodyLayer);
+        event.registerLayerDefinition(CatEngineModel.LAYER_LOCATION, CatEngineModel::createBodyLayer);
     }
 
     //将所有的生物的渲染信息写在这个函数里，有几个写几个
     @SubscribeEvent
     public static void onRegisterRenderer(EntityRenderersEvent.RegisterRenderers event) {
-        //event.registerBlockEntityRenderer(AcademyBlockEntities.CAT_ENGINE.get(), CatEngineRender::new);
+        event.registerBlockEntityRenderer(AcademyBlockEntities.CAT_ENGINE.get(), CatEngineRender::new);
         event.registerBlockEntityRenderer(AcademyBlockEntities.PHASE_LIQUID.get(), PhaseLiquidRender::new);
         event.registerBlockEntityRenderer(AcademyBlockEntities.WINDGEN_FAN.get(), WindGenFanRender::new);
     }

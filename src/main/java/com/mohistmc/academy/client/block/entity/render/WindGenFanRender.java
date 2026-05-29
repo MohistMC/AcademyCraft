@@ -1,6 +1,6 @@
 package com.mohistmc.academy.client.block.entity.render;
 
-import com.mohistmc.academy.client.block.entity.WindGenFanBlockEntity;
+import com.mohistmc.academy.world.block.entity.WindGenFanBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;

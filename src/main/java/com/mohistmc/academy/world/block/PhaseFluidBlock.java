@@ -1,6 +1,6 @@
 package com.mohistmc.academy.world.block;
 
-import com.mohistmc.academy.client.block.entity.PhaseLiquidBlockEntity;
+import com.mohistmc.academy.world.block.entity.PhaseLiquidBlockEntity;
 import com.mohistmc.academy.world.AcademyFluids;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.MenuProvider;

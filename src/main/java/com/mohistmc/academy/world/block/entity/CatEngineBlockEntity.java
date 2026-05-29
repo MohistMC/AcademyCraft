@@ -1,4 +1,4 @@
-package com.mohistmc.academy.client.block.entity;
+package com.mohistmc.academy.world.block.entity;
 
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -22,13 +22,11 @@ public class CatEngineBlockEntity extends BlockEntity {
 
     public static void tickAnim(Level level, BlockPos blockPos, BlockState blockState, CatEngineBlockEntity e) {
         e.oRot = e.rot;
-        Player player = level.getNearestPlayer(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 3, false);
+        Player player = level.getNearestPlayer(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 10, false);
         if (player != null) {
             double d0 = player.getX() - ((double) blockPos.getX() + 0.5D);
             double d1 = player.getZ() - ((double) blockPos.getZ() + 0.5D);
             e.tRot = (float) Mth.atan2(d1, d0);
-        } else {
-            e.tRot += 0.02F;
         }
         while (e.rot >= (float) Math.PI) {
             e.rot -= ((float) Math.PI * 2F);

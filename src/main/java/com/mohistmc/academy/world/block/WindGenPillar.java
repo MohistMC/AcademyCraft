@@ -1,6 +1,6 @@
 package com.mohistmc.academy.world.block;
 
-import com.mohistmc.academy.client.block.entity.WindGenPillarBlockEntity;
+import com.mohistmc.academy.world.block.entity.WindGenPillarBlockEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -1,4 +1,4 @@
-package com.mohistmc.academy.client.block.entity;
+package com.mohistmc.academy.world.block.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;

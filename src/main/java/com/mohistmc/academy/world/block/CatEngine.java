@@ -1,6 +1,6 @@
 package com.mohistmc.academy.world.block;
 
-import com.mohistmc.academy.client.block.entity.CatEngineBlockEntity;
+import com.mohistmc.academy.world.block.entity.CatEngineBlockEntity;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -9,7 +9,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;

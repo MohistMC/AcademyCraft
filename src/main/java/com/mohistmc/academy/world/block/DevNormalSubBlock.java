@@ -1,6 +1,6 @@
 package com.mohistmc.academy.world.block;
 
-import com.mohistmc.academy.client.block.entity.DevNormalSubBlockEntity;
+import com.mohistmc.academy.world.block.entity.DevNormalSubBlockEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;

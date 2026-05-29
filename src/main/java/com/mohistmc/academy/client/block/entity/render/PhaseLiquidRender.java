@@ -1,6 +1,6 @@
 package com.mohistmc.academy.client.block.entity.render;
 
-import com.mohistmc.academy.client.block.entity.PhaseLiquidBlockEntity;
+import com.mohistmc.academy.world.block.entity.PhaseLiquidBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;

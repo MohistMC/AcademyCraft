@@ -1,6 +1,6 @@
 package com.mohistmc.academy.world.block;
 
-import com.mohistmc.academy.client.block.entity.WindGenMainBlockEntity;
+import com.mohistmc.academy.world.block.entity.WindGenMainBlockEntity;
 import com.mohistmc.academy.world.menu.WindGenMainMenu;
 import com.mojang.serialization.MapCodec;
 import io.netty.buffer.Unpooled;

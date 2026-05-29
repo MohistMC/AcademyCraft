@@ -1,6 +1,6 @@
 package com.mohistmc.academy.world.block;
 
-import com.mohistmc.academy.client.block.entity.MatrixBlockEntity;
+import com.mohistmc.academy.world.block.entity.MatrixBlockEntity;
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;

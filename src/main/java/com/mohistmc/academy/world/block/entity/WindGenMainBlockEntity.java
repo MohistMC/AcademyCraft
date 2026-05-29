@@ -1,4 +1,4 @@
-package com.mohistmc.academy.client.block.entity;
+package com.mohistmc.academy.world.block.entity;
 
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.AcademyBlocks;
