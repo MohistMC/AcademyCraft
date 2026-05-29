@@ -5,7 +5,9 @@ import com.mohistmc.academy.client.block.entity.model.CatEngineModel;
 import com.mohistmc.academy.client.block.entity.render.CatEngineRender;
 import com.mohistmc.academy.client.block.entity.render.PhaseLiquidRender;
 import com.mohistmc.academy.client.block.entity.render.WindGenFanRender;
+import com.mohistmc.academy.client.entity.CoinRenderer;
 import com.mohistmc.academy.world.AcademyBlockEntities;
+import com.mohistmc.academy.world.AcademyEntities;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
@@ -44,5 +46,7 @@ public class ClientListener {
         event.registerBlockEntityRenderer(AcademyBlockEntities.CAT_ENGINE.get(), CatEngineRender::new);
         event.registerBlockEntityRenderer(AcademyBlockEntities.PHASE_LIQUID.get(), PhaseLiquidRender::new);
         event.registerBlockEntityRenderer(AcademyBlockEntities.WINDGEN_FAN.get(), WindGenFanRender::new);
+
+        event.registerEntityRenderer(AcademyEntities.COIN_ENTITY.get(), CoinRenderer::new);
     }
 }

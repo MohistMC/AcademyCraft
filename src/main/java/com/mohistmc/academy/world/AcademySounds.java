@@ -11,7 +11,7 @@ public class AcademySounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS =
             DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, AcademyCraft.MODID);
 
-    public static final Holder<SoundEvent> MY_SOUND = SOUND_EVENTS.register(
+    public static final Holder<SoundEvent> FLIPCOIN = SOUND_EVENTS.register(
             "entity.flipcoin",
             SoundEvent::createVariableRangeEvent
     );
