@@ -1,6 +1,10 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "academy:item/energy_unit_empty"
-    }
+        "layer0": "academy:item/energy_unit_full"
+    },
+    "overrides": [
+        { "predicate": { "damage": 0.5 }, "model": "academy:item/energy_unit_half" },
+        { "predicate": { "damage": 1 }, "model": "academy:item/energy_unit_empty" }
+    ]
 }

@@ -64,34 +64,6 @@ public class AcademyItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, AcademyCraft.MODID);
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, AcademyCraft.MODID);
 
-    public static final Supplier<CreativeModeTab> EXAMPLE_TAB = TABS.register("academy_group", () -> CreativeModeTab.builder()
-            // Set name of tab to display
-            .title(Component.translatable("itemGroup." + AcademyCraft.MODID))
-            // Set icon of creative tab
-            .icon(() -> new ItemStack(AcademyItems.LOGO.get()))
-            // Add default items to tab
-            .displayItems((params, output) -> {
-                AcademyItems.ITEMS.getEntries().stream().filter(item ->
-                        !((item.get() instanceof Logo)
-                                || (item.get() instanceof AppSettings)
-                                || item.get().getDescriptionId().contains("dev_normal_sub")
-                                || item.get().getDescriptionId().contains("dev_advanced_sub")
-                                || item.get().getDescriptionId().contains("windgen_fan_block")
-                                || item.get().getDescriptionId().contains("wingen_base_sub")
-                                || item.get().getDescriptionId().contains("matrix_sub"))
-                ).forEach(item -> output.accept(item.get()));
-                AcademyBlocks.BLOCKS.getEntries().stream().filter(block ->
-                        !(block.get() instanceof DevNormalSubBlock)
-                                && !(block.get() instanceof DevAdvancedSubBlock)
-                                && !(block.get() instanceof MatrixSubBlock)
-                                && !(block.get() instanceof WindGenBaseSubBlock)
-                                && !(block.get() instanceof WindGenFan)
-                                && !(block.get() instanceof LiquidBlock)
-                ).forEach(block -> output.accept(block.get()));
-            })
-            .build()
-    );
-
     public static final Supplier<Item> CAT_ENGINE = ITEMS.register("cat_engine", () -> new BlockItem(AcademyBlocks.CAT_ENGINE.get(), new Item.Properties()));
     public static final Supplier<Item> ABILITY_INTERFERER = ITEMS.register("ability_interferer", () -> new BlockItem(AcademyBlocks.ABILITY_INTERFERER.get(), new Item.Properties()));
     public static final Supplier<Item> CONSTRAIN_METAL = ITEMS.register("constraint_metal", () -> new BlockItem(AcademyBlocks.CONSTRAIN_METAL.get(), new Item.Properties()));
@@ -192,5 +164,45 @@ public class AcademyItems {
     public static final Supplier<Item> WAFER = ITEMS.register("wafer", Wafer::new);
 
     public static final Supplier<Item> WINDGEN_FAN = ITEMS.register("windgen_fan", WindgenFan::new);
+
+    public static final Supplier<CreativeModeTab> EXAMPLE_TAB = TABS.register("academy_group", () -> CreativeModeTab.builder()
+            // Set name of tab to display
+            .title(Component.translatable("itemGroup." + AcademyCraft.MODID))
+            // Set icon of creative tab
+            .icon(() -> new ItemStack(AcademyItems.LOGO.get()))
+            // Add default items to tab
+            .displayItems((params, output) -> {
+                AcademyItems.ITEMS.getEntries().stream().filter(item ->
+                        !((item.get() instanceof Logo)
+                                || (item.get() instanceof AppSettings)
+                                || item.get().getDescriptionId().contains("dev_normal_sub")
+                                || item.get().getDescriptionId().contains("dev_advanced_sub")
+                                || item.get().getDescriptionId().contains("windgen_fan_block")
+                                || item.get().getDescriptionId().contains("wingen_base_sub")
+                                || item.get().getDescriptionId().contains("matrix_sub"))
+                ).forEach(item -> {
+                    if (item.get() == ENERGY_UNIT.get()) {
+                        ItemStack empty_energy_unit = ENERGY_UNIT.get().getDefaultInstance();
+                        empty_energy_unit.setDamageValue(EnergyUnit.maxEnergy);
+                        output.accept(empty_energy_unit);
+                    }
+                    if (item.get() == DEVELOPER_PORTABLE.get()) {
+                        ItemStack empty_developer_portable = DEVELOPER_PORTABLE.get().getDefaultInstance();
+                        empty_developer_portable.setDamageValue(DeveloperPortable.maxEnergy);
+                        output.accept(empty_developer_portable);
+                    }
+                    output.accept(item.get());
+                });
+                AcademyBlocks.BLOCKS.getEntries().stream().filter(block ->
+                        !(block.get() instanceof DevNormalSubBlock)
+                                && !(block.get() instanceof DevAdvancedSubBlock)
+                                && !(block.get() instanceof MatrixSubBlock)
+                                && !(block.get() instanceof WindGenBaseSubBlock)
+                                && !(block.get() instanceof WindGenFan)
+                                && !(block.get() instanceof LiquidBlock)
+                ).forEach(block -> output.accept(block.get()));
+            })
+            .build()
+    );
 
 }
