@@ -15,4 +15,19 @@ public class AcademySounds {
             "entity.flipcoin",
             SoundEvent::createVariableRangeEvent
     );
+
+    public static final Holder<SoundEvent> MEDIA_RAILGUN = SOUND_EVENTS.register(
+            "media.only_my_railgun",
+            SoundEvent::createVariableRangeEvent
+    );
+
+    public static final Holder<SoundEvent> MEDIA_JUDGELIGHT = SOUND_EVENTS.register(
+            "media.level5_judgelight",
+            SoundEvent::createVariableRangeEvent
+    );
+
+    public static final Holder<SoundEvent> MEDIA_NOISE = SOUND_EVENTS.register(
+            "media.sisters_noise",
+            SoundEvent::createVariableRangeEvent
+    );
 }

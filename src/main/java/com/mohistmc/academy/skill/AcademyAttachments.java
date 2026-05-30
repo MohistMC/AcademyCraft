@@ -20,5 +20,6 @@ public class AcademyAttachments {
             ATTACHMENT_TYPES.register("player_ability",
                     () -> AttachmentType.builder(PlayerAbilityData::new)
                             .serialize(new PlayerAbilityDataCodec())
+                            .copyOnDeath()
                             .build());
 }

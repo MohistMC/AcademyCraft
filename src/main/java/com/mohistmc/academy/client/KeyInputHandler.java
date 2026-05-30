@@ -1,6 +1,7 @@
 package com.mohistmc.academy.client;
 
 import com.mohistmc.academy.AcademyCraft;
+import com.mohistmc.academy.client.gui.DataTerminalGui;
 import com.mohistmc.academy.client.gui.SkillSlotGui;
 import com.mohistmc.academy.network.ToggleAbilityPacket;
 import com.mohistmc.academy.network.UseSkillPacket;
@@ -79,6 +80,14 @@ public class KeyInputHandler {
             "key.categories.academy"
     );
 
+    public static final KeyMapping OPEN_TERMINAL = new KeyMapping(
+            "key.academy.open_terminal",
+            KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_LEFT_ALT,
+            "key.categories.academy"
+    );
+
     private static final KeyMapping[] SKILL_KEYS = { SKILL_1, SKILL_2, SKILL_3, SKILL_4 };
 
     public static KeyMapping[] getSkillKeys() {
@@ -93,6 +102,7 @@ public class KeyInputHandler {
         event.register(SKILL_3);
         event.register(SKILL_4);
         event.register(SWITCH_PRESET);
+        event.register(OPEN_TERMINAL);
     }
 
     @SubscribeEvent
@@ -101,6 +111,18 @@ public class KeyInputHandler {
 
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
+
+        if (OPEN_TERMINAL.consumeClick()) {
+            if (mc.screen == null) {
+                PlayerAbilityData data = mc.player.getData(AcademyAttachments.PLAYER_ABILITY);
+                if (data.isTerminalInstalled()) {
+                    mc.setScreen(new DataTerminalGui());
+                } else {
+                    mc.player.displayClientMessage(Component.literal("§7[数据终端] §c尚未安装数据终端，请使用数据终端安装。"), true);
+                }
+            }
+            return;
+        }
 
         if (OPEN_SKILL_SLOT.consumeClick()) {
             if (mc.screen == null) {

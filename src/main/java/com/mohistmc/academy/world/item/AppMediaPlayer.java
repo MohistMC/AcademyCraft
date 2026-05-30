@@ -5,4 +5,8 @@ public class AppMediaPlayer extends BaseApp {
         super(new Properties());
     }
 
+    @Override
+    public String getAppId() {
+        return "media_player";
+    }
 }

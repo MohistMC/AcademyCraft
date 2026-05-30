@@ -194,5 +194,7 @@
     "key.academy.skill_3": "Skill Slot 3",
     "key.academy.skill_4": "Skill Slot 4",
     "key.academy.switch_preset": "Switch Preset",
-    "key.academy.toggle_ability": "Toggle Ability"
+    "key.academy.toggle_ability": "Toggle Ability",
+    "key.academy.open_terminal": "Open/Close Data Terminal",
+    "gui.academy.data_terminal": "Data Terminal"
 }

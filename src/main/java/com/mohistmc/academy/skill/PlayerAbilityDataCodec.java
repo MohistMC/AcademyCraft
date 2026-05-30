@@ -64,6 +64,23 @@ public class PlayerAbilityDataCodec implements IAttachmentSerializer<CompoundTag
             data.setAbilityActive(tag.getBoolean("ability_active"));
         }
 
+        if (tag.contains("terminal_installed")) {
+            data.setTerminalInstalled(tag.getBoolean("terminal_installed"));
+        }
+        if (tag.contains("installed_apps")) {
+            ListTag appList = tag.getList("installed_apps", Tag.TAG_STRING);
+            for (int i = 0; i < appList.size(); i++) {
+                data.installApp(appList.getString(i));
+            }
+        }
+
+        if (tag.contains("loaded_media")) {
+            ListTag mediaList = tag.getList("loaded_media", Tag.TAG_STRING);
+            for (int i = 0; i < mediaList.size(); i++) {
+                data.addLoadedMedia(mediaList.getString(i));
+            }
+        }
+
         return data;
     }
 
@@ -110,6 +127,19 @@ public class PlayerAbilityDataCodec implements IAttachmentSerializer<CompoundTag
         tag.put("presets", presetsTag);
 
         tag.putBoolean("ability_active", data.isAbilityActive());
+
+        tag.putBoolean("terminal_installed", data.isTerminalInstalled());
+        ListTag appList = new ListTag();
+        for (String appId : data.getInstalledApps()) {
+            appList.add(net.minecraft.nbt.StringTag.valueOf(appId));
+        }
+        tag.put("installed_apps", appList);
+
+        ListTag mediaList = new ListTag();
+        for (String mediaId : data.getLoadedMedia()) {
+            mediaList.add(net.minecraft.nbt.StringTag.valueOf(mediaId));
+        }
+        tag.put("loaded_media", mediaList);
 
         return tag;
     }

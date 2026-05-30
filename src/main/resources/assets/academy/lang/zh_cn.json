@@ -194,5 +194,7 @@
     "key.academy.skill_3": "技能槽 3",
     "key.academy.skill_4": "技能槽 4",
     "key.academy.switch_preset": "切换预设组",
-    "key.academy.toggle_ability": "激活/关闭能力"
+    "key.academy.toggle_ability": "激活/关闭能力",
+    "key.academy.open_terminal": "打开/关闭数据终端",
+    "gui.academy.data_terminal": "数据终端"
 }

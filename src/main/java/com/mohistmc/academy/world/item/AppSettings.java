@@ -5,4 +5,8 @@ public class AppSettings extends BaseApp {
         super(new Properties());
     }
 
+    @Override
+    public String getAppId() {
+        return "settings";
+    }
 }

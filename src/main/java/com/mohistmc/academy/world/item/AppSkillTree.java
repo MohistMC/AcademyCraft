@@ -5,4 +5,8 @@ public class AppSkillTree extends BaseApp {
         super(new Properties());
     }
 
+    @Override
+    public String getAppId() {
+        return "skill_tree";
+    }
 }

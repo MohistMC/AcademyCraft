@@ -33,6 +33,7 @@ public class DevNormalGui extends Screen {
     private static final int SKILL_GAP = 4;
     private static final int LEVEL_HEADER_HEIGHT = 14;
     private static final int BAR_HEIGHT = 8;
+    private static final int BACK_BTN_SIZE = 18;
 
     private static final int COLOR_BG = 0xCC101020;
     private static final int COLOR_TOP_BAR = 0xCC1a1a2e;
@@ -54,6 +55,9 @@ public class DevNormalGui extends Screen {
     private static final int COLOR_HOVER = 0x44FFFFFF;
     private static final int COLOR_LINE = 0xFF666688;
     private static final int COLOR_SCROLL_BAR = 0x88FFFFFF;
+    private static final int COLOR_BACK_BG = 0xFF162040;
+    private static final int COLOR_BACK_HOVER = 0xFF00bcd4;
+    private static final int COLOR_BACK_BORDER = 0xFF00bcd4;
 
     private int guiLeft;
     private int guiTop;
@@ -68,12 +72,20 @@ public class DevNormalGui extends Screen {
     private int maxScroll = 0;
     private int scrollOffset = 0;
     private boolean isScrolling = false;
+    private boolean fromTerminal = false;
+    private boolean hoveredBack = false;
 
     private final List<SkillNode> skillNodes = new ArrayList<>();
     private SkillNode hoveredNode = null;
 
     public DevNormalGui() {
         super(Component.translatable("block.academy.dev_normal"));
+        this.fromTerminal = false;
+    }
+
+    public DevNormalGui(boolean fromTerminal) {
+        super(Component.translatable("block.academy.dev_normal"));
+        this.fromTerminal = fromTerminal;
     }
 
     @Override
@@ -170,6 +182,20 @@ public class DevNormalGui extends Screen {
         graphics.fill(this.guiLeft, this.guiTop, this.guiLeft + guiWidth, this.guiTop + guiHeight, COLOR_BG);
         graphics.fill(this.guiLeft, this.guiTop, this.guiLeft + guiWidth, this.guiTop + TOP_BAR_HEIGHT, COLOR_TOP_BAR);
 
+        if (fromTerminal) {
+            int backX = this.guiLeft + 4;
+            int backY = this.guiTop + 4;
+            hoveredBack = mouseX >= backX && mouseX < backX + BACK_BTN_SIZE
+                    && mouseY >= backY && mouseY < backY + BACK_BTN_SIZE;
+
+            graphics.fill(backX, backY, backX + BACK_BTN_SIZE, backY + BACK_BTN_SIZE,
+                    hoveredBack ? COLOR_BACK_HOVER : COLOR_BACK_BG);
+            drawBorder(graphics, backX, backY, BACK_BTN_SIZE, BACK_BTN_SIZE, COLOR_BACK_BORDER);
+            String arrow = "<-";
+            int aw = this.font.width(arrow);
+            graphics.drawString(this.font, arrow, backX + (BACK_BTN_SIZE - aw) / 2, backY + 5, COLOR_TEXT_WHITE);
+        }
+
         hoveredNode = null;
 
         drawTopBar(graphics);
@@ -223,7 +249,7 @@ public class DevNormalGui extends Screen {
         PlayerAbilityData data = mc.player.getData(AcademyAttachments.PLAYER_ABILITY);
         if (!data.hasAbility()) return;
 
-        int x = this.guiLeft + 8;
+        int x = this.guiLeft + (fromTerminal ? 26 : 8);
         int y = this.guiTop + 5;
 
         String abilityName = Component.translatable("item.academy.factor_" + data.getCurrentAbility().id()).getString();
@@ -393,8 +419,20 @@ public class DevNormalGui extends Screen {
         graphics.pose().popPose();
     }
 
+    private void drawBorder(GuiGraphics graphics, int x, int y, int w, int h, int color) {
+        graphics.fill(x, y, x + w, y + 1, color);
+        graphics.fill(x, y + h - 1, x + w, y + h, color);
+        graphics.fill(x, y, x + 1, y + h, color);
+        graphics.fill(x + w - 1, y, x + w, y + h, color);
+    }
+
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (fromTerminal && hoveredBack && button == 0) {
+            Minecraft.getInstance().setScreen(new DataTerminalGui(true));
+            return true;
+        }
+
         if (hoveredNode != null && hoveredNode.canLearn && !hoveredNode.learned && button == 0) {
             PacketDistributor.sendToServer(new LearnSkillPacket(hoveredNode.skill.getId()));
             Minecraft mc = Minecraft.getInstance();

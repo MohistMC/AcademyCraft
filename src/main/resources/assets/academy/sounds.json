@@ -49,5 +49,9 @@
   "vecmanip.plasma_cannon_t": {"category": "master", "sounds": [{"name": "academy:vecmanip/plasma_cannon_t", "stream": false}]},
 
   "machine.imag_fusor_work": {"category": "master", "sounds": [{"name": "academy:machine/imag_fusor_work", "stream": true}]},
-  "machine.machine_work": {"category": "master", "sounds": [{"name": "academy:machine/machine_work", "stream": true}]}
+  "machine.machine_work": {"category": "master", "sounds": [{"name": "academy:machine/machine_work", "stream": true}]},
+
+  "media.only_my_railgun": {"category": "master", "sounds": [{"name": "academy:media/only_my_railgun", "stream": true}]},
+  "media.level5_judgelight": {"category": "master", "sounds": [{"name": "academy:media/level5_judgelight", "stream": true}]},
+  "media.sisters_noise": {"category": "master", "sounds": [{"name": "academy:media/sisters_noise", "stream": true}]}
 }

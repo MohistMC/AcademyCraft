@@ -30,10 +30,16 @@ public class PlayerAbilityData {
     private int currentPreset = 0;
     private boolean abilityActive = false;
 
+    private boolean terminalInstalled = false;
+    private final Set<String> installedApps = new HashSet<>();
+    private final Set<String> loadedMedia = new HashSet<>();
+
     public PlayerAbilityData() {
         for (int i = 0; i < PRESET_COUNT; i++) {
             presets[i] = new SkillPreset();
         }
+        installedApps.add("settings");
+        installedApps.add("tutorial");
     }
 
     public AbilityCategory getCurrentAbility() {
@@ -211,6 +217,40 @@ public class PlayerAbilityData {
         return presets[presetIndex].getSkillInSlot(slotIndex);
     }
 
+    // ==================== 数据终端 ====================
+
+    public boolean isTerminalInstalled() {
+        return terminalInstalled;
+    }
+
+    public void setTerminalInstalled(boolean installed) {
+        this.terminalInstalled = installed;
+    }
+
+    public boolean hasApp(String appId) {
+        return installedApps.contains(appId);
+    }
+
+    public void installApp(String appId) {
+        installedApps.add(appId);
+    }
+
+    public Set<String> getInstalledApps() {
+        return installedApps;
+    }
+
+    public Set<String> getLoadedMedia() {
+        return loadedMedia;
+    }
+
+    public boolean hasLoadedMedia(String mediaId) {
+        return loadedMedia.contains(mediaId);
+    }
+
+    public void addLoadedMedia(String mediaId) {
+        loadedMedia.add(mediaId);
+    }
+
     public void tick() {
         float overloadFactor = 1.0f - (currentOverload / maxOverload) * 0.5f;
         currentCp = Math.min(currentCp + cpRegenRate * overloadFactor, maxCp);
@@ -286,6 +326,19 @@ public class PlayerAbilityData {
 
         tag.putBoolean("ability_active", abilityActive);
 
+        tag.putBoolean("terminal_installed", terminalInstalled);
+        ListTag appList = new ListTag();
+        for (String appId : installedApps) {
+            appList.add(StringTag.valueOf(appId));
+        }
+        tag.put("installed_apps", appList);
+
+        ListTag mediaList = new ListTag();
+        for (String mediaId : loadedMedia) {
+            mediaList.add(StringTag.valueOf(mediaId));
+        }
+        tag.put("loaded_media", mediaList);
+
         return tag;
     }
 
@@ -336,6 +389,23 @@ public class PlayerAbilityData {
 
         if (tag.contains("ability_active")) {
             data.setAbilityActive(tag.getBoolean("ability_active"));
+        }
+
+        if (tag.contains("terminal_installed")) {
+            data.setTerminalInstalled(tag.getBoolean("terminal_installed"));
+        }
+        if (tag.contains("installed_apps")) {
+            ListTag appList = tag.getList("installed_apps", net.minecraft.nbt.Tag.TAG_STRING);
+            for (int i = 0; i < appList.size(); i++) {
+                data.installApp(appList.getString(i));
+            }
+        }
+
+        if (tag.contains("loaded_media")) {
+            ListTag mediaList = tag.getList("loaded_media", net.minecraft.nbt.Tag.TAG_STRING);
+            for (int i = 0; i < mediaList.size(); i++) {
+                data.addLoadedMedia(mediaList.getString(i));
+            }
         }
 
         return data;

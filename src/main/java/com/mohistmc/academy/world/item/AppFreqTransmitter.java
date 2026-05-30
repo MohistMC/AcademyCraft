@@ -5,4 +5,8 @@ public class AppFreqTransmitter extends BaseApp {
         super(new Properties());
     }
 
+    @Override
+    public String getAppId() {
+        return "freq_transmitter";
+    }
 }

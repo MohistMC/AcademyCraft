@@ -1,4 +1,4 @@
-package com.mohistmc.academy.gui;
+package com.mohistmc.academy.client.gui;
 
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.capability.AcademyNode;
