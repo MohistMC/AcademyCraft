@@ -1,0 +1,30 @@
+{
+  "replace": false,
+  "values": [
+    "academy:cat_engine",
+    "academy:ability_interferer",
+    "academy:constraint_metal",
+    "academy:crystal_ore",
+    "academy:reso_ore",
+    "academy:imagsil_ore",
+    "academy:imag_fusor",
+    "academy:machine_frame",
+    "academy:metal_former",
+    "academy:node_basic",
+    "academy:node_advanced",
+    "academy:node_standard",
+    "academy:dev_normal",
+    "academy:dev_advanced",
+    "academy:dev_normal_sub",
+    "academy:dev_advanced_sub",
+    "academy:windgen_base_sub",
+    "academy:matrix",
+    "academy:matrix_sub",
+    "academy:phase_gen",
+    "academy:solar_gen",
+    "academy:windgen_base",
+    "academy:windgen_main",
+    "academy:windgen_pillar",
+    "academy:windgen_fan_block"
+  ]
+}
