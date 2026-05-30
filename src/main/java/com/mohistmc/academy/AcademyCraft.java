@@ -9,6 +9,7 @@ import com.mohistmc.academy.network.ToggleAbilityPacket;
 import com.mohistmc.academy.network.UseSkillPacket;
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.SkillRegistry;
+import com.mohistmc.academy.terminal.AppRegistry;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyEntities;
@@ -53,6 +54,7 @@ public class AcademyCraft {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         SkillRegistry.init();
+        AppRegistry.init();
         LOGGER.info("AcademyCraft Skill Registry initialized with {} skills", SkillRegistry.getAllSkills().size());
     }
 

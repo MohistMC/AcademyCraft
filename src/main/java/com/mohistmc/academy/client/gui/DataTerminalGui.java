@@ -2,6 +2,8 @@ package com.mohistmc.academy.client.gui;
 
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.PlayerAbilityData;
+import com.mohistmc.academy.terminal.AppRegistry;
+import com.mohistmc.academy.terminal.TerminalApp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -74,7 +76,19 @@ public class DataTerminalGui extends Screen {
         super.init();
         this.guiLeft = (this.width - GUI_WIDTH) / 2;
         this.guiTop = (this.height - GUI_HEIGHT) / 2;
+        bindBuiltinRoutes();
         buildAppEntries();
+    }
+
+    private static boolean routesBound = false;
+
+    private static void bindBuiltinRoutes() {
+        if (routesBound) return;
+        routesBound = true;
+        AppRegistry.bindOpenAction("skill_tree", mc -> mc.setScreen(new DevNormalGui(true)));
+        AppRegistry.bindOpenAction("settings", mc -> mc.setScreen(new SettingsAppGui()));
+        AppRegistry.bindOpenAction("tutorial", mc -> mc.setScreen(new TutorialAppGui()));
+        AppRegistry.bindOpenAction("media_player", mc -> mc.setScreen(new MediaPlayerAppGui()));
     }
 
     @Override
@@ -91,16 +105,10 @@ public class DataTerminalGui extends Screen {
 
         PlayerAbilityData data = mc.player.getData(AcademyAttachments.PLAYER_ABILITY);
 
-        appEntries.add(new AppEntry("skill_tree", "item.academy.app_skill_tree",
-                data.hasApp("skill_tree"), "◆"));
-        appEntries.add(new AppEntry("freq_transmitter", "item.academy.app_freq_transmitter",
-                data.hasApp("freq_transmitter"), "⚡"));
-        appEntries.add(new AppEntry("media_player", "item.academy.app_media_player",
-                data.hasApp("media_player"), "♫"));
-        appEntries.add(new AppEntry("tutorial", "item.academy.app_tutorial",
-                data.hasApp("tutorial"), "☁"));
-        appEntries.add(new AppEntry("settings", "item.academy.app_settings",
-                data.hasApp("settings"), "⚙"));
+        for (TerminalApp app : AppRegistry.getAllApps()) {
+            boolean installed = data.hasApp(app.getAppId()) || app.isBuiltIn();
+            appEntries.add(new AppEntry(app.getAppId(), app.getNameKey(), installed, app.getIcon()));
+        }
     }
 
     @Override
@@ -326,17 +334,12 @@ public class DataTerminalGui extends Screen {
 
     private void openApp(String appId) {
         Minecraft mc = Minecraft.getInstance();
-        switch (appId) {
-            case "skill_tree" -> mc.setScreen(new DevNormalGui(true));
-            case "settings" -> mc.setScreen(new SettingsAppGui());
-            case "tutorial" -> mc.setScreen(new TutorialAppGui());
-            case "media_player" -> mc.setScreen(new MediaPlayerAppGui());
-            default -> {
-                if (mc.player != null) {
-                    mc.player.displayClientMessage(
-                            Component.literal("§7[数据终端] §c该APP暂未实现: " + appId), true);
-                }
-            }
+        TerminalApp app = AppRegistry.getApp(appId);
+        if (app != null) {
+            app.open(mc);
+        } else if (mc.player != null) {
+            mc.player.displayClientMessage(
+                    Component.literal("§7[数据终端] §c该APP暂未实现: " + appId), true);
         }
     }
 
