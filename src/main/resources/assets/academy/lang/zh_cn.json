@@ -186,5 +186,13 @@
     "item.academy.factor_vecmanip.blood_retro.desc": "操作敌人的血液流向，使主动脉破裂并造成致死的伤害。",
     "item.academy.factor_vecmanip.vec_reflection.desc": "将攻击自己的危险矢量向视线方向反转，让敌人自食其果。",
     "item.academy.factor_vecmanip.plasma_cannon.desc": "操作极大范围的空气流动，将其压缩混合，变成一枚巨大的电浆体，并向前投掷。",
-    "item.academy.factor_ac.ability_interf.cantuse": "你无法使用这个能力干扰方块。"
+    "item.academy.factor_ac.ability_interf.cantuse": "你无法使用这个能力干扰方块。",
+    "key.categories.academy": "超能力学院",
+    "key.academy.skill_slot": "打开技能槽界面",
+    "key.academy.skill_1": "技能槽 1",
+    "key.academy.skill_2": "技能槽 2",
+    "key.academy.skill_3": "技能槽 3",
+    "key.academy.skill_4": "技能槽 4",
+    "key.academy.switch_preset": "切换预设组",
+    "key.academy.toggle_ability": "激活/关闭能力"
 }

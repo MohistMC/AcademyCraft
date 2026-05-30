@@ -5,7 +5,7 @@ import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.Skill;
 import com.mohistmc.academy.skill.SkillEffect;
-import com.mohistmc.academy.skill.SkillRegistry;
+import com.mohistmc.academy.skill.SkillPreset;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -15,17 +15,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-/**
- * @author Mgazul
- * @date 2026/5/30 21:52
- */
-public record UseSkillPacket(String skillId) implements CustomPacketPayload {
+public record UseSkillPacket(int slotIndex) implements CustomPacketPayload {
 
     public static final Type<UseSkillPacket> TYPE =
             new Type<>(ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "use_skill"));
 
     public static final StreamCodec<ByteBuf, UseSkillPacket> STREAM_CODEC =
-            ByteBufCodecs.STRING_UTF8.map(UseSkillPacket::new, UseSkillPacket::skillId);
+            ByteBufCodecs.INT.map(UseSkillPacket::new, UseSkillPacket::slotIndex);
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
@@ -37,8 +33,18 @@ public record UseSkillPacket(String skillId) implements CustomPacketPayload {
             ServerPlayer player = (ServerPlayer) context.player();
             PlayerAbilityData data = player.getData(AcademyAttachments.PLAYER_ABILITY);
 
-            Skill skill = SkillRegistry.getSkill(packet.skillId());
-            if (skill == null) return;
+            if (!data.isAbilityActive()) {
+                player.sendSystemMessage(Component.literal("§c能力未激活"));
+                return;
+            }
+
+            if (packet.slotIndex() < 0 || packet.slotIndex() >= SkillPreset.SLOT_COUNT) return;
+
+            Skill skill = data.getSlotSkill(data.getCurrentPresetIndex(), packet.slotIndex());
+            if (skill == null) {
+                player.sendSystemMessage(Component.literal("§c槽位未装备技能"));
+                return;
+            }
 
             if (!data.hasLearnedSkill(skill.getId())) {
                 player.sendSystemMessage(Component.literal("§c尚未学习: " + skill.getId()));

@@ -2,7 +2,9 @@ package com.mohistmc.academy;
 
 import com.mohistmc.academy.listener.ServerListener;
 import com.mohistmc.academy.network.LearnSkillPacket;
+import com.mohistmc.academy.network.SetSkillSlotPacket;
 import com.mohistmc.academy.network.SyncAbilityDataPacket;
+import com.mohistmc.academy.network.ToggleAbilityPacket;
 import com.mohistmc.academy.network.UseSkillPacket;
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.SkillRegistry;
@@ -64,6 +66,16 @@ public class AcademyCraft {
                 UseSkillPacket.TYPE,
                 UseSkillPacket.STREAM_CODEC,
                 UseSkillPacket::handle
+        );
+        registrar.playToServer(
+                SetSkillSlotPacket.TYPE,
+                SetSkillSlotPacket.STREAM_CODEC,
+                SetSkillSlotPacket::handle
+        );
+        registrar.playToServer(
+                ToggleAbilityPacket.TYPE,
+                ToggleAbilityPacket.STREAM_CODEC,
+                ToggleAbilityPacket::handle
         );
         registrar.playToClient(
                 SyncAbilityDataPacket.TYPE,

@@ -8,15 +8,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 
-/**
- * @author Mgazul
- * @date 2026/5/30 20:28
- */
 public class PlayerAbilityData {
 
     public static final float BASE_MAX_CP = 2000;
     public static final float BASE_MAX_OVERLOAD = 500;
     public static final float BASE_CP_REGEN = 1.0f;
+    public static final int PRESET_COUNT = 4;
 
     private AbilityCategory currentAbility = null;
     private int playerLevel = 0;
@@ -28,6 +25,16 @@ public class PlayerAbilityData {
 
     private final Set<String> learnedSkills = new HashSet<>();
     private final Map<String, Float> skillProficiency = new HashMap<>();
+
+    private final SkillPreset[] presets = new SkillPreset[PRESET_COUNT];
+    private int currentPreset = 0;
+    private boolean abilityActive = false;
+
+    public PlayerAbilityData() {
+        for (int i = 0; i < PRESET_COUNT; i++) {
+            presets[i] = new SkillPreset();
+        }
+    }
 
     public AbilityCategory getCurrentAbility() {
         return currentAbility;
@@ -156,6 +163,55 @@ public class PlayerAbilityData {
         addProficiency(skill.getId(), 0.002f);
     }
 
+    // ==================== 激活状态 ====================
+
+    public boolean isAbilityActive() {
+        return abilityActive;
+    }
+
+    public void setAbilityActive(boolean active) {
+        this.abilityActive = active;
+    }
+
+    public void toggleAbilityActive() {
+        this.abilityActive = !this.abilityActive;
+    }
+
+    // ==================== 预设系统 ====================
+
+    public SkillPreset getPreset(int index) {
+        if (index < 0 || index >= PRESET_COUNT) return presets[0];
+        return presets[index];
+    }
+
+    public SkillPreset getCurrentPreset() {
+        return presets[currentPreset];
+    }
+
+    public int getCurrentPresetIndex() {
+        return currentPreset;
+    }
+
+    public void setCurrentPreset(int index) {
+        this.currentPreset = Math.max(0, Math.min(index, PRESET_COUNT - 1));
+    }
+
+    public void setSlot(int presetIndex, int slotIndex, String skillId) {
+        presets[presetIndex].setSlot(slotIndex, skillId);
+    }
+
+    public void clearSlot(int presetIndex, int slotIndex) {
+        presets[presetIndex].clearSlot(slotIndex);
+    }
+
+    public String getSlotSkillId(int presetIndex, int slotIndex) {
+        return presets[presetIndex].getSlot(slotIndex);
+    }
+
+    public Skill getSlotSkill(int presetIndex, int slotIndex) {
+        return presets[presetIndex].getSkillInSlot(slotIndex);
+    }
+
     public void tick() {
         float overloadFactor = 1.0f - (currentOverload / maxOverload) * 0.5f;
         currentCp = Math.min(currentCp + cpRegenRate * overloadFactor, maxCp);
@@ -172,6 +228,11 @@ public class PlayerAbilityData {
         cpRegenRate = BASE_CP_REGEN;
         learnedSkills.clear();
         skillProficiency.clear();
+        abilityActive = false;
+        for (SkillPreset preset : presets) {
+            preset.clearAll();
+        }
+        currentPreset = 0;
     }
 
     public int computeEffectiveLevel() {
@@ -209,6 +270,23 @@ public class PlayerAbilityData {
             profTag.putFloat(skillId, skillProficiency.getOrDefault(skillId, 0.0f));
         }
         tag.put("proficiency", profTag);
+
+        tag.putInt("current_preset", currentPreset);
+        CompoundTag presetsTag = new CompoundTag();
+        for (int p = 0; p < PRESET_COUNT; p++) {
+            CompoundTag presetTag = new CompoundTag();
+            for (int s = 0; s < SkillPreset.SLOT_COUNT; s++) {
+                String skillId = presets[p].getSlot(s);
+                if (skillId != null) {
+                    presetTag.putString("slot_" + s, skillId);
+                }
+            }
+            presetsTag.put("preset_" + p, presetTag);
+        }
+        tag.put("presets", presetsTag);
+
+        tag.putBoolean("ability_active", abilityActive);
+
         return tag;
     }
 
@@ -237,6 +315,30 @@ public class PlayerAbilityData {
                 data.setProficiency(key, profTag.getFloat(key));
             }
         }
+
+        if (tag.contains("current_preset")) {
+            data.setCurrentPreset(tag.getInt("current_preset"));
+        }
+        if (tag.contains("presets")) {
+            CompoundTag presetsTag = tag.getCompound("presets");
+            for (int p = 0; p < PRESET_COUNT; p++) {
+                String presetKey = "preset_" + p;
+                if (presetsTag.contains(presetKey)) {
+                    CompoundTag presetTag = presetsTag.getCompound(presetKey);
+                    for (int s = 0; s < SkillPreset.SLOT_COUNT; s++) {
+                        String slotKey = "slot_" + s;
+                        if (presetTag.contains(slotKey)) {
+                            data.setSlot(p, s, presetTag.getString(slotKey));
+                        }
+                    }
+                }
+            }
+        }
+
+        if (tag.contains("ability_active")) {
+            data.setAbilityActive(tag.getBoolean("ability_active"));
+        }
+
         return data;
     }
 }

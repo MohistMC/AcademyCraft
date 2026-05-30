@@ -7,11 +7,6 @@ import net.minecraft.nbt.Tag;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 
-
-/**
- * @author Mgazul
- * @date 2026/5/30 20:30
- */
 public class PlayerAbilityDataCodec implements IAttachmentSerializer<CompoundTag, PlayerAbilityData> {
 
     @Override
@@ -45,6 +40,29 @@ public class PlayerAbilityDataCodec implements IAttachmentSerializer<CompoundTag
             }
         }
 
+        if (tag.contains("current_preset")) {
+            data.setCurrentPreset(tag.getInt("current_preset"));
+        }
+        if (tag.contains("presets")) {
+            CompoundTag presetsTag = tag.getCompound("presets");
+            for (int p = 0; p < PlayerAbilityData.PRESET_COUNT; p++) {
+                String presetKey = "preset_" + p;
+                if (presetsTag.contains(presetKey)) {
+                    CompoundTag presetTag = presetsTag.getCompound(presetKey);
+                    for (int s = 0; s < SkillPreset.SLOT_COUNT; s++) {
+                        String slotKey = "slot_" + s;
+                        if (presetTag.contains(slotKey)) {
+                            data.setSlot(p, s, presetTag.getString(slotKey));
+                        }
+                    }
+                }
+            }
+        }
+
+        if (tag.contains("ability_active")) {
+            data.setAbilityActive(tag.getBoolean("ability_active"));
+        }
+
         return data;
     }
 
@@ -74,6 +92,23 @@ public class PlayerAbilityDataCodec implements IAttachmentSerializer<CompoundTag
             profTag.putFloat(skillId, data.getProficiency(skillId));
         }
         tag.put("proficiency", profTag);
+
+        tag.putInt("current_preset", data.getCurrentPresetIndex());
+        CompoundTag presetsTag = new CompoundTag();
+        for (int p = 0; p < PlayerAbilityData.PRESET_COUNT; p++) {
+            CompoundTag presetTag = new CompoundTag();
+            SkillPreset preset = data.getPreset(p);
+            for (int s = 0; s < SkillPreset.SLOT_COUNT; s++) {
+                String skillId = preset.getSlot(s);
+                if (skillId != null) {
+                    presetTag.putString("slot_" + s, skillId);
+                }
+            }
+            presetsTag.put("preset_" + p, presetTag);
+        }
+        tag.put("presets", presetsTag);
+
+        tag.putBoolean("ability_active", data.isAbilityActive());
 
         return tag;
     }

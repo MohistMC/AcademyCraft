@@ -186,5 +186,13 @@
     "item.academy.factor_vecmanip.blood_retro.desc": "Stir the blood flow of organic enemies, making their vessel burst and die in extreme pain.",
     "item.academy.factor_vecmanip.vec_reflection.desc": "Reflects the dangerous incoming attacks towards your line of sight, and make your opponent bear it.",
     "item.academy.factor_vecmanip.plasma_cannon.desc": "Manipulate a large area of air flow with extreme precision to form a plasma body. Throw it out to cause a disastrous explosion.",
-    "item.academy.factor_ac.ability_interf.cantuse": "You can't use this interference block."
+    "item.academy.factor_ac.ability_interf.cantuse": "You can't use this interference block.",
+    "key.categories.academy": "Academy Craft",
+    "key.academy.skill_slot": "Open Skill Slot GUI",
+    "key.academy.skill_1": "Skill Slot 1",
+    "key.academy.skill_2": "Skill Slot 2",
+    "key.academy.skill_3": "Skill Slot 3",
+    "key.academy.skill_4": "Skill Slot 4",
+    "key.academy.switch_preset": "Switch Preset",
+    "key.academy.toggle_ability": "Toggle Ability"
 }
