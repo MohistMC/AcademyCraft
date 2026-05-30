@@ -53,7 +53,7 @@ public class PlayerAbilityData {
     }
 
     public void setPlayerLevel(int level) {
-        this.playerLevel = Math.max(0, Math.min(5, level));
+        this.playerLevel = Math.clamp(level, 0, 5);
     }
 
     public float getCurrentCp() {
@@ -61,7 +61,7 @@ public class PlayerAbilityData {
     }
 
     public void setCurrentCp(float cp) {
-        this.currentCp = Math.max(0, Math.min(cp, getMaxCp()));
+        this.currentCp =  Math.clamp(cp, 0, getMaxCp());
     }
 
     public float getMaxCp() {
@@ -77,7 +77,7 @@ public class PlayerAbilityData {
     }
 
     public void setCurrentOverload(float overload) {
-        this.currentOverload = Math.max(0, Math.min(overload, getMaxOverload()));
+        this.currentOverload = Math.clamp(overload, 0, getMaxOverload());
     }
 
     public void addOverload(float amount) {
@@ -125,7 +125,7 @@ public class PlayerAbilityData {
     }
 
     public void setProficiency(String skillId, float value) {
-        skillProficiency.put(skillId, Math.max(0.0f, Math.min(1.0f, value)));
+        skillProficiency.put(skillId, Math.clamp(value, 0.0f, 1.0f));
     }
 
     public boolean canLearnSkill(Skill skill) {
@@ -134,7 +134,7 @@ public class PlayerAbilityData {
         if (skill.getLevel() > playerLevel + 1) return false;
 
         for (Skill.Prerequisite prereq : skill.getPrerequisites()) {
-            String prereqId = prereq.getSkillId();
+            String prereqId = prereq.skillId();
             if (prereqId.startsWith("any_level_")) {
                 int requiredLevel = Integer.parseInt(prereqId.substring("any_level_".length()));
                 boolean hasAnySkillAtLevel = SkillRegistry.getSkillsByCategory(currentAbility).stream()
@@ -143,7 +143,7 @@ public class PlayerAbilityData {
                 if (!hasAnySkillAtLevel) return false;
             } else {
                 if (!learnedSkills.contains(prereqId)) return false;
-                if (getProficiency(prereqId) < prereq.getProficiencyRequired()) return false;
+                if (getProficiency(prereqId) < prereq.proficiencyRequired()) return false;
             }
         }
         return true;
@@ -152,8 +152,7 @@ public class PlayerAbilityData {
     public boolean canUseSkill(Skill skill) {
         if (!hasLearnedSkill(skill.getId())) return false;
         if (currentCp < skill.getBaseCpCost()) return false;
-        if (currentOverload >= maxOverload) return false;
-        return true;
+        return !(currentOverload >= maxOverload);
     }
 
     public void useSkill(Skill skill) {
@@ -193,7 +192,7 @@ public class PlayerAbilityData {
     }
 
     public void setCurrentPreset(int index) {
-        this.currentPreset = Math.max(0, Math.min(index, PRESET_COUNT - 1));
+        this.currentPreset = Math.clamp(index, 0, PRESET_COUNT - 1);
     }
 
     public void setSlot(int presetIndex, int slotIndex, String skillId) {
@@ -250,7 +249,7 @@ public class PlayerAbilityData {
     public CompoundTag toSyncTag() {
         CompoundTag tag = new CompoundTag();
         if (hasAbility()) {
-            tag.putString("ability", currentAbility.getId());
+            tag.putString("ability", currentAbility.id());
         }
         tag.putInt("level", playerLevel);
         tag.putFloat("cp", currentCp);

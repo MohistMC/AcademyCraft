@@ -13,10 +13,6 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-/**
- * @author Mgazul
- * @date 2026/5/30 20:30
- */
 @EventBusSubscriber(modid = AcademyCraft.MODID)
 public class SkillEventHandler {
 
@@ -60,7 +56,7 @@ public class SkillEventHandler {
                 data.setCurrentAbility(category);
                 data.setPlayerLevel(1);
                 player.setData(AcademyAttachments.PLAYER_ABILITY, data);
-                player.sendSystemMessage(Component.literal("后天能力: " + category.getId()));
+                player.sendSystemMessage(Component.literal("后天能力: ").append(Component.translatable(category.getTranslationKey())));
 
                 if (player instanceof ServerPlayer sp) {
                     LearnSkillPacket.syncToClient(sp);

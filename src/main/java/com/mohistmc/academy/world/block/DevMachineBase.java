@@ -2,6 +2,7 @@ package com.mohistmc.academy.world.block;
 
 import com.mohistmc.academy.client.gui.DevNormalGui;
 import com.mohistmc.academy.network.LearnSkillPacket;
+import com.mohistmc.academy.network.OpenDevGuiPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,6 +26,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class DevMachineBase extends BaseEntityBlock implements IDevMachine {
@@ -53,12 +55,9 @@ public abstract class DevMachineBase extends BaseEntityBlock implements IDevMach
 
     @Override
     public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.isClientSide()) {
-            Minecraft.getInstance().setScreen(new DevNormalGui());
-            return InteractionResult.CONSUME;
-        }
         if (player instanceof ServerPlayer serverPlayer) {
             LearnSkillPacket.syncToClient(serverPlayer);
+            PacketDistributor.sendToPlayer(serverPlayer, OpenDevGuiPacket.INSTANCE);
         }
         return InteractionResult.CONSUME;
     }

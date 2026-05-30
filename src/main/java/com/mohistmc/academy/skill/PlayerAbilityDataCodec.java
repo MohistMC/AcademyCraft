@@ -6,11 +6,12 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerAbilityDataCodec implements IAttachmentSerializer<CompoundTag, PlayerAbilityData> {
 
     @Override
-    public PlayerAbilityData read(IAttachmentHolder holder, CompoundTag tag, HolderLookup.Provider provider) {
+    public @NotNull PlayerAbilityData read(@NotNull IAttachmentHolder holder, CompoundTag tag, HolderLookup.@NotNull Provider provider) {
         PlayerAbilityData data = new PlayerAbilityData();
 
         if (tag.contains("ability")) {
@@ -67,11 +68,11 @@ public class PlayerAbilityDataCodec implements IAttachmentSerializer<CompoundTag
     }
 
     @Override
-    public CompoundTag write(PlayerAbilityData data, HolderLookup.Provider provider) {
+    public CompoundTag write(PlayerAbilityData data, HolderLookup.@NotNull Provider provider) {
         CompoundTag tag = new CompoundTag();
 
         if (data.hasAbility()) {
-            tag.putString("ability", data.getCurrentAbility().getId());
+            tag.putString("ability", data.getCurrentAbility().id());
         }
 
         tag.putInt("level", data.getPlayerLevel());

@@ -69,35 +69,20 @@ public class Skill {
     }
 
     public String getTranslationKey() {
-        return "item.academy.factor_" + category.getId() + "." + id;
+        return "item.academy.factor_" + category.id() + "." + id;
     }
 
     public String getDescKey() {
         return getTranslationKey() + ".desc";
     }
 
-    public static class Prerequisite {
-        private final String skillId;
-        private final float proficiencyRequired;
-
-        public Prerequisite(String skillId, float proficiencyRequired) {
-            this.skillId = skillId;
-            this.proficiencyRequired = proficiencyRequired;
-        }
-
-        public String getSkillId() {
-            return skillId;
-        }
-
-        public float getProficiencyRequired() {
-            return proficiencyRequired;
-        }
+    public record Prerequisite(String skillId, float proficiencyRequired) {
     }
 
     public static class Builder {
-        private String id;
-        private AbilityCategory category;
-        private int level;
+        private final String id;
+        private final AbilityCategory category;
+        private final int level;
         private SkillType type = SkillType.ACTIVE;
         private final List<Prerequisite> prerequisites = new ArrayList<>();
         private float baseCpCost = 0;

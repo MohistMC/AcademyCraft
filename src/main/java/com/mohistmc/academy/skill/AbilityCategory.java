@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * @author Mgazul
- * @date 2026/5/30 20:26
- */
-public class AbilityCategory {
+public record AbilityCategory(String id) {
 
     private static final Map<String, AbilityCategory> REGISTRY = new LinkedHashMap<>();
 
@@ -18,19 +15,13 @@ public class AbilityCategory {
     public static final AbilityCategory TELEPORTER = register(new AbilityCategory("teleporter"));
     public static final AbilityCategory VECMANIP = register(new AbilityCategory("vecmanip"));
 
-    private final String id;
-
-    public AbilityCategory(String id) {
-        this.id = id;
-    }
-
     public static AbilityCategory register(AbilityCategory category) {
         REGISTRY.put(category.id, category);
         return category;
     }
 
-    public String getId() {
-        return id;
+    public String getTranslationKey() {
+        return "item.academy.factor_" + id;
     }
 
     public static AbilityCategory fromId(String id) {
@@ -44,17 +35,12 @@ public class AbilityCategory {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AbilityCategory that)) return false;
-        return id.equals(that.id);
+        if (!(o instanceof AbilityCategory(String id1))) return false;
+        return id.equals(id1);
     }
 
     @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
-
-    @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "AbilityCategory{" + id + "}";
     }
 }

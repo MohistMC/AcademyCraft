@@ -226,7 +226,7 @@ public class DevNormalGui extends Screen {
         int x = this.guiLeft + 8;
         int y = this.guiTop + 5;
 
-        String abilityName = Component.translatable("item.academy.factor_" + data.getCurrentAbility().getId()).getString();
+        String abilityName = Component.translatable("item.academy.factor_" + data.getCurrentAbility().id()).getString();
         graphics.drawString(this.font, abilityName + "  Lv." + data.getPlayerLevel(), x, y, COLOR_TEXT_WHITE);
 
         int barX = x;
@@ -266,7 +266,7 @@ public class DevNormalGui extends Screen {
 
         for (SkillNode node : skillNodes) {
             for (Skill.Prerequisite prereq : node.skill.getPrerequisites()) {
-                String prereqId = prereq.getSkillId();
+                String prereqId = prereq.skillId();
                 if (prereqId.startsWith("any_level_")) continue;
 
                 SkillNode prereqNode = findNode(prereqId);
@@ -371,16 +371,16 @@ public class DevNormalGui extends Screen {
         } else {
             tooltip.add(Component.literal("§c[未解锁]"));
             for (Skill.Prerequisite prereq : skill.getPrerequisites()) {
-                String prereqId = prereq.getSkillId();
+                String prereqId = prereq.skillId();
                 if (prereqId.startsWith("any_level_")) {
                     int reqLv = Integer.parseInt(prereqId.substring("any_level_".length()));
                     tooltip.add(Component.literal("§7  需要任意 Lv." + reqLv + " 技能"));
                 } else {
-                    String prereqName = Component.translatable("item.academy.factor_" + skill.getCategory().getId() + "." + prereqId).getString();
-                    boolean met = data.hasLearnedSkill(prereqId) && data.getProficiency(prereqId) >= prereq.getProficiencyRequired();
+                    String prereqName = Component.translatable("item.academy.factor_" + skill.getCategory().id() + "." + prereqId).getString();
+                    boolean met = data.hasLearnedSkill(prereqId) && data.getProficiency(prereqId) >= prereq.proficiencyRequired();
                     String status = met ? "§a✓" : "§c✗";
-                    String reqText = prereq.getProficiencyRequired() > 0
-                            ? String.format(" %.0f%%", prereq.getProficiencyRequired() * 100)
+                    String reqText = prereq.proficiencyRequired() > 0
+                            ? String.format(" %.0f%%", prereq.proficiencyRequired() * 100)
                             : "";
                     tooltip.add(Component.literal(status + " §7" + prereqName + reqText));
                 }

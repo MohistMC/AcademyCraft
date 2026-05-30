@@ -15,10 +15,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-/**
- * @author Mgazul
- * @date 2026/5/30 20:54
- */
 public record LearnSkillPacket(String skillId) implements CustomPacketPayload {
 
     public static final Type<LearnSkillPacket> TYPE =
@@ -44,12 +40,12 @@ public record LearnSkillPacket(String skillId) implements CustomPacketPayload {
             }
 
             if (data.hasLearnedSkill(skill.getId())) {
-                player.sendSystemMessage(Component.literal("§c已学习: " + skill.getId()));
+                player.sendSystemMessage(Component.translatable("§c已学习: ").append(Component.translatable(skill.getTranslationKey())));
                 return;
             }
 
             if (!data.canLearnSkill(skill)) {
-                player.sendSystemMessage(Component.literal("§c前置条件未满足: " + skill.getId()));
+                player.sendSystemMessage(Component.translatable("§c前置条件未满足: ").append(Component.translatable(skill.getTranslationKey())));
                 return;
             }
 
@@ -71,7 +67,7 @@ public record LearnSkillPacket(String skillId) implements CustomPacketPayload {
             }
 
             player.setData(AcademyAttachments.PLAYER_ABILITY, data);
-            player.sendSystemMessage(Component.literal("§a已学习: " + skill.getId()));
+            player.sendSystemMessage(Component.translatable("§a已学习: ").append(Component.translatable(skill.getTranslationKey())));
             syncToClient(player);
         });
     }
