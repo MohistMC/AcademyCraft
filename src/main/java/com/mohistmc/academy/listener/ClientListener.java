@@ -9,14 +9,18 @@ import com.mohistmc.academy.client.block.entity.render.WindGenFanRender;
 import com.mohistmc.academy.client.entity.CoinRenderer;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.AcademyEntities;
+import com.mohistmc.academy.world.block.IDevMachine;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.RenderHighlightEvent;
 import org.slf4j.Logger;
 
 /**
@@ -55,5 +59,16 @@ public class ClientListener {
         event.registerBlockEntityRenderer(AcademyBlockEntities.WINDGEN_FAN.get(), WindGenFanRender::new);
 
         event.registerEntityRenderer(AcademyEntities.COIN_ENTITY.get(), CoinRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void onBlockHighlight(RenderHighlightEvent.Block event) {
+        BlockHitResult hitResult = event.getTarget();
+
+        var level = event.getCamera().getEntity().level();
+        BlockState state = level.getBlockState(hitResult.getBlockPos());
+        if (state.getBlock() instanceof IDevMachine) {
+           event.setCanceled(true);
+        }
     }
 }
