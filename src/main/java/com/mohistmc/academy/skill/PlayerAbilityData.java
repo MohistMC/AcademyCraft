@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 
 /**
  * @author Mgazul
@@ -181,5 +184,59 @@ public class PlayerAbilityData {
             }
         }
         return maxLevel;
+    }
+
+    public CompoundTag toSyncTag() {
+        CompoundTag tag = new CompoundTag();
+        if (hasAbility()) {
+            tag.putString("ability", currentAbility.getId());
+        }
+        tag.putInt("level", playerLevel);
+        tag.putFloat("cp", currentCp);
+        tag.putFloat("max_cp", maxCp);
+        tag.putFloat("overload", currentOverload);
+        tag.putFloat("max_overload", maxOverload);
+        tag.putFloat("cp_regen", cpRegenRate);
+
+        ListTag learnedList = new ListTag();
+        for (String skillId : learnedSkills) {
+            learnedList.add(StringTag.valueOf(skillId));
+        }
+        tag.put("learned", learnedList);
+
+        CompoundTag profTag = new CompoundTag();
+        for (String skillId : learnedSkills) {
+            profTag.putFloat(skillId, skillProficiency.getOrDefault(skillId, 0.0f));
+        }
+        tag.put("proficiency", profTag);
+        return tag;
+    }
+
+    public static PlayerAbilityData fromSyncTag(CompoundTag tag) {
+        PlayerAbilityData data = new PlayerAbilityData();
+        if (tag.contains("ability")) {
+            AbilityCategory cat = AbilityCategory.fromId(tag.getString("ability"));
+            if (cat != null) data.setCurrentAbility(cat);
+        }
+        data.setPlayerLevel(tag.getInt("level"));
+        data.setCurrentCp(tag.getFloat("cp"));
+        if (tag.contains("max_cp")) data.addMaxCp(tag.getFloat("max_cp") - BASE_MAX_CP);
+        data.setCurrentOverload(tag.getFloat("overload"));
+        if (tag.contains("max_overload")) data.addMaxOverload(tag.getFloat("max_overload") - BASE_MAX_OVERLOAD);
+        if (tag.contains("cp_regen")) data.addCpRegenRate(tag.getFloat("cp_regen") / BASE_CP_REGEN - 1.0f);
+
+        if (tag.contains("learned")) {
+            ListTag list = tag.getList("learned", net.minecraft.nbt.Tag.TAG_STRING);
+            for (int i = 0; i < list.size(); i++) {
+                data.learnSkill(list.getString(i));
+            }
+        }
+        if (tag.contains("proficiency")) {
+            CompoundTag profTag = tag.getCompound("proficiency");
+            for (String key : profTag.getAllKeys()) {
+                data.setProficiency(key, profTag.getFloat(key));
+            }
+        }
+        return data;
     }
 }

@@ -15,6 +15,7 @@ public class Skill {
     private final List<Prerequisite> prerequisites;
     private final float baseCpCost;
     private final float baseOverload;
+    private SkillEffect effect;
 
     public Skill(String id, AbilityCategory category, int level, SkillType type,
                  List<Prerequisite> prerequisites, float baseCpCost, float baseOverload) {
@@ -53,6 +54,18 @@ public class Skill {
 
     public float getBaseOverload() {
         return baseOverload;
+    }
+
+    public SkillEffect getEffect() {
+        return effect;
+    }
+
+    public void setEffect(SkillEffect effect) {
+        this.effect = effect;
+    }
+
+    public boolean hasEffect() {
+        return effect != null;
     }
 
     public String getTranslationKey() {

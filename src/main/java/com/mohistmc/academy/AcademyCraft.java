@@ -1,6 +1,9 @@
 package com.mohistmc.academy;
 
 import com.mohistmc.academy.listener.ServerListener;
+import com.mohistmc.academy.network.LearnSkillPacket;
+import com.mohistmc.academy.network.SyncAbilityDataPacket;
+import com.mohistmc.academy.network.UseSkillPacket;
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.SkillRegistry;
 import com.mohistmc.academy.world.AcademyBlockEntities;
@@ -17,6 +20,8 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.slf4j.Logger;
 
 @Mod(AcademyCraft.MODID)
@@ -38,6 +43,7 @@ public class AcademyCraft {
         AcademyAttachments.ATTACHMENT_TYPES.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::registerPayloads);
 
         NeoForge.EVENT_BUS.register(new ServerListener());
     }
@@ -45,5 +51,24 @@ public class AcademyCraft {
     private void commonSetup(final FMLCommonSetupEvent event) {
         SkillRegistry.init();
         LOGGER.info("AcademyCraft Skill Registry initialized with {} skills", SkillRegistry.getAllSkills().size());
+    }
+
+    private void registerPayloads(final RegisterPayloadHandlersEvent event) {
+        final PayloadRegistrar registrar = event.registrar(MODID).versioned("1.0");
+        registrar.playToServer(
+                LearnSkillPacket.TYPE,
+                LearnSkillPacket.STREAM_CODEC,
+                LearnSkillPacket::handle
+        );
+        registrar.playToServer(
+                UseSkillPacket.TYPE,
+                UseSkillPacket.STREAM_CODEC,
+                UseSkillPacket::handle
+        );
+        registrar.playToClient(
+                SyncAbilityDataPacket.TYPE,
+                SyncAbilityDataPacket.STREAM_CODEC,
+                SyncAbilityDataPacket::handle
+        );
     }
 }

@@ -1,5 +1,6 @@
 package com.mohistmc.academy.world.item;
 
+import com.mohistmc.academy.skill.AbilityCategory;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -8,8 +9,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
 public class BaseFactor extends AcademyItem {
-    public BaseFactor(Properties p_41383_) {
-        super(p_41383_);
+
+    private final AbilityCategory category;
+
+    public BaseFactor(Properties properties, AbilityCategory category) {
+        super(properties);
+        this.category = category;
+    }
+
+    public AbilityCategory getCategory() {
+        return category;
     }
 
     @Override

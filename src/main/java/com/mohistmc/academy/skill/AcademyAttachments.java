@@ -1,11 +1,10 @@
 package com.mohistmc.academy.skill;
 
 import com.mohistmc.academy.AcademyCraft;
+import java.util.function.Supplier;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
-
-import java.util.function.Supplier;
 
 
 /**

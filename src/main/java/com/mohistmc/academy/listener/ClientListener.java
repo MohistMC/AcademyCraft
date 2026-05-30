@@ -1,6 +1,7 @@
 package com.mohistmc.academy.listener;
 
 import com.mohistmc.academy.AcademyCraft;
+import com.mohistmc.academy.client.KeyInputHandler;
 import com.mohistmc.academy.client.block.entity.model.CatEngineModel;
 import com.mohistmc.academy.client.block.entity.render.CatEngineRender;
 import com.mohistmc.academy.client.block.entity.render.PhaseLiquidRender;
@@ -15,6 +16,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import org.slf4j.Logger;
 
 /**
@@ -32,6 +34,11 @@ public class ClientListener {
         // Some client setup code
         LOGGER.info("HELLO FROM CLIENT SETUP");
         LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+    }
+
+    @SubscribeEvent
+    public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
+        KeyInputHandler.register(event);
     }
 
     //将所有的生物的皮肤贴图信息写在这个函数里，有几个写几个

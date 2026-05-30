@@ -1,12 +1,19 @@
 package com.mohistmc.academy.world.block;
 
+import com.mohistmc.academy.client.gui.DevNormalGui;
+import com.mohistmc.academy.network.LearnSkillPacket;
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.block.entity.DevNormalBlockEntity;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.AirBlock;
@@ -20,6 +27,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class DevNormal extends BaseEntityBlock {
@@ -43,7 +54,7 @@ public class DevNormal extends BaseEntityBlock {
     public void animateTick(BlockState p_220827_, Level p_220828_, BlockPos p_220829_, RandomSource p_220830_) {
     }
 
-    /*
+
     @Override
     public VoxelShape getShape(BlockState p_60555_, BlockGetter p_60556_, BlockPos p_60557_, CollisionContext p_60558_) {
         Direction direction = p_60555_.getValue(HorizontalDirectionalBlock.FACING).getOpposite();
@@ -54,8 +65,6 @@ public class DevNormal extends BaseEntityBlock {
             case WEST -> Shapes.box(-2, 0, 0, 1, 3, 1);
         };
     }
-
-     */
 
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState p_60569_, boolean p_60570_) {
@@ -140,6 +149,18 @@ public class DevNormal extends BaseEntityBlock {
     @Override
     public RenderShape getRenderShape(BlockState p_49232_) {
         return RenderShape.MODEL;
+    }
+
+    @Override
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult p_60508_) {
+        if (level.isClientSide()) {
+            Minecraft.getInstance().setScreen(new DevNormalGui());
+            return InteractionResult.CONSUME;
+        }
+        if (player instanceof ServerPlayer serverPlayer) {
+            LearnSkillPacket.syncToClient(serverPlayer);
+        }
+        return InteractionResult.CONSUME;
     }
 
     @Nullable
