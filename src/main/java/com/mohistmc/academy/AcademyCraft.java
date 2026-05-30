@@ -1,6 +1,8 @@
 package com.mohistmc.academy;
 
 import com.mohistmc.academy.listener.ServerListener;
+import com.mohistmc.academy.skill.AcademyAttachments;
+import com.mohistmc.academy.skill.SkillRegistry;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyEntities;
@@ -13,6 +15,7 @@ import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 
@@ -32,8 +35,15 @@ public class AcademyCraft {
         AcademyEntities.ENTITIES.register(modEventBus);
         AcademyBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         AcademySounds.SOUND_EVENTS.register(modEventBus);
+        AcademyAttachments.ATTACHMENT_TYPES.register(modEventBus);
+
+        modEventBus.addListener(this::commonSetup);
+
         NeoForge.EVENT_BUS.register(new ServerListener());
     }
 
-
+    private void commonSetup(final FMLCommonSetupEvent event) {
+        SkillRegistry.init();
+        LOGGER.info("AcademyCraft Skill Registry initialized with {} skills", SkillRegistry.getAllSkills().size());
+    }
 }
