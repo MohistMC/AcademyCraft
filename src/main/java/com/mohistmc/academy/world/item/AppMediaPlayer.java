@@ -1,5 +1,7 @@
 package com.mohistmc.academy.world.item;
 
+import com.mohistmc.academy.terminal.AppRegistry;
+
 public class AppMediaPlayer extends BaseApp {
     public AppMediaPlayer() {
         super(new Properties());
@@ -7,6 +9,6 @@ public class AppMediaPlayer extends BaseApp {
 
     @Override
     public String getAppId() {
-        return "media_player";
+        return AppRegistry.MEDIA_PLAYER.getAppId();
     }
 }

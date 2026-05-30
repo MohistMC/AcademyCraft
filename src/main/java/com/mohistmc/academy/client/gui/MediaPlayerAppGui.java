@@ -1,14 +1,14 @@
 package com.mohistmc.academy.client.gui;
 
-import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.client.MediaPlayerManager;
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.PlayerAbilityData;
+import com.mohistmc.academy.terminal.MediaTrack;
+import com.mohistmc.academy.terminal.MediaTrackRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -56,27 +56,15 @@ public class MediaPlayerAppGui extends Screen {
     private static final int COLOR_STOP_BTN_HOVER = 0xFFff6b6b;
     private static final int COLOR_SEPARATOR = 0xFF004d5a;
 
-    private static final ResourceLocation MEDIA_RAILGUN_TEX =
-            ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/media/only_my_railgun.png");
-    private static final ResourceLocation MEDIA_JUDGELIGHT_TEX =
-            ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/media/level5_judgelight.png");
-    private static final ResourceLocation MEDIA_NOISE_TEX =
-            ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/media/sisters_noise.png");
-
-    private static final String[][] ALL_TRACKS = {
-            {"only_my_railgun", "item.academy.media_only_my_railgun", "item.academy.media_only_my_railgun.desc", "OP1"},
-            {"level5_judgelight", "item.academy.media_level5_judgelight", "item.academy.media_level5_judgelight.desc", "OP2"},
-            {"sisters_noise", "item.academy.media_sisters_noise", "item.academy.media_sisters_noise.desc", "OPs"},
-    };
-
     private int guiLeft;
     private int guiTop;
     private int hoveredTrack = -1;
     private boolean hoveredBack = false;
     private boolean hoveredStop = false;
     private int animTick = 0;
+    private int scrollOffset = 0;
 
-    private List<String[]> visibleTracks = new ArrayList<>();
+    private List<MediaTrack> visibleTracks = new ArrayList<>();
 
     public MediaPlayerAppGui() {
         super(Component.translatable("item.academy.app_media_player"));
@@ -105,20 +93,11 @@ public class MediaPlayerAppGui extends Screen {
         if (player == null) return;
         PlayerAbilityData data = player.getData(AcademyAttachments.PLAYER_ABILITY);
         Set<String> loaded = data.getLoadedMedia();
-        for (String[] track : ALL_TRACKS) {
-            if (loaded.contains(track[0])) {
+        for (MediaTrack track : MediaTrackRegistry.getAllTracks()) {
+            if (loaded.contains(track.trackId())) {
                 visibleTracks.add(track);
             }
         }
-    }
-
-    private ResourceLocation getMediaTexture(String trackId) {
-        return switch (trackId) {
-            case "only_my_railgun" -> MEDIA_RAILGUN_TEX;
-            case "level5_judgelight" -> MEDIA_JUDGELIGHT_TEX;
-            case "sisters_noise" -> MEDIA_NOISE_TEX;
-            default -> MEDIA_RAILGUN_TEX;
-        };
     }
 
     @Override
@@ -157,20 +136,24 @@ public class MediaPlayerAppGui extends Screen {
         }
 
         int tracksStartY = guiTop + TOP_BAR + 8;
+        int tracksEndY = guiTop + GUI_HEIGHT - CONTROL_BAR_HEIGHT - 4;
         hoveredTrack = -1;
-
         int textX = guiLeft + 12 + IMG_SIZE + 6;
+
+        graphics.enableScissor(guiLeft + 4, tracksStartY, guiLeft + GUI_WIDTH - 4, tracksEndY);
+        graphics.pose().pushPose();
+        graphics.pose().translate(0, -scrollOffset, 0);
 
         if (visibleTracks.isEmpty()) {
             String emptyMsg = "暂无曲目，使用媒体物品加载";
             int mw = this.font.width(emptyMsg);
-            int emptyY = guiTop + (GUI_HEIGHT - CONTROL_BAR_HEIGHT) / 2;
+            int emptyY = tracksStartY + (tracksEndY - tracksStartY) / 2 + scrollOffset;
             graphics.drawString(this.font, emptyMsg, guiLeft + (GUI_WIDTH - mw) / 2, emptyY, COLOR_TEXT_DIM);
         }
 
         for (int i = 0; i < visibleTracks.size(); i++) {
-            String[] track = visibleTracks.get(i);
-            String trackId = track[0];
+            MediaTrack track = visibleTracks.get(i);
+            String trackId = track.trackId();
             int trackY = tracksStartY + i * (TRACK_HEIGHT + TRACK_GAP);
 
             boolean isHovered = mouseX >= guiLeft + 8 && mouseX < guiLeft + GUI_WIDTH - 8
@@ -192,34 +175,27 @@ public class MediaPlayerAppGui extends Screen {
 
             int imgX = guiLeft + 12;
             int imgY = trackY + (TRACK_HEIGHT - IMG_SIZE) / 2;
-            ResourceLocation mediaTex = getMediaTexture(trackId);
-            graphics.blit(mediaTex, imgX, imgY, 0, 0, IMG_SIZE, IMG_SIZE, IMG_SIZE, IMG_SIZE);
+            graphics.blit(track.texture(), imgX, imgY, 0, 0, IMG_SIZE, IMG_SIZE, IMG_SIZE, IMG_SIZE);
 
             if (isThisPlaying) {
                 drawBorder(graphics, imgX - 1, imgY - 1, IMG_SIZE + 2, IMG_SIZE + 2, COLOR_TRACK_BORDER_PLAYING);
             }
 
-            String trackName = Component.translatable(track[1]).getString();
+            String trackName = Component.translatable(track.nameKey()).getString();
             graphics.drawString(this.font, trackName, textX, trackY + 6,
                     isThisPlaying ? COLOR_TEXT_CYAN : COLOR_TEXT_WHITE);
 
-            String trackDesc = Component.translatable(track[2]).getString();
+            String trackDesc = Component.translatable(track.descKey()).getString();
             graphics.drawString(this.font, trackDesc, textX, trackY + 18, COLOR_TEXT_GRAY);
 
-            String tagLabel = track[3];
+            String tagLabel = track.tag();
             int tagW = this.font.width(tagLabel) + 6;
             int tagX = guiLeft + GUI_WIDTH - 8 - tagW - 4;
             graphics.fill(tagX, trackY + 4, tagX + tagW, trackY + 16, 0xFF1a3050);
             drawBorder(graphics, tagX, trackY + 4, tagW, 12, COLOR_SEPARATOR);
             graphics.drawString(this.font, tagLabel, tagX + 3, trackY + 6, COLOR_TEXT_CYAN);
 
-            int duration = switch (trackId) {
-                case "only_my_railgun" -> MediaPlayerManager.DURATION_RAILGUN;
-                case "level5_judgelight" -> MediaPlayerManager.DURATION_JUDGELIGHT;
-                case "sisters_noise" -> MediaPlayerManager.DURATION_NOISE;
-                default -> 60;
-            };
-            String durStr = MediaPlayerManager.formatTime(duration);
+            String durStr = MediaPlayerManager.formatTime(track.durationSeconds());
             int durW = this.font.width(durStr);
             graphics.drawString(this.font, durStr, guiLeft + GUI_WIDTH - durW - 16, trackY + TRACK_HEIGHT - 14, COLOR_TEXT_DIM);
 
@@ -242,17 +218,28 @@ public class MediaPlayerAppGui extends Screen {
             }
         }
 
+        graphics.pose().popPose();
+        graphics.disableScissor();
+
+        int maxScroll = Math.max(0, visibleTracks.size() * (TRACK_HEIGHT + TRACK_GAP) - (tracksEndY - tracksStartY));
+        if (maxScroll > 0) {
+            int scrollBarX = guiLeft + GUI_WIDTH - 5;
+            int scrollBarH = tracksEndY - tracksStartY - 4;
+            int thumbH = Math.max(10, scrollBarH * scrollBarH / (visibleTracks.size() * (TRACK_HEIGHT + TRACK_GAP)));
+            int thumbY = tracksStartY + 2 + (scrollBarH - thumbH) * scrollOffset / maxScroll;
+            graphics.fill(scrollBarX, tracksStartY + 2, scrollBarX + 2, tracksStartY + 2 + scrollBarH, 0x44FFFFFF);
+            graphics.fill(scrollBarX, thumbY, scrollBarX + 2, thumbY + thumbH, 0x8800bcd4);
+        }
+
         int controlY = guiTop + GUI_HEIGHT - CONTROL_BAR_HEIGHT;
         graphics.fill(guiLeft, controlY, guiLeft + GUI_WIDTH, guiTop + GUI_HEIGHT, COLOR_CONTROL_BG);
         graphics.fill(guiLeft, controlY, guiLeft + GUI_WIDTH, controlY + 1, COLOR_SEPARATOR);
 
         if (playing) {
             String currentTrackName = "";
-            for (String[] track : ALL_TRACKS) {
-                if (MediaPlayerManager.isTrackPlaying(track[0])) {
-                    currentTrackName = Component.translatable(track[1]).getString();
-                    break;
-                }
+            MediaTrack current = MediaTrackRegistry.getTrack(MediaPlayerManager.getCurrentTrack());
+            if (current != null) {
+                currentTrackName = Component.translatable(current.nameKey()).getString();
             }
             String nowPlaying = "正在播放: " + currentTrackName;
             graphics.drawString(this.font, nowPlaying, guiLeft + 10, controlY + 6, COLOR_TEXT_CYAN);
@@ -304,7 +291,7 @@ public class MediaPlayerAppGui extends Screen {
         }
 
         if (hoveredTrack >= 0 && hoveredTrack < visibleTracks.size() && button == 0) {
-            String trackId = visibleTracks.get(hoveredTrack)[0];
+            String trackId = visibleTracks.get(hoveredTrack).trackId();
             if (MediaPlayerManager.isTrackPlaying(trackId)) {
                 MediaPlayerManager.stop();
             } else {
@@ -314,6 +301,15 @@ public class MediaPlayerAppGui extends Screen {
         }
 
         return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        int tracksStartY = guiTop + TOP_BAR + 8;
+        int tracksEndY = guiTop + GUI_HEIGHT - CONTROL_BAR_HEIGHT - 4;
+        int maxScroll = Math.max(0, visibleTracks.size() * (TRACK_HEIGHT + TRACK_GAP) - (tracksEndY - tracksStartY));
+        scrollOffset = (int) Math.clamp(scrollOffset - scrollY * 10, 0, maxScroll);
+        return true;
     }
 
     @Override

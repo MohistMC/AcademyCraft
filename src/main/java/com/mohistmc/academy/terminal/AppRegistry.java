@@ -4,6 +4,8 @@ import com.mojang.logging.LogUtils;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import net.minecraft.client.Minecraft;
 import org.slf4j.Logger;
 
 /**
@@ -11,6 +13,12 @@ import org.slf4j.Logger;
  * @date 2026/5/31 04:09
  */
 public class AppRegistry {
+
+    public static final BuiltinApp SKILL_TREE = new BuiltinApp("skill_tree", "item.academy.app_skill_tree", "◆");
+    public static final BuiltinApp FREQ_TRANSMITTER = new BuiltinApp("freq_transmitter", "item.academy.app_freq_transmitter", "⚡");
+    public static final BuiltinApp MEDIA_PLAYER = new BuiltinApp("media_player", "item.academy.app_media_player", "♫");
+    public static final BuiltinApp TUTORIAL = new BuiltinApp("tutorial", "item.academy.app_tutorial", "☁");
+    public static final BuiltinApp SETTINGS = new BuiltinApp("settings", "item.academy.app_settings", "⚙");
 
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Map<String, TerminalApp> APPS = new LinkedHashMap<>();
@@ -39,18 +47,15 @@ public class AppRegistry {
         return APPS.containsKey(appId);
     }
 
-    public static void bindOpenAction(String appId, java.util.function.Consumer<net.minecraft.client.Minecraft> action) {
-        TerminalApp app = APPS.get(appId);
-        if (app instanceof BuiltinApp builtin) {
-            builtin.setOpenAction(action);
-        }
+    public static void bindOpenAction(BuiltinApp app, Consumer<Minecraft> action) {
+        app.setOpenAction(action);
     }
 
     private static void registerBuiltins() {
-        register(new BuiltinApp("skill_tree", "item.academy.app_skill_tree", "◆"));
-        register(new BuiltinApp("freq_transmitter", "item.academy.app_freq_transmitter", "⚡"));
-        register(new BuiltinApp("media_player", "item.academy.app_media_player", "♫"));
-        register(new BuiltinApp("tutorial", "item.academy.app_tutorial", "☁"));
-        register(new BuiltinApp("settings", "item.academy.app_settings", "⚙"));
+        register(SKILL_TREE);
+        register(FREQ_TRANSMITTER);
+        register(MEDIA_PLAYER);
+        register(TUTORIAL);
+        register(SETTINGS);
     }
 }

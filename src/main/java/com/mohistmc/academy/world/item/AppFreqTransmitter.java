@@ -1,5 +1,7 @@
 package com.mohistmc.academy.world.item;
 
+import com.mohistmc.academy.terminal.AppRegistry;
+
 public class AppFreqTransmitter extends BaseApp {
     public AppFreqTransmitter() {
         super(new Properties());
@@ -7,6 +9,6 @@ public class AppFreqTransmitter extends BaseApp {
 
     @Override
     public String getAppId() {
-        return "freq_transmitter";
+        return AppRegistry.FREQ_TRANSMITTER.getAppId();
     }
 }

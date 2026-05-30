@@ -35,6 +35,9 @@ import com.mohistmc.academy.world.item.MatCore1;
 import com.mohistmc.academy.world.item.MatCore2;
 import com.mohistmc.academy.world.item.MatterUnit;
 import com.mohistmc.academy.world.item.MediaItem;
+import com.mohistmc.academy.world.item.MediaLevel5Judgelight;
+import com.mohistmc.academy.world.item.MediaOnlyMyRailgun;
+import com.mohistmc.academy.world.item.MediaSistersNoise;
 import com.mohistmc.academy.world.item.Needle;
 import com.mohistmc.academy.world.item.ReinforcedIronPlate;
 import com.mohistmc.academy.world.item.ResoCrystal;
@@ -92,12 +95,9 @@ public class AcademyItems {
     public static final DeferredItem<Item> MAT_CORE_1 = ITEMS.register("mat_core_1", MatCore1::new);
     public static final DeferredItem<Item> MAT_CORE_2 = ITEMS.register("mat_core_2", MatCore2::new);
     public static final DeferredItem<Item> MATTER_UNIT = ITEMS.register("matter_unit", MatterUnit::new);
-    public static final DeferredItem<Item> MEDIA_LEVEL5_JUDGELIGHT = ITEMS.register("media_level5_judgelight",
-            () -> new MediaItem("level5_judgelight", "§7[媒体播放器] §a已加载: Level5 -Judgelight-"));
-    public static final DeferredItem<Item> MEDIA_ONLY_MY_RAILGUN = ITEMS.register("media_only_my_railgun",
-            () -> new MediaItem("only_my_railgun", "§7[媒体播放器] §a已加载: Only My Railgun"));
-    public static final DeferredItem<Item> MEDIA_SISTERS_NOISE = ITEMS.register("media_sisters_noise",
-            () -> new MediaItem("sisters_noise", "§7[媒体播放器] §a已加载: Sister's Noise"));
+    public static final DeferredItem<Item> MEDIA_LEVEL5_JUDGELIGHT = ITEMS.register("media_level5_judgelight", MediaLevel5Judgelight::new);
+    public static final DeferredItem<Item> MEDIA_ONLY_MY_RAILGUN = ITEMS.register("media_only_my_railgun", MediaOnlyMyRailgun::new);
+    public static final DeferredItem<Item> MEDIA_SISTERS_NOISE = ITEMS.register("media_sisters_noise", MediaSistersNoise::new);
     public static final DeferredItem<Item> NEEDLE = ITEMS.register("needle", Needle::new);
     public static final DeferredItem<Item> REINFORCED_IRON_PLATE = ITEMS.register("reinforced_iron_plate", ReinforcedIronPlate::new);
     public static final DeferredItem<Item> RESO_CRYSTAL = ITEMS.register("reso_crystal", ResoCrystal::new);

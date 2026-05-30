@@ -1,5 +1,7 @@
 package com.mohistmc.academy.world.item;
 
+import com.mohistmc.academy.terminal.AppRegistry;
+
 public class AppSettings extends BaseApp {
     public AppSettings() {
         super(new Properties());
@@ -7,6 +9,6 @@ public class AppSettings extends BaseApp {
 
     @Override
     public String getAppId() {
-        return "settings";
+        return AppRegistry.SETTINGS.getAppId();
     }
 }

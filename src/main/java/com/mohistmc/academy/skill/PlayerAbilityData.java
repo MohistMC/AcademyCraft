@@ -1,5 +1,7 @@
 package com.mohistmc.academy.skill;
 
+import com.mohistmc.academy.terminal.AppRegistry;
+import com.mohistmc.academy.terminal.TerminalApp;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -38,8 +40,8 @@ public class PlayerAbilityData {
         for (int i = 0; i < PRESET_COUNT; i++) {
             presets[i] = new SkillPreset();
         }
-        installedApps.add("settings");
-        installedApps.add("tutorial");
+        installedApps.add(AppRegistry.SETTINGS.getAppId());
+        installedApps.add(AppRegistry.TUTORIAL.getAppId());
     }
 
     public AbilityCategory getCurrentAbility() {
@@ -231,8 +233,16 @@ public class PlayerAbilityData {
         return installedApps.contains(appId);
     }
 
+    public boolean hasApp(TerminalApp app) {
+        return installedApps.contains(app.getAppId());
+    }
+
     public void installApp(String appId) {
         installedApps.add(appId);
+    }
+
+    public void installApp(TerminalApp app) {
+        installedApps.add(app.getAppId());
     }
 
     public Set<String> getInstalledApps() {

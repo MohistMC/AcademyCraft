@@ -13,8 +13,8 @@ public class TerminalData {
     private final Set<String> installedApps = new HashSet<>();
 
     public TerminalData() {
-        installedApps.add("settings");
-        installedApps.add("tutorial");
+        installedApps.add(AppRegistry.SETTINGS.getAppId());
+        installedApps.add(AppRegistry.TUTORIAL.getAppId());
     }
 
     public boolean isInstalled() {
@@ -29,15 +29,23 @@ public class TerminalData {
         return installedApps.contains(appId);
     }
 
+    public boolean hasApp(TerminalApp app) {
+        return installedApps.contains(app.getAppId());
+    }
+
     public void installApp(String appId) {
         installedApps.add(appId);
+    }
+
+    public void installApp(TerminalApp app) {
+        installedApps.add(app.getAppId());
     }
 
     public Set<String> getInstalledApps() {
         return installedApps;
     }
 
-    public boolean isBuiltIn(String appId) {
-        return "settings".equals(appId) || "tutorial".equals(appId);
+    public boolean isBuiltIn(TerminalApp app) {
+        return app.isBuiltIn();
     }
 }

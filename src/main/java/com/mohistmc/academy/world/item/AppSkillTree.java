@@ -1,5 +1,7 @@
 package com.mohistmc.academy.world.item;
 
+import com.mohistmc.academy.terminal.AppRegistry;
+
 public class AppSkillTree extends BaseApp {
     public AppSkillTree() {
         super(new Properties());
@@ -7,6 +9,6 @@ public class AppSkillTree extends BaseApp {
 
     @Override
     public String getAppId() {
-        return "skill_tree";
+        return AppRegistry.SKILL_TREE.getAppId();
     }
 }

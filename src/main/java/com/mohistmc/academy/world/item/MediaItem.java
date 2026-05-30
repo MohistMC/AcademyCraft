@@ -2,6 +2,8 @@ package com.mohistmc.academy.world.item;
 
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.PlayerAbilityData;
+import com.mohistmc.academy.terminal.AppRegistry;
+import com.mohistmc.academy.terminal.MediaTrackRegistry;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -12,25 +14,31 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Mgazul
  * @date 2026/5/31 04:04
  */
-public class MediaItem extends AcademyItem {
+public abstract class MediaItem extends AcademyItem {
 
-    private final String mediaId;
-    private final String loadMessage;
-
-    public MediaItem(String mediaId, String loadMessage) {
+    public MediaItem() {
         super(new Properties());
-        this.mediaId = mediaId;
-        this.loadMessage = loadMessage;
     }
 
+    public abstract String getMediaId();
+
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+
+        if (!MediaTrackRegistry.isRegistered(getMediaId())) {
+            if (level.isClientSide()) {
+                player.displayClientMessage(Component.literal("§7[媒体播放器] §c曲目未注册: " + getMediaId()), true);
+            }
+            return InteractionResultHolder.fail(stack);
+        }
+
         PlayerAbilityData data = player.getData(AcademyAttachments.PLAYER_ABILITY);
 
         if (!data.isTerminalInstalled()) {
@@ -40,18 +48,26 @@ public class MediaItem extends AcademyItem {
             return InteractionResultHolder.fail(stack);
         }
 
-        if (!data.hasApp("media_player")) {
+        if (!data.hasApp(AppRegistry.MEDIA_PLAYER)) {
             if (level.isClientSide()) {
                 player.displayClientMessage(Component.literal("§7[数据终端] §c尚未安装媒体播放器APP。"), true);
             }
             return InteractionResultHolder.fail(stack);
         }
 
-        data.addLoadedMedia(mediaId);
+        if (data.hasLoadedMedia(getMediaId())) {
+            if (level.isClientSide()) {
+                player.displayClientMessage(Component.literal("§7[媒体播放器] §c该曲目已加载，无需重复加载。"), true);
+            }
+            return InteractionResultHolder.fail(stack);
+        }
+
+        data.addLoadedMedia(getMediaId());
         player.setData(AcademyAttachments.PLAYER_ABILITY, data);
 
         if (level.isClientSide()) {
-            player.displayClientMessage(Component.literal(loadMessage), false);
+            String name = Component.translatable(getDescriptionId()).getString();
+            player.displayClientMessage(Component.literal("§7[媒体播放器] §a已加载: " + name), false);
         }
 
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());

@@ -1,9 +1,11 @@
 package com.mohistmc.academy.client;
 
-import com.mohistmc.academy.world.AcademySounds;
+import com.mohistmc.academy.terminal.MediaTrack;
+import com.mohistmc.academy.terminal.MediaTrackRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -23,19 +25,18 @@ public class MediaPlayerManager {
     private static int playStartTick = 0;
     private static int currentDurationTicks = 0;
 
-    public static final int DURATION_RAILGUN = 99;
-    public static final int DURATION_JUDGELIGHT = 102;
-    public static final int DURATION_NOISE = 95;
-
     public static void play(String trackId) {
         stop();
+
+        MediaTrack track = MediaTrackRegistry.getTrack(trackId);
+        if (track == null) return;
 
         Minecraft mc = Minecraft.getInstance();
         if (mc.getSoundManager() == null) return;
 
         mc.getMusicManager().stopPlaying();
 
-        SoundEvent soundEvent = getSoundEvent(trackId);
+        SoundEvent soundEvent = BuiltInRegistries.SOUND_EVENT.get(track.soundId());
         if (soundEvent == null) return;
 
         currentSoundInstance = new SimpleSoundInstance(
@@ -55,7 +56,7 @@ public class MediaPlayerManager {
         currentTrack = trackId;
         isPlaying = true;
         playStartTick = mc.player != null ? mc.player.tickCount : 0;
-        currentDurationTicks = getDurationTicks(trackId);
+        currentDurationTicks = track.durationSeconds() * 20;
     }
 
     public static void stop() {
@@ -104,24 +105,6 @@ public class MediaPlayerManager {
 
     public static boolean isTrackPlaying(String trackId) {
         return isPlaying() && trackId.equals(currentTrack);
-    }
-
-    private static SoundEvent getSoundEvent(String trackId) {
-        return switch (trackId) {
-            case "only_my_railgun" -> AcademySounds.MEDIA_RAILGUN.value();
-            case "level5_judgelight" -> AcademySounds.MEDIA_JUDGELIGHT.value();
-            case "sisters_noise" -> AcademySounds.MEDIA_NOISE.value();
-            default -> null;
-        };
-    }
-
-    private static int getDurationTicks(String trackId) {
-        return switch (trackId) {
-            case "only_my_railgun" -> DURATION_RAILGUN * 20;
-            case "level5_judgelight" -> DURATION_JUDGELIGHT * 20;
-            case "sisters_noise" -> DURATION_NOISE * 20;
-            default -> 60 * 20;
-        };
     }
 
     public static String formatTime(int totalSeconds) {
