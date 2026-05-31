@@ -22,8 +22,10 @@ import com.mohistmc.academy.world.item.DataChip;
 import com.mohistmc.academy.world.item.DeveloperPortable;
 import com.mohistmc.academy.world.item.EnergyConvertComponent;
 import com.mohistmc.academy.world.item.EnergyUnit;
+import com.mohistmc.academy.world.item.FactorAerohand;
 import com.mohistmc.academy.world.item.FactorElectromaster;
 import com.mohistmc.academy.world.item.FactorMeltdowner;
+import com.mohistmc.academy.world.item.FactorTelekinesis;
 import com.mohistmc.academy.world.item.FactorTeleporter;
 import com.mohistmc.academy.world.item.FactorVecmanip;
 import com.mohistmc.academy.world.item.InfoComponent;
@@ -84,10 +86,14 @@ public class AcademyItems {
     public static final DeferredItem<Item> ENERGY_UNIT = ITEMS.register("energy_unit", EnergyUnit::new);
     public static final DeferredItem<Item> IMAG_SILICON_INGOT = ITEMS.registerSimpleItem("imag_silicon_ingot");
     public static final DeferredItem<Item> IMAG_SILICON_PIECE = ITEMS.registerSimpleItem("imag_silicon_piece");
+
     public static final DeferredItem<Item> FACTOR_ELECTROMASTER = ITEMS.register("factor_electromaster", FactorElectromaster::new);
     public static final DeferredItem<Item> FACTOR_MELTDOWNER = ITEMS.register("factor_meltdowner", FactorMeltdowner::new);
     public static final DeferredItem<Item> FACTOR_TELEPORTER = ITEMS.register("factor_teleporter", FactorTeleporter::new);
     public static final DeferredItem<Item> FACTOR_VECMANIP = ITEMS.register("factor_vecmanip", FactorVecmanip::new);
+    public static final DeferredItem<Item> FACTOR_AEROHAND = ITEMS.register("factor_aerohand", FactorAerohand::new);
+    public static final DeferredItem<Item> FACTOR_TELEKINESIS = ITEMS.register("factor_telekinesis", FactorTelekinesis::new);
+
     public static final DeferredItem<Item> INFO_COMPONENT = ITEMS.register("info_component", InfoComponent::new);
     public static final DeferredItem<Item> MAG_HOOK = ITEMS.register("mag_hook", MagHook::new);
     public static final DeferredItem<Item> MAGNETIC_COIL = ITEMS.register("magnetic_coil", MagneticCoil::new);

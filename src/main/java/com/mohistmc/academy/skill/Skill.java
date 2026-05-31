@@ -69,6 +69,9 @@ public class Skill {
     }
 
     public String getTranslationKey() {
+        if (id.equals("brain_course") || id.equals("brain_course_advanced") || id.equals("mind_course")) {
+            return "item.academy.factor_generic." + id;
+        }
         return "item.academy.factor_" + category.id() + "." + id;
     }
 

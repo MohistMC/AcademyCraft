@@ -28,6 +28,8 @@ public class SkillRegistry {
         registerMeltdownerSkills();
         registerTeleporterSkills();
         registerVecmanipSkills();
+        registerAerohandSkills();
+        registerTelekinesisSkills();
 
         bindEffects();
     }
@@ -300,4 +302,126 @@ public class SkillRegistry {
                 .type(SkillType.PASSIVE)
                 .anyLevelPrereq(5).build());
     }
+
+    private static void registerAerohandSkills() {
+        AbilityCategory cat = AbilityCategory.AEROHAND;
+
+        registerSkill(new Skill.Builder("volcanic_ball", cat, 1)
+                .cpCost(10).overload(5).build());
+
+        registerSkill(new Skill.Builder("ascending_air", cat, 1)
+                .type(SkillType.PASSIVE)
+                .build());
+
+        registerSkill(new Skill.Builder("air_blade", cat, 2)
+                .prereq("volcanic_ball", 0.5f)
+                .cpCost(12).overload(15).build());
+
+        registerSkill(new Skill.Builder("airflow", cat, 2)
+                .type(SkillType.PASSIVE)
+                .prereq("ascending_air", 0.5f).build());
+
+        registerSkill(new Skill.Builder("air_cooling", cat, 3)
+                .prereq("ascending_air", 0.0f)
+                .cpCost(20).overload(20).build());
+
+        registerSkill(new Skill.Builder("air_wall", cat, 3)
+                .prereq("air_blade", 0.5f)
+                .cpCost(30).overload(25).build());
+
+        registerSkill(new Skill.Builder("air_jet", cat, 3)
+                .prereq("airflow", 0.1f)
+                .cpCost(15).overload(10).build());
+
+        registerSkill(new Skill.Builder("brain_course", cat, 3)
+                .type(SkillType.PASSIVE)
+                .anyLevelPrereq(3).build());
+
+        registerSkill(new Skill.Builder("offense_armour", cat, 4)
+                .type(SkillType.PASSIVE)
+                .prereq("air_wall", 1.0f).build());
+
+        registerSkill(new Skill.Builder("bomber_lance", cat, 4)
+                .prereq("air_wall", 0.5f)
+                .cpCost(50).overload(40).build());
+
+        registerSkill(new Skill.Builder("brain_course_advanced", cat, 4)
+                .type(SkillType.PASSIVE)
+                .anyLevelPrereq(4).build());
+
+        registerSkill(new Skill.Builder("flying", cat, 5)
+                .type(SkillType.PASSIVE)
+                .prereq("offense_armour", 0.5f).build());
+
+        registerSkill(new Skill.Builder("storm_core", cat, 5)
+                .prereq("air_wall", 1.0f)
+                .cpCost(60).overload(50).build());
+
+        registerSkill(new Skill.Builder("aero_separator", cat, 5)
+                .prereq("air_wall", 1.0f)
+                .cpCost(80).overload(60).build());
+
+        registerSkill(new Skill.Builder("mind_course", cat, 5)
+                .type(SkillType.PASSIVE)
+                .anyLevelPrereq(5).build());
+    }
+
+    private static void registerTelekinesisSkills() {
+        AbilityCategory cat = AbilityCategory.TELEKINESIS;
+
+        registerSkill(new Skill.Builder("psycho_throwing", cat, 1)
+                .cpCost(10).overload(5).build());
+
+        registerSkill(new Skill.Builder("psycho_transmission", cat, 1)
+                .cpCost(5).overload(5).build());
+
+        registerSkill(new Skill.Builder("psycho_needling", cat, 2)
+                .prereq("psycho_throwing", 0.5f)
+                .cpCost(12).overload(15).build());
+
+        registerSkill(new Skill.Builder("insulation", cat, 2)
+                .type(SkillType.PASSIVE)
+                .prereq("psycho_transmission", 0.0f).build());
+
+        registerSkill(new Skill.Builder("cruise_bomb", cat, 3)
+                .prereq("psycho_needling", 0.5f)
+                .cpCost(25).overload(20).build());
+
+        registerSkill(new Skill.Builder("overload_thinking", cat, 3)
+                .prereq("insulation", 0.0f)
+                .cpCost(0).overload(0).build());
+
+        registerSkill(new Skill.Builder("perfect_paper", cat, 3)
+                .type(SkillType.PASSIVE)
+                .prereq("insulation", 0.0f).build());
+
+        registerSkill(new Skill.Builder("brain_course", cat, 3)
+                .type(SkillType.PASSIVE)
+                .anyLevelPrereq(3).build());
+
+        registerSkill(new Skill.Builder("psycho_slam", cat, 4)
+                .prereq("cruise_bomb", 0.5f)
+                .cpCost(50).overload(40).build());
+
+        registerSkill(new Skill.Builder("psycho_harden", cat, 4)
+                .type(SkillType.PASSIVE)
+                .prereq("perfect_paper", 0.5f).build());
+
+        registerSkill(new Skill.Builder("brain_course_advanced", cat, 4)
+                .type(SkillType.PASSIVE)
+                .anyLevelPrereq(4).build());
+
+        registerSkill(new Skill.Builder("liquid_shadow", cat, 5)
+                .type(SkillType.PASSIVE)
+                .prereq("psycho_slam", 0.5f).build());
+
+        registerSkill(new Skill.Builder("paper_drill", cat, 5)
+                .prereq("perfect_paper", 1.0f)
+                .cpCost(60).overload(50).build());
+
+        registerSkill(new Skill.Builder("mind_course", cat, 5)
+                .type(SkillType.PASSIVE)
+                .anyLevelPrereq(5).build());
+    }
+
 }

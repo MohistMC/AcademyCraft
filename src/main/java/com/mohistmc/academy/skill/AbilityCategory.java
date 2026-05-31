@@ -14,6 +14,9 @@ public record AbilityCategory(String id) {
     public static final AbilityCategory MELTDOWNER = register(new AbilityCategory("meltdowner"));
     public static final AbilityCategory TELEPORTER = register(new AbilityCategory("teleporter"));
     public static final AbilityCategory VECMANIP = register(new AbilityCategory("vecmanip"));
+    public static final AbilityCategory AEROHAND = register(new AbilityCategory("aerohand"));
+    public static final AbilityCategory TELEKINESIS = register(new AbilityCategory("telekinesis"));
+
 
     public static AbilityCategory register(AbilityCategory category) {
         REGISTRY.put(category.id, category);

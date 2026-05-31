@@ -106,7 +106,7 @@ public class DataTerminalGui extends Screen {
         PlayerAbilityData data = mc.player.getData(AcademyAttachments.PLAYER_ABILITY);
 
         for (TerminalApp app : AppRegistry.getAllApps()) {
-            boolean installed = data.hasApp(app.getAppId()) || app.isBuiltIn();
+            boolean installed = data.hasApp(app.getAppId());
             appEntries.add(new AppEntry(app.getAppId(), app.getNameKey(), installed, app.getIcon()));
         }
     }
