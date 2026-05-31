@@ -124,8 +124,11 @@ public class SolarGenBlockEntity extends AcademyContainerBlockEntity {
 
     public SolarStatus getStatus() {
         if (level == null) return SolarStatus.STOPPED;
+
+        long time = level.getDayTime() % 24000;
+        if (time >= 12000) return SolarStatus.STOPPED; // 12000 太阳落山，月亮出现
+
         if (level.isRaining() || level.isThundering()) return SolarStatus.WEAK;
-        if (!level.isDay()) return SolarStatus.STOPPED;
         return SolarStatus.STRONG;
     }
 }

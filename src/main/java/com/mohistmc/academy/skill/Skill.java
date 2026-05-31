@@ -1,7 +1,9 @@
 package com.mohistmc.academy.skill;
 
+import com.mohistmc.academy.AcademyCraft;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author Mgazul
@@ -77,6 +79,16 @@ public class Skill {
 
     public String getDescKey() {
         return getTranslationKey() + ".desc";
+    }
+
+    public ResourceLocation getIconLocation() {
+        String categoryId;
+        if (id.equals("brain_course") || id.equals("brain_course_advanced") || id.equals("mind_course")) {
+            categoryId = "generic";
+        } else {
+            categoryId = this.category.id();
+        }
+        return ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/abilities/" + categoryId + "/skills/" + id + ".png");
     }
 
     public record Prerequisite(String skillId, float proficiencyRequired) {

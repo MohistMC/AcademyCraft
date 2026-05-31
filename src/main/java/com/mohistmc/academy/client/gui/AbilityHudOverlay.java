@@ -34,7 +34,7 @@ public class AbilityHudOverlay {
     private static final int COLOR_PROF = 0xFF2ecc71;
 
     private static final int SLOT_HEIGHT = 18;
-    private static final int HUD_WIDTH = 110;
+    private static final int HUD_WIDTH = 60;
     private static final int BAR_HEIGHT = 4;
     private static final int MARGIN = 6;
 
@@ -94,22 +94,16 @@ public class AbilityHudOverlay {
             if (skillId != null) {
                 Skill skill = SkillRegistry.getSkill(skillId);
                 if (skill != null) {
-                    String name = Component.translatable(skill.getTranslationKey()).getString();
-                    int maxW = HUD_WIDTH - 30;
-                    if (mc.font.width(name) > maxW) {
-                        while (mc.font.width(name + "..") > maxW && !name.isEmpty()) {
-                            name = name.substring(0, name.length() - 1);
-                        }
-                        name += "..";
-                    }
-                    g.drawString(mc.font, name, hudX + 22, iy + 5, COLOR_TEXT_WHITE);
+                    ResourceLocation icon = skill.getIconLocation();
+                    int iconSize = 16;
+                    int iconX = hudX + 22;
+                    int iconY = iy + (SLOT_HEIGHT - iconSize) / 2;
+                    g.blit(icon, iconX, iconY, 0, 0, iconSize, iconSize, iconSize, iconSize);
 
                     float prof = data.getProficiency(skillId);
                     int profW = (int) ((HUD_WIDTH - 24) * prof);
-                    g.fill(hudX + 22, iy + SLOT_HEIGHT - 3, hudX + 22 + profW, iy + SLOT_HEIGHT - 2, COLOR_PROF);
+                    g.fill(hudX + 22, iy + SLOT_HEIGHT - 1, hudX + 22 + profW, iy + SLOT_HEIGHT, COLOR_PROF);
                 }
-            } else {
-                g.drawString(mc.font, "空", hudX + 22, iy + 5, COLOR_TEXT_GRAY);
             }
         }
 

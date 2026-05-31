@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -163,7 +164,9 @@ public class DevNormalGui extends Screen {
                 boolean canLearn = data.canLearnSkill(skill);
                 boolean isPassive = skill.getType() == SkillType.PASSIVE;
 
-                skillNodes.add(new SkillNode(skill, colX, y, skillWidth, SKILL_HEIGHT, learned, canLearn, isPassive));
+                int nodeW = SKILL_HEIGHT;
+                int nodeX = colX + (skillWidth - nodeW) / 2;
+                skillNodes.add(new SkillNode(skill, nodeX, y, nodeW, SKILL_HEIGHT, learned, canLearn, isPassive));
             }
 
             totalContentHeight = Math.max(totalContentHeight, columnTotalHeight);
@@ -280,7 +283,9 @@ public class DevNormalGui extends Screen {
             int colTop = this.guiTop + TOP_BAR_HEIGHT + 2;
             String levelText = "Lv." + level;
             int tw = this.font.width(levelText);
-            graphics.drawString(this.font, levelText, colX + (skillWidth - tw) / 2, colTop, COLOR_TEXT_GRAY);
+            int nodeW = SKILL_HEIGHT;
+            int nodeX = colX + (skillWidth - nodeW) / 2;
+            graphics.drawString(this.font, levelText, nodeX + (nodeW - tw) / 2, colTop, COLOR_TEXT_GRAY);
         }
     }
 
@@ -346,15 +351,17 @@ public class DevNormalGui extends Screen {
                 graphics.fill(node.x + 1, node.y + 1, node.x + node.w - 1, node.y + node.h - 1, COLOR_HOVER);
             }
 
-            String name = Component.translatable(node.skill.getTranslationKey()).getString();
-            int maxChars = node.w / 5;
-            if (name.length() > maxChars) {
-                name = name.substring(0, maxChars - 1) + "..";
+            ResourceLocation icon = node.skill.getIconLocation();
+            int iconSize = 16;
+            int iconX = node.x + (node.w - iconSize) / 2;
+            int iconY = node.y + (node.h - iconSize) / 2;
+            graphics.blit(icon, iconX, iconY, 0, 0, iconSize, iconSize, iconSize, iconSize);
+
+            if (node.learned && !node.isPassive) {
+                float prof = data.getProficiency(node.skill.getId());
+                int profBarW = (int) ((node.w - 4) * prof);
+                graphics.fill(node.x + 2, node.y + node.h - 1, node.x + 2 + profBarW, node.y + node.h, 0xFFffffff);
             }
-            int tw = this.font.width(name);
-            int textX = node.x + (node.w - tw) / 2;
-            int textY = node.y + (node.h - 8) / 2;
-            graphics.drawString(this.font, name, textX, textY, COLOR_TEXT_WHITE);
 
             if (node.learned && !node.isPassive) {
                 float prof = data.getProficiency(node.skill.getId());

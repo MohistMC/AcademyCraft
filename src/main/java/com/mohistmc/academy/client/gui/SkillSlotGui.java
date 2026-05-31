@@ -18,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -32,8 +33,8 @@ public class SkillSlotGui extends Screen {
     private static final int TAB_WIDTH = 50;
     private static final int TAB_HEIGHT = 18;
     private static final int TAB_GAP = 4;
-    private static final int DROPDOWN_ITEM_HEIGHT = 16;
-    private static final int DROPDOWN_WIDTH = 100;
+    private static final int DROPDOWN_ITEM_HEIGHT = 18;
+    private static final int DROPDOWN_WIDTH = 24;
     private static final int DROPDOWN_PADDING = 2;
 
     private static final int COLOR_BG = 0xCC101020;
@@ -106,11 +107,16 @@ public class SkillSlotGui extends Screen {
             drawSlotTooltip(graphics, mouseX, mouseY);
         }
 
+        if (hoveredDropdownItem >= 0 && dropdownSlot >= 0) {
+            drawDropdownTooltip(graphics, mouseX, mouseY);
+        }
+
         graphics.pose().popPose();
     }
 
     private void drawTabs(GuiGraphics graphics, int mouseX, int mouseY) {
-        int tabStartX = guiLeft + 10;
+        int tabTotalWidth = PlayerAbilityData.PRESET_COUNT * TAB_WIDTH + (PlayerAbilityData.PRESET_COUNT - 1) * TAB_GAP;
+        int tabStartX = guiLeft + (GUI_WIDTH - tabTotalWidth) / 2;
         int tabY = guiTop + 8;
 
         for (int i = 0; i < PlayerAbilityData.PRESET_COUNT; i++) {
@@ -165,22 +171,16 @@ public class SkillSlotGui extends Screen {
             if (skillId != null) {
                 Skill skill = SkillRegistry.getSkill(skillId);
                 if (skill != null) {
-                    String name = Component.translatable(skill.getTranslationKey()).getString();
-                    int maxChars = SLOT_SIZE / 5;
-                    if (name.length() > maxChars) {
-                        name = name.substring(0, maxChars - 1) + "..";
-                    }
-                    int tw = this.font.width(name);
-                    graphics.drawString(this.font, name, slotX + (SLOT_SIZE - tw) / 2, slotY + (SLOT_SIZE - 8) / 2, COLOR_TEXT_WHITE);
+                    ResourceLocation icon = skill.getIconLocation();
+                    int iconSize = 32;
+                    int iconX = slotX + (SLOT_SIZE - iconSize) / 2;
+                    int iconY = slotY + (SLOT_SIZE - iconSize) / 2;
+                    graphics.blit(icon, iconX, iconY, 0, 0, iconSize, iconSize, iconSize, iconSize);
 
                     float prof = data.getProficiency(skillId);
                     int profBarW = (int) ((SLOT_SIZE - 8) * prof);
-                    graphics.fill(slotX + 4, slotY + SLOT_SIZE - 6, slotX + 4 + profBarW, slotY + SLOT_SIZE - 4, COLOR_TEXT_GREEN);
+                    graphics.fill(slotX + 4, slotY + SLOT_SIZE - 2, slotX + 4 + profBarW, slotY + SLOT_SIZE - 1, COLOR_TEXT_GREEN);
                 }
-            } else {
-                String empty = "空";
-                int tw = this.font.width(empty);
-                graphics.drawString(this.font, empty, slotX + (SLOT_SIZE - tw) / 2, slotY + (SLOT_SIZE - 8) / 2, COLOR_TEXT_GRAY);
             }
 
             String keyLabel = i < keys.length ? keys[i].getTranslatedKeyMessage().getString() : "?";
@@ -209,16 +209,15 @@ public class SkillSlotGui extends Screen {
                 graphics.fill(ix, iy, ix + DROPDOWN_WIDTH - DROPDOWN_PADDING * 2, iy + DROPDOWN_ITEM_HEIGHT, COLOR_DROPDOWN_HOVER);
             }
 
-            String label = entry.skillId == null ? "§c清空槽位" : entry.displayName;
-            int textColor = entry.skillId == null ? COLOR_DROPDOWN_CLEAR : COLOR_TEXT_WHITE;
-            int maxW = DROPDOWN_WIDTH - DROPDOWN_PADDING * 4;
-            if (this.font.width(label) > maxW) {
-                while (this.font.width(label + "..") > maxW && !label.isEmpty()) {
-                    label = label.substring(0, label.length() - 1);
-                }
-                label += "..";
+            if (entry.icon != null) {
+                graphics.blit(entry.icon, ix + 2, iy + 1, 0, 0, 16, 16, 16, 16);
+            } else {
+                String label = "§c清空";
+                int textWidth = this.font.width(label);
+                int textX = ix + (DROPDOWN_WIDTH - DROPDOWN_PADDING * 2 - textWidth) / 2;
+                int textY = iy + (DROPDOWN_ITEM_HEIGHT - 8) / 2;
+                graphics.drawString(this.font, label, textX, textY, COLOR_DROPDOWN_CLEAR);
             }
-            graphics.drawString(this.font, label, ix + 4, iy + 4, textColor);
         }
     }
 
@@ -254,6 +253,32 @@ public class SkillSlotGui extends Screen {
             tooltip.add(Component.literal("§7空槽位"));
             tooltip.add(Component.literal("§7左键选择技能"));
         }
+
+        graphics.pose().pushPose();
+        graphics.pose().translate(0, 0, 400);
+        graphics.renderTooltip(this.font, tooltip, Optional.empty(), mouseX, mouseY);
+        graphics.pose().popPose();
+    }
+
+    private void drawDropdownTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return;
+
+        DropdownEntry entry = dropdownEntries.get(hoveredDropdownItem);
+        if (entry.skillId == null) return;
+
+        Skill skill = SkillRegistry.getSkill(entry.skillId);
+        if (skill == null) return;
+
+        PlayerAbilityData data = mc.player.getData(AcademyAttachments.PLAYER_ABILITY);
+        List<Component> tooltip = new ArrayList<>();
+        tooltip.add(Component.translatable(skill.getTranslationKey()));
+        tooltip.add(Component.literal("§f等级: " + skill.getLevel() + "  类型: " + (skill.getType() == SkillType.PASSIVE ? "被动" : "主动")));
+        if (skill.getBaseCpCost() > 0) {
+            tooltip.add(Component.literal("§b计算力: " + (int) skill.getBaseCpCost() + "  §c过载: " + (int) skill.getBaseOverload()));
+        }
+        float prof = data.getProficiency(entry.skillId);
+        tooltip.add(Component.literal("§e熟练度: " + String.format("%.1f%%", prof * 100)));
 
         graphics.pose().pushPose();
         graphics.pose().translate(0, 0, 400);
@@ -319,7 +344,7 @@ public class SkillSlotGui extends Screen {
         }
 
         dropdownEntries.clear();
-        dropdownEntries.add(new DropdownEntry(null, "清空槽位"));
+        dropdownEntries.add(new DropdownEntry(null, "清空", null));
 
         List<String> learned = getLearnedActiveSkills(data);
         for (String skillId : learned) {
@@ -327,14 +352,14 @@ public class SkillSlotGui extends Screen {
             Skill skill = SkillRegistry.getSkill(skillId);
             if (skill == null) continue;
             String name = Component.translatable(skill.getTranslationKey()).getString();
-            dropdownEntries.add(new DropdownEntry(skillId, name));
+            dropdownEntries.add(new DropdownEntry(skillId, name, skill.getIconLocation()));
         }
 
         if (currentSkillId != null && usedSkills.contains(currentSkillId)) {
             Skill skill = SkillRegistry.getSkill(currentSkillId);
             if (skill != null) {
                 String name = Component.translatable(skill.getTranslationKey()).getString();
-                dropdownEntries.add(new DropdownEntry(currentSkillId, name + " (当前)"));
+                dropdownEntries.add(new DropdownEntry(currentSkillId, name + " (当前)", skill.getIconLocation()));
             }
         }
 
@@ -371,6 +396,6 @@ public class SkillSlotGui extends Screen {
         return false;
     }
 
-    private record DropdownEntry(String skillId, String displayName) {
+    private record DropdownEntry(String skillId, String displayName, ResourceLocation icon) {
     }
 }
