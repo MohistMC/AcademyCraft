@@ -1,12 +1,20 @@
 package com.mohistmc.academy.world.item;
 
+import com.mohistmc.academy.network.LearnSkillPacket;
 import com.mohistmc.academy.skill.AbilityCategory;
+import com.mohistmc.academy.skill.AcademyAttachments;
+import com.mohistmc.academy.skill.PlayerAbilityData;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 
 public class BaseFactor extends AcademyItem {
 
@@ -19,6 +27,43 @@ public class BaseFactor extends AcademyItem {
 
     public AbilityCategory getCategory() {
         return category;
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        if (level.isClientSide()) {
+            return super.use(level, player, hand);
+        }
+
+        ItemStack stack = player.getItemInHand(hand);
+
+        PlayerAbilityData data = player.getData(AcademyAttachments.PLAYER_ABILITY);
+        if (data.hasAbility()) {
+            if (player.isCreative()) {
+                player.sendSystemMessage(Component.literal("[测试用/临时] 已更换职业为: ")
+                        .append(Component.translatable(category.getTranslationKey())));
+                data.reset();
+            } else {
+                player.sendSystemMessage(Component.literal("你已经有能力了!"));
+                return InteractionResultHolder.fail(stack);
+            }
+        }
+
+        data.setCurrentAbility(category);
+        data.setPlayerLevel(1);
+        player.setData(AcademyAttachments.PLAYER_ABILITY, data);
+        if (!player.isCreative()) {
+            player.sendSystemMessage(Component.literal("成功学习: ").append(Component.translatable(category.getTranslationKey())));
+        }
+        if (player instanceof ServerPlayer sp) {
+            LearnSkillPacket.syncToClient(sp);
+        }
+
+        if (!player.isCreative()) {
+            stack.shrink(1);
+        }
+
+        return InteractionResultHolder.success(stack);
     }
 
     @Override

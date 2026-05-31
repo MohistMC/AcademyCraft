@@ -38,34 +38,4 @@ public class SkillEventHandler {
             LearnSkillPacket.syncToClient(sp);
         }
     }
-
-    @SubscribeEvent
-    public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
-        Player player = event.getEntity();
-        if (player.level().isClientSide()) return;
-
-        ItemStack stack = event.getItemStack();
-        if (stack.getItem() instanceof BaseFactor factor) {
-            AbilityCategory category = factor.getCategory();
-            if (category != null) {
-                PlayerAbilityData data = player.getData(AcademyAttachments.PLAYER_ABILITY);
-                if (data.hasAbility()) {
-                    player.sendSystemMessage(Component.literal("你已经有能力了!"));
-                    return;
-                }
-                data.setCurrentAbility(category);
-                data.setPlayerLevel(1);
-                player.setData(AcademyAttachments.PLAYER_ABILITY, data);
-                player.sendSystemMessage(Component.literal("后天能力: ").append(Component.translatable(category.getTranslationKey())));
-
-                if (player instanceof ServerPlayer sp) {
-                    LearnSkillPacket.syncToClient(sp);
-                }
-
-                if (!player.isCreative()) {
-                    stack.shrink(1);
-                }
-            }
-        }
-    }
 }
