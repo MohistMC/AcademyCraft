@@ -1,7 +1,9 @@
 package com.mohistmc.academy.listener;
 
 import com.mohistmc.academy.AcademyCraft;
+import com.mohistmc.academy.client.block.gui.ImagFusorGui;
 import com.mohistmc.academy.client.block.gui.NodeBasicGui;
+import com.mohistmc.academy.client.block.gui.SolarGenGui;
 import com.mohistmc.academy.client.block.gui.WindBaseGui;
 import com.mohistmc.academy.client.block.gui.WindMainGui;
 import com.mohistmc.academy.world.AcademyMenus;
@@ -40,6 +42,8 @@ public class CommonListener {
         event.register(AcademyMenus.WIND_BASE_MENU.get(), WindBaseGui::new);
         event.register(AcademyMenus.WIND_MAIN_MENU.get(), WindMainGui::new);
         event.register(AcademyMenus.NODE_BASIC.get(), NodeBasicGui::new);
+        event.register(AcademyMenus.IMAG_FUSOR_MENU.get(), ImagFusorGui::new);
+        event.register(AcademyMenus.SOLAR_GEN_MENU.get(), SolarGenGui::new);
     }
 
 }

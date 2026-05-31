@@ -9,7 +9,7 @@
       "item": "academy:machine_frame"
     },
     "C": {
-      "item": "academy:matter_unit"
+      "item": "academy:matter_unit_none"
     }
   },
   "pattern": [

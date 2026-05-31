@@ -15,7 +15,7 @@
       "item": "academy:constraint_plate"
     },
     "E": {
-      "item": "academy:matter_unit"
+      "item": "academy:matter_unit_none"
     }
   },
   "pattern": [

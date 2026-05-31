@@ -46,7 +46,11 @@ public class AcademyBlocks {
     public static final DeferredBlock<Block> CRYSTAL_ORE = BLOCKS.register("crystal_ore", CrystalOre::new);
     public static final DeferredBlock<Block> RESO_ORE = BLOCKS.register("reso_ore", ResoOre::new);
     public static final DeferredBlock<Block> IMAGSIL_ORE = BLOCKS.register("imagsil_ore", ImagsilOre::new);
-    public static final DeferredBlock<Block> IMAG_FUSOR = BLOCKS.register("imag_fusor", ImagFusor::new);
+    public static final DeferredBlock<Block> IMAG_FUSOR = BLOCKS.register("imag_fusor", () -> new ImagFusor(Properties.of()
+            .sound(SoundType.STONE)
+            .noOcclusion()
+            .strength(4.0f)
+            .requiresCorrectToolForDrops()));
     public static final DeferredBlock<Block> MACHINE_FRAME = BLOCKS.register("machine_frame", MachineFrame::new);
     public static final DeferredBlock<Block> METAL_FORMER = BLOCKS.register("metal_former", MetalFomer::new);
     public static final DeferredBlock<Block> NODE_BASIC = BLOCKS.register("node_basic", () -> new NodeBasic(Properties.of()

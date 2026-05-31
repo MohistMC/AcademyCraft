@@ -6,6 +6,7 @@ import com.mohistmc.academy.world.block.entity.DevAdvancedBlockEntity;
 import com.mohistmc.academy.world.block.entity.DevAdvancedSubBlockEntity;
 import com.mohistmc.academy.world.block.entity.DevNormalBlockEntity;
 import com.mohistmc.academy.world.block.entity.DevNormalSubBlockEntity;
+import com.mohistmc.academy.world.block.entity.ImagFusorBlockEntity;
 import com.mohistmc.academy.world.block.entity.MatrixBlockEntity;
 import com.mohistmc.academy.world.block.entity.MatrixSubBlockEntity;
 import com.mohistmc.academy.world.block.entity.NodeBasicBlockEntity;
@@ -42,4 +43,6 @@ public class AcademyBlockEntities {
     public static final Supplier<BlockEntityType<WindGenPillarBlockEntity>> WINDGEN_PILLAR = BLOCK_ENTITIES.register("windgen_pillar", () -> BlockEntityType.Builder.of(WindGenPillarBlockEntity::new, AcademyBlocks.WINDGEN_PILLAR.get()).build(null));
     public static final Supplier<BlockEntityType<PhaseLiquidBlockEntity>> PHASE_LIQUID = BLOCK_ENTITIES.register("phase_liquid", () -> BlockEntityType.Builder.of(PhaseLiquidBlockEntity::new, AcademyBlocks.PHASE_LIQUID.get()).build(null));
     public static final Supplier<BlockEntityType<NodeBasicBlockEntity>> NODE_BASIC = BLOCK_ENTITIES.register("node_basic", () -> BlockEntityType.Builder.of(NodeBasicBlockEntity::new, AcademyBlocks.NODE_BASIC.get()).build(null));
+    public static final Supplier<BlockEntityType<ImagFusorBlockEntity>> IMAG_FUSOR = BLOCK_ENTITIES.register("imag_fusor", () -> BlockEntityType.Builder.of(ImagFusorBlockEntity::new, AcademyBlocks.IMAG_FUSOR.get()).build(null));
+
 }

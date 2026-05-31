@@ -1,10 +1,20 @@
 package com.mohistmc.academy.world.block;
 
+import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.block.entity.SolarGenBlockEntity;
+import com.mohistmc.academy.world.menu.SolarGenMenu;
 import com.mojang.serialization.MapCodec;
+import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -15,9 +25,12 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -78,4 +91,51 @@ public class SolarGen extends BaseEntityBlock {
         return this.defaultBlockState().setValue(FACING, p_49820_.getHorizontalDirection().getOpposite());
     }
 
+    @Override
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        if (!level.isClientSide()) {
+            player.openMenu(getMenuProvider(state, level, pos), pos);
+        }
+        return InteractionResult.CONSUME;
+    }
+
+    @Override
+    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        return new MenuProvider() {
+            @Override
+            public net.minecraft.network.chat.Component getDisplayName() {
+                return net.minecraft.network.chat.Component.translatable("container.academy.solar_gen");
+            }
+
+            @Override
+            public AbstractContainerMenu createMenu(int windowId, Inventory inv, Player player) {
+                return new SolarGenMenu(windowId, inv, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos));
+            }
+        };
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, AcademyBlockEntities.SOLAR_GEN.get(), (lvl, pos, st, be) -> {
+            if (be instanceof SolarGenBlockEntity solarBe) {
+                solarBe.tick(lvl, pos, st);
+            }
+        });
+    }
+
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!state.is(newState.getBlock())) {
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be instanceof SolarGenBlockEntity blockEntity) {
+                blockEntity.getItems().forEach(item -> {
+                    if (!item.isEmpty()) {
+                        Containers.dropItemStack(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, item);
+                    }
+                });
+            }
+            super.onRemove(state, level, pos, newState, isMoving);
+        }
+    }
 }

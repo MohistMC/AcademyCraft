@@ -1,5 +1,6 @@
 package com.mohistmc.academy.utils;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -56,20 +57,6 @@ public class RenderUtils {
 
     public static void addVertex(Matrix4f p_253955_, PoseStack.Pose p_334620_, VertexConsumer p_253894_, float p_253871_, float p_253841_, float p_254568_, float p_254361_, int p_254357_, float p_254451_, float p_254240_, float p_254117_, float p_253698_) {
         p_253894_.addVertex(p_253955_, p_254451_, (float) p_254357_, p_254240_).setColor(p_253871_, p_253841_, p_254568_, p_254361_).setUv(p_254117_, p_253698_).setOverlay(OverlayTexture.NO_OVERLAY).setNormal(p_334620_, 0.0F, 1.0F, 0.0F);
-    }
-
-    public static void render(int imageWidth, int imageHeight, int x, int y, int width, int height, PoseStack stack, ResourceLocation resource) {
-
-        /*
-        int x = (width - drawWidth) / 2;
-        int y = (height - drawHeight) / 2;
-        RenderSystem.setShaderColor(255.0f, 255.0f, 255.0f, 255.0f);
-        RenderSystem.enableDepthTest();
-        RenderSystem.setShaderTexture(0, resource);
-
-
-        GuiComponent.blit(stack, x, y, 0, 0, drawWidth, drawHeight);
-          */
     }
 
     public static void renderCenter(int drawWidth, int drawHeight, int width, int height, GuiGraphics poseStack, ResourceLocation resource) {

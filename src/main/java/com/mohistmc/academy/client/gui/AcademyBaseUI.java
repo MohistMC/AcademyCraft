@@ -14,12 +14,15 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.level.Level;
 
 public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractContainerScreen<T> {
 
+    public static final int GUI_WIDTH = 176;
+    public static final int GUI_HEIGHT = 187;
+
     private static final ResourceLocation PARENT_BACKGROUND = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/parent/parent_background.png");
-    private static final ResourceLocation UI_INV = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/ui/ui_inventory.png");
 
     private static final ResourceLocation IC_INV = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/icons/icon_inv.png");
     private static final ResourceLocation IC_WIRELESS = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/icons/icon_wireless.png");
@@ -34,7 +37,6 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
     private static final ResourceLocation BTN_ARROW_DOWN = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/button/button_arrowdownb.png");
     public final Inventory inv;
     private boolean wireless = false;
-    private boolean renderInv = true;
     private boolean renderBg = true;
     private boolean renderWireless = true;
     public int activeNode = -1;
@@ -62,10 +64,6 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
         addOrSetNode(null, "qwq", null);
     }
 
-    public void setRenderInv(boolean renderInv) {
-        this.renderInv = renderInv;
-    }
-
     public void setRenderBg(boolean renderBg) {
         this.renderBg = renderBg;
     }
@@ -81,13 +79,9 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
         RenderSystem.defaultBlendFunc();
         if (renderBg)
             RenderUtils.renderCenter(176, 187, this.width, this.height, var1, PARENT_BACKGROUND);
-        if (this.renderInv && !this.wireless)
-            RenderUtils.renderCenter(176, 187, this.width, this.height, var1, UI_INV);
         RenderSystem.disableBlend();
         if (!this.wireless) {
             // 背包页面
-            RenderSystem.setShaderColor(1, 1, 1, 1);
-            RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             // 机器ui
             this.renderBackground(var1, var3, var4, var2);
@@ -97,13 +91,13 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
             RenderSystem.setShaderColor(1, 1, 1, 0.7f);
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
-            RenderUtils.renderCenter(176, 187, this.width, this.height, var1, PARENT_BACKGROUND);
-            RenderUtils.renderCenterTop(-(176 / 2) + 20, 10, 18, 18, this.width, (this.height - 187) / 2, var1, IC_TOMATRIX);
-            RenderUtils.renderCenterTop(0, 37, 160, 16, this.width, (this.height - 187) / 2, var1, ELEMENT_BG_300_32);
-            RenderUtils.renderCenterTop(-(160 / 2) + 16, 39, 11, 11, this.width, (this.height - 187) / 2, var1, IC_MATRIX);
+            RenderUtils.renderCenter(GUI_WIDTH, GUI_HEIGHT, this.width, this.height, var1, PARENT_BACKGROUND);
+            RenderUtils.renderCenterTop(-(GUI_WIDTH / 2) + 20, 10, 18, 18, this.width, (this.height - GUI_HEIGHT) / 2, var1, IC_TOMATRIX);
+            RenderUtils.renderCenterTop(0, 37, 160, 16, this.width, (this.height - GUI_HEIGHT) / 2, var1, ELEMENT_BG_300_32);
+            RenderUtils.renderCenterTop(-(160 / 2) + 16, 39, 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, var1, IC_MATRIX);
 
-            RenderUtils.renderText(var1, "Connected", ((this.width - 176) / 2) + 13, ((this.height - 187) / 2) + 30);
-            RenderUtils.renderText(var1, "Available", ((this.width - 176) / 2) + 13, ((this.height - 187) / 2) + 55);
+            RenderUtils.renderText(var1, "Connected", ((this.width - GUI_WIDTH) / 2) + 13, ((this.height - GUI_HEIGHT) / 2) + 30);
+            RenderUtils.renderText(var1, "Available", ((this.width - GUI_WIDTH) / 2) + 13, ((this.height - GUI_HEIGHT) / 2) + 55);
 
         }
 
@@ -129,40 +123,40 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
         this.renderBg(stack, p_97798_, mouseX, mouseY);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        if (this.isHoveringButton(((this.width - 176) / 2) - 20, ((this.height - 187) / 2), 18, 18, mouseX, mouseY) || !wireless) {
+        if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) - 20, ((this.height - GUI_HEIGHT) / 2), 18, 18, mouseX, mouseY) || !wireless) {
             RenderSystem.setShaderColor(1, 1, 1, 1);
         } else {
             RenderSystem.setShaderColor(1, 1, 1, 0.8f);
         }
         // 背包图标(左上1)
-        RenderUtils.renderCenterTop(-(176 / 2) - 10, 0, 18, 18, this.width, (this.height - 187) / 2, stack, IC_INV);
+        RenderUtils.renderCenterTop(-(GUI_WIDTH / 2) - 10, 0, 18, 18, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_INV);
         if (this.renderWireless) {
-            if (this.isHoveringButton(((this.width - 176) / 2) - 20, ((this.height - 187) / 2) + 20, 18, 18, mouseX, mouseY) || wireless) {
+            if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) - 20, ((this.height - GUI_HEIGHT) / 2) + 20, 18, 18, mouseX, mouseY) || wireless) {
                 //System.out.println("wireless");
                 RenderSystem.setShaderColor(1, 1, 1, 1);
             } else {
                 RenderSystem.setShaderColor(1, 1, 1, 0.8f);
             }
             // 无线图标(左上2)
-            RenderUtils.renderCenterTop(-(176 / 2) - 10, 20, 18, 18, this.width, (this.height - 187) / 2, stack, IC_WIRELESS);
+            RenderUtils.renderCenterTop(-(GUI_WIDTH / 2) - 10, 20, 18, 18, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_WIRELESS);
             if (this.wireless) {
-                if (this.isHoveringButton(((this.width - 176) / 2) + (160 / 2) * 2 - 5, ((this.height - 187) / 2) + 65, 15, 15, mouseX, mouseY)) {
+                if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 5, ((this.height - GUI_HEIGHT) / 2) + 65, 15, 15, mouseX, mouseY)) {
                     //System.out.println("wireless");
                     RenderSystem.setShaderColor(1, 1, 1, 1);
                 } else {
                     RenderSystem.setShaderColor(1, 1, 1, 0.8f);
                 }
                 // 无线内上翻页图标
-                RenderUtils.renderCenterTop((160 / 2) - 5, 65, 15, 15, this.width, (this.height - 187) / 2, stack, BTN_ARROW_UP);
-                if (this.isHoveringButton(((this.width - 176) / 2) + (160 / 2) * 2 - 5, ((this.height - 187) / 2) + 65 + (7 * 13), 15, 15, mouseX, mouseY)) {
+                RenderUtils.renderCenterTop((160 / 2) - 5, 65, 15, 15, this.width, (this.height - GUI_HEIGHT) / 2, stack, BTN_ARROW_UP);
+                if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 5, ((this.height - GUI_HEIGHT) / 2) + 65 + (7 * 13), 15, 15, mouseX, mouseY)) {
                     //System.out.println("wireless");
                     RenderSystem.setShaderColor(1, 1, 1, 1);
                 } else {
                     RenderSystem.setShaderColor(1, 1, 1, 0.8f);
                 }
                 // 无线内下翻页图标
-                RenderUtils.renderCenterTop((160 / 2) - 5, 65 + (7 * 13), 15, 15, this.width, (this.height - 187) / 2, stack, BTN_ARROW_DOWN);
-                if (this.isHoveringButton(((this.width - 176) / 2) + (160 / 2) * 2 - 16, ((this.height - 187) / 2) + 39, 15, 15, mouseX, mouseY)) {
+                RenderUtils.renderCenterTop((160 / 2) - 5, 65 + (7 * 13), 15, 15, this.width, (this.height - GUI_HEIGHT) / 2, stack, BTN_ARROW_DOWN);
+                if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 16, ((this.height - GUI_HEIGHT) / 2) + 39, 15, 15, mouseX, mouseY)) {
                     //System.out.println("wireless");
                     RenderSystem.setShaderColor(1, 1, 1, 1);
                 } else {
@@ -170,13 +164,13 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
                 }
                 // 无线内当前节点
                 if (activeNode != -1) {
-                    RenderUtils.renderCenterTop((160 / 2) - 16, 39, 11, 11, this.width, (this.height - 187) / 2, stack, IC_CONNECTED);
+                    RenderUtils.renderCenterTop((160 / 2) - 16, 39, 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_CONNECTED);
                     RenderSystem.disableBlend();
-                    RenderUtils.renderText(stack, nodes.get(activeNode).getName(), ((this.width - 176) / 2) + 32, ((this.height - 187) / 2) + 41);
+                    RenderUtils.renderText(stack, nodes.get(activeNode).getName(), ((this.width - GUI_WIDTH) / 2) + 32, ((this.height - GUI_HEIGHT) / 2) + 41);
                 } else {
-                    RenderUtils.renderCenterTop((160 / 2) - 16, 39, 11, 11, this.width, (this.height - 187) / 2, stack, IC_UNCONNECTED);
+                    RenderUtils.renderCenterTop((160 / 2) - 16, 39, 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_UNCONNECTED);
                     RenderSystem.disableBlend();
-                    RenderUtils.renderText(stack, "未连接", ((this.width - 176) / 2) + 32, ((this.height - 187) / 2) + 41);
+                    RenderUtils.renderText(stack, "未连接", ((this.width - GUI_WIDTH) / 2) + 32, ((this.height - GUI_HEIGHT) / 2) + 41);
                 }
                 // 无线内节点列表
                 for (int i = 0; i < nodes.size(); i++) {
@@ -192,38 +186,37 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
                     RenderSystem.enableBlend();
                     RenderSystem.defaultBlendFunc();
                     if (node.isNeedAuth()) {
-                        RenderUtils.renderCenterTop(-8, 65 + (i * 13), 11, 11, this.width, (this.height - 187) / 2, stack, IC_KEY);
-                        RenderUtils.renderCenterTop(-5, 62 + (i * 13), 150, 16, this.width, (this.height - 187) / 2, stack, ELEMENT_BG_300_32_I);
+                        RenderUtils.renderCenterTop(-8, 65 + (i * 13), 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_KEY);
+                        RenderUtils.renderCenterTop(-5, 62 + (i * 13), 150, 16, this.width, (this.height - GUI_HEIGHT) / 2, stack, ELEMENT_BG_300_32_I);
                     } else {
-                        RenderUtils.renderCenterTop(-5, 62 + (i * 13), 150, 16, this.width, (this.height - 187) / 2, stack, ELEMENT_BG_300_32);
+                        RenderUtils.renderCenterTop(-5, 62 + (i * 13), 150, 16, this.width, (this.height - GUI_HEIGHT) / 2, stack, ELEMENT_BG_300_32);
                     }
-                    RenderUtils.renderCenterTop(-(160 / 2) + 16 - 4, 65 + (i * 13), 11, 11, this.width, (this.height - 187) / 2, stack, IC_MATRIX);
+                    RenderUtils.renderCenterTop(-(160 / 2) + 16 - 4, 65 + (i * 13), 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_MATRIX);
                     // TODO: 加密节点的绘制
-                    if (this.isHoveringButton(((this.width - 176) / 2) + (160 / 2) * 2 - 16 - 6, ((this.height - 187) / 2) + 65 + (i * 13), 15, 15, mouseX, mouseY)) {
+                    if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 16 - 6, ((this.height - GUI_HEIGHT) / 2) + 65 + (i * 13), 15, 15, mouseX, mouseY)) {
                         RenderSystem.setShaderColor(1, 1, 1, 1);
                     } else {
                         RenderSystem.setShaderColor(1, 1, 1, 0.7f);
                     }
                     if (activeNode == index) {
-                        RenderUtils.renderCenterTop((160 / 2) - 16 - 6, 65 + (i * 13), 11, 11, this.width, (this.height - 187) / 2, stack, IC_CONNECTED);
+                        RenderUtils.renderCenterTop((160 / 2) - 16 - 6, 65 + (i * 13), 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_CONNECTED);
                     } else {
-                        RenderUtils.renderCenterTop((160 / 2) - 16 - 6, 65 + (i * 13), 11, 11, this.width, (this.height - 187) / 2, stack, IC_UNCONNECTED);
+                        RenderUtils.renderCenterTop((160 / 2) - 16 - 6, 65 + (i * 13), 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_UNCONNECTED);
                     }
                     RenderSystem.disableBlend();
-                    RenderUtils.renderText(stack, name, ((this.width - 176) / 2) + 32 - 4, ((this.height - 187) / 2) + 67 + (i * 13));
+                    RenderUtils.renderText(stack, name, ((this.width - GUI_WIDTH) / 2) + 32 - 4, ((this.height - GUI_HEIGHT) / 2) + 67 + (i * 13));
                     if (waitPass == index) {
                         StringBuilder sb = new StringBuilder();
                         for (int qw = 0; qw < inputPass.length(); qw++) {
                             sb.append("*");
                         }
-                        RenderUtils.renderText(stack, sb.toString(), ((this.width - 176) / 2) + 85, ((this.height - 187) / 2) + 67 + (i * 13));
+                        RenderUtils.renderText(stack, sb.toString(), ((this.width - GUI_WIDTH) / 2) + 85, ((this.height - GUI_HEIGHT) / 2) + 67 + (i * 13));
                     }
                 }
             }
         }
         RenderSystem.disableBlend();
     }
-
 
     public boolean isHoveringButton(int x, int y, int w, int h, double mx, double my) {
 
@@ -232,25 +225,25 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int p_97750_) {
-        if (this.isHoveringButton(((this.width - 176) / 2) - 20, ((this.height - 187) / 2), 18, 18, mouseX, mouseY)) {
+        if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) - 20, ((this.height - GUI_HEIGHT) / 2), 18, 18, mouseX, mouseY)) {
             this.wireless = false;
         }
         if (this.renderWireless) {
-            if (this.isHoveringButton(((this.width - 176) / 2) - 20, ((this.height - 187) / 2) + 20, 18, 18, mouseX, mouseY)) {
+            if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) - 20, ((this.height - GUI_HEIGHT) / 2) + 20, 18, 18, mouseX, mouseY)) {
                 this.wireless = true;
             }
             if (wireless) {
-                if (this.isHoveringButton(((this.width - 176) / 2) + (160 / 2) * 2 - 5, ((this.height - 187) / 2) + 65, 15, 15, mouseX, mouseY)) {
+                if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 5, ((this.height - GUI_HEIGHT) / 2) + 65, 15, 15, mouseX, mouseY)) {
                     if (page > 1) {
                         page--;
                     }
                 }
-                if (this.isHoveringButton(((this.width - 176) / 2) + (160 / 2) * 2 - 5, ((this.height - 187) / 2) + 65 + (7 * 13), 15, 15, mouseX, mouseY)) {
+                if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 5, ((this.height - GUI_HEIGHT) / 2) + 65 + (7 * 13), 15, 15, mouseX, mouseY)) {
                     if (page * 8 < nodes.size()) {
                         page++;
                     }
                 }
-                if (this.isHoveringButton(((this.width - 176) / 2) + (160 / 2) * 2 - 16, ((this.height - 187) / 2) + 39, 15, 15, mouseX, mouseY)) {
+                if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 16, ((this.height - GUI_HEIGHT) / 2) + 39, 15, 15, mouseX, mouseY)) {
                     if (activeNode != -1) {
                         activeNode = -1;
                     }
@@ -264,7 +257,7 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
                     if (i >= 8 || index >= nodes.size()) break;
                     AcademyNode node = nodes.get(index);
 
-                    if (this.isHoveringButton(((this.width - 176) / 2) + (160 / 2) * 2 - 16 - 6, ((this.height - 187) / 2) + 65 + (i * 13), 15, 15, mouseX, mouseY) && activeNode != index) {
+                    if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 16 - 6, ((this.height - GUI_HEIGHT) / 2) + 65 + (i * 13), 15, 15, mouseX, mouseY) && activeNode != index) {
                         if (node.isNeedAuth()) {
                             waitPass = index;
                             inputPass = new StringBuilder();
@@ -272,7 +265,7 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
 
                     }
 
-                    if (node.isNeedAuth() && this.isHoveringButton(((this.width - 176) / 2) - 10, ((this.height - 187) / 2) + 62 + (i * 13), 150, 16, mouseX, mouseY) && activeNode != index) {
+                    if (node.isNeedAuth() && this.isHoveringButton(((this.width - GUI_WIDTH) / 2) - 10, ((this.height - GUI_HEIGHT) / 2) + 62 + (i * 13), 150, 16, mouseX, mouseY) && activeNode != index) {
                         if (node.isNeedAuth()) {
                             waitPass = index;
                             inputPass = new StringBuilder();

@@ -1,13 +1,131 @@
 package com.mohistmc.academy.world.block.entity;
 
 import com.mohistmc.academy.world.AcademyBlockEntities;
+import com.mohistmc.academy.world.AcademyItems;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class SolarGenBlockEntity extends BlockEntity {
-    public SolarGenBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
-        super(AcademyBlockEntities.SOLAR_GEN.get(), p_155229_, p_155230_);
+public class SolarGenBlockEntity extends AcademyContainerBlockEntity {
+    // 发电速率（IF/tick）
+    private static final float STRONG_RATE = 3.0f;   // 晴天
+    private static final float WEAK_RATE = 0.6f;     // 雨天
+    // 内部存储上限
+    private static final float MAX_STORAGE = 1000.0f;
+
+    // 当前存储的能量（支持小数累积）
+    private float storedEnergy = 0.0f;
+
+    public SolarGenBlockEntity(BlockPos pos, BlockState state) {
+        super(AcademyBlockEntities.SOLAR_GEN.get(), pos, state);
+        setItems(NonNullList.withSize(getContainerSize(), ItemStack.EMPTY));
     }
 
+    @Override
+    public int getContainerSize() {
+        return 1;
+    }
+
+    public void tick(Level level, BlockPos pos, BlockState state) {
+        if (level.isClientSide) return;
+
+        // 太阳能板必须有天空光照
+        if (!level.canSeeSky(pos)) return;
+
+        // 获取当前发电速率
+        float rate = switch (getStatus()) {
+            case STRONG -> STRONG_RATE;   // 晴天：3 IF/t
+            case WEAK -> WEAK_RATE;       // 雨天：0.6 IF/t
+            case STOPPED -> 0.0f;         // 夜晚：不发电
+        };
+
+        // 将新产生的能量加入存储池
+        if (rate > 0.0f) {
+            storedEnergy = Math.min(MAX_STORAGE, storedEnergy + rate);
+        }
+
+        // 尝试用存储池中的整数能量给能源单元充能
+        int chargeAmount = (int) storedEnergy;
+        if (chargeAmount > 0) {
+            int charged = chargeEnergyUnit(chargeAmount);
+            storedEnergy -= charged;
+        }
+
+        if (rate > 0.0f) {
+            setChanged();
+        }
+    }
+
+    /**
+     * 给槽位中的能源单元充能
+     * @param amount 充能数量
+     * @return 实际充能数量
+     */
+    private int chargeEnergyUnit(int amount) {
+        ItemStack stack = getItems().getFirst();
+        if (stack.isEmpty() || !stack.is(AcademyItems.ENERGY_UNIT.get())) return 0;
+
+        int damage = stack.getDamageValue();
+        if (damage <= 0) return 0;
+
+        int recharge = Math.min(amount, damage);
+        stack.setDamageValue(damage - recharge);
+        setItems(getItems());
+        return recharge;
+    }
+
+    public float getStoredEnergy() {
+        return storedEnergy;
+    }
+
+    public float getMaxStorage() {
+        return MAX_STORAGE;
+    }
+
+    @Override
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.loadAdditional(tag, provider);
+
+        if (tag.contains("storedEnergy")) {
+            this.storedEnergy = tag.getFloat("storedEnergy");
+        }
+
+        NonNullList<ItemStack> items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
+        CompoundTag contentItems = tag.getCompound("contentItems");
+        for (int i = 0; i < getContainerSize(); i++) {
+            if (contentItems.contains(String.valueOf(i))) {
+                items.set(i, ItemStack.parse(provider, contentItems.getCompound(String.valueOf(i))).orElse(ItemStack.EMPTY));
+            }
+        }
+        setItems(items);
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
+
+        tag.putFloat("storedEnergy", storedEnergy);
+
+        CompoundTag contentItems = new CompoundTag();
+        NonNullList<ItemStack> items = getItems();
+        for (int i = 0; i < getContainerSize(); i++) {
+            if (!items.get(i).isEmpty()) {
+                contentItems.put(String.valueOf(i), items.get(i).save(provider));
+            }
+        }
+        tag.put("contentItems", contentItems);
+    }
+
+    public enum SolarStatus { STRONG, STOPPED, WEAK }
+
+    public SolarStatus getStatus() {
+        if (level == null) return SolarStatus.STOPPED;
+        if (level.isRaining() || level.isThundering()) return SolarStatus.WEAK;
+        if (!level.isDay()) return SolarStatus.STOPPED;
+        return SolarStatus.STRONG;
+    }
 }
