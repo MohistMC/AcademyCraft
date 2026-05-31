@@ -20,6 +20,7 @@ public class PhaseFluidBlock extends LiquidBlock implements EntityBlock {
         super(AcademyFluids.PHASE_LIQUID.get(),
                 BlockBehaviour.Properties
                         .of()
+                        .replaceable()
                         .noCollission()
                         .strength(100.0F)
                         .noLootTable()

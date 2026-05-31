@@ -19,6 +19,7 @@ import net.minecraft.world.level.pathfinder.PathType;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.FluidType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PhaseLiquidType extends FluidType {
@@ -27,7 +28,7 @@ public class PhaseLiquidType extends FluidType {
                 .descriptionId("block.academy.phase")
                 .fallDistanceModifier(0F)
                 .canExtinguish(true)
-                .canConvertToSource(true)
+                .canConvertToSource(false)
                 .supportsBoating(true)
                 .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
                 .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
@@ -50,16 +51,15 @@ public class PhaseLiquidType extends FluidType {
                     WATER_OVERLAY = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "block/phase_liquid");
 
             @Override
-            public ResourceLocation getStillTexture() {
+            public @NotNull ResourceLocation getStillTexture() {
                 return WATER_STILL;
             }
 
             @Override
-            public ResourceLocation getFlowingTexture() {
+            public @NotNull ResourceLocation getFlowingTexture() {
                 return WATER_FLOW;
             }
 
-            @Nullable
             @Override
             public ResourceLocation getOverlayTexture() {
                 return WATER_OVERLAY;

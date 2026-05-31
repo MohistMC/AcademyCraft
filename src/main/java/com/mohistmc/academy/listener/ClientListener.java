@@ -9,9 +9,12 @@ import com.mohistmc.academy.client.block.entity.render.WindGenFanRender;
 import com.mohistmc.academy.client.entity.CoinRenderer;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.AcademyEntities;
+import com.mohistmc.academy.world.AcademyItems;
 import com.mohistmc.academy.world.block.IDevMachine;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.api.distmarker.Dist;
@@ -32,13 +35,6 @@ import org.slf4j.Logger;
 public class ClientListener {
 
     private static final Logger LOGGER = LogUtils.getLogger();
-
-    @SubscribeEvent
-    public static void onClientSetup(FMLClientSetupEvent event) {
-        // Some client setup code
-        LOGGER.info("HELLO FROM CLIENT SETUP");
-        LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
-    }
 
     @SubscribeEvent
     public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
