@@ -74,7 +74,7 @@ public class ACItemAdditionalRegistry {
         };
         ACLootItem itemFactor = new ACLootItem("induction_factor", ACItems.induction_factor, func, 10, 1);
         ACLootItem itemEmpty = ACLootItem.newEmpty(90, 1);
-        addLoots("name", 4, 4, itemFactor, itemEmpty);
+        addLoots("induction_factor", 4, 4, itemFactor, itemEmpty);
 
         LootFunction funcMedia = new LootFunction(DEFAULT_CONDS) {
             @Override
