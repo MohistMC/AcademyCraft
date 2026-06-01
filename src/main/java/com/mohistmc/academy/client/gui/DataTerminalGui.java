@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.ModList;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class DataTerminalGui extends Screen {
@@ -64,14 +65,14 @@ public class DataTerminalGui extends Screen {
     private static void bindBuiltinRoutes() {
         if (routesBound) return;
         routesBound = true;
-        AppRegistry.bindOpenAction(AppRegistry.SKILL_TREE, mc -> mc.setScreen(new SkillTreeGui(true)));
+        AppRegistry.bindOpenAction(AppRegistry.SKILL_TREE, mc -> mc.setScreen(new SkillTreeGui(true, true)));
         AppRegistry.bindOpenAction(AppRegistry.SETTINGS, mc -> mc.setScreen(new SettingsAppGui()));
         AppRegistry.bindOpenAction(AppRegistry.TUTORIAL, mc -> mc.setScreen(new TutorialAppGui(true)));
         AppRegistry.bindOpenAction(AppRegistry.MEDIA_PLAYER, mc -> mc.setScreen(new MediaPlayerAppGui()));
     }
 
     @Override
-    public void resize(Minecraft minecraft, int width, int height) {
+    public void resize(@NotNull Minecraft minecraft, int width, int height) {
         super.resize(minecraft, width, height);
         this.guiLeft = (this.width - GUI_WIDTH) / 2;
         this.guiTop = (this.height - GUI_HEIGHT) / 2;

@@ -55,7 +55,8 @@ public abstract class DevMachineBase extends BaseEntityBlock implements IDevMach
     public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (player instanceof ServerPlayer serverPlayer) {
             LearnSkillPacket.syncToClient(serverPlayer);
-            PacketDistributor.sendToPlayer(serverPlayer, OpenDevGuiPacket.INSTANCE);
+            DevMachineType devType = this instanceof DevAdvanced ? DevMachineType.ADVANCED : DevMachineType.NORMAL;
+            PacketDistributor.sendToPlayer(serverPlayer, new OpenDevGuiPacket(devType.ordinal()));
         }
         return InteractionResult.CONSUME;
     }

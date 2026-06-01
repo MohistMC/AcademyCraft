@@ -7,6 +7,7 @@ import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.Skill;
 import com.mohistmc.academy.skill.SkillRegistry;
 import com.mohistmc.academy.skill.SkillType;
+import com.mohistmc.academy.world.block.DevMachineType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -75,18 +76,29 @@ public class SkillTreeGui extends Screen {
     private boolean isScrolling = false;
     private boolean fromTerminal = false;
     private boolean hoveredBack = false;
+    private final boolean readOnly;
+    private final DevMachineType devType;
 
     private final List<SkillNode> skillNodes = new ArrayList<>();
     private SkillNode hoveredNode = null;
 
     public SkillTreeGui() {
-        super(Component.translatable("block.academy.dev_normal"));
-        this.fromTerminal = false;
+        this(false, false, DevMachineType.NORMAL);
     }
 
     public SkillTreeGui(boolean fromTerminal) {
+        this(fromTerminal, false, DevMachineType.NORMAL);
+    }
+
+    public SkillTreeGui(boolean fromTerminal, boolean readOnly) {
+        this(fromTerminal, readOnly, DevMachineType.NORMAL);
+    }
+
+    public SkillTreeGui(boolean fromTerminal, boolean readOnly, DevMachineType devType) {
         super(Component.translatable("block.academy.dev_normal"));
         this.fromTerminal = fromTerminal;
+        this.readOnly = readOnly;
+        this.devType = devType;
     }
 
     @Override
@@ -400,7 +412,14 @@ public class SkillTreeGui extends Screen {
                 tooltip.add(Component.literal("§e熟练度: " + String.format("%.1f%%", prof * 100)));
             }
         } else if (hoveredNode.canLearn) {
-            tooltip.add(Component.literal("§b[点击学习]"));
+            if (readOnly) {
+                tooltip.add(Component.literal("§7[仅查看] 请使用开发机学习"));
+            } else if (skill.getLevel() > devType.maxLevel) {
+                tooltip.add(Component.literal("§c[同步率不足] 该开发机无法支持此等级技能"));
+            } else {
+                int cost = devType.applySyncRate(100 + skill.getLevel() * 50);
+                tooltip.add(Component.literal("§b[点击学习] 消耗: " + cost + " IF"));
+            }
         } else {
             tooltip.add(Component.literal("§c[未解锁]"));
             for (Skill.Prerequisite prereq : skill.getPrerequisites()) {
@@ -440,8 +459,11 @@ public class SkillTreeGui extends Screen {
             return true;
         }
 
-        if (hoveredNode != null && hoveredNode.canLearn && !hoveredNode.learned && button == 0) {
-            PacketDistributor.sendToServer(new LearnSkillPacket(hoveredNode.skill.getId()));
+        if (!readOnly && hoveredNode != null && hoveredNode.canLearn && !hoveredNode.learned && button == 0) {
+            if (hoveredNode.skill.getLevel() > devType.maxLevel) {
+                return true;
+            }
+            PacketDistributor.sendToServer(new LearnSkillPacket(hoveredNode.skill.getId(), devType.ordinal()));
             Minecraft mc = Minecraft.getInstance();
             if (mc.player != null) {
                 PlayerAbilityData data = mc.player.getData(AcademyAttachments.PLAYER_ABILITY);

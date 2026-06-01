@@ -63,14 +63,7 @@ public abstract class DevMachineSubBase extends BaseEntityBlock implements IDevM
                 return base.useWithoutItem(mainState, level, mainPos, player, hitResult);
             }
         }
-        if (level.isClientSide()) {
-            return InteractionResult.SUCCESS;
-        }
-        if (player instanceof ServerPlayer serverPlayer) {
-            LearnSkillPacket.syncToClient(serverPlayer);
-            PacketDistributor.sendToPlayer(serverPlayer, OpenDevGuiPacket.INSTANCE);
-        }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.PASS;
     }
 
     @Nullable
