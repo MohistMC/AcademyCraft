@@ -302,7 +302,7 @@ public class SkillSlotGui extends Screen {
                     data.setSlot(viewPreset, dropdownSlot, entry.skillId);
                     PacketDistributor.sendToServer(new SetSkillSlotPacket(viewPreset, dropdownSlot, entry.skillId));
                 }
-                mc.player.setData(AcademyAttachments.PLAYER_ABILITY, data);
+                data.syncTo(mc.player);
             }
             dropdownSlot = -1;
             return true;
@@ -317,7 +317,7 @@ public class SkillSlotGui extends Screen {
             if (button == 1) {
                 PlayerAbilityData data = mc.player.getData(AcademyAttachments.PLAYER_ABILITY);
                 data.clearSlot(viewPreset, hoveredSlot);
-                mc.player.setData(AcademyAttachments.PLAYER_ABILITY, data);
+                data.syncTo(mc.player);
                 PacketDistributor.sendToServer(new SetSkillSlotPacket(viewPreset, hoveredSlot, ""));
                 return true;
             }

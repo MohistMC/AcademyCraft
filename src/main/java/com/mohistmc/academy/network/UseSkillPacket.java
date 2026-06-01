@@ -65,8 +65,7 @@ public record UseSkillPacket(int slotIndex) implements CustomPacketPayload {
             data.useSkill(skill);
             effect.execute(player, data);
 
-            player.setData(AcademyAttachments.PLAYER_ABILITY, data);
-            LearnSkillPacket.syncToClient(player);
+            data.syncTo(player);
         });
     }
 }

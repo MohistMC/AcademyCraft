@@ -1,13 +1,11 @@
 package com.mohistmc.academy.world.item;
 
-import com.mohistmc.academy.network.LearnSkillPacket;
 import com.mohistmc.academy.skill.AbilityCategory;
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -51,12 +49,9 @@ public class BaseFactor extends AcademyItem {
 
         data.setCurrentAbility(category);
         data.setPlayerLevel(1);
-        player.setData(AcademyAttachments.PLAYER_ABILITY, data);
+        data.syncTo(player);
         if (!player.isCreative()) {
             player.sendSystemMessage(Component.literal("成功学习: ").append(Component.translatable(category.getTranslationKey())));
-        }
-        if (player instanceof ServerPlayer sp) {
-            LearnSkillPacket.syncToClient(sp);
         }
 
         if (!player.isCreative()) {

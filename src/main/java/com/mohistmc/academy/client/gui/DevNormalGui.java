@@ -446,7 +446,7 @@ public class DevNormalGui extends Screen {
             if (mc.player != null) {
                 PlayerAbilityData data = mc.player.getData(AcademyAttachments.PLAYER_ABILITY);
                 data.learnSkill(hoveredNode.skill.getId());
-                mc.player.setData(AcademyAttachments.PLAYER_ABILITY, data);
+                data.syncTo(mc.player);
             }
             buildSkillNodes();
             return true;

@@ -176,7 +176,7 @@ public class KeyInputHandler {
         if (SWITCH_PRESET.consumeClick()) {
             int next = (data.getCurrentPresetIndex() + 1) % PlayerAbilityData.PRESET_COUNT;
             data.setCurrentPreset(next);
-            mc.player.setData(AcademyAttachments.PLAYER_ABILITY, data);
+            data.syncTo(mc.player);
             mc.player.displayClientMessage(Component.literal("§a切换预设: " + (next + 1)), true);
         }
     }

@@ -66,9 +66,8 @@ public record LearnSkillPacket(String skillId) implements CustomPacketPayload {
                 player.sendSystemMessage(Component.literal("§a等级提升! 当前等级 " + newLevel));
             }
 
-            player.setData(AcademyAttachments.PLAYER_ABILITY, data);
+            data.syncTo(player);
             player.sendSystemMessage(Component.translatable("§a已学习: ").append(Component.translatable(skill.getTranslationKey())));
-            syncToClient(player);
         });
     }
 

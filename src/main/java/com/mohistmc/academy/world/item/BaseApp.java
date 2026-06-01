@@ -1,12 +1,10 @@
 package com.mohistmc.academy.world.item;
 
-import com.mohistmc.academy.network.LearnSkillPacket;
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -43,8 +41,7 @@ public abstract class BaseApp extends AcademyItem {
         }
 
         data.installApp(getAppId());
-        player.setData(AcademyAttachments.PLAYER_ABILITY, data);
-        LearnSkillPacket.syncToClient((ServerPlayer) player);
+        data.syncTo(player);
 
         if (!player.getAbilities().instabuild) {
             stack.shrink(1);

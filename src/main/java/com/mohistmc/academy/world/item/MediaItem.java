@@ -63,7 +63,7 @@ public abstract class MediaItem extends AcademyItem {
         }
 
         data.addLoadedMedia(getMediaId());
-        player.setData(AcademyAttachments.PLAYER_ABILITY, data);
+        data.syncTo(player);
 
         if (level.isClientSide()) {
             String name = Component.translatable(getDescriptionId()).getString();

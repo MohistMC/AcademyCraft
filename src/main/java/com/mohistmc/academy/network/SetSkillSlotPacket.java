@@ -50,8 +50,7 @@ public record SetSkillSlotPacket(int presetIndex, int slotIndex, String skillId)
                 data.setSlot(packet.presetIndex(), packet.slotIndex(), skillId);
             }
 
-            player.setData(AcademyAttachments.PLAYER_ABILITY, data);
-            LearnSkillPacket.syncToClient(player);
+            data.syncTo(player);
         });
     }
 }

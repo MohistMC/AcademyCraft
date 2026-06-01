@@ -34,8 +34,7 @@ public record ToggleAbilityPacket() implements CustomPacketPayload {
 
             data.toggleAbilityActive();
 
-            player.setData(AcademyAttachments.PLAYER_ABILITY, data);
-            LearnSkillPacket.syncToClient(player);
+            data.syncTo(player);
         });
     }
 }

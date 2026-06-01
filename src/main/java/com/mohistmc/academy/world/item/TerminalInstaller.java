@@ -1,14 +1,13 @@
 package com.mohistmc.academy.world.item;
 
-import com.mohistmc.academy.network.LearnSkillPacket;
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import java.util.List;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -31,8 +30,7 @@ public class TerminalInstaller extends AcademyItem {
         }
 
         data.setTerminalInstalled(true);
-        player.setData(AcademyAttachments.PLAYER_ABILITY, data);
-        LearnSkillPacket.syncToClient((ServerPlayer) player);
+        data.syncTo(player);
 
         if (!player.getAbilities().instabuild) {
             stack.shrink(1);
@@ -46,7 +44,7 @@ public class TerminalInstaller extends AcademyItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> components, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> components, TooltipFlag flag) {
         components.add(Component.literal("§7右键安装数据终端"));
         components.add(Component.literal("§7安装后可按 Alt 打开终端界面"));
     }
