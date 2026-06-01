@@ -200,19 +200,21 @@ class VecReflectionContext(p: EntityPlayer) extends Context(p, VecReflection) {
   private def handleAttack(dmgSource: DamageSource, dmg: Float, passby: Boolean): (Boolean, Float) = {
     val reflectDamage = lerpf(0.6f, 1.2f, ctx.getSkillExp) * dmg
     if (!passby) { // Perform the action.
+      if (_isAttacking) {
+        return (true, dmg - reflectDamage)
+      }
+
       _isAttacking = true
 
-      if (!_isAttacking) {
-        consumeDamage(dmg)
-        ctx.addSkillExp(dmg * 0.0004f)
+      consumeDamage(dmg)
+      ctx.addSkillExp(dmg * 0.0004f)
 
-        val sourceEntity = dmgSource.getImmediateSource
-        if (sourceEntity != null && sourceEntity != player) {
-          ctx.attack(sourceEntity, reflectDamage)
+      val sourceEntity = dmgSource.getImmediateSource
+      if (sourceEntity != null && sourceEntity != player) {
+        ctx.attack(sourceEntity, reflectDamage)
 
-          if (!SideUtils.isClient)
-            sendToClient(MSG_EFFECT, sourceEntity.getPositionVector)
-        }
+        if (!SideUtils.isClient)
+          sendToClient(MSG_EFFECT, sourceEntity.getPositionVector)
       }
 
       _isAttacking = false
