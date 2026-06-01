@@ -72,7 +72,7 @@ public class CooldownData extends DataPart<EntityPlayer> {
             }
         });
 
-        scheduler.every(15).atOnly(Side.SERVER).run(this::sync);
+        scheduler.every(15).atOnly(Side.SERVER).run(this::trySync);
     }
 
     @Override
@@ -148,6 +148,13 @@ public class CooldownData extends DataPart<EntityPlayer> {
     @Listener(channel="cross", side={Side.CLIENT, Side.SERVER})
     private void hCrossSet(Controllable ctrl, int id, int cd) {
         doSet(ctrl, id, cd);
+    }
+
+    private void trySync() {
+        EntityPlayer player = getEntity();
+        if (player != null && !player.isDead) {
+            sync();
+        }
     }
 
     public static class SkillCooldown {
