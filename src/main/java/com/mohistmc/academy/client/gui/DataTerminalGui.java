@@ -86,7 +86,7 @@ public class DataTerminalGui extends Screen {
         routesBound = true;
         AppRegistry.bindOpenAction(AppRegistry.SKILL_TREE, mc -> mc.setScreen(new DevNormalGui(true)));
         AppRegistry.bindOpenAction(AppRegistry.SETTINGS, mc -> mc.setScreen(new SettingsAppGui()));
-        AppRegistry.bindOpenAction(AppRegistry.TUTORIAL, mc -> mc.setScreen(new TutorialAppGui()));
+        AppRegistry.bindOpenAction(AppRegistry.TUTORIAL, mc -> mc.setScreen(new TutorialAppGui(true)));
         AppRegistry.bindOpenAction(AppRegistry.MEDIA_PLAYER, mc -> mc.setScreen(new MediaPlayerAppGui()));
     }
 
@@ -244,10 +244,6 @@ public class DataTerminalGui extends Screen {
             }
 
             String name = Component.translatable(entry.nameKey).getString();
-            int maxChars = (APP_ICON_SIZE + APP_GAP) / 6;
-            if (name.length() > maxChars) {
-                name = name.substring(0, maxChars - 1) + "..";
-            }
             int nameW = this.font.width(name);
             int nameColor = isHovered ? COLOR_TEXT_CYAN : COLOR_TEXT_WHITE;
             graphics.drawString(this.font, name, x + (APP_ICON_SIZE - nameW) / 2, y + APP_ICON_SIZE + 4, nameColor);

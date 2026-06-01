@@ -81,6 +81,10 @@ public class PlayerAbilityDataCodec implements IAttachmentSerializer<CompoundTag
             }
         }
 
+        if (tag.contains("misaka_id")) {
+            data.setMisakaId(tag.getInt("misaka_id"));
+        }
+
         return data;
     }
 
@@ -140,6 +144,9 @@ public class PlayerAbilityDataCodec implements IAttachmentSerializer<CompoundTag
             mediaList.add(net.minecraft.nbt.StringTag.valueOf(mediaId));
         }
         tag.put("loaded_media", mediaList);
+
+        tag.putInt("misaka_id", data.getMisakaId());
+
 
         return tag;
     }

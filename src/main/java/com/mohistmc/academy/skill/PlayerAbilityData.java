@@ -1,5 +1,6 @@
 package com.mohistmc.academy.skill;
 
+import com.mohistmc.academy.network.LearnSkillPacket;
 import com.mohistmc.academy.terminal.AppRegistry;
 import com.mohistmc.academy.terminal.TerminalApp;
 import java.util.HashMap;
@@ -9,6 +10,8 @@ import java.util.Set;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class PlayerAbilityData {
 
@@ -35,13 +38,13 @@ public class PlayerAbilityData {
     private boolean terminalInstalled = false;
     private final Set<String> installedApps = new HashSet<>();
     private final Set<String> loadedMedia = new HashSet<>();
+    private int misakaId = -1;
 
     public PlayerAbilityData() {
         for (int i = 0; i < PRESET_COUNT; i++) {
             presets[i] = new SkillPreset();
         }
         installedApps.add(AppRegistry.SETTINGS.getAppId());
-        installedApps.add(AppRegistry.TUTORIAL.getAppId());
     }
 
     public AbilityCategory getCurrentAbility() {
@@ -229,6 +232,14 @@ public class PlayerAbilityData {
         this.terminalInstalled = installed;
     }
 
+    public int getMisakaId() {
+        return misakaId;
+    }
+
+    public void setMisakaId(int misakaId) {
+        this.misakaId = misakaId;
+    }
+
     public boolean hasApp(String appId) {
         return installedApps.contains(appId);
     }
@@ -296,6 +307,14 @@ public class PlayerAbilityData {
         return maxLevel;
     }
 
+    public void syncTo(Player player) {
+        PlayerAbilityData copy = PlayerAbilityData.fromSyncTag(this.toSyncTag());
+        player.setData(AcademyAttachments.PLAYER_ABILITY, copy);
+        if (player instanceof ServerPlayer serverPlayer) {
+            LearnSkillPacket.syncToClient(serverPlayer);
+        }
+    }
+
     public CompoundTag toSyncTag() {
         CompoundTag tag = new CompoundTag();
         if (hasAbility()) {
@@ -342,6 +361,8 @@ public class PlayerAbilityData {
             appList.add(StringTag.valueOf(appId));
         }
         tag.put("installed_apps", appList);
+
+        tag.putInt("misaka_id", misakaId);
 
         ListTag mediaList = new ListTag();
         for (String mediaId : loadedMedia) {
@@ -404,6 +425,11 @@ public class PlayerAbilityData {
         if (tag.contains("terminal_installed")) {
             data.setTerminalInstalled(tag.getBoolean("terminal_installed"));
         }
+
+        if (tag.contains("misaka_id")) {
+            data.setMisakaId(tag.getInt("misaka_id"));
+        }
+
         if (tag.contains("installed_apps")) {
             ListTag appList = tag.getList("installed_apps", net.minecraft.nbt.Tag.TAG_STRING);
             for (int i = 0; i < appList.size(); i++) {

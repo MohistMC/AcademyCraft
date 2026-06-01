@@ -244,5 +244,6 @@
     "key.academy.switch_preset": "Switch Preset",
     "key.academy.toggle_ability": "Toggle Ability",
     "key.academy.open_terminal": "Open/Close Data Terminal",
-    "gui.academy.data_terminal": "Data Terminal"
+    "gui.academy.data_terminal": "Data Terminal",
+    "academy.tutorial.misaka": "Misaka No.%d"
 }
