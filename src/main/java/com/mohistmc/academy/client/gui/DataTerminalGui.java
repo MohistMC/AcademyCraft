@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -33,8 +34,6 @@ public class DataTerminalGui extends Screen {
     private static final int COLOR_APP_BORDER = 0xFF1e3a5f;
     private static final int COLOR_APP_HOVER = 0xFF1a4a6e;
     private static final int COLOR_APP_HOVER_BORDER = 0xFF00bcd4;
-    private static final int COLOR_APP_LOCKED_BG = 0xFF1a1a2a;
-    private static final int COLOR_APP_LOCKED_BORDER = 0xFF333344;
     private static final int COLOR_TEXT_WHITE = 0xFFFFFFFF;
     private static final int COLOR_TEXT_CYAN = 0xFF00e5ff;
     private static final int COLOR_TEXT_GRAY = 0xFF888899;
@@ -106,8 +105,9 @@ public class DataTerminalGui extends Screen {
         PlayerAbilityData data = mc.player.getData(AcademyAttachments.PLAYER_ABILITY);
 
         for (TerminalApp app : AppRegistry.getAllApps()) {
-            boolean installed = data.hasApp(app.getAppId());
-            appEntries.add(new AppEntry(app.getAppId(), app.getNameKey(), installed, app.getIcon()));
+            if (data.hasApp(app.getAppId())) {
+                appEntries.add(new AppEntry(app.getAppId(), app.getNameKey(), app.getIcon()));
+            }
         }
     }
 
@@ -226,25 +226,21 @@ public class DataTerminalGui extends Screen {
                     && mouseY >= y && mouseY < y + APP_ICON_SIZE;
             if (isHovered) hoveredApp = i;
 
-            if (!entry.installed) {
-                graphics.fill(x, y, x + APP_ICON_SIZE, y + APP_ICON_SIZE, COLOR_APP_LOCKED_BG);
-                drawBorder(graphics, x, y, APP_ICON_SIZE, APP_ICON_SIZE, COLOR_APP_LOCKED_BORDER);
-                String lockIcon = "X";
-                int iw = this.font.width(lockIcon);
-                graphics.drawString(this.font, lockIcon, x + (APP_ICON_SIZE - iw) / 2, y + (APP_ICON_SIZE - 8) / 2, COLOR_TEXT_DIM);
-            } else {
-                int bgColor = isHovered ? COLOR_APP_HOVER : COLOR_APP_BG;
-                int borderColor = isHovered ? COLOR_APP_HOVER_BORDER : COLOR_APP_BORDER;
-                graphics.fill(x, y, x + APP_ICON_SIZE, y + APP_ICON_SIZE, bgColor);
-                drawBorder(graphics, x, y, APP_ICON_SIZE, APP_ICON_SIZE, borderColor);
+            int bgColor = isHovered ? COLOR_APP_HOVER : COLOR_APP_BG;
+            int borderColor = isHovered ? COLOR_APP_HOVER_BORDER : COLOR_APP_BORDER;
+            graphics.fill(x, y, x + APP_ICON_SIZE, y + APP_ICON_SIZE, bgColor);
+            drawBorder(graphics, x, y, APP_ICON_SIZE, APP_ICON_SIZE, borderColor);
 
-                if (isHovered) {
-                    graphics.fill(x + 2, y + 2, x + APP_ICON_SIZE - 2, y + APP_ICON_SIZE - 2, 0x2200bcd4);
-                }
+            if (isHovered) {
+                graphics.fill(x + 2, y + 2, x + APP_ICON_SIZE - 2, y + APP_ICON_SIZE - 2, 0x2200bcd4);
+            }
 
-                String icon = entry.icon;
-                int iconW = this.font.width(icon);
-                graphics.drawString(this.font, icon, x + (APP_ICON_SIZE - iconW) / 2, y + 12, COLOR_TEXT_CYAN);
+            ResourceLocation icon = entry.icon;
+            if (icon != null) {
+                int drawSize = 32;
+                int iconX = x + (APP_ICON_SIZE - drawSize) / 2;
+                int iconY = y + (APP_ICON_SIZE - drawSize) / 2;
+                graphics.blit(icon, iconX, iconY, 0, 0, drawSize, drawSize, drawSize, drawSize);
             }
 
             String name = Component.translatable(entry.nameKey).getString();
@@ -253,18 +249,8 @@ public class DataTerminalGui extends Screen {
                 name = name.substring(0, maxChars - 1) + "..";
             }
             int nameW = this.font.width(name);
-            int nameColor = entry.installed ? (isHovered ? COLOR_TEXT_CYAN : COLOR_TEXT_WHITE) : COLOR_TEXT_DIM;
+            int nameColor = isHovered ? COLOR_TEXT_CYAN : COLOR_TEXT_WHITE;
             graphics.drawString(this.font, name, x + (APP_ICON_SIZE - nameW) / 2, y + APP_ICON_SIZE + 4, nameColor);
-        }
-
-        if (hoveredApp >= 0) {
-            AppEntry entry = appEntries.get(hoveredApp);
-            if (!entry.installed) {
-                String hint = "需要安装 " + Component.translatable(entry.nameKey).getString() + " APP安装器";
-                int hw = this.font.width(hint);
-                graphics.drawString(this.font, hint, guiLeft + (GUI_WIDTH - hw) / 2,
-                        guiTop + GUI_HEIGHT - BOTTOM_BAR_HEIGHT - 24, 0xFFff6b6b);
-            }
         }
     }
 
@@ -322,11 +308,8 @@ public class DataTerminalGui extends Screen {
         }
 
         if (hoveredApp >= 0 && button == 0) {
-            AppEntry entry = appEntries.get(hoveredApp);
-            if (entry.installed) {
-                openApp(entry.appId);
-                return true;
-            }
+            openApp(appEntries.get(hoveredApp).appId);
+            return true;
         }
 
         return super.mouseClicked(mouseX, mouseY, button);
@@ -348,6 +331,6 @@ public class DataTerminalGui extends Screen {
         return false;
     }
 
-    private record AppEntry(String appId, String nameKey, boolean installed, String icon) {
+    private record AppEntry(String appId, String nameKey, ResourceLocation icon) {
     }
 }

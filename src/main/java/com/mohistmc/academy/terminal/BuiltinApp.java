@@ -2,6 +2,7 @@ package com.mohistmc.academy.terminal;
 
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author Mgazul
@@ -11,10 +12,16 @@ public class BuiltinApp implements TerminalApp {
 
     private final String appId;
     private final String nameKey;
-    private final String icon;
+    private final ResourceLocation icon;
     private Consumer<Minecraft> openAction;
 
-    public BuiltinApp(String appId, String nameKey, String icon) {
+    public BuiltinApp(String appId, String nameKey) {
+        this.appId = appId;
+        this.nameKey = nameKey;
+        this.icon = TerminalApp.super.getIcon();
+    }
+
+    public BuiltinApp(String appId, String nameKey, ResourceLocation icon) {
         this.appId = appId;
         this.nameKey = nameKey;
         this.icon = icon;
@@ -35,7 +42,7 @@ public class BuiltinApp implements TerminalApp {
     }
 
     @Override
-    public String getIcon() {
+    public ResourceLocation getIcon() {
         return icon;
     }
 

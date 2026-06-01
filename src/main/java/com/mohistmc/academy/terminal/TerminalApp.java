@@ -1,6 +1,8 @@
 package com.mohistmc.academy.terminal;
 
+import com.mohistmc.academy.AcademyCraft;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author Mgazul
@@ -14,8 +16,8 @@ public interface TerminalApp {
         return "app." + getAppId();
     }
 
-    default String getIcon() {
-        return "◆";
+    default ResourceLocation getIcon() {
+        return ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/apps/" + getAppId() + "/icon.png");
     }
 
     default boolean isBuiltIn() {

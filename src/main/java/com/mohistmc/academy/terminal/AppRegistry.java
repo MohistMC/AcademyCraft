@@ -14,11 +14,11 @@ import org.slf4j.Logger;
  */
 public class AppRegistry {
 
-    public static final BuiltinApp SKILL_TREE = new BuiltinApp("skill_tree", "item.academy.app_skill_tree", "◆");
-    public static final BuiltinApp FREQ_TRANSMITTER = new BuiltinApp("freq_transmitter", "item.academy.app_freq_transmitter", "⚡");
-    public static final BuiltinApp MEDIA_PLAYER = new BuiltinApp("media_player", "item.academy.app_media_player", "♫");
-    public static final BuiltinApp TUTORIAL = new BuiltinApp("tutorial", "item.academy.app_tutorial", "☁");
-    public static final BuiltinApp SETTINGS = new BuiltinApp("settings", "item.academy.app_settings", "⚙");
+    public static final BuiltinApp SKILL_TREE = new BuiltinApp("skill_tree", "item.academy.app_skill_tree");
+    public static final BuiltinApp FREQ_TRANSMITTER = new BuiltinApp("freq_transmitter", "item.academy.app_freq_transmitter");
+    public static final BuiltinApp MEDIA_PLAYER = new BuiltinApp("media_player", "item.academy.app_media_player");
+    public static final BuiltinApp TUTORIAL = new BuiltinApp("tutorial", "item.academy.app_tutorial");
+    public static final BuiltinApp SETTINGS = new BuiltinApp("settings", "item.academy.app_settings");
 
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Map<String, TerminalApp> APPS = new LinkedHashMap<>();
