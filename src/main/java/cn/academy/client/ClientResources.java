@@ -11,6 +11,7 @@ import cn.lambdalib2.render.obj.ObjLegacyRender;
 import cn.lambdalib2.render.obj.ObjParser;
 import cn.lambdalib2.util.ResourceUtils;
 import com.google.common.base.Throwables;
+import java.io.InputStream;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.ITextureObject;
@@ -80,10 +81,11 @@ public class ClientResources {
         return fontItalic;
     }
 
+    private static final Minecraft MC = Minecraft.getMinecraft();
     public static ResourceLocation preloadMipmapTexture(String loc) {
-        TextureManager texManager = Minecraft.getMinecraft().getTextureManager();
 
         ResourceLocation ret = Resources.getTexture(loc);
+        TextureManager texManager = MC.getTextureManager();
 
         ITextureObject loadedTexture = texManager.getTexture(ret);
         if (loadedTexture == null) {
@@ -171,19 +173,16 @@ public class ClientResources {
         if (!fontsInit) {
             fontsInit = true;
 
-            Configuration config = AcademyCraft.config;
-            String userSpecified = config.getString("font", "gui", "Microsoft YaHei",
-                    "The font to be used. If not found in the system, default fonts will be used.");
-
-            font = TrueTypeFont.withFallback(
-                Font.PLAIN, 24, userSpecified,
-                "微软雅黑",
-                "Microsoft YaHei",
-                "SimHei",
-                "Adobe Heiti Std R"
-            );
-            fontBold = new TrueTypeFont(font.font.deriveFont(Font.BOLD));
-            fontItalic = new TrueTypeFont(font.font.deriveFont(Font.ITALIC));
+            try (InputStream is = ResourceUtils.getResourceStream(
+                    new ResourceLocation("academy", "fonts/misans-normal.ttf")))
+            {
+                Font baseFont = Font.createFont(Font.TRUETYPE_FONT, is);
+                font = new TrueTypeFont(baseFont.deriveFont(Font.PLAIN, 24));
+                fontBold = new TrueTypeFont(baseFont.deriveFont(Font.BOLD, 24));
+                fontItalic = new TrueTypeFont(baseFont.deriveFont(Font.ITALIC, 24));
+            } catch (Exception e) {
+                throw new RuntimeException("Critical error: Internal font cannot be loaded.", e);
+            }
         }
     }
 
@@ -191,8 +190,8 @@ public class ClientResources {
     private static void __preInit(FMLPreInitializationEvent event) {
         checkFontInit();
 
-        Fonts.register("AC_Normal", font());
-        Fonts.register("AC_Bold", fontBold());
-        Fonts.register("AC_Italic", fontItalic());
+        Fonts.register("AC_Normal", font);
+        Fonts.register("AC_Bold", fontBold);
+        Fonts.register("AC_Italic", fontItalic);
     }
 }
