@@ -1,17 +1,18 @@
 package com.mohistmc.academy.world.item;
 
-import com.mohistmc.academy.client.gui.TutorialAppGui;
+import com.mohistmc.academy.network.OpenTutorialGuiPacket;
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.terminal.AppRegistry;
 import com.mohistmc.academy.utils.RandUtils;
-import net.minecraft.client.Minecraft;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class Tutorial extends Item {
     public Tutorial() {
@@ -30,9 +31,7 @@ public class Tutorial extends Item {
                 data.installApp(AppRegistry.TUTORIAL.getAppId());
             }
             data.syncTo(player);
-        }
-        if (level.isClientSide()) {
-            Minecraft.getInstance().setScreen(new TutorialAppGui());
+            PacketDistributor.sendToPlayer((ServerPlayer) player, new OpenTutorialGuiPacket());
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }

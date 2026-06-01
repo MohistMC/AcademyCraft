@@ -6,7 +6,6 @@ import com.mohistmc.academy.terminal.AppRegistry;
 import com.mohistmc.academy.terminal.TerminalApp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -14,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.ModList;
 
 @OnlyIn(Dist.CLIENT)
 public class DataTerminalGui extends Screen {
@@ -41,33 +41,13 @@ public class DataTerminalGui extends Screen {
     private static final int COLOR_SCANLINE = 0x08FFFFFF;
     private static final int COLOR_SEPARATOR = 0xFF004d5a;
 
-    private static final String[][] OPENING_MESSAGES = {
-            {"正在连接学园都市数据中心...", "连接成功。"},
-            {"初始化数据终端协议...", "协议就绪。"},
-            {"载入用户配置文件...", "配置完成。"},
-            {"同步虚能网络状态...", "同步完毕。"},
-            {"校验终端安全证书...", "验证通过。"},
-    };
-
     private int guiLeft;
     private int guiTop;
     private int hoveredApp = -1;
-    private int openAnimTicks = 0;
-    private boolean animDone = false;
-    private int messageIndex;
     private final List<AppEntry> appEntries = new ArrayList<>();
 
     public DataTerminalGui() {
         super(Component.translatable("gui.academy.data_terminal"));
-        this.messageIndex = new Random().nextInt(OPENING_MESSAGES.length);
-    }
-
-    public DataTerminalGui(boolean skipAnim) {
-        super(Component.translatable("gui.academy.data_terminal"));
-        this.messageIndex = 0;
-        if (skipAnim) {
-            this.animDone = true;
-        }
     }
 
     @Override
@@ -114,12 +94,6 @@ public class DataTerminalGui extends Screen {
     @Override
     public void tick() {
         super.tick();
-        if (!animDone) {
-            openAnimTicks++;
-            if (openAnimTicks >= 30) {
-                animDone = true;
-            }
-        }
         if (appEntries.isEmpty()) {
             buildAppEntries();
         }
@@ -134,47 +108,12 @@ public class DataTerminalGui extends Screen {
 
         graphics.fill(guiLeft, guiTop, guiLeft + GUI_WIDTH, guiTop + GUI_HEIGHT, COLOR_BG);
 
-        if (!animDone) {
-            drawOpeningAnimation(graphics);
-        } else {
-            drawTopBar(graphics);
-            drawAppGrid(graphics, mouseX, mouseY);
-            drawBottomBar(graphics);
-            drawDecorations(graphics);
-        }
+        drawTopBar(graphics);
+        drawAppGrid(graphics, mouseX, mouseY);
+        drawBottomBar(graphics);
+        drawDecorations(graphics);
 
         graphics.pose().popPose();
-    }
-
-    private void drawOpeningAnimation(GuiGraphics graphics) {
-        float progress = openAnimTicks / 30f;
-
-        int barWidth = (int) ((GUI_WIDTH - 40) * progress);
-        int barX = guiLeft + 20;
-        int barY = guiTop + GUI_HEIGHT / 2 - 4;
-
-        graphics.fill(guiLeft, guiTop + TOP_BAR_HEIGHT, guiLeft + GUI_WIDTH, guiTop + TOP_BAR_HEIGHT + 1, COLOR_ACCENT);
-        graphics.fill(guiLeft, guiTop + GUI_HEIGHT - BOTTOM_BAR_HEIGHT - 1, guiLeft + GUI_WIDTH, guiTop + GUI_HEIGHT - BOTTOM_BAR_HEIGHT, COLOR_ACCENT);
-
-        graphics.fill(barX, barY, barX + (GUI_WIDTH - 40), barY + 8, 0xFF1a1a2e);
-        graphics.fill(barX, barY, barX + barWidth, barY + 8, COLOR_ACCENT);
-
-        String[] msgs = OPENING_MESSAGES[messageIndex];
-        String msg = progress < 0.5f ? msgs[0] : msgs[1];
-        int tw = this.font.width(msg);
-        graphics.drawString(this.font, msg, guiLeft + (GUI_WIDTH - tw) / 2, barY - 16, COLOR_TEXT_CYAN);
-
-        String percent = String.format("%.0f%%", progress * 100);
-        int pw = this.font.width(percent);
-        graphics.drawString(this.font, percent, guiLeft + (GUI_WIDTH - pw) / 2, barY + 14, COLOR_TEXT_GRAY);
-
-        for (int i = 0; i < 3; i++) {
-            int dotX = guiLeft + GUI_WIDTH / 2 - 12 + i * 12;
-            int dotY = barY + 28;
-            float dotAlpha = (float) (0.3 + 0.7 * Math.abs(Math.sin((openAnimTicks + i * 5) * 0.2)));
-            int dotColor = (int) (dotAlpha * 255) << 24 | 0x00bcd4;
-            graphics.fill(dotX, dotY, dotX + 4, dotY + 4, dotColor);
-        }
     }
 
     private void drawTopBar(GuiGraphics graphics) {
@@ -187,6 +126,12 @@ public class DataTerminalGui extends Screen {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player != null) {
             PlayerAbilityData data = mc.player.getData(AcademyAttachments.PLAYER_ABILITY);
+            int misakaId = data.getMisakaId();
+            if (misakaId >= 0) {
+                String misakaText = String.format("No.%06d", misakaId);
+                graphics.drawString(this.font, misakaText, guiLeft + 8 + this.font.width(title) + 8, guiTop + 6, COLOR_TEXT_GRAY);
+            }
+
             String playerName = mc.player.getName().getString();
             String levelStr = data.hasAbility()
                     ? " Lv." + data.getPlayerLevel()
@@ -202,14 +147,16 @@ public class DataTerminalGui extends Screen {
             graphics.drawString(this.font, abilityStr, guiLeft + GUI_WIDTH - abW - 8, guiTop + 18, COLOR_TEXT_DIM);
         }
 
-        String version = "v1.0.0";
+        String version = ModList.get().getModContainerById("academy")
+                .map(mod -> mod.getModInfo().getVersion().toString())
+                .orElse("unknown");
         int vw = this.font.width(version);
         graphics.drawString(this.font, version, guiLeft + (GUI_WIDTH - vw) / 2, guiTop + 18, COLOR_TEXT_DIM);
     }
 
+
     private void drawAppGrid(GuiGraphics graphics, int mouseX, int mouseY) {
-        int totalCols = Math.min(APP_COLS, appEntries.size());
-        int totalW = totalCols * APP_ICON_SIZE + (totalCols - 1) * APP_GAP;
+        int totalW = APP_COLS * APP_ICON_SIZE + (APP_COLS - 1) * APP_GAP;
         int startX = guiLeft + (GUI_WIDTH - totalW) / 2;
         int startY = guiTop + TOP_BAR_HEIGHT + 20;
 
@@ -298,11 +245,6 @@ public class DataTerminalGui extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!animDone) {
-            animDone = true;
-            return true;
-        }
-
         if (hoveredApp >= 0 && button == 0) {
             openApp(appEntries.get(hoveredApp).appId);
             return true;

@@ -1,9 +1,11 @@
 package com.mohistmc.academy.world.item;
 
+import com.mohistmc.academy.network.StartTerminalInstallPacket;
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import java.util.List;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -11,6 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class TerminalInstaller extends AcademyItem {
     public TerminalInstaller() {
@@ -29,15 +32,14 @@ public class TerminalInstaller extends AcademyItem {
             return InteractionResultHolder.fail(stack);
         }
 
-        data.setTerminalInstalled(true);
-        data.syncTo(player);
+        if (!level.isClientSide()) {
+            data.setTerminalInstalled(true);
+            data.syncTo(player);
+            PacketDistributor.sendToPlayer((ServerPlayer) player, new StartTerminalInstallPacket());
+        }
 
         if (!player.getAbilities().instabuild) {
             stack.shrink(1);
-        }
-
-        if (level.isClientSide()) {
-            player.displayClientMessage(Component.literal("§7[数据终端] §a数据终端安装成功！按 Alt 打开终端界面。"), false);
         }
 
         return InteractionResultHolder.consume(stack);

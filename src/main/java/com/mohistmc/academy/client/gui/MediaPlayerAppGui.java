@@ -281,7 +281,7 @@ public class MediaPlayerAppGui extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (hoveredBack && button == 0) {
-            Minecraft.getInstance().setScreen(new DataTerminalGui(true));
+            Minecraft.getInstance().setScreen(new DataTerminalGui());
             return true;
         }
 

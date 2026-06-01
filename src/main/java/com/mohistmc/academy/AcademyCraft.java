@@ -3,7 +3,9 @@ package com.mohistmc.academy;
 import com.mohistmc.academy.listener.ServerListener;
 import com.mohistmc.academy.network.LearnSkillPacket;
 import com.mohistmc.academy.network.OpenDevGuiPacket;
+import com.mohistmc.academy.network.OpenTutorialGuiPacket;
 import com.mohistmc.academy.network.SetSkillSlotPacket;
+import com.mohistmc.academy.network.StartTerminalInstallPacket;
 import com.mohistmc.academy.network.SyncAbilityDataPacket;
 import com.mohistmc.academy.network.ToggleAbilityPacket;
 import com.mohistmc.academy.network.UseSkillPacket;
@@ -91,6 +93,16 @@ public class AcademyCraft {
                 OpenDevGuiPacket.TYPE,
                 OpenDevGuiPacket.STREAM_CODEC,
                 OpenDevGuiPacket::handle
+        );
+        registrar.playToClient(
+                OpenTutorialGuiPacket.TYPE,
+                OpenTutorialGuiPacket.STREAM_CODEC,
+                OpenTutorialGuiPacket::handle
+        );
+        registrar.playToClient(
+                StartTerminalInstallPacket.TYPE,
+                StartTerminalInstallPacket.STREAM_CODEC,
+                StartTerminalInstallPacket::handle
         );
     }
 }
