@@ -76,8 +76,8 @@ public class AcademyCraft {
         log.info("Starting AcademyCraft");
         log.info("Copyright (c) Lambda Innovation, 2013-2018");
         log.info("https://ac.li-dev.cn/");
-        log.info("Copyright (c) MohistMC, 2023-2023");
-        log.info("https://www.mohistmc.com");
+        log.info("Copyright (c) MohistMC, 2023-2026");
+        log.info("https://www.mohistmc.cn");
         recipes = new RecipeRegistry();
 
         config = new Configuration(event.getSuggestedConfigurationFile());
