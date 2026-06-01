@@ -1,9 +1,7 @@
 package com.mohistmc.academy.world.block;
 
-import com.mohistmc.academy.client.gui.DevNormalGui;
 import com.mohistmc.academy.network.LearnSkillPacket;
 import com.mohistmc.academy.network.OpenDevGuiPacket;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;

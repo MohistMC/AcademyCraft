@@ -1,5 +1,7 @@
 package com.mohistmc.academy.world.block.entity;
 
+import com.mohistmc.academy.capability.EnergyItemHelper;
+import com.mohistmc.academy.capability.IFEnergyStorage;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.AcademyItems;
 import net.minecraft.core.BlockPos;
@@ -10,12 +12,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class SolarGenBlockEntity extends AcademyContainerBlockEntity {
+public class SolarGenBlockEntity extends AcademyContainerBlockEntity implements IFEnergyStorage {
     // 发电速率（IF/tick）
     private static final float STRONG_RATE = 3.0f;   // 晴天
     private static final float WEAK_RATE = 0.6f;     // 雨天
     // 内部存储上限
-    private static final float MAX_STORAGE = 1000.0f;
+    private static final int MAX_STORAGE = 1000;
 
     // 当前存储的能量（支持小数累积）
     private float storedEnergy = 0.0f;
@@ -69,13 +71,26 @@ public class SolarGenBlockEntity extends AcademyContainerBlockEntity {
         ItemStack stack = getItems().getFirst();
         if (stack.isEmpty() || !stack.is(AcademyItems.ENERGY_UNIT.get())) return 0;
 
-        int damage = stack.getDamageValue();
-        if (damage <= 0) return 0;
+        int energy = EnergyItemHelper.getEnergy(stack);
+        if (energy >= EnergyItemHelper.getEnergy(stack) && stack.getDamageValue() <= 0) return 0;
 
-        int recharge = Math.min(amount, damage);
-        stack.setDamageValue(damage - recharge);
-        setItems(getItems());
-        return recharge;
+        return EnergyItemHelper.receiveEnergy(stack, amount, false);
+    }
+
+    @Override
+    public int getEnergyStored() {
+        return (int) storedEnergy;
+    }
+
+    @Override
+    public int getMaxEnergyStored() {
+        return MAX_STORAGE;
+    }
+
+    @Override
+    public void setEnergy(int energy) {
+        this.storedEnergy = Math.min(MAX_STORAGE, Math.max(0, energy));
+        setChanged();
     }
 
     public float getStoredEnergy() {
@@ -94,14 +109,7 @@ public class SolarGenBlockEntity extends AcademyContainerBlockEntity {
             this.storedEnergy = tag.getFloat("storedEnergy");
         }
 
-        NonNullList<ItemStack> items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
-        CompoundTag contentItems = tag.getCompound("contentItems");
-        for (int i = 0; i < getContainerSize(); i++) {
-            if (contentItems.contains(String.valueOf(i))) {
-                items.set(i, ItemStack.parse(provider, contentItems.getCompound(String.valueOf(i))).orElse(ItemStack.EMPTY));
-            }
-        }
-        setItems(items);
+        deserializeEnergy(tag);
     }
 
     @Override
@@ -109,15 +117,7 @@ public class SolarGenBlockEntity extends AcademyContainerBlockEntity {
         super.saveAdditional(tag, provider);
 
         tag.putFloat("storedEnergy", storedEnergy);
-
-        CompoundTag contentItems = new CompoundTag();
-        NonNullList<ItemStack> items = getItems();
-        for (int i = 0; i < getContainerSize(); i++) {
-            if (!items.get(i).isEmpty()) {
-                contentItems.put(String.valueOf(i), items.get(i).save(provider));
-            }
-        }
-        tag.put("contentItems", contentItems);
+        serializeEnergy(tag);
     }
 
     public enum SolarStatus { STRONG, STOPPED, WEAK }

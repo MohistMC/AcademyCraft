@@ -38,7 +38,7 @@ public abstract class AcademyContainerBlockEntity extends BlockEntity {
         CompoundTag contentItems = tag.getCompound("contentItems");
         for (int i = 0; i < getContainerSize(); i++) {
             if (contentItems.contains(String.valueOf(i))) {
-                items.set(i, ItemStack.parse(provider, contentItems.getCompound("SaddleItem")).orElse(ItemStack.EMPTY));
+                items.set(i, ItemStack.parse(provider, contentItems.getCompound(String.valueOf(i))).orElse(ItemStack.EMPTY));
             }
         }
         return items;
@@ -47,10 +47,12 @@ public abstract class AcademyContainerBlockEntity extends BlockEntity {
     public void serializeContentItems(CompoundTag tag, HolderLookup.Provider provider) {
         CompoundTag contentItems = new CompoundTag();
         if (items.isEmpty()) {
-            items =NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
+            items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
         }
         for (int i = 0; i < getContainerSize(); i++) {
-            // contentItems.put(String.valueOf(i), items.get(i).serializeNBT()); TODO
+            if (!items.get(i).isEmpty()) {
+                contentItems.put(String.valueOf(i), items.get(i).save(provider));
+            }
         }
         tag.put("contentItems", contentItems);
     }
@@ -76,7 +78,7 @@ public abstract class AcademyContainerBlockEntity extends BlockEntity {
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider p_329179_) {
         CompoundTag tag = new CompoundTag();
-        //serializeContentItems(tag); TODO
+        serializeContentItems(tag, p_329179_);
         return tag;
     }
 

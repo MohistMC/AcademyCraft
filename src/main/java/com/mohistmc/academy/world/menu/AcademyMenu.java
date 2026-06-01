@@ -63,6 +63,38 @@ public abstract class AcademyMenu extends AbstractContainerMenu {
         super.slotsChanged(p_38868_);
     }
 
+    /**
+     * 获取机器槽位数量（玩家背包之前的槽位）
+     */
+    protected int getMachineSlotCount() {
+        return container.getContainerSize();
+    }
+
+    @Override
+    public ItemStack quickMoveStack(Player p_38941_, int p_38942_) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.slots.get(p_38942_);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
+            itemstack = itemstack1.copy();
+            int machineSlots = getMachineSlotCount();
+            if (p_38942_ < machineSlots) {
+                if (!this.moveItemStackTo(itemstack1, machineSlots, this.slots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.moveItemStackTo(itemstack1, 0, machineSlots, false)) {
+                return ItemStack.EMPTY;
+            }
+
+            if (itemstack1.isEmpty()) {
+                slot.setByPlayer(ItemStack.EMPTY);
+            } else {
+                slot.setChanged();
+            }
+        }
+        return itemstack;
+    }
+
     public static class AcademyMenuContainer implements Container, StackedContentsCompatible {
 
         private final AcademyMenu menu;
@@ -91,7 +123,6 @@ public abstract class AcademyMenu extends AbstractContainerMenu {
         @Override
         public ItemStack removeItem(int p_18942_, int p_18943_) {
             ItemStack stack = getItem(p_18942_);
-            // System.out.println("移除物品: " + p_18942_);
             items.set(p_18942_, ItemStack.EMPTY);
             saveItems();
             return stack;
@@ -103,7 +134,6 @@ public abstract class AcademyMenu extends AbstractContainerMenu {
                 blockEntity.setItems(items);
             }
         }
-
 
         public void reloadItems() {
             AcademyContainerBlockEntity blockEntity = getBlockEntity(this.menu);
@@ -167,28 +197,5 @@ public abstract class AcademyMenu extends AbstractContainerMenu {
         }
     }
 
-    @Override
-    public ItemStack quickMoveStack(Player p_38941_, int p_38942_) {
-        ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(p_38942_);
-        if (slot != null && slot.hasItem()) {
-            ItemStack itemstack1 = slot.getItem();
-            itemstack = itemstack1.copy();
-            if (p_38942_ < 1) {
-                if (!this.moveItemStackTo(itemstack1, 1, this.slots.size(), true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!this.moveItemStackTo(itemstack1, 0, 1, false)) {
-                return ItemStack.EMPTY;
-            }
-
-            if (itemstack1.isEmpty()) {
-                slot.setByPlayer(ItemStack.EMPTY);
-            } else {
-                slot.setChanged();
-            }
-        }
-        return itemstack;
-    }
 
 }

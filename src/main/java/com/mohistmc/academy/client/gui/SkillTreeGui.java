@@ -21,10 +21,10 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 /**
  * @author Mgazul
- * @date 2026/5/30 20:55
+ * @date 2026/6/2 04:47
  */
 @OnlyIn(Dist.CLIENT)
-public class DevNormalGui extends Screen {
+public class SkillTreeGui extends Screen {
 
     private static final int MIN_GUI_WIDTH = 320;
     private static final int MIN_GUI_HEIGHT = 200;
@@ -79,12 +79,12 @@ public class DevNormalGui extends Screen {
     private final List<SkillNode> skillNodes = new ArrayList<>();
     private SkillNode hoveredNode = null;
 
-    public DevNormalGui() {
+    public SkillTreeGui() {
         super(Component.translatable("block.academy.dev_normal"));
         this.fromTerminal = false;
     }
 
-    public DevNormalGui(boolean fromTerminal) {
+    public SkillTreeGui(boolean fromTerminal) {
         super(Component.translatable("block.academy.dev_normal"));
         this.fromTerminal = fromTerminal;
     }

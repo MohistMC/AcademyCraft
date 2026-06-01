@@ -1,7 +1,7 @@
 package com.mohistmc.academy.network;
 
 import com.mohistmc.academy.AcademyCraft;
-import com.mohistmc.academy.client.gui.DevNormalGui;
+import com.mohistmc.academy.client.gui.SkillTreeGui;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.codec.StreamCodec;
@@ -31,7 +31,7 @@ public record OpenDevGuiPacket() implements CustomPacketPayload {
     public static void handle(OpenDevGuiPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (context.player().level().isClientSide()) {
-                Minecraft.getInstance().setScreen(new DevNormalGui());
+                Minecraft.getInstance().setScreen(new SkillTreeGui());
             }
         });
     }

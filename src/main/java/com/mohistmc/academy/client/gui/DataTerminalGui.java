@@ -64,7 +64,7 @@ public class DataTerminalGui extends Screen {
     private static void bindBuiltinRoutes() {
         if (routesBound) return;
         routesBound = true;
-        AppRegistry.bindOpenAction(AppRegistry.SKILL_TREE, mc -> mc.setScreen(new DevNormalGui(true)));
+        AppRegistry.bindOpenAction(AppRegistry.SKILL_TREE, mc -> mc.setScreen(new SkillTreeGui(true)));
         AppRegistry.bindOpenAction(AppRegistry.SETTINGS, mc -> mc.setScreen(new SettingsAppGui()));
         AppRegistry.bindOpenAction(AppRegistry.TUTORIAL, mc -> mc.setScreen(new TutorialAppGui(true)));
         AppRegistry.bindOpenAction(AppRegistry.MEDIA_PLAYER, mc -> mc.setScreen(new MediaPlayerAppGui()));

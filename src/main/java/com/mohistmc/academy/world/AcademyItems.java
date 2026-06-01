@@ -161,12 +161,12 @@ public class AcademyItems {
                 ).forEach(item -> {
                     if (item.get() == ENERGY_UNIT.get()) {
                         ItemStack empty_energy_unit = ENERGY_UNIT.get().getDefaultInstance();
-                        empty_energy_unit.setDamageValue(EnergyUnit.maxEnergy);
+                        empty_energy_unit.setDamageValue(EnergyUnit.MAX_ENERGY);
                         output.accept(empty_energy_unit);
                     }
                     if (item.get() == DEVELOPER_PORTABLE.get()) {
                         ItemStack empty_developer_portable = DEVELOPER_PORTABLE.get().getDefaultInstance();
-                        empty_developer_portable.setDamageValue(DeveloperPortable.maxEnergy);
+                        empty_developer_portable.setDamageValue(DeveloperPortable.MAX_ENERGY);
                         output.accept(empty_developer_portable);
                     }
                     output.accept(item.get());
