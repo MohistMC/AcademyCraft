@@ -5,9 +5,9 @@ package com.mohistmc.academy.world.block;
  * @date 2026/6/2 05:22
  */
 public enum DevMachineType {
-    PORTABLE(2, 80, "便携"),
-    NORMAL(3, 100, "基础"),
-    ADVANCED(Integer.MAX_VALUE, 120, "高级");
+    PORTABLE(2, 30, "便携"),
+    NORMAL(3, 60, "基础"),
+    ADVANCED(Integer.MAX_VALUE, 100, "高级");
 
     public final int maxLevel;
     public final int syncRate;

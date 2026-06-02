@@ -1,5 +1,6 @@
 package com.mohistmc.academy.world.block;
 
+import com.mohistmc.academy.capability.IFEnergyStorage;
 import com.mohistmc.academy.network.LearnSkillPacket;
 import com.mohistmc.academy.network.OpenDevGuiPacket;
 import net.minecraft.core.BlockPos;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
@@ -56,7 +58,14 @@ public abstract class DevMachineBase extends BaseEntityBlock implements IDevMach
         if (player instanceof ServerPlayer serverPlayer) {
             LearnSkillPacket.syncToClient(serverPlayer);
             DevMachineType devType = this instanceof DevAdvanced ? DevMachineType.ADVANCED : DevMachineType.NORMAL;
-            PacketDistributor.sendToPlayer(serverPlayer, new OpenDevGuiPacket(devType.ordinal()));
+            int energy = 0;
+            int maxEnergy = 0;
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be instanceof IFEnergyStorage storage) {
+                energy = storage.getEnergyStored();
+                maxEnergy = storage.getMaxEnergyStored();
+            }
+            PacketDistributor.sendToPlayer(serverPlayer, new OpenDevGuiPacket(devType.ordinal(), energy, maxEnergy));
         }
         return InteractionResult.CONSUME;
     }

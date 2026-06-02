@@ -28,7 +28,8 @@ public class DeveloperPortable extends AcademyItem {
         ItemStack stack = player.getItemInHand(hand);
         if (player instanceof ServerPlayer serverPlayer) {
             LearnSkillPacket.syncToClient(serverPlayer);
-            PacketDistributor.sendToPlayer(serverPlayer, OpenDevGuiPacket.PORTABLE);
+            int energy = EnergyItemHelper.getEnergy(stack);
+            PacketDistributor.sendToPlayer(serverPlayer, new OpenDevGuiPacket(0, energy, MAX_ENERGY));
         }
         return InteractionResultHolder.consume(stack);
     }

@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class DevNormalBlockEntity extends BlockEntity implements IFEnergyStorage {
     public static final int MAX_ENERGY = 5000;
-    private int energy = MAX_ENERGY;
+    private int energy = 0;
 
     public DevNormalBlockEntity(BlockPos pos, BlockState state) {
         super(AcademyBlockEntities.DEV_NORMAL.get(), pos, state);

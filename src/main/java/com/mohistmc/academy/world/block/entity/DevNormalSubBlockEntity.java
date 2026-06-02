@@ -9,7 +9,4 @@ public class DevNormalSubBlockEntity extends BlockEntity {
     public DevNormalSubBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
         super(AcademyBlockEntities.DEV_NORMAL_SUB.get(), p_155229_, p_155230_);
     }
-
-
-
 }
