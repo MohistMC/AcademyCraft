@@ -1,15 +1,14 @@
 package com.mohistmc.academy.client.gui;
 
 import com.mohistmc.academy.AcademyCraft;
-import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 
 public class TutorialMdParser {
 
@@ -31,9 +30,8 @@ public class TutorialMdParser {
     }
 
     private static String readResource(ResourceLocation loc) throws IOException {
-        var optional = Minecraft.getInstance().getResourceManager().getResource(loc);
-        if (optional.isEmpty()) throw new IOException("Resource not found: " + loc);
-        var resource = optional.get();
+        var resource = Minecraft.getInstance().getResourceManager().getResource(loc)
+                .orElseThrow(() -> new IOException("Resource not found: " + loc));
         try (var reader = new BufferedReader(new InputStreamReader(resource.open(), StandardCharsets.UTF_8))) {
             StringBuilder sb = new StringBuilder();
             String line;
@@ -50,32 +48,39 @@ public class TutorialMdParser {
         StringBuilder brief = new StringBuilder();
         List<TutorialLine> contentLines = new ArrayList<>();
 
-        String section = "";
+        Section section = Section.NONE;
         for (String rawLine : lines) {
             String line = rawLine.trim();
+
             if (line.startsWith("![title]")) {
-                section = "title";
+                section = Section.TITLE;
                 continue;
             } else if (line.startsWith("![brief]")) {
-                section = "brief";
+                section = Section.BRIEF;
                 continue;
             } else if (line.startsWith("![content]")) {
-                section = "content";
+                section = Section.CONTENT;
                 continue;
             }
 
-            if (section.equals("title") && !line.isEmpty()) {
-                title = line;
-                section = "";
-            } else if (section.equals("brief")) {
-                if (line.isEmpty()) {
-                    section = "";
-                } else {
-                    if (!brief.isEmpty()) brief.append(" ");
-                    brief.append(line);
+            switch (section) {
+                case TITLE -> {
+                    if (!line.isEmpty()) {
+                        title = line;
+                        section = Section.NONE;
+                    }
                 }
-            } else if (section.equals("content")) {
-                contentLines.add(parseLine(line));
+                case BRIEF -> {
+                    if (line.isEmpty()) {
+                        section = Section.NONE;
+                    } else {
+                        if (!brief.isEmpty()) brief.append(" ");
+                        brief.append(line);
+                    }
+                }
+                case CONTENT -> contentLines.add(parseLine(line));
+                default -> {
+                }
             }
         }
 
@@ -94,7 +99,7 @@ public class TutorialMdParser {
             if (closeBracket > 0 && openParen > closeBracket && closeParen > openParen) {
                 String alt = line.substring(2, closeBracket);
                 String path = line.substring(openParen + 1, closeParen);
-                ResourceLocation loc = null;
+                ResourceLocation loc;
                 if (path.contains(":")) {
                     String[] parts = path.split(":", 2);
                     loc = ResourceLocation.fromNamespaceAndPath(parts[0], parts[1]);
@@ -123,6 +128,14 @@ public class TutorialMdParser {
 
         result = result.replace("![misakaname]", "{@MISAKANAME@}");
 
+        result = processBold(result);
+        result = processKeyTags(result);
+
+        return result;
+    }
+
+    private static String processBold(String text) {
+        String result = text;
         while (true) {
             int start = result.indexOf("__");
             if (start == -1) break;
@@ -131,7 +144,11 @@ public class TutorialMdParser {
             String bold = result.substring(start + 2, end);
             result = result.substring(0, start) + "§l" + bold + "§r" + result.substring(end + 2);
         }
+        return result;
+    }
 
+    private static String processKeyTags(String text) {
+        String result = text;
         while (true) {
             int start = result.indexOf("![key");
             if (start == -1) break;
@@ -149,6 +166,10 @@ public class TutorialMdParser {
             result = result.substring(0, start) + "[§b" + keyName + "§r]" + result.substring(end + 1);
         }
         return result;
+    }
+
+    private enum Section {
+        NONE, TITLE, BRIEF, CONTENT
     }
 
     public record TutorialData(String id, String title, String brief, List<TutorialLine> contentLines) {}

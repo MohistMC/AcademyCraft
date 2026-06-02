@@ -9,18 +9,13 @@ import com.mohistmc.academy.client.block.entity.render.WindGenFanRender;
 import com.mohistmc.academy.client.entity.CoinRenderer;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.AcademyEntities;
-import com.mohistmc.academy.world.AcademyItems;
 import com.mohistmc.academy.world.block.IDevMachine;
 import com.mojang.logging.LogUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RenderHighlightEvent;
@@ -64,7 +59,7 @@ public class ClientListener {
         var level = event.getCamera().getEntity().level();
         BlockState state = level.getBlockState(hitResult.getBlockPos());
         if (state.getBlock() instanceof IDevMachine) {
-           event.setCanceled(true);
+          // event.setCanceled(true);
         }
     }
 }

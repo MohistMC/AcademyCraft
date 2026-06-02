@@ -7,37 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class SettingsAppGui extends Screen {
+public class SettingsAppGui extends AcademyScreen {
 
     private static final int GUI_WIDTH = 280;
     private static final int GUI_HEIGHT = 200;
     private static final int TOP_BAR = 28;
     private static final int ROW_HEIGHT = 20;
-    private static final int BACK_BTN_SIZE = 18;
 
-    private static final int COLOR_BG = 0xE0080818;
-    private static final int COLOR_TOP_BAR = 0xFF0a1628;
-    private static final int COLOR_ACCENT = 0xFF00bcd4;
-    private static final int COLOR_ROW_EVEN = 0xFF101828;
-    private static final int COLOR_ROW_ODD = 0xFF141e30;
-    private static final int COLOR_TEXT_WHITE = 0xFFFFFFFF;
-    private static final int COLOR_TEXT_CYAN = 0xFF00e5ff;
-    private static final int COLOR_TEXT_GRAY = 0xFF888899;
-    private static final int COLOR_TEXT_GREEN = 0xFF2ecc71;
-    private static final int COLOR_TEXT_RED = 0xFFe74c3c;
-    private static final int COLOR_SEPARATOR = 0xFF004d5a;
-    private static final int COLOR_HOVER = 0x2200bcd4;
-    private static final int COLOR_BACK_BG = 0xFF162040;
-    private static final int COLOR_BACK_HOVER = 0xFF00bcd4;
-
-    private int guiLeft;
-    private int guiTop;
     private int scrollOffset = 0;
     private int hoveredRow = -1;
     private boolean hoveredBack = false;
@@ -51,15 +32,13 @@ public class SettingsAppGui extends Screen {
     @Override
     protected void init() {
         super.init();
-        this.guiLeft = (this.width - GUI_WIDTH) / 2;
-        this.guiTop = (this.height - GUI_HEIGHT) / 2;
+        centerGui(GUI_WIDTH, GUI_HEIGHT);
         buildRows();
     }
 
     private void buildRows() {
         rows.clear();
         rows.add(new SettingRow("快捷键设置", "", RowType.HEADER));
-
         rows.add(new SettingRow("技能槽界面",
                 KeyInputHandler.OPEN_SKILL_SLOT.getTranslatedKeyMessage().getString(), RowType.INFO));
         rows.add(new SettingRow("激活/关闭能力",
@@ -95,29 +74,19 @@ public class SettingsAppGui extends Screen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         super.render(graphics, mouseX, mouseY, partialTick);
+        pushZ(graphics);
 
-        graphics.pose().pushPose();
-        graphics.pose().translate(0, 0, 300);
-
-        graphics.fill(guiLeft, guiTop, guiLeft + GUI_WIDTH, guiTop + GUI_HEIGHT, COLOR_BG);
-        graphics.fill(guiLeft, guiTop, guiLeft + GUI_WIDTH, guiTop + TOP_BAR, COLOR_TOP_BAR);
-        graphics.fill(guiLeft, guiTop + TOP_BAR, guiLeft + GUI_WIDTH, guiTop + TOP_BAR + 1, COLOR_ACCENT);
+        drawBackground(graphics, AcademyColors.BG);
+        graphics.fill(guiLeft, guiTop, guiLeft + GUI_WIDTH, guiTop + TOP_BAR, AcademyColors.BG_PANEL);
+        graphics.fill(guiLeft, guiTop + TOP_BAR, guiLeft + GUI_WIDTH, guiTop + TOP_BAR + 1, AcademyColors.ACCENT);
 
         int backX = guiLeft + 6;
         int backY = guiTop + 5;
-        hoveredBack = mouseX >= backX && mouseX < backX + BACK_BTN_SIZE
-                && mouseY >= backY && mouseY < backY + BACK_BTN_SIZE;
-
-        graphics.fill(backX, backY, backX + BACK_BTN_SIZE, backY + BACK_BTN_SIZE,
-                hoveredBack ? COLOR_BACK_HOVER : COLOR_BACK_BG);
-        drawBorder(graphics, backX, backY, BACK_BTN_SIZE, BACK_BTN_SIZE, COLOR_ACCENT);
-        String arrow = "<-";
-        int aw = this.font.width(arrow);
-        graphics.drawString(this.font, arrow, backX + (BACK_BTN_SIZE - aw) / 2, backY + 5, COLOR_TEXT_WHITE);
+        hoveredBack = drawBackButton(graphics, backX, backY, mouseX, mouseY);
 
         String title = Component.translatable("item.academy.app_settings").getString();
-        int titleX = backX + BACK_BTN_SIZE + 6;
-        graphics.drawString(this.font, title, titleX, guiTop + 9, COLOR_TEXT_CYAN);
+        int titleX = backX + 18 + 6;
+        graphics.drawString(this.font, title, titleX, guiTop + 9, AcademyColors.TEXT_ACCENT);
 
         graphics.enableScissor(guiLeft, guiTop + TOP_BAR + 1, guiLeft + GUI_WIDTH, guiTop + GUI_HEIGHT);
         graphics.pose().pushPose();
@@ -132,46 +101,37 @@ public class SettingsAppGui extends Screen {
             int rowY = y + i * ROW_HEIGHT;
 
             if (row.type == RowType.SEPARATOR) {
-                graphics.fill(guiLeft + 8, rowY + ROW_HEIGHT / 2, guiLeft + GUI_WIDTH - 8, rowY + ROW_HEIGHT / 2 + 1, COLOR_SEPARATOR);
+                graphics.fill(guiLeft + 8, rowY + ROW_HEIGHT / 2, guiLeft + GUI_WIDTH - 8, rowY + ROW_HEIGHT / 2 + 1, AcademyColors.SEPARATOR);
                 continue;
             }
 
             if (row.type != RowType.HEADER) {
-                int bgColor = (i % 2 == 0) ? COLOR_ROW_EVEN : COLOR_ROW_ODD;
+                int bgColor = (i % 2 == 0) ? AcademyColors.BG_CARD : AcademyColors.BG_CARD_ALT;
                 graphics.fill(guiLeft + 2, rowY, guiLeft + GUI_WIDTH - 2, rowY + ROW_HEIGHT, bgColor);
             }
 
-            boolean isHovered = mouseX >= guiLeft + 2 && mouseX < guiLeft + GUI_WIDTH - 2
-                    && adjustedMouseY >= rowY && adjustedMouseY < rowY + ROW_HEIGHT;
+            boolean isHovered = isHovered(guiLeft + 2, rowY, GUI_WIDTH - 4, ROW_HEIGHT, mouseX, adjustedMouseY);
             if (isHovered && row.type != RowType.HEADER) hoveredRow = i;
 
             if (isHovered && row.type != RowType.HEADER) {
-                graphics.fill(guiLeft + 2, rowY, guiLeft + GUI_WIDTH - 2, rowY + ROW_HEIGHT, COLOR_HOVER);
+                graphics.fill(guiLeft + 2, rowY, guiLeft + GUI_WIDTH - 2, rowY + ROW_HEIGHT, AcademyColors.HOVER);
             }
 
             if (row.type == RowType.HEADER) {
-                graphics.drawString(this.font, row.label, guiLeft + 8, rowY + 6, COLOR_TEXT_CYAN);
+                graphics.drawString(this.font, row.label, guiLeft + 8, rowY + 6, AcademyColors.TEXT_ACCENT);
             } else {
-                graphics.drawString(this.font, row.label, guiLeft + 10, rowY + 6, COLOR_TEXT_WHITE);
+                graphics.drawString(this.font, row.label, guiLeft + 10, rowY + 6, AcademyColors.TEXT);
                 int valW = this.font.width(row.value);
                 int valColor = row.type == RowType.STATUS
-                        ? (row.value.contains("已激活") ? COLOR_TEXT_GREEN : COLOR_TEXT_RED)
-                        : COLOR_TEXT_GRAY;
+                        ? (row.value.contains("已激活") ? AcademyColors.SUCCESS : AcademyColors.ERROR)
+                        : AcademyColors.TEXT_SECONDARY;
                 graphics.drawString(this.font, row.value, guiLeft + GUI_WIDTH - valW - 10, rowY + 6, valColor);
             }
         }
 
         graphics.pose().popPose();
         graphics.disableScissor();
-
-        graphics.pose().popPose();
-    }
-
-    private void drawBorder(GuiGraphics graphics, int x, int y, int w, int h, int color) {
-        graphics.fill(x, y, x + w, y + 1, color);
-        graphics.fill(x, y + h - 1, x + w, y + h, color);
-        graphics.fill(x, y, x + 1, y + h, color);
-        graphics.fill(x + w - 1, y, x + w, y + h, color);
+        popZ(graphics);
     }
 
     @Override
@@ -192,13 +152,7 @@ public class SettingsAppGui extends Screen {
         return true;
     }
 
-    @Override
-    public boolean isPauseScreen() {
-        return false;
-    }
-
     private enum RowType { HEADER, INFO, STATUS, SEPARATOR }
 
-    private record SettingRow(String label, String value, RowType type) {
-    }
+    private record SettingRow(String label, String value, RowType type) {}
 }

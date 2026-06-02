@@ -11,12 +11,10 @@ import com.mohistmc.academy.skill.SkillType;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
@@ -24,7 +22,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 @OnlyIn(Dist.CLIENT)
-public class SkillSlotGui extends Screen {
+public class SkillSlotGui extends AcademyScreen {
 
     private static final int GUI_WIDTH = 280;
     private static final int GUI_HEIGHT = 180;
@@ -37,27 +35,13 @@ public class SkillSlotGui extends Screen {
     private static final int DROPDOWN_WIDTH = 24;
     private static final int DROPDOWN_PADDING = 2;
 
-    private static final int COLOR_BG = 0xCC101020;
-    private static final int COLOR_SLOT_BG = 0xFF2c3e50;
-    private static final int COLOR_SLOT_BORDER = 0xFF34495e;
     private static final int COLOR_SLOT_ACTIVE = 0xFF3498db;
-    private static final int COLOR_SLOT_HOVER = 0x44FFFFFF;
-    private static final int COLOR_TAB_BG = 0xFF34495e;
-    private static final int COLOR_TAB_ACTIVE = 0xFF2ecc71;
-    private static final int COLOR_TEXT_WHITE = 0xFFFFFFFF;
-    private static final int COLOR_TEXT_GRAY = 0xFF999999;
-    private static final int COLOR_TEXT_GREEN = 0xFF2ecc71;
     private static final int COLOR_DROPDOWN_BG = 0xEE1a1a2e;
-    private static final int COLOR_DROPDOWN_BORDER = 0xFF3498db;
-    private static final int COLOR_DROPDOWN_HOVER = 0xFF34495e;
     private static final int COLOR_DROPDOWN_CLEAR = 0xFFe74c3c;
 
-    private int guiLeft;
-    private int guiTop;
     private int viewPreset;
     private int hoveredSlot = -1;
     private int hoveredTab = -1;
-
     private int dropdownSlot = -1;
     private int dropdownX;
     private int dropdownY;
@@ -71,8 +55,7 @@ public class SkillSlotGui extends Screen {
     @Override
     protected void init() {
         super.init();
-        this.guiLeft = (this.width - GUI_WIDTH) / 2;
-        this.guiTop = (this.height - GUI_HEIGHT) / 2;
+        centerGui(GUI_WIDTH, GUI_HEIGHT);
         this.dropdownSlot = -1;
 
         Minecraft mc = Minecraft.getInstance();
@@ -86,10 +69,9 @@ public class SkillSlotGui extends Screen {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         super.render(graphics, mouseX, mouseY, partialTick);
 
-        graphics.pose().pushPose();
-        graphics.pose().translate(0, 0, 300);
+        pushZ(graphics);
 
-        graphics.fill(guiLeft, guiTop, guiLeft + GUI_WIDTH, guiTop + GUI_HEIGHT, COLOR_BG);
+        drawBackground(graphics, AcademyColors.BG);
 
         hoveredSlot = -1;
         hoveredTab = -1;
@@ -111,7 +93,7 @@ public class SkillSlotGui extends Screen {
             drawDropdownTooltip(graphics, mouseX, mouseY);
         }
 
-        graphics.pose().popPose();
+        popZ(graphics);
     }
 
     private void drawTabs(GuiGraphics graphics, int mouseX, int mouseY) {
@@ -121,18 +103,17 @@ public class SkillSlotGui extends Screen {
 
         for (int i = 0; i < PlayerAbilityData.PRESET_COUNT; i++) {
             int tabX = tabStartX + i * (TAB_WIDTH + TAB_GAP);
-            boolean isHovered = mouseX >= tabX && mouseX < tabX + TAB_WIDTH
-                    && mouseY >= tabY && mouseY < tabY + TAB_HEIGHT;
+            boolean isHovered = isHovered(tabX, tabY, TAB_WIDTH, TAB_HEIGHT, mouseX, mouseY);
             if (isHovered) hoveredTab = i;
 
             boolean isActive = (i == viewPreset);
-            int bgColor = isActive ? COLOR_TAB_ACTIVE : COLOR_TAB_BG;
+            int bgColor = isActive ? AcademyColors.SUCCESS : AcademyColors.BORDER;
             if (isHovered && !isActive) bgColor = 0xFF4a6a7e;
 
             graphics.fill(tabX, tabY, tabX + TAB_WIDTH, tabY + TAB_HEIGHT, bgColor);
             String text = "预设 " + (i + 1);
             int tw = this.font.width(text);
-            graphics.drawString(this.font, text, tabX + (TAB_WIDTH - tw) / 2, tabY + 5, COLOR_TEXT_WHITE);
+            graphics.drawString(this.font, text, tabX + (TAB_WIDTH - tw) / 2, tabY + 5, AcademyColors.TEXT);
         }
     }
 
@@ -150,21 +131,17 @@ public class SkillSlotGui extends Screen {
 
         for (int i = 0; i < SkillPreset.SLOT_COUNT; i++) {
             int slotX = startX + i * (SLOT_SIZE + SLOT_GAP);
-            boolean isHovered = mouseX >= slotX && mouseX < slotX + SLOT_SIZE
-                    && mouseY >= slotY && mouseY < slotY + SLOT_SIZE;
+            boolean isHovered = isHovered(slotX, slotY, SLOT_SIZE, SLOT_SIZE, mouseX, mouseY);
             if (isHovered && dropdownSlot < 0) hoveredSlot = i;
 
             boolean isOpen = (dropdownSlot == i);
-            graphics.fill(slotX, slotY, slotX + SLOT_SIZE, slotY + SLOT_SIZE, COLOR_SLOT_BG);
+            graphics.fill(slotX, slotY, slotX + SLOT_SIZE, slotY + SLOT_SIZE, AcademyColors.BG_PANEL);
 
-            int borderColor = isOpen ? COLOR_DROPDOWN_BORDER : (isHovered ? COLOR_SLOT_ACTIVE : COLOR_SLOT_BORDER);
-            graphics.fill(slotX, slotY, slotX + SLOT_SIZE, slotY + 1, borderColor);
-            graphics.fill(slotX, slotY + SLOT_SIZE - 1, slotX + SLOT_SIZE, slotY + SLOT_SIZE, borderColor);
-            graphics.fill(slotX, slotY, slotX + 1, slotY + SLOT_SIZE, borderColor);
-            graphics.fill(slotX + SLOT_SIZE - 1, slotY, slotX + SLOT_SIZE, slotY + SLOT_SIZE, borderColor);
+            int borderColor = isOpen ? AcademyColors.BORDER_ACTIVE : (isHovered ? COLOR_SLOT_ACTIVE : AcademyColors.BORDER);
+            drawBorder(graphics, slotX, slotY, SLOT_SIZE, SLOT_SIZE, borderColor);
 
             if (isHovered && !isOpen) {
-                graphics.fill(slotX + 1, slotY + 1, slotX + SLOT_SIZE - 1, slotY + SLOT_SIZE - 1, COLOR_SLOT_HOVER);
+                graphics.fill(slotX + 1, slotY + 1, slotX + SLOT_SIZE - 1, slotY + SLOT_SIZE - 1, AcademyColors.HOVER);
             }
 
             String skillId = preset.getSlot(i);
@@ -179,21 +156,21 @@ public class SkillSlotGui extends Screen {
 
                     float prof = data.getProficiency(skillId);
                     int profBarW = (int) ((SLOT_SIZE - 8) * prof);
-                    graphics.fill(slotX + 4, slotY + SLOT_SIZE - 2, slotX + 4 + profBarW, slotY + SLOT_SIZE - 1, COLOR_TEXT_GREEN);
+                    graphics.fill(slotX + 4, slotY + SLOT_SIZE - 2, slotX + 4 + profBarW, slotY + SLOT_SIZE - 1, AcademyColors.SUCCESS);
                 }
             }
 
             String keyLabel = i < keys.length ? keys[i].getTranslatedKeyMessage().getString() : "?";
             String display = "§7[" + keyLabel + "]";
             int kw = this.font.width(display);
-            graphics.drawString(this.font, display, slotX + (SLOT_SIZE - kw) / 2, slotY + SLOT_SIZE + 4, COLOR_TEXT_GRAY);
+            graphics.drawString(this.font, display, slotX + (SLOT_SIZE - kw) / 2, slotY + SLOT_SIZE + 4, AcademyColors.TEXT_SECONDARY);
         }
     }
 
     private void drawDropdown(GuiGraphics graphics, int mouseX, int mouseY) {
         int totalHeight = dropdownEntries.size() * DROPDOWN_ITEM_HEIGHT + DROPDOWN_PADDING * 2;
 
-        graphics.fill(dropdownX - 1, dropdownY - 1, dropdownX + DROPDOWN_WIDTH + 1, dropdownY + totalHeight + 1, COLOR_DROPDOWN_BORDER);
+        graphics.fill(dropdownX - 1, dropdownY - 1, dropdownX + DROPDOWN_WIDTH + 1, dropdownY + totalHeight + 1, AcademyColors.BORDER_ACTIVE);
         graphics.fill(dropdownX, dropdownY, dropdownX + DROPDOWN_WIDTH, dropdownY + totalHeight, COLOR_DROPDOWN_BG);
 
         int itemY = dropdownY + DROPDOWN_PADDING;
@@ -201,16 +178,15 @@ public class SkillSlotGui extends Screen {
             DropdownEntry entry = dropdownEntries.get(i);
             int ix = dropdownX + DROPDOWN_PADDING;
             int iy = itemY + i * DROPDOWN_ITEM_HEIGHT;
-            boolean isHovered = mouseX >= ix && mouseX < ix + DROPDOWN_WIDTH - DROPDOWN_PADDING * 2
-                    && mouseY >= iy && mouseY < iy + DROPDOWN_ITEM_HEIGHT;
+            boolean isHovered = isHovered(ix, iy, DROPDOWN_WIDTH - DROPDOWN_PADDING * 2, DROPDOWN_ITEM_HEIGHT, mouseX, mouseY);
             if (isHovered) hoveredDropdownItem = i;
 
             if (isHovered) {
-                graphics.fill(ix, iy, ix + DROPDOWN_WIDTH - DROPDOWN_PADDING * 2, iy + DROPDOWN_ITEM_HEIGHT, COLOR_DROPDOWN_HOVER);
+                graphics.fill(ix, iy, ix + DROPDOWN_WIDTH - DROPDOWN_PADDING * 2, iy + DROPDOWN_ITEM_HEIGHT, AcademyColors.HOVER_BG);
             }
 
-            if (entry.icon != null) {
-                graphics.blit(entry.icon, ix + 2, iy + 1, 0, 0, 16, 16, 16, 16);
+            if (entry.icon() != null) {
+                graphics.blit(entry.icon(), ix + 2, iy + 1, 0, 0, 16, 16, 16, 16);
             } else {
                 String label = "§c清空";
                 int textWidth = this.font.width(label);
@@ -224,7 +200,7 @@ public class SkillSlotGui extends Screen {
     private void drawHint(GuiGraphics graphics) {
         String hint = "左键: 选择技能  右键: 清除";
         int tw = this.font.width(hint);
-        graphics.drawString(this.font, hint, guiLeft + (GUI_WIDTH - tw) / 2, guiTop + GUI_HEIGHT - 16, COLOR_TEXT_GRAY);
+        graphics.drawString(this.font, hint, guiLeft + (GUI_WIDTH - tw) / 2, guiTop + GUI_HEIGHT - 16, AcademyColors.TEXT_SECONDARY);
     }
 
     private void drawSlotTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
@@ -256,7 +232,7 @@ public class SkillSlotGui extends Screen {
 
         graphics.pose().pushPose();
         graphics.pose().translate(0, 0, 400);
-        graphics.renderTooltip(this.font, tooltip, Optional.empty(), mouseX, mouseY);
+        graphics.renderTooltip(this.font, tooltip, java.util.Optional.empty(), mouseX, mouseY);
         graphics.pose().popPose();
     }
 
@@ -265,9 +241,9 @@ public class SkillSlotGui extends Screen {
         if (mc.player == null) return;
 
         DropdownEntry entry = dropdownEntries.get(hoveredDropdownItem);
-        if (entry.skillId == null) return;
+        if (entry.skillId() == null) return;
 
-        Skill skill = SkillRegistry.getSkill(entry.skillId);
+        Skill skill = SkillRegistry.getSkill(entry.skillId());
         if (skill == null) return;
 
         PlayerAbilityData data = mc.player.getData(AcademyAttachments.PLAYER_ABILITY);
@@ -277,12 +253,12 @@ public class SkillSlotGui extends Screen {
         if (skill.getBaseCpCost() > 0) {
             tooltip.add(Component.literal("§b计算力: " + (int) skill.getBaseCpCost() + "  §c过载: " + (int) skill.getBaseOverload()));
         }
-        float prof = data.getProficiency(entry.skillId);
+        float prof = data.getProficiency(entry.skillId());
         tooltip.add(Component.literal("§e熟练度: " + String.format("%.1f%%", prof * 100)));
 
         graphics.pose().pushPose();
         graphics.pose().translate(0, 0, 400);
-        graphics.renderTooltip(this.font, tooltip, Optional.empty(), mouseX, mouseY);
+        graphics.renderTooltip(this.font, tooltip, java.util.Optional.empty(), mouseX, mouseY);
         graphics.pose().popPose();
     }
 
@@ -294,15 +270,11 @@ public class SkillSlotGui extends Screen {
         if (dropdownSlot >= 0) {
             if (hoveredDropdownItem >= 0 && hoveredDropdownItem < dropdownEntries.size()) {
                 DropdownEntry entry = dropdownEntries.get(hoveredDropdownItem);
-                PlayerAbilityData data = mc.player.getData(AcademyAttachments.PLAYER_ABILITY);
-                if (entry.skillId == null) {
-                    data.clearSlot(viewPreset, dropdownSlot);
+                if (entry.skillId() == null) {
                     PacketDistributor.sendToServer(new SetSkillSlotPacket(viewPreset, dropdownSlot, ""));
                 } else {
-                    data.setSlot(viewPreset, dropdownSlot, entry.skillId);
-                    PacketDistributor.sendToServer(new SetSkillSlotPacket(viewPreset, dropdownSlot, entry.skillId));
+                    PacketDistributor.sendToServer(new SetSkillSlotPacket(viewPreset, dropdownSlot, entry.skillId()));
                 }
-                data.syncTo(mc.player);
             }
             dropdownSlot = -1;
             return true;
@@ -315,9 +287,6 @@ public class SkillSlotGui extends Screen {
 
         if (hoveredSlot >= 0) {
             if (button == 1) {
-                PlayerAbilityData data = mc.player.getData(AcademyAttachments.PLAYER_ABILITY);
-                data.clearSlot(viewPreset, hoveredSlot);
-                data.syncTo(mc.player);
                 PacketDistributor.sendToServer(new SetSkillSlotPacket(viewPreset, hoveredSlot, ""));
                 return true;
             }
@@ -369,7 +338,7 @@ public class SkillSlotGui extends Screen {
         dropdownX = startX + slotIndex * (SLOT_SIZE + SLOT_GAP) + SLOT_SIZE / 2 - DROPDOWN_WIDTH / 2;
         dropdownY = slotY + SLOT_SIZE + 14;
 
-        dropdownX = Math.max(guiLeft + 2, Math.min(dropdownX, guiLeft + GUI_WIDTH - DROPDOWN_WIDTH - 2));
+        dropdownX = Math.clamp(dropdownX, guiLeft + 2, guiLeft + GUI_WIDTH - DROPDOWN_WIDTH - 2);
         int totalDropdownHeight = dropdownEntries.size() * DROPDOWN_ITEM_HEIGHT + DROPDOWN_PADDING * 2;
         if (dropdownY + totalDropdownHeight > guiTop + GUI_HEIGHT) {
             dropdownY = slotY - totalDropdownHeight;
@@ -389,11 +358,6 @@ public class SkillSlotGui extends Screen {
             }
         }
         return result;
-    }
-
-    @Override
-    public boolean isPauseScreen() {
-        return false;
     }
 
     private record DropdownEntry(String skillId, String displayName, ResourceLocation icon) {

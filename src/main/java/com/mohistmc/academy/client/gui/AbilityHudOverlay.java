@@ -1,12 +1,12 @@
 package com.mohistmc.academy.client.gui;
 
+import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.client.KeyInputHandler;
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.Skill;
 import com.mohistmc.academy.skill.SkillPreset;
 import com.mohistmc.academy.skill.SkillRegistry;
-import com.mohistmc.academy.AcademyCraft;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;

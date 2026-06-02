@@ -1,13 +1,12 @@
 package com.mohistmc.academy.terminal;
 
 import com.mohistmc.academy.AcademyCraft;
-import net.minecraft.resources.ResourceLocation;
-import org.slf4j.Logger;
 import com.mojang.logging.LogUtils;
-
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.resources.ResourceLocation;
+import org.slf4j.Logger;
 
 /**
  * @author Mgazul

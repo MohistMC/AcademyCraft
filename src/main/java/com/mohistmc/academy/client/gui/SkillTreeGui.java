@@ -14,19 +14,15 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-/**
- * @author Mgazul
- * @date 2026/6/2 04:47
- */
 @OnlyIn(Dist.CLIENT)
-public class SkillTreeGui extends Screen {
+public class SkillTreeGui extends AcademyScreen {
 
     private static final int MIN_GUI_WIDTH = 320;
     private static final int MIN_GUI_HEIGHT = 200;
@@ -35,12 +31,9 @@ public class SkillTreeGui extends Screen {
     private static final int SKILL_HEIGHT = 18;
     private static final int SKILL_GAP = 4;
     private static final int LEVEL_HEADER_HEIGHT = 14;
-    private static final int BAR_HEIGHT = 8;
-    private static final int BACK_BTN_SIZE = 18;
     private static final int INFO_PANEL_WIDTH = 120;
 
-    private static final int COLOR_BG = 0xCC101020;
-    private static final int COLOR_TOP_BAR = 0xCC1a1a2e;
+    // 技能树业务颜色（保留）
     private static final int COLOR_LEARNED = 0xFF2ecc71;
     private static final int COLOR_LEARNED_BORDER = 0xFF27ae60;
     private static final int COLOR_AVAILABLE = 0xFF3498db;
@@ -50,23 +43,9 @@ public class SkillTreeGui extends Screen {
     private static final int COLOR_PASSIVE_LEARNED = 0xFFf39c12;
     private static final int COLOR_PASSIVE_BORDER = 0xFFe67e22;
     private static final int COLOR_PASSIVE_AVAILABLE = 0xFF9b59b6;
-    private static final int COLOR_TEXT_WHITE = 0xFFFFFFFF;
-    private static final int COLOR_TEXT_GRAY = 0xFF999999;
-    private static final int COLOR_CP_BAR = 0xFF2ecc71;
-    private static final int COLOR_CP_BG = 0xFF2c3e50;
-    private static final int COLOR_OVERLOAD_BAR = 0xFFe74c3c;
-    private static final int COLOR_OVERLOAD_BG = 0xFF2c3e50;
-    private static final int COLOR_HOVER = 0x44FFFFFF;
     private static final int COLOR_LINE = 0xFF666688;
     private static final int COLOR_SCROLL_BAR = 0x88FFFFFF;
-    private static final int COLOR_BACK_BG = 0xFF162040;
-    private static final int COLOR_BACK_HOVER = 0xFF00bcd4;
-    private static final int COLOR_BACK_BORDER = 0xFF00bcd4;
 
-    private int guiLeft;
-    private int guiTop;
-    private int guiWidth;
-    private int guiHeight;
     private int colWidth;
     private int skillWidth;
     private int treeAreaLeft;
@@ -82,37 +61,28 @@ public class SkillTreeGui extends Screen {
     private final DevMachineType devType;
     private final int energy;
     private final int maxEnergy;
+    private final BlockPos devPos;
 
     private final List<SkillNode> skillNodes = new ArrayList<>();
     private SkillNode hoveredNode = null;
 
-    public SkillTreeGui() {
-        this(false, false, null, 0, 0);
-    }
-
-    public SkillTreeGui(boolean fromTerminal) {
-        this(fromTerminal, false, null, 0, 0);
-    }
-
-    public SkillTreeGui(boolean fromTerminal, boolean readOnly) {
-        this(fromTerminal, readOnly, null, 0, 0);
-    }
-
+    public SkillTreeGui() { this(false, false, null, 0, 0, null); }
+    public SkillTreeGui(boolean fromTerminal) { this(fromTerminal, false, null, 0, 0, null); }
+    public SkillTreeGui(boolean fromTerminal, boolean readOnly) { this(fromTerminal, readOnly, null, 0, 0, null); }
     public SkillTreeGui(boolean fromTerminal, boolean readOnly, DevMachineType devType, int energy, int maxEnergy) {
+        this(fromTerminal, readOnly, devType, energy, maxEnergy, null);
+    }
+    public SkillTreeGui(boolean fromTerminal, boolean readOnly, DevMachineType devType, int energy, int maxEnergy, BlockPos devPos) {
         super(Component.translatable("block.academy.dev_normal"));
         this.fromTerminal = fromTerminal;
         this.readOnly = readOnly || devType == null;
         this.devType = devType;
         this.energy = energy;
         this.maxEnergy = maxEnergy;
+        this.devPos = devPos;
     }
 
-    @Override
-    protected void init() {
-        super.init();
-        recalcLayout();
-        buildSkillNodes();
-    }
+    @Override protected void init() { super.init(); recalcLayout(); buildSkillNodes(); }
 
     @Override
     public void resize(Minecraft minecraft, int width, int height) {
@@ -123,51 +93,37 @@ public class SkillTreeGui extends Screen {
 
     private void recalcLayout() {
         float scale = Math.min(this.width / 480f, this.height / 300f);
-
         this.guiWidth = Math.max(MIN_GUI_WIDTH, (int) (360 * scale));
         this.guiHeight = Math.max(MIN_GUI_HEIGHT, (int) (220 * scale));
         this.guiWidth = Math.min(this.guiWidth, this.width - 20);
         this.guiHeight = Math.min(this.guiHeight, this.height - 20);
-
         this.guiLeft = (this.width - this.guiWidth) / 2;
         this.guiTop = (this.height - this.guiHeight) / 2;
-
         this.colWidth = Math.max(24, (this.guiWidth - PADDING * 2 - INFO_PANEL_WIDTH) / 5);
         this.skillWidth = colWidth - 6;
-
         this.treeAreaLeft = this.guiLeft + PADDING + INFO_PANEL_WIDTH;
         this.treeAreaTop = this.guiTop + TOP_BAR_HEIGHT + LEVEL_HEADER_HEIGHT;
         this.treeAreaWidth = this.guiWidth - PADDING * 2 - INFO_PANEL_WIDTH;
         this.treeAreaHeight = this.guiHeight - TOP_BAR_HEIGHT - LEVEL_HEADER_HEIGHT - PADDING;
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-        if (skillNodes.isEmpty()) {
-            buildSkillNodes();
-        }
-    }
+    @Override public void tick() { super.tick(); if (skillNodes.isEmpty()) buildSkillNodes(); }
 
     private void buildSkillNodes() {
         skillNodes.clear();
         scrollOffset = 0;
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
-
         PlayerAbilityData data = mc.player.getData(AcademyAttachments.PLAYER_ABILITY);
         if (!data.hasAbility()) return;
 
         AbilityCategory category = data.getCurrentAbility();
         List<Skill> allSkills = SkillRegistry.getSkillsByCategory(category);
-
         int totalContentHeight = 0;
 
         for (int level = 1; level <= 5; level++) {
             List<Skill> levelSkills = new ArrayList<>();
-            for (Skill s : allSkills) {
-                if (s.getLevel() == level) levelSkills.add(s);
-            }
+            for (Skill s : allSkills) if (s.getLevel() == level) levelSkills.add(s);
             if (levelSkills.isEmpty()) continue;
 
             int colX = this.treeAreaLeft + (level - 1) * colWidth;
@@ -180,46 +136,29 @@ public class SkillTreeGui extends Screen {
                 boolean learned = data.hasLearnedSkill(skill.getId());
                 boolean canLearn = data.canLearnSkill(skill);
                 boolean isPassive = skill.getType() == SkillType.PASSIVE;
-
-                int nodeW = SKILL_HEIGHT;
-                int nodeX = colX + (skillWidth - nodeW) / 2;
-                skillNodes.add(new SkillNode(skill, nodeX, y, nodeW, SKILL_HEIGHT, learned, canLearn, isPassive));
+                int nodeX = colX + (skillWidth - SKILL_HEIGHT) / 2;
+                skillNodes.add(new SkillNode(skill, nodeX, y, SKILL_HEIGHT, SKILL_HEIGHT, learned, canLearn, isPassive));
             }
-
             totalContentHeight = Math.max(totalContentHeight, columnTotalHeight);
         }
-
         maxScroll = Math.max(0, totalContentHeight - treeAreaHeight);
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         super.render(graphics, mouseX, mouseY, partialTick);
+        pushZ(graphics);
 
-        graphics.pose().pushPose();
-        graphics.pose().translate(0, 0, 300);
-
-        graphics.fill(this.guiLeft, this.guiTop, this.guiLeft + guiWidth, this.guiTop + guiHeight, COLOR_BG);
-        graphics.fill(this.guiLeft, this.guiTop, this.guiLeft + guiWidth, this.guiTop + TOP_BAR_HEIGHT, COLOR_TOP_BAR);
+        graphics.fill(this.guiLeft, this.guiTop, this.guiLeft + guiWidth, this.guiTop + guiHeight, AcademyColors.BG_DARK);
+        graphics.fill(this.guiLeft, this.guiTop, this.guiLeft + guiWidth, this.guiTop + TOP_BAR_HEIGHT, AcademyColors.BG_PANEL);
 
         if (fromTerminal) {
-            int backX = this.guiLeft + 4;
-            int backY = this.guiTop + 4;
-            hoveredBack = mouseX >= backX && mouseX < backX + BACK_BTN_SIZE
-                    && mouseY >= backY && mouseY < backY + BACK_BTN_SIZE;
-
-            graphics.fill(backX, backY, backX + BACK_BTN_SIZE, backY + BACK_BTN_SIZE,
-                    hoveredBack ? COLOR_BACK_HOVER : COLOR_BACK_BG);
-            drawBorder(graphics, backX, backY, BACK_BTN_SIZE, BACK_BTN_SIZE, COLOR_BACK_BORDER);
-            String arrow = "<-";
-            int aw = this.font.width(arrow);
-            graphics.drawString(this.font, arrow, backX + (BACK_BTN_SIZE - aw) / 2, backY + 5, COLOR_TEXT_WHITE);
+            int backX = this.guiLeft + 4, backY = this.guiTop + 4;
+            hoveredBack = drawBackButton(graphics, backX, backY, mouseX, mouseY);
         }
 
         drawDevInfoPanel(graphics);
-
         hoveredNode = null;
-
         drawLevelHeaders(graphics);
 
         graphics.enableScissor(treeAreaLeft, treeAreaTop, treeAreaLeft + treeAreaWidth, treeAreaTop + treeAreaHeight);
@@ -234,22 +173,22 @@ public class SkillTreeGui extends Screen {
         graphics.disableScissor();
 
         if (maxScroll > 0) {
-            drawScrollBar(graphics);
+            int scrollBarX = this.guiLeft + guiWidth - 6, thumbHeight = Math.max(12, treeAreaHeight * treeAreaHeight / (treeAreaHeight + maxScroll));
+            int thumbY = treeAreaTop + (treeAreaHeight - thumbHeight) * scrollOffset / maxScroll;
+            graphics.fill(scrollBarX, treeAreaTop, scrollBarX + 3, treeAreaTop + treeAreaHeight, 0x44FFFFFF);
+            graphics.fill(scrollBarX, thumbY, scrollBarX + 3, thumbY + thumbHeight, COLOR_SCROLL_BAR);
         }
 
         Minecraft mc = Minecraft.getInstance();
         PlayerAbilityData data = mc.player != null ? mc.player.getData(AcademyAttachments.PLAYER_ABILITY) : null;
         if (data != null && !data.hasAbility()) {
             String msg = "尚未获得能力，请先使用能力诱导因子。";
-            int textWidth = this.font.width(msg);
-            graphics.drawString(this.font, msg, this.guiLeft + (guiWidth - textWidth) / 2, this.guiTop + guiHeight / 2 - 4, COLOR_TEXT_GRAY);
+            graphics.drawString(this.font, msg, this.guiLeft + (guiWidth - this.font.width(msg)) / 2,
+                    this.guiTop + guiHeight / 2 - 4, AcademyColors.TEXT_SECONDARY);
         }
 
-        if (hoveredNode != null) {
-            drawTooltip(graphics, mouseX, mouseY);
-        }
-
-        graphics.pose().popPose();
+        if (hoveredNode != null) drawTooltip(graphics, mouseX, mouseY);
+        popZ(graphics);
     }
 
     private void drawDevInfoPanel(GuiGraphics graphics) {
@@ -262,84 +201,49 @@ public class SkillTreeGui extends Screen {
         drawBorder(graphics, panelLeft, panelTop, panelWidth, panelHeight, 0xFF444455);
 
         int y = panelTop + 4;
-
         Minecraft mc = Minecraft.getInstance();
         PlayerAbilityData data = mc.player != null ? mc.player.getData(AcademyAttachments.PLAYER_ABILITY) : null;
+
         if (data != null && data.hasAbility()) {
-            int iconSize = 16;
-            int iconX = panelLeft + 5;
-            ResourceLocation abilityIcon = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/abilities/" + data.getCurrentAbility().id() + "/icon.png");
+            int iconSize = 16, iconX = panelLeft + 5;
+            ResourceLocation abilityIcon = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID,
+                    "textures/abilities/" + data.getCurrentAbility().id() + "/icon.png");
             graphics.blit(abilityIcon, iconX, y, 0, 0, iconSize, iconSize, iconSize, iconSize);
-
-            String abilityName = Component.translatable("item.academy.factor_" + data.getCurrentAbility().id()).getString();
-            graphics.drawString(this.font, abilityName, iconX + iconSize + 4, y + 4, COLOR_TEXT_WHITE);
-
+            graphics.drawString(this.font, Component.translatable("item.academy.factor_" + data.getCurrentAbility().id()).getString(),
+                    iconX + iconSize + 4, y + 4, AcademyColors.TEXT);
             y += iconSize + 6;
 
             int barW = panelWidth - 10;
-            y = drawProgressBar(graphics, panelLeft + 5, y, barW, "CP", (int) data.getCurrentCp(), (int) data.getMaxCp(), COLOR_CP_BAR);
+            y = GuiUtils.drawProgressBar(graphics, this.font, panelLeft + 5, y, barW, "CP",
+                    (int) data.getCurrentCp(), (int) data.getMaxCp(), AcademyColors.SUCCESS, AcademyColors.PROGRESS_BG);
             y += 2;
-
-            y = drawProgressBar(graphics, panelLeft + 5, y, barW, "OL", (int) data.getCurrentOverload(), (int) data.getMaxOverload(), COLOR_OVERLOAD_BAR);
+            y = GuiUtils.drawProgressBar(graphics, this.font, panelLeft + 5, y, barW, "OL",
+                    (int) data.getCurrentOverload(), (int) data.getMaxOverload(), AcademyColors.ERROR, AcademyColors.PROGRESS_BG);
             y += 4;
         }
 
         if (!fromTerminal && devType != null) {
-            int devInfoHeight = 54;
-            int minY = panelTop + panelHeight - devInfoHeight - 4;
-            if (y < minY) {
-                y = minY;
-            }
-
-            Component title = Component.literal(devType.displayName + "开发机").withStyle(net.minecraft.network.chat.Style.EMPTY.withBold(true));
-            graphics.drawString(this.font, title, panelLeft + 5, y - 2, COLOR_TEXT_WHITE);
+            int minY = panelTop + panelHeight - 54 - 4;
+            if (y < minY) y = minY;
+            Component title = Component.literal(devType.displayName + "开发机").withStyle(
+                    net.minecraft.network.chat.Style.EMPTY.withBold(true));
+            graphics.drawString(this.font, title, panelLeft + 5, y - 2, AcademyColors.TEXT);
             y += 10;
-
-            y = drawProgressBar(graphics, panelLeft + 5, y, panelWidth - 10, "IF能量", energy, maxEnergy, 0xFFf1c40f);
+            y = GuiUtils.drawProgressBar(graphics, this.font, panelLeft + 5, y, panelWidth - 10, "IF能量",
+                    energy, maxEnergy, 0xFFf1c40f, AcademyColors.PROGRESS_BG);
             y += 4;
-
-            drawProgressBar(graphics, panelLeft + 5, y, panelWidth - 10, "同步率", devType.syncRate, 100, 0xFF3498db);
+            y = GuiUtils.drawProgressBar(graphics, this.font, panelLeft + 5, y, panelWidth - 10, "同步率",
+                    devType.syncRate, 100, AcademyColors.INFO, AcademyColors.PROGRESS_BG);
         }
-    }
-
-    private int drawProgressBar(GuiGraphics graphics, int x, int y, int width, String label, int value, int max, int color) {
-        int barHeight = 8;
-
-        graphics.drawString(this.font, label + ": " + value + "/" + max, x, y, COLOR_TEXT_WHITE);
-
-        int barY = y + 12;
-        graphics.fill(x, barY, x + width, barY + barHeight, 0xFF444455);
-        graphics.fill(x + 1, barY + 1, x + width - 1, barY + barHeight - 1, 0xFF2c3e50);
-
-        if (max > 0) {
-            int innerWidth = width - 2;
-            int fillWidth = (int) Math.min(innerWidth, (long) innerWidth * value / max);
-            graphics.fill(x + 1, barY + 1, x + 1 + fillWidth, barY + barHeight - 1, color);
-        }
-
-        return barY + barHeight;
-    }
-
-    private void drawScrollBar(GuiGraphics graphics) {
-        int scrollBarX = this.guiLeft + guiWidth - 6;
-        int scrollBarTop = treeAreaTop;
-        int scrollBarHeight = treeAreaHeight;
-        int thumbHeight = Math.max(12, scrollBarHeight * treeAreaHeight / (treeAreaHeight + maxScroll));
-        int thumbY = scrollBarTop + (scrollBarHeight - thumbHeight) * scrollOffset / maxScroll;
-
-        graphics.fill(scrollBarX, scrollBarTop, scrollBarX + 3, scrollBarTop + scrollBarHeight, 0x44FFFFFF);
-        graphics.fill(scrollBarX, thumbY, scrollBarX + 3, thumbY + thumbHeight, COLOR_SCROLL_BAR);
     }
 
     private void drawLevelHeaders(GuiGraphics graphics) {
         for (int level = 1; level <= 5; level++) {
             int colX = this.treeAreaLeft + (level - 1) * colWidth;
-            int colTop = this.treeAreaTop + 2;
             String levelText = "Lv." + level;
             int tw = this.font.width(levelText);
-            int nodeW = SKILL_HEIGHT;
-            int nodeX = colX + (skillWidth - nodeW) / 2;
-            graphics.drawString(this.font, levelText, nodeX + (nodeW - tw) / 2, colTop, COLOR_TEXT_GRAY);
+            int nodeX = colX + (skillWidth - SKILL_HEIGHT) / 2;
+            graphics.drawString(this.font, levelText, nodeX + (SKILL_HEIGHT - tw) / 2, this.treeAreaTop + 2, AcademyColors.TEXT_SECONDARY);
         }
     }
 
@@ -353,21 +257,17 @@ public class SkillTreeGui extends Screen {
             for (Skill.Prerequisite prereq : node.skill.getPrerequisites()) {
                 String prereqId = prereq.skillId();
                 if (prereqId.startsWith("any_level_")) continue;
-
                 SkillNode prereqNode = findNode(prereqId);
-                if (prereqNode != null) {
-                    int x1 = prereqNode.x + prereqNode.w;
-                    int y1 = prereqNode.y + prereqNode.h / 2;
-                    int x2 = node.x;
-                    int y2 = node.y + node.h / 2;
+                if (prereqNode == null) continue;
 
-                    int lineColor = data.hasLearnedSkill(prereqId) ? COLOR_LEARNED : COLOR_LINE;
-                    int midX = (x1 + x2) / 2;
+                int x1 = prereqNode.x + prereqNode.w, y1 = prereqNode.y + prereqNode.h / 2;
+                int x2 = node.x, y2 = node.y + node.h / 2;
+                int lineColor = data.hasLearnedSkill(prereqId) ? COLOR_LEARNED : COLOR_LINE;
+                int midX = (x1 + x2) / 2;
 
-                    graphics.fill(x1, y1, midX, y1 + 1, lineColor);
-                    graphics.fill(midX, Math.min(y1, y2), midX + 1, Math.max(y1, y2) + 1, lineColor);
-                    graphics.fill(midX, y2, x2, y2 + 1, lineColor);
-                }
+                graphics.fill(x1, y1, midX, y1 + 1, lineColor);
+                graphics.fill(midX, Math.min(y1, y2), midX + 1, Math.max(y1, y2) + 1, lineColor);
+                graphics.fill(midX, y2, x2, y2 + 1, lineColor);
             }
         }
     }
@@ -379,8 +279,7 @@ public class SkillTreeGui extends Screen {
         if (!data.hasAbility()) return;
 
         for (SkillNode node : skillNodes) {
-            boolean isHovered = mouseX >= node.x && mouseX < node.x + node.w
-                    && mouseY >= node.y && mouseY < node.y + node.h;
+            boolean isHovered = mouseX >= node.x && mouseX < node.x + node.w && mouseY >= node.y && mouseY < node.y + node.h;
             if (isHovered) hoveredNode = node;
 
             int bgColor, borderColor;
@@ -397,44 +296,27 @@ public class SkillTreeGui extends Screen {
 
             if (isHovered) {
                 graphics.pose().pushPose();
-                float centerX = node.x + node.w / 2f;
-                float centerY = node.y + node.h / 2f;
-                graphics.pose().translate(centerX, centerY, 0);
+                float cx = node.x + node.w / 2f, cy = node.y + node.h / 2f;
+                graphics.pose().translate(cx, cy, 0);
                 graphics.pose().scale(1.15f, 1.15f, 1.0f);
-                graphics.pose().translate(-centerX, -centerY, 0);
+                graphics.pose().translate(-cx, -cy, 0);
             }
 
             graphics.fill(node.x, node.y, node.x + node.w, node.y + node.h, bgColor);
-            graphics.fill(node.x, node.y, node.x + node.w, node.y + 1, borderColor);
-            graphics.fill(node.x, node.y + node.h - 1, node.x + node.w, node.y + node.h, borderColor);
-            graphics.fill(node.x, node.y, node.x + 1, node.y + node.h, borderColor);
-            graphics.fill(node.x + node.w - 1, node.y, node.x + node.w, node.y + node.h, borderColor);
-
-            if (isHovered) {
-                graphics.fill(node.x + 1, node.y + 1, node.x + node.w - 1, node.y + node.h - 1, COLOR_HOVER);
-            }
+            drawBorder(graphics, node.x, node.y, node.w, node.h, borderColor);
+            if (isHovered) graphics.fill(node.x + 1, node.y + 1, node.x + node.w - 1, node.y + node.h - 1, 0x44FFFFFF);
 
             ResourceLocation icon = node.skill.getIconLocation();
             int iconSize = 16;
-            int iconX = node.x + (node.w - iconSize) / 2;
-            int iconY = node.y + (node.h - iconSize) / 2;
-            graphics.blit(icon, iconX, iconY, 0, 0, iconSize, iconSize, iconSize, iconSize);
+            graphics.blit(icon, node.x + (node.w - iconSize) / 2, node.y + (node.h - iconSize) / 2,
+                    0, 0, iconSize, iconSize, iconSize, iconSize);
 
             if (node.learned && !node.isPassive) {
-                float prof = data.getProficiency(node.skill.getId());
-                int profBarW = (int) ((node.w - 4) * prof);
-                graphics.fill(node.x + 2, node.y + node.h - 1, node.x + 2 + profBarW, node.y + node.h, 0xFFffffff);
-            }
-
-            if (node.learned && !node.isPassive) {
-                float prof = data.getProficiency(node.skill.getId());
-                int profBarW = (int) ((node.w - 4) * prof);
+                int profBarW = (int) ((node.w - 4) * data.getProficiency(node.skill.getId()));
                 graphics.fill(node.x + 2, node.y + node.h - 3, node.x + 2 + profBarW, node.y + node.h - 2, 0xFFffffff);
             }
 
-            if (isHovered) {
-                graphics.pose().popPose();
-            }
+            if (isHovered) graphics.pose().popPose();
         }
     }
 
@@ -461,21 +343,31 @@ public class SkillTreeGui extends Screen {
         }
 
         if (hoveredNode.learned) {
+            // 已学习状态
             tooltip.add(Component.literal("§a[已学习]"));
             if (!hoveredNode.isPassive) {
                 float prof = data.getProficiency(skill.getId());
                 tooltip.add(Component.literal("§e熟练度: " + String.format("%.1f%%", prof * 100)));
             }
+            // 修复：当开发机能量不足时追加提示
+            if (!fromTerminal && devType != null && energy <= 0) {
+                tooltip.add(Component.literal("§c[开发机能量不足] 该技能暂不可用"));
+            }
         } else if (hoveredNode.canLearn) {
+            // 可学习状态
             if (readOnly) {
                 tooltip.add(Component.literal("§7[仅查看] 请使用开发机学习"));
             } else if (skill.getLevel() > devType.maxLevel) {
                 tooltip.add(Component.literal("§c[同步率不足] 该开发机无法支持此等级技能"));
+            } else if (!fromTerminal && devType != null && energy <= 0) {
+                // 修复：能量不足时优先提示
+                tooltip.add(Component.literal("§c[开发机能量不足] 暂无法学习该技能"));
             } else {
                 int cost = devType.applySyncRate(100 + skill.getLevel() * 50);
                 tooltip.add(Component.literal("§b[点击学习] 消耗: " + cost + " IF"));
             }
         } else {
+            // 未解锁状态
             tooltip.add(Component.literal("§c[未解锁]"));
             for (Skill.Prerequisite prereq : skill.getPrerequisites()) {
                 String prereqId = prereq.skillId();
@@ -500,12 +392,6 @@ public class SkillTreeGui extends Screen {
         graphics.pose().popPose();
     }
 
-    private void drawBorder(GuiGraphics graphics, int x, int y, int w, int h, int color) {
-        graphics.fill(x, y, x + w, y + 1, color);
-        graphics.fill(x, y + h - 1, x + w, y + h, color);
-        graphics.fill(x, y, x + 1, y + h, color);
-        graphics.fill(x + w - 1, y, x + w, y + h, color);
-    }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -513,47 +399,30 @@ public class SkillTreeGui extends Screen {
             Minecraft.getInstance().setScreen(new DataTerminalGui());
             return true;
         }
-
         if (!readOnly && hoveredNode != null && hoveredNode.canLearn && !hoveredNode.learned && button == 0) {
-            if (hoveredNode.skill.getLevel() > devType.maxLevel) {
+            if (hoveredNode.skill.getLevel() > devType.maxLevel) return true;
+            if (!fromTerminal && devType != null && energy <= 0) {
                 return true;
             }
-            PacketDistributor.sendToServer(new LearnSkillPacket(hoveredNode.skill.getId(), devType.ordinal()));
-            Minecraft mc = Minecraft.getInstance();
-            if (mc.player != null) {
-                PlayerAbilityData data = mc.player.getData(AcademyAttachments.PLAYER_ABILITY);
-                data.learnSkill(hoveredNode.skill.getId());
-                data.syncTo(mc.player);
+            PacketDistributor.sendToServer(new LearnSkillPacket(hoveredNode.skill.getId(), devType.ordinal(), java.util.Optional.ofNullable(devPos)));
+            return true;
+        }
+        if (maxScroll > 0) {
+            int scrollBarX = this.guiLeft + guiWidth - 6;
+            if (mouseX >= scrollBarX && mouseX <= scrollBarX + 3 && mouseY >= treeAreaTop && mouseY <= treeAreaTop + treeAreaHeight) {
+                isScrolling = true;
+                updateScrollFromMouse(mouseY);
+                return true;
             }
-            buildSkillNodes();
-            return true;
         }
-
-        int scrollBarX = this.guiLeft + guiWidth - 6;
-        if (maxScroll > 0 && mouseX >= scrollBarX && mouseX <= scrollBarX + 3
-                && mouseY >= treeAreaTop && mouseY <= treeAreaTop + treeAreaHeight) {
-            isScrolling = true;
-            updateScrollFromMouse(mouseY);
-            return true;
-        }
-
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (isScrolling) {
-            updateScrollFromMouse(mouseY);
-            return true;
-        }
+    @Override public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (isScrolling) { updateScrollFromMouse(mouseY); return true; }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
-
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        isScrolling = false;
-        return super.mouseReleased(mouseX, mouseY, button);
-    }
+    @Override public boolean mouseReleased(double mouseX, double mouseY, int button) { isScrolling = false; return super.mouseReleased(mouseX, mouseY, button); }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
@@ -572,18 +441,10 @@ public class SkillTreeGui extends Screen {
         scrollOffset = (int) Math.clamp(ratio * maxScroll, 0, maxScroll);
     }
 
-    @Override
-    public boolean isPauseScreen() {
-        return false;
-    }
-
     private SkillNode findNode(String skillId) {
-        for (SkillNode node : skillNodes) {
-            if (node.skill.getId().equals(skillId)) return node;
-        }
+        for (SkillNode node : skillNodes) if (node.skill.getId().equals(skillId)) return node;
         return null;
     }
 
-    private record SkillNode(Skill skill, int x, int y, int w, int h, boolean learned, boolean canLearn, boolean isPassive) {
-    }
+    private record SkillNode(Skill skill, int x, int y, int w, int h, boolean learned, boolean canLearn, boolean isPassive) {}
 }

@@ -8,10 +8,9 @@ import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.Skill;
 import com.mohistmc.academy.skill.SkillRegistry;
 import com.mohistmc.academy.world.block.DevMachineType;
-import com.mohistmc.academy.world.block.entity.DevAdvancedBlockEntity;
-import com.mohistmc.academy.world.block.entity.DevNormalBlockEntity;
 import com.mohistmc.academy.world.item.DeveloperPortable;
 import io.netty.buffer.ByteBuf;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -25,17 +24,16 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record LearnSkillPacket(String skillId, int typeOrdinal) implements CustomPacketPayload {
+public record LearnSkillPacket(String skillId, int typeOrdinal, Optional<BlockPos> devPos) implements CustomPacketPayload {
 
     public static final Type<LearnSkillPacket> TYPE =
             new Type<>(ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "learn_skill"));
 
     public static final StreamCodec<ByteBuf, LearnSkillPacket> STREAM_CODEC =
             StreamCodec.composite(
-                    ByteBufCodecs.STRING_UTF8,
-                    LearnSkillPacket::skillId,
-                    ByteBufCodecs.INT,
-                    LearnSkillPacket::typeOrdinal,
+                    ByteBufCodecs.STRING_UTF8, LearnSkillPacket::skillId,
+                    ByteBufCodecs.INT, LearnSkillPacket::typeOrdinal,
+                    ByteBufCodecs.optional(BlockPos.STREAM_CODEC), LearnSkillPacket::devPos,
                     LearnSkillPacket::new
             );
 
@@ -66,17 +64,16 @@ public record LearnSkillPacket(String skillId, int typeOrdinal) implements Custo
                 return;
             }
 
-            // 检查等级限制
             if (skill.getLevel() > devType.maxLevel) {
                 player.sendSystemMessage(Component.literal("§c同步率不足，该开发机无法支持 Lv." + skill.getLevel() + " 技能"));
                 return;
             }
 
-            // 计算并消耗能量
             int baseCost = getSkillCost(skill);
             int actualCost = devType.applySyncRate(baseCost);
 
-            boolean success = consumeEnergy(player, devType, actualCost);
+            BlockPos devPos = packet.devPos().orElse(null);
+            boolean success = consumeEnergy(player, devType, actualCost, devPos);
             if (!success) {
                 player.sendSystemMessage(Component.literal("§c能量不足! 需要 " + actualCost + " IF"));
                 return;
@@ -105,7 +102,7 @@ public record LearnSkillPacket(String skillId, int typeOrdinal) implements Custo
         });
     }
 
-    private static boolean consumeEnergy(ServerPlayer player, DevMachineType devType, int cost) {
+    private static boolean consumeEnergy(ServerPlayer player, DevMachineType devType, int cost, BlockPos devPos) {
         if (devType == DevMachineType.PORTABLE) {
             ItemStack mainHand = player.getMainHandItem();
             if (mainHand.getItem() instanceof DeveloperPortable) {
@@ -118,33 +115,18 @@ public record LearnSkillPacket(String skillId, int typeOrdinal) implements Custo
             }
             return false;
         } else {
-            IFEnergyStorage devMachine = findNearbyDevMachine(player);
-            if (devMachine == null) {
+            if (devPos == null) return false;
+            Level level = player.level();
+            BlockEntity be = level.getBlockEntity(devPos);
+            if (!(be instanceof IFEnergyStorage storage)) {
                 return false;
             }
-            if (devMachine.getEnergyStored() < cost) {
+            if (storage.getEnergyStored() < cost) {
                 return false;
             }
-            devMachine.extractEnergy(cost, false);
+            storage.extractEnergy(cost, false);
             return true;
         }
-    }
-
-    private static IFEnergyStorage findNearbyDevMachine(ServerPlayer player) {
-        BlockPos playerPos = player.blockPosition();
-        Level level = player.level();
-        for (int dx = -5; dx <= 5; dx++) {
-            for (int dy = -5; dy <= 5; dy++) {
-                for (int dz = -5; dz <= 5; dz++) {
-                    BlockPos checkPos = new BlockPos(playerPos.getX() + dx, playerPos.getY() + dy, playerPos.getZ() + dz);
-                    BlockEntity be = level.getBlockEntity(checkPos);
-                    if (be instanceof DevNormalBlockEntity || be instanceof DevAdvancedBlockEntity) {
-                        return (IFEnergyStorage) be;
-                    }
-                }
-            }
-        }
-        return null;
     }
 
     private static int getSkillCost(Skill skill) {

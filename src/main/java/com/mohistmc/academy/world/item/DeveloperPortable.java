@@ -4,6 +4,7 @@ import com.mohistmc.academy.capability.EnergyItemHelper;
 import com.mohistmc.academy.network.LearnSkillPacket;
 import com.mohistmc.academy.network.OpenDevGuiPacket;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -29,7 +30,7 @@ public class DeveloperPortable extends AcademyItem {
         if (player instanceof ServerPlayer serverPlayer) {
             LearnSkillPacket.syncToClient(serverPlayer);
             int energy = EnergyItemHelper.getEnergy(stack);
-            PacketDistributor.sendToPlayer(serverPlayer, new OpenDevGuiPacket(0, energy, MAX_ENERGY));
+            PacketDistributor.sendToPlayer(serverPlayer, new OpenDevGuiPacket(0, energy, MAX_ENERGY, Optional.empty()));
         }
         return InteractionResultHolder.consume(stack);
     }

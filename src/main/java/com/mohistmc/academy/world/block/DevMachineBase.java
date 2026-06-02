@@ -3,15 +3,16 @@ package com.mohistmc.academy.world.block;
 import com.mohistmc.academy.capability.IFEnergyStorage;
 import com.mohistmc.academy.network.LearnSkillPacket;
 import com.mohistmc.academy.network.OpenDevGuiPacket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -23,26 +24,66 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class DevMachineBase extends BaseEntityBlock implements IDevMachine {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
+    private final List<SubBlockPos> subBlocks = new ArrayList<>();
+    private List<SubBlockPos>[] rotatedBuffer;
+    private boolean init = false;
+
+    public record SubBlockPos(int dx, int dy, int dz) {}
+
     public DevMachineBase(Properties properties) {
         super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
+        this.addSubBlock(0, 1, 0);
+        this.addSubBlock(0, 0, 1);
+        this.addSubBlock(0, 1, 1);
+        this.addSubBlock(0, 2, 1);
+        this.addSubBlock(0, 0, 2);
+        this.addSubBlock(0, 1, 2);
+        this.addSubBlock(0, 2, 2);
+        finishInit();
+    }
+
+    protected void addSubBlock(int dx, int dy, int dz) {
+        if (init) {
+            throw new RuntimeException("Trying to add a sub block after block init finished");
+        }
+        subBlocks.add(new SubBlockPos(dx, dy, dz));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void finishInit() {
+        rotatedBuffer = new List[4];
+        for (int i = 0; i < 4; i++) {
+            Direction dir = Direction.from2DDataValue(i);
+            rotatedBuffer[i] = new ArrayList<>();
+            for (SubBlockPos s : subBlocks) {
+                rotatedBuffer[i].add(rotateSouth(s, dir));
+            }
+        }
+        init = true;
+    }
+
+    public List<SubBlockPos> getRotatedSubBlocks(Direction dir) {
+        return rotatedBuffer[dir.get2DDataValue()];
+    }
+
+    private static SubBlockPos rotateSouth(SubBlockPos s, Direction dir) {
+        return switch (dir) {
+            case SOUTH -> new SubBlockPos(s.dx, s.dy, s.dz);
+            case NORTH -> new SubBlockPos(-s.dx, s.dy, -s.dz);
+            case EAST -> new SubBlockPos(s.dz, s.dy, -s.dx);
+            case WEST -> new SubBlockPos(-s.dz, s.dy, s.dx);
+            default -> new SubBlockPos(s.dx, s.dy, s.dz);
+        };
     }
 
     protected abstract Block getSubBlock();
-
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return Shapes.box(0, 0, 0, 1, 1.6, 1);
-    }
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, net.minecraft.util.RandomSource random) {
@@ -65,7 +106,7 @@ public abstract class DevMachineBase extends BaseEntityBlock implements IDevMach
                 energy = storage.getEnergyStored();
                 maxEnergy = storage.getMaxEnergyStored();
             }
-            PacketDistributor.sendToPlayer(serverPlayer, new OpenDevGuiPacket(devType.ordinal(), energy, maxEnergy));
+            PacketDistributor.sendToPlayer(serverPlayer, new OpenDevGuiPacket(devType.ordinal(), energy, maxEnergy, java.util.Optional.of(pos)));
         }
         return InteractionResult.CONSUME;
     }
@@ -74,29 +115,52 @@ public abstract class DevMachineBase extends BaseEntityBlock implements IDevMach
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean moved) {
         Direction dir = state.getValue(FACING).getOpposite();
         Block sub = getSubBlock();
-        for (int dist = 1; dist <= 2; dist++) {
-            for (int dy = 0; dy <= (dist == 2 ? 2 : 1); dy++) {
-                level.setBlock(pos.relative(dir, dist).above(dy), sub.defaultBlockState(), 19);
+        List<SubBlockPos> subList = getRotatedSubBlocks(dir);
+
+        for (SubBlockPos subPos : subList) {
+            BlockPos target = pos.offset(subPos.dx, subPos.dy, subPos.dz);
+            if (!level.isEmptyBlock(target)) {
+                level.destroyBlock(pos, true);
+                return;
+            }
+        }
+
+        UUID id = UUID.randomUUID();
+        BlockEntity mainBe = level.getBlockEntity(pos);
+        if (mainBe instanceof IDevStructure s) {
+            s.setStructureId(id);
+        }
+
+        for (SubBlockPos subPos : subList) {
+            BlockPos target = pos.offset(subPos.dx, subPos.dy, subPos.dz);
+            level.setBlock(target, sub.defaultBlockState(), 19);
+            BlockEntity subBe = level.getBlockEntity(target);
+            if (subBe instanceof IDevSubStructure s) {
+                s.setStructureId(id);
+                s.setMainPos(pos);
             }
         }
     }
 
     @Override
-    public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
-        Direction dir = state.getValue(FACING).getOpposite();
-        for (int dist = 1; dist <= 2; dist++) {
-            for (int dy = 0; dy <= (dist == 2 ? 2 : 1); dy++) {
-                level.destroyBlock(pos.relative(dir, dist).above(dy), false);
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!level.isClientSide() && !newState.is(state.getBlock())) {
+            Direction dir = state.getValue(FACING).getOpposite();
+            BlockEntity mainBe = level.getBlockEntity(pos);
+            UUID mainId = (mainBe instanceof IDevStructure dev) ? dev.getStructureId() : null;
+            List<SubBlockPos> subList = getRotatedSubBlocks(dir);
+            for (SubBlockPos sub : subList) {
+                BlockPos subPos = pos.offset(sub.dx, sub.dy, sub.dz);
+                BlockEntity subBe = level.getBlockEntity(subPos);
+                if (subBe instanceof IDevSubStructure s) {
+                    UUID subId = s.getStructureId();
+                    if (pos.equals(s.getMainPos()) && (mainId == null || mainId.equals(subId))) {
+                        level.destroyBlock(subPos, false);
+                    }
+                }
             }
         }
-    }
-
-    @Override
-    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos neighbor, boolean moved) {
-        if (block instanceof IDevMachine && level.getBlockState(neighbor).getBlock() instanceof net.minecraft.world.level.block.AirBlock) {
-            level.destroyBlock(pos, false);
-        }
-        super.neighborChanged(state, level, pos, block, neighbor, moved);
+        super.onRemove(state, level, pos, newState, isMoving);
     }
 
     @Override
@@ -118,6 +182,18 @@ public abstract class DevMachineBase extends BaseEntityBlock implements IDevMach
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+        BlockState state = this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+        Direction dir = state.getValue(FACING).getOpposite();
+        BlockPos pos = context.getClickedPos();
+        List<SubBlockPos> subList = getRotatedSubBlocks(dir);
+
+        for (SubBlockPos sub : subList) {
+            BlockPos subPos = pos.offset(sub.dx, sub.dy, sub.dz);
+            if (!context.getLevel().isEmptyBlock(subPos)) {
+                return null;
+            }
+        }
+
+        return state;
     }
 }
