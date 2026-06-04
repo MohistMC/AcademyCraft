@@ -18,7 +18,7 @@ public class WindGenBaseBlockEntity extends AcademyContainerBlockEntity implemen
     // 风力发电基础速率
     private static final int GENERATION_RATE = 1;
     // 内部存储上限
-    private static final int MAX_STORAGE = 1000;
+    private static final int MAX_STORAGE = 20000;
     // 当前存储的能量
     private float storedEnergy = 0.0f;
 
@@ -27,17 +27,21 @@ public class WindGenBaseBlockEntity extends AcademyContainerBlockEntity implemen
         setItems(net.minecraft.core.NonNullList.withSize(getContainerSize(), ItemStack.EMPTY));
     }
 
-    public void tick(boolean validBlock, boolean validMiddle) {
+    public void tick(boolean validBlock, boolean validMiddle, int mainHeight) {
         this.validBlock = validBlock;
         this.validMiddle = validMiddle;
-        if (!validBlock) return;
 
         float oldEnergy = storedEnergy;
 
-        // 累积能量到存储池
-        storedEnergy = Math.min(MAX_STORAGE, storedEnergy + GENERATION_RATE);
+        if (validBlock) {
+            // 所处海拔越高，产生能量越多：每超出基础高度1格，发电速率+1
+            int generationRate = GENERATION_RATE + Math.max(0, mainHeight - 5);
 
-        // 尝试用存储池中的整数能量给能源单元充能
+            // 累积能量到存储池
+            storedEnergy = Math.min(MAX_STORAGE, storedEnergy + generationRate);
+        }
+
+        // 无论结构是否有效，都尝试用存储池中的整数能量给能源单元充能
         int chargeAmount = (int) storedEnergy;
         if (chargeAmount > 0) {
             int charged = chargeEnergyUnit(chargeAmount);

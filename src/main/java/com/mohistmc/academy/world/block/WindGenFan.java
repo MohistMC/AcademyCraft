@@ -1,12 +1,16 @@
 package com.mohistmc.academy.world.block;
 
+import com.mohistmc.academy.world.AcademyItems;
 import com.mohistmc.academy.world.block.entity.WindGenFanBlockEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -17,6 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
 public class WindGenFan extends BaseEntityBlock {
@@ -52,6 +57,11 @@ public class WindGenFan extends BaseEntityBlock {
     }
 
     @Override
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+        return new ItemStack(AcademyItems.WINDGEN_MAIN.get());
+    }
+
+    @Override
     public BlockState rotate(BlockState p_48722_, Rotation p_48723_) {
         return p_48722_.setValue(FACING, p_48723_.rotate(p_48722_.getValue(FACING)));
     }
@@ -72,6 +82,4 @@ public class WindGenFan extends BaseEntityBlock {
     public BlockState getStateForPlacement(BlockPlaceContext p_49820_) {
         return this.defaultBlockState().setValue(FACING, p_49820_.getHorizontalDirection().getOpposite());
     }
-
-
 }

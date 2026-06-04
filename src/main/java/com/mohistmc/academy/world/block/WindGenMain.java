@@ -139,7 +139,7 @@ public class WindGenMain extends BaseEntityBlock {
                         });
                 blockEntity
                         .getItems().clear();
-                blockEntity.destroy(world, pos);
+                blockEntity.destroy(world, pos, p_60515_.getValue(FACING));
             }
             super.onRemove(p_60515_, world, pos, p_60518_, p_60519_);
         }

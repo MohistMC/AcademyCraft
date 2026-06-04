@@ -49,13 +49,13 @@ public class WindBaseGui extends AcademyBaseUI<WindGenBaseMenu> {
                 if (blockEntity.isValidMiddle()) {
                     RenderSystem.setShaderColor(1, 1, 1, 1);
                 } else {
-                    RenderSystem.setShaderColor(1, 1, 1, 0.7f);
+                    RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
                 }
                 RenderUtils.renderCenterTop(0, 31, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_MIDDLE);// 中部
                 if (blockEntity.isValidMain()) {
                     RenderSystem.setShaderColor(1, 1, 1, 1);
                 } else {
-                    RenderSystem.setShaderColor(1, 1, 1, 0.7f);
+                    RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
                 }
                 RenderUtils.renderCenterTop(0, 13, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_MAIN);// 头部
                 RenderSystem.disableBlend();

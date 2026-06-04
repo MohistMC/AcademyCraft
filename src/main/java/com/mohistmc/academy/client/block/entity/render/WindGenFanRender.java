@@ -54,7 +54,9 @@ public class WindGenFanRender implements BlockEntityRenderer<WindGenFanBlockEnti
 
         p_112309_.popPose();
 
-        // 更新旋转角度（调慢）
-        p_112307_.rH += 0.02F;
+        if (p_112307_.isRunning) {
+            // 更新旋转角度（调慢）
+            p_112307_.rH += 0.02F;
+        }
     }
 }

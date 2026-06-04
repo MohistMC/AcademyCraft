@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class WindGenMainBlockEntity extends AcademyContainerBlockEntity implements IFEnergyStorage {
-    private static final int MAX_STORAGE = 1000;
 
     public WindGenMainBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
         super(AcademyBlockEntities.WINDGEN_MAIN.get(), p_155229_, p_155230_);
@@ -29,46 +28,109 @@ public class WindGenMainBlockEntity extends AcademyContainerBlockEntity implemen
     }
 
     public void tick(WindGenMain block, Level level, BlockPos pos, Direction facing) {
-        switch (facing) {
-            case EAST -> checkFan(block, level, pos.east(1), facing);
-            case WEST -> checkFan(block, level, pos.west(1), facing);
-            case NORTH -> checkFan(block, level, pos.north(1), facing);
-            case SOUTH -> checkFan(block, level, pos.south(1), facing);
+        boolean hasBase = findBase() != null;
+
+        BlockPos fanPos = switch (facing) {
+            case EAST -> pos.east(1);
+            case WEST -> pos.west(1);
+            case NORTH -> pos.north(1);
+            case SOUTH -> pos.south(1);
+            default -> pos;
+        };
+
+        // 更新风扇旋转状态
+        BlockEntity fanEntity = level.getBlockEntity(fanPos);
+        if (fanEntity instanceof WindGenFanBlockEntity fan) {
+            boolean hasFanBlock = level.getBlockState(fanPos).is(AcademyBlocks.WINDGEN_FAN.get());
+            fan.isRunning = hasFanBlock && hasBase;
+            fan.setChanged();
+            if (!level.isClientSide()) {
+                level.sendBlockUpdated(fanPos, fan.getBlockState(), fan.getBlockState(), Block.UPDATE_ALL);
+            }
+        }
+
+        if (!level.isClientSide()) {
+            if (!hasBase) {
+                block.setValid(false);
+                return;
+            }
+
+            switch (facing) {
+                case EAST -> checkFan(block, level, pos.east(1), facing);
+                case WEST -> checkFan(block, level, pos.west(1), facing);
+                case NORTH -> checkFan(block, level, pos.north(1), facing);
+                case SOUTH -> checkFan(block, level, pos.south(1), facing);
+            }
         }
     }
 
-    private void checkFan(WindGenMain block, Level level, BlockPos east, Direction facing) {
-        BlockState state = level.getBlockState(east);
+    private void checkFan(WindGenMain block, Level level, BlockPos fanPos, Direction facing) {
+        BlockState state = level.getBlockState(fanPos);
         if (!getItems().isEmpty() && getItems().get(0).is(AcademyItems.WINDGEN_FAN.get())) {
             if (!state.is(Blocks.AIR) && state.is(AcademyBlocks.WINDGEN_FAN.get())) {
                 block.setValid(true);
                 return;
             } else if (state.is(Blocks.AIR)) {
-                level.setBlock(east, AcademyBlocks.WINDGEN_FAN.get()
-                        .defaultBlockState()
-                        .setValue(WindGenPillar.FACING, facing), 19);
-                block.setValid(true);
+                if (checkFanSpace(level, fanPos, facing)) {
+                    level.setBlock(fanPos, AcademyBlocks.WINDGEN_FAN.get()
+                            .defaultBlockState()
+                            .setValue(WindGenPillar.FACING, facing), 19);
+                    block.setValid(true);
+                } else {
+                    block.setValid(false);
+                }
                 return;
             }
         } else {
             if (!state.is(Blocks.AIR) && state.is(AcademyBlocks.WINDGEN_FAN.get())) {
-                level.destroyBlock(east, false);
+                level.destroyBlock(fanPos, false);
             }
         }
         block.setValid(false);
     }
 
-    public void destroy(Level world, BlockPos pos) {
-        destroyFan(world, pos.east(1));
-        destroyFan(world, pos.west(1));
-        destroyFan(world, pos.south(1));
-        destroyFan(world, pos.north(1));
+    private boolean checkFanSpace(Level level, BlockPos pos, Direction facing) {
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
+
+        if (facing == Direction.EAST || facing == Direction.WEST) {
+            for (int dy = -3; dy <= 3; dy++) {
+                for (int dz = -3; dz <= 3; dz++) {
+                    BlockPos checkPos = new BlockPos(x, y + dy, z + dz);
+                    BlockState state = level.getBlockState(checkPos);
+                    if (!state.isAir() && !state.is(AcademyBlocks.WINDGEN_FAN.get())) {
+                        return false;
+                    }
+                }
+            }
+        } else {
+            for (int dy = -3; dy <= 3; dy++) {
+                for (int dx = -3; dx <= 3; dx++) {
+                    BlockPos checkPos = new BlockPos(x + dx, y + dy, z);
+                    BlockState state = level.getBlockState(checkPos);
+                    if (!state.isAir() && !state.is(AcademyBlocks.WINDGEN_FAN.get())) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
-    private void destroyFan(Level world, BlockPos east) {
-        BlockState state = world.getBlockState(east);
+    public void destroy(Level world, BlockPos pos, Direction facing) {
+        switch (facing) {
+            case EAST -> destroyFan(world, pos.east(1));
+            case WEST -> destroyFan(world, pos.west(1));
+            case NORTH -> destroyFan(world, pos.north(1));
+            case SOUTH -> destroyFan(world, pos.south(1));
+        }
+    }
+
+    private void destroyFan(Level world, BlockPos pos) {
+        BlockState state = world.getBlockState(pos);
         if (state.is(AcademyBlocks.WINDGEN_FAN.get())) {
-            world.destroyBlock(east, false);
+            world.destroyBlock(pos, false);
         }
     }
 
@@ -81,7 +143,7 @@ public class WindGenMainBlockEntity extends AcademyContainerBlockEntity implemen
     @Override
     public int getMaxEnergyStored() {
         WindGenBaseBlockEntity base = findBase();
-        return base != null ? base.getMaxEnergyStored() : MAX_STORAGE;
+        return base != null ? base.getMaxEnergyStored() : 0;
     }
 
     @Override

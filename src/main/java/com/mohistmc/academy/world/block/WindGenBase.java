@@ -78,24 +78,25 @@ public class WindGenBase extends BaseEntityBlock {
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState p_153213_, BlockEntityType<T> p_153214_) {
         return (level, pos, p_155255_, p_155256_) -> {
             mainHeight = 0;
+            boolean valid = false;
             for (int i = 2; i < 200; i++) {
                 Block block = level.getBlockState(pos.above(i)).getBlock();
                 if (block instanceof WindGenPillar) {
                     mainHeight++;
                     continue;
                 } else if (block instanceof WindGenMain mainBlock) {
-                    if (mainHeight > 4) {
-                        this.validBlock = mainBlock.hasFan();
-                        break;
+                    if (mainHeight >= 5 && mainHeight <= 37) {
+                        valid = mainBlock.hasFan();
                     }
+                    break;
                 }
-                this.validBlock = false;
                 break;
             }
+            this.validBlock = valid;
 
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof WindGenBaseBlockEntity blockEntity) {
-                blockEntity.tick(this.validBlock,mainHeight>0);
+                blockEntity.tick(this.validBlock, mainHeight > 0, mainHeight);
             }
         };
     }
