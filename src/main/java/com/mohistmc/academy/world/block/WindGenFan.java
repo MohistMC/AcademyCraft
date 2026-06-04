@@ -48,7 +48,7 @@ public class WindGenFan extends BaseEntityBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState p_49232_) {
-        return RenderShape.MODEL;
+        return RenderShape.INVISIBLE;
     }
 
     @Override

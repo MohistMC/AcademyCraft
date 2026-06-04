@@ -10,6 +10,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class SolarGenBlockEntity extends AcademyContainerBlockEntity implements IFEnergyStorage {
@@ -45,6 +46,8 @@ public class SolarGenBlockEntity extends AcademyContainerBlockEntity implements 
             case STOPPED -> 0.0f;         // 夜晚：不发电
         };
 
+        float oldEnergy = storedEnergy;
+
         // 将新产生的能量加入存储池
         if (rate > 0.0f) {
             storedEnergy = Math.min(MAX_STORAGE, storedEnergy + rate);
@@ -57,8 +60,11 @@ public class SolarGenBlockEntity extends AcademyContainerBlockEntity implements 
             storedEnergy -= charged;
         }
 
-        if (rate > 0.0f) {
+        if (oldEnergy != storedEnergy || rate > 0.0f) {
             setChanged();
+            if (oldEnergy != storedEnergy) {
+                level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
+            }
         }
     }
 
@@ -118,6 +124,13 @@ public class SolarGenBlockEntity extends AcademyContainerBlockEntity implements 
 
         tag.putFloat("storedEnergy", storedEnergy);
         serializeEnergy(tag);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+        CompoundTag tag = super.getUpdateTag(provider);
+        tag.putFloat("storedEnergy", storedEnergy);
+        return tag;
     }
 
     public enum SolarStatus { STRONG, STOPPED, WEAK }

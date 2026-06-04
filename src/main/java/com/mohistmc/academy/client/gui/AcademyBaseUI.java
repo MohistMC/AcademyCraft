@@ -2,7 +2,11 @@ package com.mohistmc.academy.client.gui;
 
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.capability.AcademyNode;
+import com.mohistmc.academy.capability.IFEnergyStorage;
 import com.mohistmc.academy.utils.RenderUtils;
+import com.mohistmc.academy.world.block.entity.SolarGenBlockEntity;
+import com.mohistmc.academy.world.block.entity.WindGenBaseBlockEntity;
+import com.mohistmc.academy.world.block.entity.WindGenMainBlockEntity;
 import com.mohistmc.academy.world.menu.AcademyMenu;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -15,6 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractContainerScreen<T> {
 
@@ -41,6 +46,7 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
     public int activeNode = -1;
     private int waitPass = -1;
     private StringBuilder inputPass = new StringBuilder();
+    private boolean renderEnergyTree = false;
 
     public AcademyBaseUI(T t, Inventory inv, Component p_97743_) {
         super(t, inv, p_97743_);
@@ -71,6 +77,10 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
         this.renderWireless = wireless;
     }
 
+    public void setRenderEnergyTree(boolean renderEnergyTree) {
+        this.renderEnergyTree = renderEnergyTree;
+    }
+
     @Override
     public void renderBg(GuiGraphics var1, float var2, int var3, int var4) {
         RenderSystem.setShaderColor(1, 1, 1, 0.7f);
@@ -99,7 +109,8 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
             RenderUtils.renderText(var1, "Available", ((this.width - GUI_WIDTH) / 2) + 13, ((this.height - GUI_HEIGHT) / 2) + 55);
 
         }
-
+        renderEnergyTreePanel(var1);
+        RenderSystem.disableBlend();
     }
 
     private NonNullList<AcademyNode> nodes = NonNullList.create();
@@ -215,6 +226,58 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
             }
         }
         RenderSystem.disableBlend();
+    }
+
+    private void renderEnergyTreePanel(GuiGraphics graphics) {
+        if (!renderEnergyTree || this.menu == null || this.menu.pos == null || this.inv == null) return;
+        if (this.wireless) return;
+
+        BlockEntity be = this.inv.player.level().getBlockEntity(this.menu.pos);
+        if (!(be instanceof IFEnergyStorage storage)) return;
+
+        int current = storage.getEnergyStored();
+        int max = Math.max(1, storage.getMaxEnergyStored());
+
+        int guiLeft = (this.width - GUI_WIDTH) / 2;
+        int guiTop = (this.height - GUI_HEIGHT) / 2;
+
+        int barW = 4;
+        int barH = 44;
+        int barX = guiLeft + GUI_WIDTH - 20;
+        int barY = guiTop + 24;
+
+        // 背景
+        graphics.fill(barX, barY, barX + barW, barY + barH, 0xFF2a2a3a);
+
+        // 填充（从下到上）
+        int filled = (int) ((long) current * barH / max);
+        graphics.fill(barX, barY + barH - filled, barX + barW, barY + barH, 0xFFf1c40f);
+
+        // IF 数值
+        graphics.drawString(this.font, current + "/" + max + " IF", barX + (barW - this.font.width(current + "/" + max + " IF")) / 2, barY - 10, 0xFFcccccc);
+
+        // IF/t 速率
+        String rateText = "0 IF/t";
+        if (be instanceof SolarGenBlockEntity solarBe) {
+            var status = solarBe.getStatus();
+            rateText = switch (status) {
+                case STRONG -> "3 IF/t";
+                case WEAK -> "0.6 IF/t";
+                case STOPPED -> "0 IF/t";
+            };
+        } else if (be instanceof WindGenBaseBlockEntity windBe) {
+            rateText = windBe.isValidMain() ? "1 IF/t" : "0 IF/t";
+        } else if (be instanceof WindGenMainBlockEntity) {
+            rateText = "1 IF/t";
+        }
+        graphics.drawString(this.font, rateText, barX + (barW - this.font.width(rateText)) / 2, barY + barH + 2, 0xFFaaaaaa);
+    }
+
+    private void drawPanelBorder(GuiGraphics graphics, int x, int y, int w, int h, int color) {
+        graphics.fill(x, y, x + w, y + 1, color);
+        graphics.fill(x, y + h - 1, x + w, y + h, color);
+        graphics.fill(x, y, x + 1, y + h, color);
+        graphics.fill(x + w - 1, y, x + w, y + h, color);
     }
 
     public boolean isHoveringButton(int x, int y, int w, int h, double mx, double my) {

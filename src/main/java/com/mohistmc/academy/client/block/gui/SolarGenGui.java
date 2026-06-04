@@ -32,7 +32,7 @@ public class SolarGenGui extends AcademyBaseUI<SolarGenMenu> {
 
     public SolarGenGui(SolarGenMenu menu, Inventory inv, Component title) {
         super(menu, inv, title);
-        setRenderWireless(false);
+        setRenderEnergyTree(true);
     }
 
     @Override

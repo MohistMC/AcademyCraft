@@ -59,7 +59,7 @@ public class ClientListener {
         var level = event.getCamera().getEntity().level();
         BlockState state = level.getBlockState(hitResult.getBlockPos());
         if (state.getBlock() instanceof IDevMachine) {
-          // event.setCanceled(true);
+          event.setCanceled(true);
         }
     }
 }

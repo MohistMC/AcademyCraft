@@ -1,17 +1,24 @@
 package com.mohistmc.academy.world.block.entity;
 
+import com.mohistmc.academy.capability.IFEnergyStorage;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyItems;
+import com.mohistmc.academy.world.block.WindGenBase;
+import com.mohistmc.academy.world.block.WindGenBaseSubBlock;
 import com.mohistmc.academy.world.block.WindGenMain;
 import com.mohistmc.academy.world.block.WindGenPillar;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class WindGenMainBlockEntity extends AcademyContainerBlockEntity {
+public class WindGenMainBlockEntity extends AcademyContainerBlockEntity implements IFEnergyStorage {
+    private static final int MAX_STORAGE = 1000;
+
     public WindGenMainBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
         super(AcademyBlockEntities.WINDGEN_MAIN.get(), p_155229_, p_155230_);
     }
@@ -34,11 +41,9 @@ public class WindGenMainBlockEntity extends AcademyContainerBlockEntity {
         BlockState state = level.getBlockState(east);
         if (!getItems().isEmpty() && getItems().get(0).is(AcademyItems.WINDGEN_FAN.get())) {
             if (!state.is(Blocks.AIR) && state.is(AcademyBlocks.WINDGEN_FAN.get())) {
-                // 这一方向有风扇
                 block.setValid(true);
                 return;
             } else if (state.is(Blocks.AIR)) {
-                // 这一方向是空的
                 level.setBlock(east, AcademyBlocks.WINDGEN_FAN.get()
                         .defaultBlockState()
                         .setValue(WindGenPillar.FACING, facing), 19);
@@ -47,7 +52,6 @@ public class WindGenMainBlockEntity extends AcademyContainerBlockEntity {
             }
         } else {
             if (!state.is(Blocks.AIR) && state.is(AcademyBlocks.WINDGEN_FAN.get())) {
-                // 这一方向有风扇
                 level.destroyBlock(east, false);
             }
         }
@@ -66,5 +70,42 @@ public class WindGenMainBlockEntity extends AcademyContainerBlockEntity {
         if (state.is(AcademyBlocks.WINDGEN_FAN.get())) {
             world.destroyBlock(east, false);
         }
+    }
+
+    @Override
+    public int getEnergyStored() {
+        WindGenBaseBlockEntity base = findBase();
+        return base != null ? base.getEnergyStored() : 0;
+    }
+
+    @Override
+    public int getMaxEnergyStored() {
+        WindGenBaseBlockEntity base = findBase();
+        return base != null ? base.getMaxEnergyStored() : MAX_STORAGE;
+    }
+
+    @Override
+    public void setEnergy(int energy) {
+        WindGenBaseBlockEntity base = findBase();
+        if (base != null) {
+            base.setEnergy(energy);
+        }
+    }
+
+    private WindGenBaseBlockEntity findBase() {
+        if (level == null) return null;
+        BlockPos pos = getBlockPos();
+        for (int i = 1; i < 200; i++) {
+            BlockPos below = pos.below(i);
+            BlockEntity be = level.getBlockEntity(below);
+            if (be instanceof WindGenBaseBlockEntity) {
+                return (WindGenBaseBlockEntity) be;
+            }
+            Block block = level.getBlockState(below).getBlock();
+            if (!(block instanceof WindGenPillar) && !(block instanceof WindGenBase) && !(block instanceof WindGenBaseSubBlock)) {
+                break;
+            }
+        }
+        return null;
     }
 }

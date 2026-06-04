@@ -26,6 +26,7 @@ public class WindBaseGui extends AcademyBaseUI<WindGenBaseMenu> {
     public WindBaseGui(WindGenBaseMenu menu, Inventory inv, Component p_97743_) {
         super(menu, inv, p_97743_);
         this.inv = inv;
+        setRenderEnergyTree(true);
     }
 
     @Override
