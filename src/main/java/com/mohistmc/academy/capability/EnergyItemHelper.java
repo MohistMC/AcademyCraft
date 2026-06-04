@@ -10,38 +10,38 @@ public final class EnergyItemHelper {
 
     private EnergyItemHelper() {}
 
+    public static boolean isEnergyItem(ItemStack stack) {
+        return stack != null && !stack.isEmpty() && stack.getItem() instanceof IEnergyItem;
+    }
+
     public static int getEnergy(ItemStack stack) {
         if (stack == null || stack.isEmpty()) return 0;
-        return stack.getMaxDamage() - stack.getDamageValue();
+        if (stack.getItem() instanceof IEnergyItem energyItem) {
+            return energyItem.getEnergyStored(stack);
+        }
+        return 0;
     }
 
     public static void setEnergy(ItemStack stack, int energy) {
         if (stack == null || stack.isEmpty()) return;
-        int maxEnergy = stack.getMaxDamage();
-        int newDamage = Math.max(0, maxEnergy - energy);
-        stack.setDamageValue(newDamage);
+        if (stack.getItem() instanceof IEnergyItem energyItem) {
+            energyItem.setEnergy(stack, energy);
+        }
     }
 
     public static int extractEnergy(ItemStack stack, int maxExtract, boolean simulate) {
-        int energy = getEnergy(stack);
-        int extracted = Math.min(energy, maxExtract);
-        if (!simulate && extracted > 0) {
-            setEnergy(stack, energy - extracted);
+        if (stack == null || stack.isEmpty()) return 0;
+        if (stack.getItem() instanceof IEnergyItem energyItem) {
+            return energyItem.extractEnergy(stack, maxExtract, simulate);
         }
-        return extracted;
+        return 0;
     }
 
     public static int receiveEnergy(ItemStack stack, int maxReceive, boolean simulate) {
-        int energy = getEnergy(stack);
-        int maxEnergy = stack.getMaxDamage();
-        int received = Math.min(maxEnergy - energy, maxReceive);
-        if (!simulate && received > 0) {
-            setEnergy(stack, energy + received);
+        if (stack == null || stack.isEmpty()) return 0;
+        if (stack.getItem() instanceof IEnergyItem energyItem) {
+            return energyItem.receiveEnergy(stack, maxReceive, simulate);
         }
-        return received;
-    }
-
-    public static boolean isEnergyItem(ItemStack stack) {
-        return stack != null && !stack.isEmpty() && stack.getMaxDamage() > 0;
+        return 0;
     }
 }

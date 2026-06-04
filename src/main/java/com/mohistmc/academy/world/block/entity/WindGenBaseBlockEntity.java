@@ -3,7 +3,6 @@ package com.mohistmc.academy.world.block.entity;
 import com.mohistmc.academy.capability.EnergyItemHelper;
 import com.mohistmc.academy.capability.IFEnergyStorage;
 import com.mohistmc.academy.world.AcademyBlockEntities;
-import com.mohistmc.academy.world.AcademyItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -63,7 +62,7 @@ public class WindGenBaseBlockEntity extends AcademyContainerBlockEntity implemen
      */
     private int chargeEnergyUnit(int amount) {
         ItemStack stack = getItems().getFirst();
-        if (stack.isEmpty() || !stack.is(AcademyItems.ENERGY_UNIT.get())) return 0;
+        if (stack.isEmpty() || !EnergyItemHelper.isEnergyItem(stack)) return 0;
         return EnergyItemHelper.receiveEnergy(stack, amount, false);
     }
 

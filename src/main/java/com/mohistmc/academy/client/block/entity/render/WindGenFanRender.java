@@ -4,18 +4,17 @@ import com.mohistmc.academy.world.block.WindGenFan;
 import com.mohistmc.academy.world.block.entity.WindGenFanBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class WindGenFanRender implements BlockEntityRenderer<WindGenFanBlockEntity> {
 

@@ -1,6 +1,6 @@
 package com.mohistmc.academy.world.menu;
 
-import com.mohistmc.academy.world.AcademyItems;
+import com.mohistmc.academy.capability.EnergyItemHelper;
 import com.mohistmc.academy.world.AcademyMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -14,12 +14,8 @@ public class WindGenBaseMenu extends AcademyMenu {
         addAcademySlot(new Slot(container, 0, 44, 70) {
             @Override
             public boolean mayPlace(ItemStack item) {
-                return item.is(AcademyItems.ENERGY_UNIT.get());
+                return EnergyItemHelper.isEnergyItem(item);
             }
         });
     }
-
-
-
-
 }
