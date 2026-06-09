@@ -1,7 +1,9 @@
-package com.mohistmc.academy.skill.effect;
+package com.mohistmc.academy.skill.ability.electromaster;
 
+import com.mohistmc.academy.entity.RailgunBeamEntity;
 import com.mohistmc.academy.skill.ChargingSkillEffect;
 import com.mohistmc.academy.skill.PlayerAbilityData;
+import com.mohistmc.academy.world.AcademyEntities;
 import com.mohistmc.academy.world.AcademyItems;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -107,17 +109,21 @@ public class RailgunEffect implements ChargingSkillEffect {
         float damage = lerpf(60, 110, exp);
         double energy = lerpf(900, 2000, exp);
 
-        Vec3 eyePos = player.getEyePosition(0);
         Vec3 lookVec = player.getLookAngle();
+        Vec3 rightVec = lookVec.cross(new Vec3(0, 1, 0)).normalize();
+        Vec3 startPos = player.getEyePosition(0)
+                .add(rightVec.scale(0.3))
+                .add(0, -0.2, 0)
+                .add(lookVec.scale(0.3));
 
-        for (double d = 0.5; d <= Math.min(RANGE, energy / 20); d += 0.5) {
-            Vec3 point = eyePos.add(lookVec.scale(d));
-            level.sendParticles(ParticleTypes.SONIC_BOOM, point.x, point.y, point.z, 1, 0, 0, 0, 0);
-        }
+        RailgunBeamEntity beam = new RailgunBeamEntity(AcademyEntities.RAILGUN_BEAM.get(), level);
+        beam.setPos(startPos.x, startPos.y, startPos.z);
+        beam.setBeam(Vec3.ZERO, lookVec, Math.min(RANGE, energy / 20));
+        level.addFreshEntity(beam);
 
         boolean hitEntity = false;
         for (double d = 1.0; d <= RANGE; d += 1.0) {
-            Vec3 checkPos = eyePos.add(lookVec.scale(d));
+            Vec3 checkPos = startPos.add(lookVec.scale(d));
             AABB area = new AABB(
                     checkPos.x - RADIUS, checkPos.y - RADIUS, checkPos.z - RADIUS,
                     checkPos.x + RADIUS, checkPos.y + RADIUS, checkPos.z + RADIUS

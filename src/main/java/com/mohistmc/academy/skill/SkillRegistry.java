@@ -1,14 +1,14 @@
 package com.mohistmc.academy.skill;
 
-import com.mohistmc.academy.skill.effect.ArcGenEffect;
-import com.mohistmc.academy.skill.effect.BodyIntensifyEffect;
-import com.mohistmc.academy.skill.effect.ChargingEffect;
-import com.mohistmc.academy.skill.effect.MagManipEffect;
-import com.mohistmc.academy.skill.effect.MagMovementEffect;
-import com.mohistmc.academy.skill.effect.MineDetectEffect;
-import com.mohistmc.academy.skill.effect.RailgunEffect;
-import com.mohistmc.academy.skill.effect.ThunderBoltEffect;
-import com.mohistmc.academy.skill.effect.ThunderClapEffect;
+import com.mohistmc.academy.skill.ability.ArcGenEffect;
+import com.mohistmc.academy.skill.ability.electromaster.BodyIntensifyEffect;
+import com.mohistmc.academy.skill.ability.electromaster.ChargingEffect;
+import com.mohistmc.academy.skill.ability.MagManipEffect;
+import com.mohistmc.academy.skill.ability.electromaster.MagMovementEffect;
+import com.mohistmc.academy.skill.ability.electromaster.MineDetectEffect;
+import com.mohistmc.academy.skill.ability.electromaster.RailgunEffect;
+import com.mohistmc.academy.skill.ability.electromaster.ThunderBoltEffect;
+import com.mohistmc.academy.skill.ability.electromaster.ThunderClapEffect;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

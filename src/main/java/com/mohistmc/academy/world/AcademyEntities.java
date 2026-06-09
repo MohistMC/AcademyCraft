@@ -1,6 +1,7 @@
 package com.mohistmc.academy.world;
 
 import com.mohistmc.academy.AcademyCraft;
+import com.mohistmc.academy.entity.RailgunBeamEntity;
 import com.mohistmc.academy.world.entity.CoinEntity;
 import com.mohistmc.academy.world.entity.OreHighlightEntity;
 import java.util.function.Supplier;
@@ -20,10 +21,18 @@ public class AcademyEntities {
                     .updateInterval(10)
                     .build("coin_entity"));
 
-    public static final Supplier<EntityType<OreHighlightEntity>> ORE_HIGHLIGHT =
-            ENTITIES.register("ore_highlight", () -> EntityType.Builder.of(OreHighlightEntity::new, MobCategory.MISC)
+    public static final DeferredHolder<EntityType<?>, EntityType<OreHighlightEntity>> ORE_HIGHLIGHT = ENTITIES.register("ore_highlight",
+            () -> EntityType.Builder.of(OreHighlightEntity::new, MobCategory.MISC)
                     .sized(1.0f, 1.0f)
                     .clientTrackingRange(64)
                     .updateInterval(20)
                     .build("ore_highlight"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<RailgunBeamEntity>> RAILGUN_BEAM = ENTITIES.register("railgun_beam",
+            () -> EntityType.Builder.of(RailgunBeamEntity::new, MobCategory.MISC)
+            .sized(0.5f, 0.5f)
+            .clientTrackingRange(64)
+            .updateInterval(1)
+            .noSummon()
+            .build("railgun_beam"));
 }

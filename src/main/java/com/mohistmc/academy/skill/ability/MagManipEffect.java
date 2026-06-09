@@ -1,4 +1,4 @@
-package com.mohistmc.academy.skill.effect;
+package com.mohistmc.academy.skill.ability;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;

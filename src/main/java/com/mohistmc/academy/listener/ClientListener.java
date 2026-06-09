@@ -7,6 +7,7 @@ import com.mohistmc.academy.client.block.entity.render.CatEngineRender;
 import com.mohistmc.academy.client.block.entity.render.PhaseLiquidRender;
 import com.mohistmc.academy.client.block.entity.render.WindGenFanRender;
 import com.mohistmc.academy.client.entity.CoinRenderer;
+import com.mohistmc.academy.client.renderer.RailgunBeamRenderer;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.AcademyEntities;
 import com.mohistmc.academy.world.block.IDevMachine;
@@ -50,6 +51,7 @@ public class ClientListener {
 
         event.registerEntityRenderer(AcademyEntities.COIN_ENTITY.get(), CoinRenderer::new);
         event.registerEntityRenderer(AcademyEntities.ORE_HIGHLIGHT.get(), OreHighlightEntity.Renderer::new);
+        event.registerEntityRenderer(AcademyEntities.RAILGUN_BEAM.get(), RailgunBeamRenderer::new);
     }
 
     @SubscribeEvent

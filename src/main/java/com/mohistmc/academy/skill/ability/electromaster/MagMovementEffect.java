@@ -1,4 +1,4 @@
-package com.mohistmc.academy.skill.effect;
+package com.mohistmc.academy.skill.ability.electromaster;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
