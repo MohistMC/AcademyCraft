@@ -9,6 +9,13 @@ import com.mohistmc.academy.skill.ability.electromaster.MineDetectEffect;
 import com.mohistmc.academy.skill.ability.electromaster.RailgunEffect;
 import com.mohistmc.academy.skill.ability.electromaster.ThunderBoltEffect;
 import com.mohistmc.academy.skill.ability.electromaster.ThunderClapEffect;
+import com.mohistmc.academy.skill.ability.teleporter.FlashingEffect;
+import com.mohistmc.academy.skill.ability.teleporter.FleshRippingEffect;
+import com.mohistmc.academy.skill.ability.teleporter.LocationTeleportEffect;
+import com.mohistmc.academy.skill.ability.teleporter.MarkTeleportEffect;
+import com.mohistmc.academy.skill.ability.teleporter.PenetrateTeleportEffect;
+import com.mohistmc.academy.skill.ability.teleporter.ShiftTpEffect;
+import com.mohistmc.academy.skill.ability.teleporter.ThreateningTeleportEffect;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -69,6 +76,15 @@ public class SkillRegistry {
         registerEffect(new ThunderBoltEffect());
         registerEffect(new RailgunEffect());
         registerEffect(new ThunderClapEffect());
+
+        // Teleporter
+        registerEffect(new ThreateningTeleportEffect());
+        registerEffect(new PenetrateTeleportEffect());
+        registerEffect(new MarkTeleportEffect());
+        registerEffect(new LocationTeleportEffect());
+        registerEffect(new FleshRippingEffect());
+        registerEffect(new FlashingEffect());
+        registerEffect(new ShiftTpEffect());
     }
 
     private static void bindEffects() {
