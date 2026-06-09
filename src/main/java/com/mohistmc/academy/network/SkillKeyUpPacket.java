@@ -13,6 +13,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record SkillKeyUpPacket(int slotIndex) implements CustomPacketPayload {
@@ -51,6 +52,9 @@ public record SkillKeyUpPacket(int slotIndex) implements CustomPacketPayload {
             }
 
             SkillChargingManager.stopCharging(player.getUUID());
+
+            // 通知客户端停止蓄力 HUD
+            PacketDistributor.sendToPlayer(player, new SyncChargingStatePacket(-1, 0, ""));
 
             if (state.ticks >= chargingEffect.getMinChargeTicks()) {
                 chargingEffect.onChargingRelease(player, data, state.ticks);

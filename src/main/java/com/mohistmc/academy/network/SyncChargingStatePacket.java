@@ -29,6 +29,14 @@ public record SyncChargingStatePacket(int ticks, int maxTicks, String skillId) i
     public static void handle(SyncChargingStatePacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             com.mohistmc.academy.client.ChargingHudOverlay.setChargingState(packet.ticks, packet.maxTicks, packet.skillId);
+
+            // 服务端停止蓄力（自动释放/打断）时，同步重置客户端所有蓄力槽位状态
+            if (packet.ticks < 0) {
+                com.mohistmc.academy.client.KeyInputHandler.resetChargingSlot(0);
+                com.mohistmc.academy.client.KeyInputHandler.resetChargingSlot(1);
+                com.mohistmc.academy.client.KeyInputHandler.resetChargingSlot(2);
+                com.mohistmc.academy.client.KeyInputHandler.resetChargingSlot(3);
+            }
         });
     }
 }
