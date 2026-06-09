@@ -83,37 +83,29 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
 
     @Override
     public void renderBg(GuiGraphics var1, float var2, int var3, int var4) {
-        RenderSystem.setShaderColor(1, 1, 1, 0.7f);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        if (renderBg)
-            RenderUtils.renderCenter(176, 187, this.width, this.height, var1, PARENT_BACKGROUND);
-        RenderSystem.disableBlend();
+
         if (!this.wireless) {
             // 背包页面
-            RenderSystem.defaultBlendFunc();
-            // 机器ui
             this.renderBackground(var1, var3, var4, var2);
-            RenderSystem.disableBlend();
         } else {
             // 无线ui
-            RenderSystem.setShaderColor(1, 1, 1, 0.7f);
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
             RenderUtils.renderCenter(GUI_WIDTH, GUI_HEIGHT, this.width, this.height, var1, PARENT_BACKGROUND);
             RenderUtils.renderCenterTop(-(GUI_WIDTH / 2) + 20, 10, 18, 18, this.width, (this.height - GUI_HEIGHT) / 2, var1, IC_TOMATRIX);
+
             RenderUtils.renderCenterTop(0, 37, 160, 16, this.width, (this.height - GUI_HEIGHT) / 2, var1, ELEMENT_BG_300_32);
             RenderUtils.renderCenterTop(-(160 / 2) + 16, 39, 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, var1, IC_MATRIX);
 
             RenderUtils.renderText(var1, "Connected", ((this.width - GUI_WIDTH) / 2) + 13, ((this.height - GUI_HEIGHT) / 2) + 30);
             RenderUtils.renderText(var1, "Available", ((this.width - GUI_WIDTH) / 2) + 13, ((this.height - GUI_HEIGHT) / 2) + 55);
-
         }
+
         renderEnergyTreePanel(var1);
         RenderSystem.disableBlend();
     }
 
-    private NonNullList<AcademyNode> nodes = NonNullList.create();
+    private final NonNullList<AcademyNode> nodes = NonNullList.create();
     private int page = 1;
 
     private void addOrSetNode(BlockPos pos, Level level) {
@@ -241,43 +233,38 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
         int guiLeft = (this.width - GUI_WIDTH) / 2;
         int guiTop = (this.height - GUI_HEIGHT) / 2;
 
-        int barW = 4;
-        int barH = 44;
         int barX = guiLeft + GUI_WIDTH - 20;
         int barY = guiTop + 24;
 
         // 背景
-        graphics.fill(barX, barY, barX + barW, barY + barH, 0xFF2a2a3a);
+        graphics.fill(barX, barY, barX + 4, barY + 44, 0xFF2a2a3a);
 
         // 填充（从下到上）
-        int filled = (int) ((long) current * barH / max);
-        graphics.fill(barX, barY + barH - filled, barX + barW, barY + barH, 0xFFf1c40f);
+        int filled = (int) ((long) current * 44 / max);
+        graphics.fill(barX, barY + 44 - filled, barX + 4, barY + 44, 0xFFf1c40f);
 
         // IF 数值
-        graphics.drawString(this.font, current + "/" + max + " IF", barX + (barW - this.font.width(current + "/" + max + " IF")) / 2, barY - 10, 0xFFcccccc);
+        String energyText = current + "/" + max + " IF";
+        graphics.drawString(this.font, energyText, barX + (4 - this.font.width(energyText)) / 2, barY - 10, 0xFFcccccc);
 
         // IF/t 速率
-        String rateText = "0 IF/t";
+        String rateText = getEnergyRateText(be);
+        graphics.drawString(this.font, rateText, barX + (4 - this.font.width(rateText)) / 2, barY + 46, 0xFFaaaaaa);
+    }
+
+    private String getEnergyRateText(BlockEntity be) {
         if (be instanceof SolarGenBlockEntity solarBe) {
-            var status = solarBe.getStatus();
-            rateText = switch (status) {
+            return switch (solarBe.getStatus()) {
                 case STRONG -> "3 IF/t";
                 case WEAK -> "0.6 IF/t";
                 case STOPPED -> "0 IF/t";
             };
         } else if (be instanceof WindGenBaseBlockEntity windBe) {
-            rateText = windBe.isValidMain() ? "1 IF/t" : "0 IF/t";
+            return windBe.isValidMain() ? "1 IF/t" : "0 IF/t";
         } else if (be instanceof WindGenMainBlockEntity) {
-            rateText = "1 IF/t";
+            return "1 IF/t";
         }
-        graphics.drawString(this.font, rateText, barX + (barW - this.font.width(rateText)) / 2, barY + barH + 2, 0xFFaaaaaa);
-    }
-
-    private void drawPanelBorder(GuiGraphics graphics, int x, int y, int w, int h, int color) {
-        graphics.fill(x, y, x + w, y + 1, color);
-        graphics.fill(x, y + h - 1, x + w, y + h, color);
-        graphics.fill(x, y, x + 1, y + h, color);
-        graphics.fill(x + w - 1, y, x + w, y + h, color);
+        return "0 IF/t";
     }
 
     public boolean isHoveringButton(int x, int y, int w, int h, double mx, double my) {
@@ -372,7 +359,7 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
         }
 
         if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 259)) {
-            if (inputPass.length() > 0) {
+            if (!inputPass.isEmpty()) {
                 inputPass.deleteCharAt(inputPass.length() - 1);
             }
         }

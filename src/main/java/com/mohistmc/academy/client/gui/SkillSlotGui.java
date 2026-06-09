@@ -104,11 +104,11 @@ public class SkillSlotGui extends AcademyScreen {
         for (int i = 0; i < PlayerAbilityData.PRESET_COUNT; i++) {
             int tabX = tabStartX + i * (TAB_WIDTH + TAB_GAP);
             boolean isHovered = isHovered(tabX, tabY, TAB_WIDTH, TAB_HEIGHT, mouseX, mouseY);
-            if (isHovered) hoveredTab = i;
+            if (isHovered && dropdownSlot < 0) hoveredTab = i;
 
             boolean isActive = (i == viewPreset);
             int bgColor = isActive ? AcademyColors.SUCCESS : AcademyColors.BORDER;
-            if (isHovered && !isActive) bgColor = 0xFF4a6a7e;
+            if (isHovered && !isActive && dropdownSlot < 0) bgColor = 0xFF4a6a7e;
 
             graphics.fill(tabX, tabY, tabX + TAB_WIDTH, tabY + TAB_HEIGHT, bgColor);
             String text = "预设 " + (i + 1);
@@ -168,6 +168,9 @@ public class SkillSlotGui extends AcademyScreen {
     }
 
     private void drawDropdown(GuiGraphics graphics, int mouseX, int mouseY) {
+        graphics.pose().pushPose();
+        graphics.pose().translate(0, 0, 200);
+
         int totalHeight = dropdownEntries.size() * DROPDOWN_ITEM_HEIGHT + DROPDOWN_PADDING * 2;
 
         graphics.fill(dropdownX - 1, dropdownY - 1, dropdownX + DROPDOWN_WIDTH + 1, dropdownY + totalHeight + 1, AcademyColors.BORDER_ACTIVE);
@@ -195,7 +198,10 @@ public class SkillSlotGui extends AcademyScreen {
                 graphics.drawString(this.font, label, textX, textY, COLOR_DROPDOWN_CLEAR);
             }
         }
+
+        graphics.pose().popPose();
     }
+
 
     private void drawHint(GuiGraphics graphics) {
         String hint = "左键: 选择技能  右键: 清除";
@@ -339,9 +345,19 @@ public class SkillSlotGui extends AcademyScreen {
         dropdownY = slotY + SLOT_SIZE + 14;
 
         dropdownX = Math.clamp(dropdownX, guiLeft + 2, guiLeft + GUI_WIDTH - DROPDOWN_WIDTH - 2);
+
         int totalDropdownHeight = dropdownEntries.size() * DROPDOWN_ITEM_HEIGHT + DROPDOWN_PADDING * 2;
-        if (dropdownY + totalDropdownHeight > guiTop + GUI_HEIGHT) {
-            dropdownY = slotY - totalDropdownHeight;
+        int centerY = slotY + SLOT_SIZE / 2;
+        dropdownY = centerY - totalDropdownHeight / 2;
+
+        if (dropdownY < 0) {
+            dropdownY = 0;
+        }
+        if (dropdownY + totalDropdownHeight > this.height) {
+            dropdownY = this.height - totalDropdownHeight;
+            if (dropdownY < 0) {
+                dropdownY = 0;
+            }
         }
 
         dropdownSlot = slotIndex;

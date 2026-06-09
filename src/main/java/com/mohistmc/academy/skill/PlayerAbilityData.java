@@ -40,11 +40,23 @@ public class PlayerAbilityData {
     private final Set<String> loadedMedia = new HashSet<>();
     private int misakaId = -1;
 
+
+    // ==================== 开发者模式 ====================
+    private boolean devMode = false;
+
     public PlayerAbilityData() {
         for (int i = 0; i < PRESET_COUNT; i++) {
             presets[i] = new SkillPreset();
         }
         installedApps.add(AppRegistry.SETTINGS.getAppId());
+    }
+
+    public boolean isDevMode() {
+        return devMode;
+    }
+
+    public void setDevMode(boolean devMode) {
+        this.devMode = devMode;
     }
 
     public AbilityCategory getCurrentAbility() {
@@ -112,6 +124,7 @@ public class PlayerAbilityData {
     }
 
     public boolean hasLearnedSkill(String skillId) {
+        if (devMode) return true;
         return learnedSkills.contains(skillId);
     }
 
@@ -140,6 +153,7 @@ public class PlayerAbilityData {
     }
 
     public boolean canLearnSkill(Skill skill) {
+        if (devMode) return true;
         if (skill.getCategory() != currentAbility) return false;
         if (learnedSkills.contains(skill.getId())) return false;
         if (skill.getLevel() > playerLevel + 1) return false;
@@ -161,6 +175,7 @@ public class PlayerAbilityData {
     }
 
     public boolean canUseSkill(Skill skill) {
+        if (isDevMode()) return true;
         if (!hasLearnedSkill(skill.getId())) return false;
         if (currentCp < skill.getBaseCpCost()) return false;
         return !(currentOverload >= maxOverload);
@@ -168,8 +183,10 @@ public class PlayerAbilityData {
 
     public void useSkill(Skill skill) {
         if (!canUseSkill(skill)) return;
-        currentCp -= skill.getBaseCpCost();
-        addOverload(skill.getBaseOverload());
+        if (!isDevMode()) {
+            currentCp -= skill.getBaseCpCost();
+            addOverload(skill.getBaseOverload());
+        }
         addProficiency(skill.getId(), 0.002f);
     }
 
@@ -370,6 +387,9 @@ public class PlayerAbilityData {
         }
         tag.put("loaded_media", mediaList);
 
+        // 保存开发者模式状态
+        tag.putBoolean("dev_mode", devMode);
+
         return tag;
     }
 
@@ -442,6 +462,11 @@ public class PlayerAbilityData {
             for (int i = 0; i < mediaList.size(); i++) {
                 data.addLoadedMedia(mediaList.getString(i));
             }
+        }
+
+        // 读取开发者模式状态
+        if (tag.contains("dev_mode")) {
+            data.setDevMode(tag.getBoolean("dev_mode"));
         }
 
         return data;

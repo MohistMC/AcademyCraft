@@ -42,7 +42,6 @@ public class SolarGenGui extends AcademyBaseUI<SolarGenMenu> {
 
     @Override
     public void renderBackground(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderUtils.renderCenter(176, 187, this.width, this.height, graphics, UI_SOLAR_GEN);

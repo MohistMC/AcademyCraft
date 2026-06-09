@@ -1,0 +1,174 @@
+package com.mohistmc.academy.skill.effect;
+
+import com.mohistmc.academy.skill.ChargingSkillEffect;
+import com.mohistmc.academy.skill.PlayerAbilityData;
+import com.mohistmc.academy.world.AcademyItems;
+import java.util.List;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+
+import static com.mohistmc.academy.utils.MathUtils.lerpf;
+
+public class RailgunEffect implements ChargingSkillEffect {
+
+    private static final int CHARGE_TICKS = 20;
+    private static final double RANGE = 45.0;
+    private static final double RADIUS = 1.5;
+    private static final double REFLECT_RANGE = 15.0;
+
+    @Override
+    public String getId() {
+        return "railgun";
+    }
+
+    @Override
+    public int getMinChargeTicks() {
+        return CHARGE_TICKS;
+    }
+
+    @Override
+    public int getMaxChargeTicks() {
+        return CHARGE_TICKS;
+    }
+
+    private boolean isAccepted(ItemStack stack) {
+        return !stack.isEmpty() && (stack.is(AcademyItems.COIN) || stack.is(Items.IRON_BLOCK));
+    }
+
+    @Override
+    public void onChargingStart(ServerPlayer player, PlayerAbilityData data) {
+        ItemStack held = player.getMainHandItem();
+        if (!isAccepted(held)) {
+            return;
+        }
+        float exp = data.getProficiency(getId());
+        float overload = lerpf(180, 120, exp);
+        if (!data.isDevMode()) {
+            data.addOverload(overload);
+        }
+    }
+
+    @Override
+    public boolean onChargingTick(ServerPlayer player, PlayerAbilityData data, int ticks) {
+        ItemStack held = player.getMainHandItem();
+        return isAccepted(held);
+    }
+
+    @Override
+    public void onChargingRelease(ServerPlayer player, PlayerAbilityData data, int ticks) {
+        ItemStack held = player.getMainHandItem();
+        if (!isAccepted(held)) {
+            return;
+        }
+
+        float exp = data.getProficiency(getId());
+        float cp = lerpf(200, 450, exp);
+
+        if (!data.isDevMode() && data.getCurrentCp() < cp) {
+            return;
+        }
+
+        if (!player.isCreative()) {
+            held.shrink(1);
+            if (held.isEmpty()) {
+                player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            }
+        }
+
+        if (!data.isDevMode()) {
+            data.setCurrentCp(data.getCurrentCp() - cp);
+        }
+
+        performRailgun(player, data, exp);
+    }
+
+    @Override
+    public void onChargingAbort(ServerPlayer player, PlayerAbilityData data) {
+    }
+
+    @Override
+    public void execute(ServerPlayer player, PlayerAbilityData data) {
+    }
+
+    private void performRailgun(ServerPlayer player, PlayerAbilityData data, float exp) {
+        ServerLevel level = player.serverLevel();
+        float damage = lerpf(60, 110, exp);
+        double energy = lerpf(900, 2000, exp);
+
+        Vec3 eyePos = player.getEyePosition(0);
+        Vec3 lookVec = player.getLookAngle();
+
+        for (double d = 0.5; d <= Math.min(RANGE, energy / 20); d += 0.5) {
+            Vec3 point = eyePos.add(lookVec.scale(d));
+            level.sendParticles(ParticleTypes.SONIC_BOOM, point.x, point.y, point.z, 1, 0, 0, 0, 0);
+        }
+
+        boolean hitEntity = false;
+        for (double d = 1.0; d <= RANGE; d += 1.0) {
+            Vec3 checkPos = eyePos.add(lookVec.scale(d));
+            AABB area = new AABB(
+                    checkPos.x - RADIUS, checkPos.y - RADIUS, checkPos.z - RADIUS,
+                    checkPos.x + RADIUS, checkPos.y + RADIUS, checkPos.z + RADIUS
+            );
+            List<Entity> entities = level.getEntities(player, area, Entity::isAlive);
+
+            for (Entity e : entities) {
+                if (e instanceof LivingEntity target && e != player) {
+                    target.hurt(player.damageSources().playerAttack(player), damage);
+                    level.sendParticles(ParticleTypes.EXPLOSION,
+                            e.getX(), e.getY() + e.getBbHeight() / 2, e.getZ(),
+                            2, 0.3, 0.3, 0.3, 0.0);
+                    hitEntity = true;
+
+                    reflectDamage(player, data, exp, e.position());
+                }
+            }
+
+            BlockPos pos = BlockPos.containing(checkPos.x, checkPos.y, checkPos.z);
+            if (!level.getBlockState(pos).isAir() && !level.getBlockState(pos).is(Blocks.BEDROCK)) {
+                level.destroyBlock(pos, true);
+            }
+        }
+
+        level.playSound(null, player.getX(), player.getY(), player.getZ(),
+                SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 1.0f, 2.0f);
+
+        if (hitEntity) {
+            data.addProficiency(getId(), 0.01f);
+        } else {
+            data.addProficiency(getId(), 0.005f);
+        }
+    }
+
+    private void reflectDamage(ServerPlayer player, PlayerAbilityData data, float exp, Vec3 reflectorPos) {
+        ServerLevel level = player.serverLevel();
+        float damage = lerpf(60, 110, exp) * 0.5f;
+
+        AABB area = new AABB(
+                reflectorPos.x - REFLECT_RANGE, reflectorPos.y - REFLECT_RANGE, reflectorPos.z - REFLECT_RANGE,
+                reflectorPos.x + REFLECT_RANGE, reflectorPos.y + REFLECT_RANGE, reflectorPos.z + REFLECT_RANGE
+        );
+        List<Entity> entities = level.getEntities(player, area, Entity::isAlive);
+
+        for (Entity e : entities) {
+            if (e instanceof LivingEntity target && e != player) {
+                double dist = reflectorPos.distanceTo(e.position());
+                if (dist <= REFLECT_RANGE) {
+                    target.hurt(player.damageSources().playerAttack(player), damage);
+                }
+            }
+        }
+    }
+}

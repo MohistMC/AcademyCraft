@@ -5,8 +5,11 @@ import com.mohistmc.academy.network.LearnSkillPacket;
 import com.mohistmc.academy.network.OpenDevGuiPacket;
 import com.mohistmc.academy.network.OpenTutorialGuiPacket;
 import com.mohistmc.academy.network.SetSkillSlotPacket;
+import com.mohistmc.academy.network.SkillKeyDownPacket;
+import com.mohistmc.academy.network.SkillKeyUpPacket;
 import com.mohistmc.academy.network.StartTerminalInstallPacket;
 import com.mohistmc.academy.network.SyncAbilityDataPacket;
+import com.mohistmc.academy.network.SyncChargingStatePacket;
 import com.mohistmc.academy.network.ToggleAbilityPacket;
 import com.mohistmc.academy.network.UseSkillPacket;
 import com.mohistmc.academy.skill.AcademyAttachments;
@@ -103,6 +106,21 @@ public class AcademyCraft {
                 StartTerminalInstallPacket.TYPE,
                 StartTerminalInstallPacket.STREAM_CODEC,
                 StartTerminalInstallPacket::handle
+        );
+        registrar.playToServer(
+                SkillKeyDownPacket.TYPE,
+                SkillKeyDownPacket.STREAM_CODEC,
+                SkillKeyDownPacket::handle
+        );
+        registrar.playToServer(
+                SkillKeyUpPacket.TYPE,
+                SkillKeyUpPacket.STREAM_CODEC,
+                SkillKeyUpPacket::handle
+        );
+        registrar.playToClient(
+                SyncChargingStatePacket.TYPE,
+                SyncChargingStatePacket.STREAM_CODEC,
+                SyncChargingStatePacket::handle
         );
     }
 }

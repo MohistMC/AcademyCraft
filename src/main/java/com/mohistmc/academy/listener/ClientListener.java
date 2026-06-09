@@ -10,6 +10,7 @@ import com.mohistmc.academy.client.entity.CoinRenderer;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.AcademyEntities;
 import com.mohistmc.academy.world.block.IDevMachine;
+import com.mohistmc.academy.world.entity.OreHighlightEntity;
 import com.mojang.logging.LogUtils;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -36,13 +37,11 @@ public class ClientListener {
         KeyInputHandler.register(event);
     }
 
-    //将所有的生物的皮肤贴图信息写在这个函数里，有几个写几个
     @SubscribeEvent
     public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(CatEngineModel.LAYER_LOCATION, CatEngineModel::createBodyLayer);
     }
 
-    //将所有的生物的渲染信息写在这个函数里，有几个写几个
     @SubscribeEvent
     public static void onRegisterRenderer(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(AcademyBlockEntities.CAT_ENGINE.get(), CatEngineRender::new);
@@ -50,6 +49,7 @@ public class ClientListener {
         event.registerBlockEntityRenderer(AcademyBlockEntities.WINDGEN_FAN.get(), WindGenFanRender::new);
 
         event.registerEntityRenderer(AcademyEntities.COIN_ENTITY.get(), CoinRenderer::new);
+        event.registerEntityRenderer(AcademyEntities.ORE_HIGHLIGHT.get(), OreHighlightEntity.Renderer::new);
     }
 
     @SubscribeEvent
