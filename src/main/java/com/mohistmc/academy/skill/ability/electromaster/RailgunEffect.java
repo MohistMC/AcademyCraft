@@ -20,6 +20,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.BlockEvent;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 
@@ -111,14 +113,17 @@ public class RailgunEffect implements ChargingSkillEffect {
 
         Vec3 lookVec = player.getLookAngle();
         Vec3 rightVec = lookVec.cross(new Vec3(0, 1, 0)).normalize();
-        Vec3 startPos = player.getEyePosition(0)
+        Vec3 eyePos = player.getEyePosition(0);
+        Vec3 startPos = eyePos
                 .add(rightVec.scale(0.3))
                 .add(0, -0.2, 0)
                 .add(lookVec.scale(0.3));
 
+        double beamLength = Math.min(RANGE, energy / 20);
+
         RailgunBeamEntity beam = new RailgunBeamEntity(AcademyEntities.RAILGUN_BEAM.get(), level);
         beam.setPos(startPos.x, startPos.y, startPos.z);
-        beam.setBeam(Vec3.ZERO, lookVec, Math.min(RANGE, energy / 20));
+        beam.setBeam(startPos, lookVec, beamLength);
         level.addFreshEntity(beam);
 
         boolean hitEntity = false;
@@ -143,8 +148,14 @@ public class RailgunEffect implements ChargingSkillEffect {
             }
 
             BlockPos pos = BlockPos.containing(checkPos.x, checkPos.y, checkPos.z);
-            if (!level.getBlockState(pos).isAir() && !level.getBlockState(pos).is(Blocks.BEDROCK)) {
-                level.destroyBlock(pos, true);
+            var state = level.getBlockState(pos);
+            if (!state.isAir() && !state.is(Blocks.BEDROCK)) {
+                // 检查玩家是否有权破坏该方块（领地保护等）
+                BlockEvent.BreakEvent breakEvent = new BlockEvent.BreakEvent(level, pos, state, player);
+                NeoForge.EVENT_BUS.post(breakEvent);
+                if (!breakEvent.isCanceled()) {
+                    level.destroyBlock(pos, true);
+                }
             }
         }
 

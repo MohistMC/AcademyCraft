@@ -1,6 +1,6 @@
 package com.mohistmc.academy.skill;
 
-import com.mohistmc.academy.skill.ability.ArcGenEffect;
+import com.mohistmc.academy.skill.ability.electromaster.ArcGenEffect;
 import com.mohistmc.academy.skill.ability.electromaster.BodyIntensifyEffect;
 import com.mohistmc.academy.skill.ability.electromaster.ChargingEffect;
 import com.mohistmc.academy.skill.ability.MagManipEffect;

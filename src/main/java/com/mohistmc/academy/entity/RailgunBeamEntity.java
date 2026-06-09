@@ -13,6 +13,9 @@ public class RailgunBeamEntity extends Entity {
 
     private static final int MAX_LIFE = 50;
 
+    /** Client-side arc render data. Cached by RailgunBeamRenderer. */
+    public Object arcData;
+
     private static final EntityDataAccessor<Float> START_X =
             SynchedEntityData.defineId(RailgunBeamEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> START_Y =

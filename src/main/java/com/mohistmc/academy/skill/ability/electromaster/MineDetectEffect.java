@@ -7,12 +7,33 @@ import com.mohistmc.academy.world.entity.OreHighlightEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.mohistmc.academy.utils.MathUtils.lerpf;
+
+/**
+ * 矿物探测 —— 致盲玩家，高亮显示周围矿物位置
+ * <p>
+ * 参考旧代码 MineDetect.scala：
+ * - 失明效果持续 100 tick
+ * - 探测范围随熟练度增加（15~30）
+ * - 熟练度 > 0.5 且等级 >= 4 时显示矿物等级颜色
+ * - 最多探测 8400 个方块（性能限制）
+ *
+ * @author Mgazul
+ */
 public class MineDetectEffect implements SkillEffect {
 
-    private static final int TIME = 100;
+    private static final int BLIND_TIME = 100;
+    private static final int MAX_ORES = 100; // 限制最大矿石实体数量
 
     @Override
     public String getId() {
@@ -22,25 +43,34 @@ public class MineDetectEffect implements SkillEffect {
     @Override
     public void execute(ServerPlayer player, PlayerAbilityData data) {
         float proficiency = data.getProficiency(getId());
-        int range = (int) (15 + proficiency * 15);
-        boolean advanced = proficiency > 0.5f;
+        int range = (int) lerpf(15, 30, proficiency);
+        boolean advanced = proficiency > 0.5f && data.getPlayerLevel() >= 4;
 
+        // 致盲效果
+        player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, BLIND_TIME, 0));
+
+        // 播放音效
         ServerLevel level = player.serverLevel();
-        BlockPos playerPos = player.blockPosition();
+        level.playSound(null, player.getX(), player.getY(), player.getZ(),
+                SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.5f, 1.0f);
 
-        for (int dx = -range; dx <= range; dx++) {
-            for (int dy = -range; dy <= range; dy++) {
-                for (int dz = -range; dz <= range; dz++) {
+        // 扫描周围矿物
+        BlockPos playerPos = player.blockPosition();
+        List<OreHighlightEntity> spawnedOres = new ArrayList<>();
+
+        for (int dx = -range; dx <= range && spawnedOres.size() < MAX_ORES; dx++) {
+            for (int dy = -range; dy <= range && spawnedOres.size() < MAX_ORES; dy++) {
+                for (int dz = -range; dz <= range && spawnedOres.size() < MAX_ORES; dz++) {
                     BlockPos pos = playerPos.offset(dx, dy, dz);
                     BlockState state = level.getBlockState(pos);
                     if (isOre(state)) {
                         int harvestLevel = advanced ? getHarvestLevel(state) : 0;
                         OreHighlightEntity entity = new OreHighlightEntity(
                                 AcademyEntities.ORE_HIGHLIGHT.get(), level);
-                        // 实体放在方块中心
                         entity.setPos(pos.getX(), pos.getY(), pos.getZ());
                         entity.setData(harvestLevel, range);
                         level.addFreshEntity(entity);
+                        spawnedOres.add(entity);
                     }
                 }
             }
@@ -58,6 +88,9 @@ public class MineDetectEffect implements SkillEffect {
                 || state.is(BlockTags.EMERALD_ORES);
     }
 
+    /**
+     * 获取矿石的挖掘等级索引（用于颜色区分）
+     */
     private int getHarvestLevel(BlockState state) {
         if (state.is(BlockTags.INCORRECT_FOR_DIAMOND_TOOL)) return 4;
         if (state.is(BlockTags.INCORRECT_FOR_IRON_TOOL)) return 3;
