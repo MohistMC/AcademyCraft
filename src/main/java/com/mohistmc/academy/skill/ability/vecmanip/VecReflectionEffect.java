@@ -5,7 +5,7 @@ import com.mohistmc.academy.client.effect.EffectHelper;
 import com.mohistmc.academy.skill.SkillEffect;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import com.mohistmc.academy.client.sound.AcademySounds;
+import com.mohistmc.academy.world.AcademySounds;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;

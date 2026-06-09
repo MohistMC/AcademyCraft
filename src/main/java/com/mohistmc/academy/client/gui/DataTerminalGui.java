@@ -1,6 +1,7 @@
 package com.mohistmc.academy.client.gui;
 
-import com.mohistmc.academy.client.sound.AcademySounds;
+import com.mohistmc.academy.client.sound.ClientSoundUtils;
+import com.mohistmc.academy.world.AcademySounds;
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.terminal.AppRegistry;
@@ -179,7 +180,7 @@ public class DataTerminalGui extends Screen {
 
             // 终端选择音效（对应旧代码 terminal.select）
             if (isHovered && hoveredApp != prevHoveredApp) {
-                AcademySounds.playClient(AcademySounds.TERMINAL_SELECT, SoundSource.MASTER, 0.2f, 1.0f);
+                ClientSoundUtils.playClient(AcademySounds.TERMINAL_SELECT, SoundSource.MASTER, 0.2f, 1.0f);
             }
 
             int bgColor = isHovered ? COLOR_APP_HOVER : COLOR_APP_BG;
@@ -258,7 +259,7 @@ public class DataTerminalGui extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (hoveredApp >= 0 && button == 0) {
             // 终端确认音效（对应旧代码 terminal.confirm）
-            AcademySounds.playClient(AcademySounds.TERMINAL_CONFIRM, SoundSource.MASTER, 0.5f, 1.0f);
+            ClientSoundUtils.playClient(AcademySounds.TERMINAL_CONFIRM, SoundSource.MASTER, 0.5f, 1.0f);
             openApp(appEntries.get(hoveredApp).appId);
             return true;
         }

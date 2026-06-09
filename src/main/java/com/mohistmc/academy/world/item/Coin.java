@@ -49,7 +49,7 @@ public class Coin extends AcademyItem {
             coinEntity.setXRot(level.random.nextFloat() * 360.0F);
 
             level.addFreshEntity(coinEntity);
-            level.playSound(null, player.blockPosition(), AcademySounds.FLIPCOIN.value(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            level.playSound(null, player.blockPosition(), AcademySounds.ENTITY_FLIPCOIN.value(), SoundSource.PLAYERS, 1.0F, 1.0F);
 
             // 消耗一个硬币
             if (!player.getAbilities().instabuild) {

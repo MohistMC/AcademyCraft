@@ -1,6 +1,6 @@
 package com.mohistmc.academy.skill.ability.vecmanip;
 
-import com.mohistmc.academy.client.sound.AcademySounds;
+import com.mohistmc.academy.world.AcademySounds;
 import com.mohistmc.academy.skill.ChargingSkillEffect;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import net.minecraft.server.level.ServerLevel;
