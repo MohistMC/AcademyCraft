@@ -1,11 +1,11 @@
 package com.mohistmc.academy.skill.ability.electromaster;
 
+import com.mohistmc.academy.client.sound.AcademySounds;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -81,8 +81,8 @@ public class MagMovementEffect implements SkillEffect {
         player.hurtMarked = true;
         player.fallDistance = 0.0f;
 
-        level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                SoundEvents.IRON_GOLEM_REPAIR, SoundSource.PLAYERS, 0.5f, 1.0f);
+        AcademySounds.playSound(level, player.getX(), player.getY(), player.getZ(),
+                AcademySounds.EM_MOVE_LOOP, SoundSource.PLAYERS, 0.5f, 1.0f);
     }
 
     /**

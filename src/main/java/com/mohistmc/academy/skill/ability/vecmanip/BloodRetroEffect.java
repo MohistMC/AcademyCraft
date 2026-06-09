@@ -1,23 +1,38 @@
 package com.mohistmc.academy.skill.ability.vecmanip;
 
+import com.mohistmc.academy.skill.ChargingSkillEffect;
 import com.mohistmc.academy.skill.PlayerAbilityData;
-import com.mohistmc.academy.skill.SkillEffect;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
+import com.mohistmc.academy.client.sound.AcademySounds;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.List;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 
 /**
- * 血液回流 —— 吸取周围敌人生命值
+ * 血液回流 —— 操纵目标血液，造成高额伤害
+ * <p>
+ * 参考旧代码 BloodRetrograde.scala：
+ * - 近战范围2格，自动锁定目标
+ * - 蓄力时减慢玩家移速，30tick后自动释放
+ * - 高额伤害：lerpf(30, 60, exp)
+ *
+ * @author Mgazul
  */
-public class BloodRetroEffect implements SkillEffect {
+public class BloodRetroEffect implements ChargingSkillEffect {
+
+    private static final int AUTO_RELEASE_TICKS = 30;
+    private static final double RANGE = 2.0;
 
     @Override
     public String getId() {
@@ -25,45 +40,93 @@ public class BloodRetroEffect implements SkillEffect {
     }
 
     @Override
-    public void execute(ServerPlayer player, PlayerAbilityData data) {
+    public int getMinChargeTicks() {
+        return 0;
+    }
+
+    @Override
+    public int getMaxChargeTicks() {
+        return AUTO_RELEASE_TICKS;
+    }
+
+    @Override
+    public void onChargingStart(ServerPlayer player, PlayerAbilityData data) {
+        // 减慢移速（模拟旧代码的 walkSpeed 降低）
+        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, AUTO_RELEASE_TICKS + 10, 2,
+                false, false, true));
+    }
+
+    @Override
+    public boolean onChargingTick(ServerPlayer player, PlayerAbilityData data, int ticks) {
+        return ticks <= AUTO_RELEASE_TICKS;
+    }
+
+    @Override
+    public void onChargingRelease(ServerPlayer player, PlayerAbilityData data, int ticks) {
         float exp = data.getProficiency(getId());
-        float damage = lerpf(8.0f, 15.0f, exp);
-        float radius = lerpf(4.0f, 7.0f, exp);
-        float healRatio = lerpf(0.3f, 0.5f, exp);
-
-        ServerLevel level = player.serverLevel();
-
-        level.sendParticles(ParticleTypes.DAMAGE_INDICATOR,
-                player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(),
-                20, radius / 2, 0.5, radius / 2, 0.1);
-
-        level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                SoundEvents.ENDERMAN_HURT, SoundSource.PLAYERS, 1.0f, 0.5f);
-
-        AABB area = new AABB(
-                player.getX() - radius, player.getY() - 1, player.getZ() - radius,
-                player.getX() + radius, player.getY() + 2, player.getZ() + radius
-        );
-
-        float totalHealed = 0;
-        for (Entity e : level.getEntities(player, area, Entity::isAlive)) {
-            if (e instanceof LivingEntity living && e != player) {
-                living.hurt(player.damageSources().playerAttack(player), damage);
-                totalHealed += damage * healRatio;
-                // 吸血粒子
-                level.sendParticles(ParticleTypes.HEART,
-                        e.getX(), e.getY() + e.getBbHeight() / 2, e.getZ(),
-                        1, 0.1, 0.1, 0.1, 0.01);
-            }
-        }
-
-        // 治疗玩家
-        if (totalHealed > 0) {
-            player.heal(totalHealed);
-        }
+        float damage = lerpf(30, 60, exp);
+        float cp = lerpf(280, 350, exp);
+        float overload = lerpf(55, 40, exp);
 
         if (!data.isDevMode()) {
-            data.addProficiency(getId(), 0.005f);
+            if (data.getCurrentCp() < cp) return;
+            data.setCurrentCp(data.getCurrentCp() - cp);
+            data.addOverload(overload);
         }
+
+        ServerLevel level = player.serverLevel();
+        EntityHitResult hit = rayTraceEntity(player, RANGE);
+
+        if (hit != null && hit.getEntity() instanceof LivingEntity target) {
+            target.hurt(player.damageSources().playerAttack(player), damage);
+
+            // 血液粒子效果
+            for (int i = 0; i < 8; i++) {
+                double ox = (level.random.nextDouble() - 0.5) * target.getBbWidth();
+                double oy = level.random.nextDouble() * target.getBbHeight();
+                double oz = (level.random.nextDouble() - 0.5) * target.getBbWidth();
+                level.sendParticles(ParticleTypes.DAMAGE_INDICATOR,
+                        target.getX() + ox, target.getY() + oy, target.getZ() + oz,
+                        1, 0, 0, 0, 0);
+            }
+
+            data.addProficiency(getId(), 0.002f);
+
+            AcademySounds.playSound(level, target.getX(), target.getY(), target.getZ(),
+                    AcademySounds.VM_BLOOD_RETRO, SoundSource.PLAYERS, 1.0f, 0.8f);
+        }
+    }
+
+    @Override
+    public void onChargingAbort(ServerPlayer player, PlayerAbilityData data) {
+    }
+
+    @Override
+    public void execute(ServerPlayer player, PlayerAbilityData data) {
+    }
+
+    private EntityHitResult rayTraceEntity(ServerPlayer player, double range) {
+        Vec3 start = player.getEyePosition();
+        Vec3 end = start.add(player.getLookAngle().scale(range));
+        List<Entity> entities = player.level().getEntities(player,
+                player.getBoundingBox().inflate(range),
+                e -> e.isAlive() && e.isPickable());
+
+        Entity closest = null;
+        double closestDist = Double.MAX_VALUE;
+        Vec3 closestHit = null;
+
+        for (Entity e : entities) {
+            var result = e.getBoundingBox().inflate(0.3).clip(start, end);
+            if (result.isPresent()) {
+                double dist = start.distanceTo(result.get());
+                if (dist < closestDist) {
+                    closestDist = dist;
+                    closest = e;
+                    closestHit = result.get();
+                }
+            }
+        }
+        return closest != null ? new EntityHitResult(closest, closestHit) : null;
     }
 }

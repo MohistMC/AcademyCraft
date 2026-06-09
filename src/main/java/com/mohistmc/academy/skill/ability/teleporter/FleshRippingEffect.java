@@ -5,7 +5,7 @@ import com.mohistmc.academy.skill.SkillEffect;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
+import com.mohistmc.academy.client.sound.AcademySounds;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -56,7 +56,7 @@ public class FleshRippingEffect implements SkillEffect {
                 10, 0.5, 0.5, 0.5, 0.1);
 
         level.playSound(null, target.getX(), target.getY(), target.getZ(),
-                SoundEvents.ENDERMAN_SCREAM, SoundSource.PLAYERS, 1.0f, 0.5f);
+                AcademySounds.TP_GUTS, SoundSource.PLAYERS, 1.0f, 0.5f);
 
         living.hurt(player.damageSources().playerAttack(player), damage);
 

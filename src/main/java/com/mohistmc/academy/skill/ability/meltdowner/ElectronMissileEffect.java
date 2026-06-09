@@ -5,7 +5,7 @@ import com.mohistmc.academy.skill.SkillEffect;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
+import com.mohistmc.academy.client.sound.AcademySounds;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,7 +49,7 @@ public class ElectronMissileEffect implements SkillEffect {
                 (int) (radius * 3), radius / 2, radius / 2, radius / 2, 0.1);
 
         level.playSound(null, missilePos.x, missilePos.y, missilePos.z,
-                SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 1.0f, 0.5f);
+                AcademySounds.MD_BALLSHOOT, SoundSource.PLAYERS, 1.0f, 0.5f);
 
         // AOE伤害
         AABB area = new AABB(

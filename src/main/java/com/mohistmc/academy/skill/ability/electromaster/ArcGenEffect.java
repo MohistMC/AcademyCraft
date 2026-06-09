@@ -1,11 +1,13 @@
 package com.mohistmc.academy.skill.ability.electromaster;
 
+import com.mohistmc.academy.client.effect.ElectroArcEntity;
+import com.mohistmc.academy.client.sound.AcademySounds;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
+import com.mohistmc.academy.world.AcademyEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -69,9 +71,18 @@ public class ArcGenEffect implements SkillEffect {
         // 射线追踪：实体 + 方块（包括水）
         TraceResult result = trace(player, eyePos, lookVec, range);
 
-        // 客户端音效（通过粒子/声音模拟）
-        level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.PLAYERS, 0.5f, 1.0f);
+        // 播放电弧音效
+        AcademySounds.playSound(level, player.getX(), player.getY(), player.getZ(),
+                AcademySounds.EM_ARC_WEAK, SoundSource.PLAYERS, 0.5f, 1.0f);
+
+        // 生成客户端电弧特效（对应旧代码 EntityArc with weakArc pattern）
+        ElectroArcEntity arc = new ElectroArcEntity(AcademyEntities.ELECTRO_ARC.get(), level);
+        arc.setPos(player.getX(), player.getY() + player.getEyeHeight(), player.getZ());
+        arc.setYRot(player.getYRot());
+        arc.setXRot(player.getXRot());
+        arc.setBeam(range).setLife(10).setArcCount(2)
+                .setWiggle(0.7f, 0.1f, 0.4f);
+        level.addFreshEntity(arc);
 
         float expIncr = 0f;
 

@@ -5,7 +5,7 @@ import com.mohistmc.academy.skill.SkillEffect;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
+import com.mohistmc.academy.client.sound.AcademySounds;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -42,7 +42,7 @@ public class JetEngineEffect implements SkillEffect {
         }
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 1.0f, 0.5f);
+                AcademySounds.MD_SIMPLE_CHARGE, SoundSource.PLAYERS, 1.0f, 0.5f);
 
         // 向后喷射推力
         player.setDeltaMovement(player.getDeltaMovement().add(thrust));

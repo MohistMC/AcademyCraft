@@ -3,6 +3,7 @@ package com.mohistmc.academy.client;
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.client.gui.DataTerminalGui;
 import com.mohistmc.academy.client.gui.SkillSlotGui;
+import com.mohistmc.academy.client.sound.AcademySounds;
 import com.mohistmc.academy.network.SkillKeyDownPacket;
 import com.mohistmc.academy.network.SkillKeyUpPacket;
 import com.mohistmc.academy.network.ToggleAbilityPacket;
@@ -17,6 +18,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -163,6 +165,7 @@ public class KeyInputHandler {
 
         if (TOGGLE_ABILITY.consumeClick()) {
             PacketDistributor.sendToServer(ToggleAbilityPacket.INSTANCE);
+            AcademySounds.playClient(AcademySounds.ABILITY_PRESET_CONFIRM, SoundSource.MASTER, 0.4f, 1.0f);
             return;
         }
 
@@ -195,6 +198,7 @@ public class KeyInputHandler {
                     mc.player.displayClientMessage(Component.literal("§7槽位 " + (i + 1) + " 未装备技能"), true);
                 } else {
                     mc.player.displayClientMessage(Component.literal("§c技能无法使用"), true);
+                    AcademySounds.playClient(AcademySounds.ABILITY_DENY, SoundSource.MASTER, 0.4f, 1.0f);
                 }
                 return;
             }
@@ -205,6 +209,7 @@ public class KeyInputHandler {
             data.setCurrentPreset(next);
             data.syncTo(mc.player);
             mc.player.displayClientMessage(Component.literal("§a切换预设: " + (next + 1)), true);
+            AcademySounds.playClient(AcademySounds.ABILITY_PRESET_SWITCH, SoundSource.MASTER, 0.5f, 1.0f);
         }
     }
 

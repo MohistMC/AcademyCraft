@@ -1,5 +1,6 @@
 package com.mohistmc.academy.skill.ability.electromaster;
 
+import com.mohistmc.academy.client.sound.AcademySounds;
 import com.mohistmc.academy.skill.ChargingSkillEffect;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.capability.EnergyItemHelper;
@@ -7,7 +8,6 @@ import com.mohistmc.academy.capability.IFEnergyStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -51,6 +51,8 @@ public class ChargingEffect implements ChargingSkillEffect {
         if (!data.isDevMode()) {
             data.addOverload(overload);
         }
+        // 播放充电循环音效
+        AcademySounds.playSound(player, AcademySounds.EM_CHARGE_LOOP, 0.3f, 1.0f);
     }
 
     @Override

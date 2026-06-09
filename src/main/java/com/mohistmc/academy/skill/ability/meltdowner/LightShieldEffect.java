@@ -5,7 +5,7 @@ import com.mohistmc.academy.skill.SkillEffect;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
+import com.mohistmc.academy.client.sound.AcademySounds;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -35,7 +35,7 @@ public class LightShieldEffect implements SkillEffect {
                 30, 0.5, 0.5, 0.5, 0.1);
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 1.0f, 1.5f);
+                AcademySounds.MD_SHIELD_STARTUP, SoundSource.PLAYERS, 1.0f, 1.5f);
 
         player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, duration, amplifier));
         player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, duration, amplifier));

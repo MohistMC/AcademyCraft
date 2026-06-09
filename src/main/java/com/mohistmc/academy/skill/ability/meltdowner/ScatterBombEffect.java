@@ -5,7 +5,7 @@ import com.mohistmc.academy.skill.SkillEffect;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
+import com.mohistmc.academy.client.sound.AcademySounds;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -35,7 +35,7 @@ public class ScatterBombEffect implements SkillEffect {
         Vec3 playerPos = player.position();
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 1.0f, 2.0f);
+                AcademySounds.MD_BALLSHOOT, SoundSource.PLAYERS, 1.0f, 2.0f);
 
         for (int i = 0; i < count; i++) {
             double angle = (Math.PI * 2 * i) / count;

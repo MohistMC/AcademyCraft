@@ -10,7 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
+import com.mohistmc.academy.client.sound.AcademySounds;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -159,8 +159,8 @@ public class RailgunEffect implements ChargingSkillEffect {
             }
         }
 
-        level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 1.0f, 2.0f);
+        AcademySounds.playSound(level, player.getX(), player.getY(), player.getZ(),
+                AcademySounds.EM_RAILGUN, SoundSource.PLAYERS, 0.5f, 1.0f);
 
         if (hitEntity) {
             data.addProficiency(getId(), 0.01f);

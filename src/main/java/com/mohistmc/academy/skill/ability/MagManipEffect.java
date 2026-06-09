@@ -1,12 +1,12 @@
 package com.mohistmc.academy.skill.ability;
 
+import com.mohistmc.academy.client.sound.AcademySounds;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -59,8 +59,8 @@ public class MagManipEffect implements SkillEffect {
                 }
             }
 
-            level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                    SoundEvents.IRON_GOLEM_ATTACK, SoundSource.PLAYERS, 0.5f, 1.0f);
+            AcademySounds.playSound(level, player.getX(), player.getY(), player.getZ(),
+                    AcademySounds.EM_MAG_MANIP, SoundSource.PLAYERS, 0.5f, 1.0f);
         }
     }
 

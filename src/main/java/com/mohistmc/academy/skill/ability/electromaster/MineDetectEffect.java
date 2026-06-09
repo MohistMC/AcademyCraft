@@ -1,5 +1,6 @@
 package com.mohistmc.academy.skill.ability.electromaster;
 
+import com.mohistmc.academy.client.sound.AcademySounds;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
 import com.mohistmc.academy.world.AcademyEntities;
@@ -7,7 +8,6 @@ import com.mohistmc.academy.world.entity.OreHighlightEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -51,8 +51,8 @@ public class MineDetectEffect implements SkillEffect {
 
         // 播放音效
         ServerLevel level = player.serverLevel();
-        level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.5f, 1.0f);
+        AcademySounds.playSound(level, player.getX(), player.getY(), player.getZ(),
+                AcademySounds.EM_MINEDETECT, SoundSource.PLAYERS, 0.5f, 1.0f);
 
         // 扫描周围矿物
         BlockPos playerPos = player.blockPosition();

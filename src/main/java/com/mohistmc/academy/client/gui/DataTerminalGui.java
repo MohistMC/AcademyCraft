@@ -1,5 +1,6 @@
 package com.mohistmc.academy.client.gui;
 
+import com.mohistmc.academy.client.sound.AcademySounds;
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.terminal.AppRegistry;
@@ -11,6 +12,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.ModList;
@@ -45,6 +47,7 @@ public class DataTerminalGui extends Screen {
     private int guiLeft;
     private int guiTop;
     private int hoveredApp = -1;
+    private int prevHoveredApp = -1;
     private final List<AppEntry> appEntries = new ArrayList<>();
 
     public DataTerminalGui() {
@@ -174,6 +177,11 @@ public class DataTerminalGui extends Screen {
                     && mouseY >= y && mouseY < y + APP_ICON_SIZE;
             if (isHovered) hoveredApp = i;
 
+            // 终端选择音效（对应旧代码 terminal.select）
+            if (isHovered && hoveredApp != prevHoveredApp) {
+                AcademySounds.playClient(AcademySounds.TERMINAL_SELECT, SoundSource.MASTER, 0.2f, 1.0f);
+            }
+
             int bgColor = isHovered ? COLOR_APP_HOVER : COLOR_APP_BG;
             int borderColor = isHovered ? COLOR_APP_HOVER_BORDER : COLOR_APP_BORDER;
             graphics.fill(x, y, x + APP_ICON_SIZE, y + APP_ICON_SIZE, bgColor);
@@ -196,6 +204,8 @@ public class DataTerminalGui extends Screen {
             int nameColor = isHovered ? COLOR_TEXT_CYAN : COLOR_TEXT_WHITE;
             graphics.drawString(this.font, name, x + (APP_ICON_SIZE - nameW) / 2, y + APP_ICON_SIZE + 4, nameColor);
         }
+
+        prevHoveredApp = hoveredApp;
     }
 
     private void drawBottomBar(GuiGraphics graphics) {
@@ -247,6 +257,8 @@ public class DataTerminalGui extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (hoveredApp >= 0 && button == 0) {
+            // 终端确认音效（对应旧代码 terminal.confirm）
+            AcademySounds.playClient(AcademySounds.TERMINAL_CONFIRM, SoundSource.MASTER, 0.5f, 1.0f);
             openApp(appEntries.get(hoveredApp).appId);
             return true;
         }

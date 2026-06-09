@@ -6,7 +6,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
+import com.mohistmc.academy.client.sound.AcademySounds;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
 
@@ -63,7 +63,7 @@ public class MarkTeleportEffect implements SkillEffect {
                 20, 0.5, 0.5, 0.5, 0.1);
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1.0f, 1.0f);
+                AcademySounds.TP_TP_PRE, SoundSource.PLAYERS, 1.0f, 1.0f);
 
         MARKS.remove(playerId);
 

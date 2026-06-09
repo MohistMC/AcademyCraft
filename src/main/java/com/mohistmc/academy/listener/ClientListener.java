@@ -6,6 +6,9 @@ import com.mohistmc.academy.client.block.entity.model.CatEngineModel;
 import com.mohistmc.academy.client.block.entity.render.CatEngineRender;
 import com.mohistmc.academy.client.block.entity.render.PhaseLiquidRender;
 import com.mohistmc.academy.client.block.entity.render.WindGenFanRender;
+import com.mohistmc.academy.client.effect.ElectroArcEntity;
+import com.mohistmc.academy.client.effect.RippleMarkEntity;
+import com.mohistmc.academy.client.effect.WaveEffectEntity;
 import com.mohistmc.academy.client.entity.CoinRenderer;
 import com.mohistmc.academy.client.renderer.RailgunBeamRenderer;
 import com.mohistmc.academy.world.AcademyBlockEntities;
@@ -52,6 +55,9 @@ public class ClientListener {
         event.registerEntityRenderer(AcademyEntities.COIN_ENTITY.get(), CoinRenderer::new);
         event.registerEntityRenderer(AcademyEntities.ORE_HIGHLIGHT.get(), OreHighlightEntity.Renderer::new);
         event.registerEntityRenderer(AcademyEntities.RAILGUN_BEAM.get(), RailgunBeamRenderer::new);
+        event.registerEntityRenderer(AcademyEntities.WAVE_EFFECT.get(), WaveEffectEntity.Renderer::new);
+        event.registerEntityRenderer(AcademyEntities.ELECTRO_ARC.get(), ElectroArcEntity.Renderer::new);
+        event.registerEntityRenderer(AcademyEntities.RIPPLE_MARK.get(), RippleMarkEntity.Renderer::new);
     }
 
     @SubscribeEvent

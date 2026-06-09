@@ -1,11 +1,13 @@
 package com.mohistmc.academy.skill.ability.electromaster;
 
+import com.mohistmc.academy.client.effect.ElectroArcEntity;
+import com.mohistmc.academy.client.sound.AcademySounds;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
+import com.mohistmc.academy.world.AcademyEntities;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -118,10 +120,28 @@ public class ThunderBoltEffect implements SkillEffect {
         }
 
         // 音效
-        level.playSound(null, impactPoint.x, impactPoint.y, impactPoint.z,
-                SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.PLAYERS, 0.8f, 1.0f);
-        level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.PLAYERS, 0.5f, 1.2f);
+        AcademySounds.playSound(level, impactPoint.x, impactPoint.y, impactPoint.z,
+                AcademySounds.EM_ARC_STRONG, SoundSource.PLAYERS, 0.6f, 1.0f);
+
+        // 生成客户端电弧特效（对应旧代码 EntityArc with strongArc pattern）
+        for (int i = 0; i < 2; i++) {
+            ElectroArcEntity mainArc = new ElectroArcEntity(AcademyEntities.ELECTRO_ARC.get(), level);
+            mainArc.setPos(player.getX(), player.getY() + player.getEyeHeight(), player.getZ());
+            mainArc.setYRot(player.getYRot());
+            mainArc.setXRot(player.getXRot());
+            mainArc.setBeam(RANGE).setLife(20).setArcCount(3);
+            level.addFreshEntity(mainArc);
+        }
+
+        // AOE电弧（对应旧代码 aoeArc）
+        for (Entity e : aoes) {
+            ElectroArcEntity aoeArc = new ElectroArcEntity(AcademyEntities.ELECTRO_ARC.get(), level);
+            aoeArc.setPos(player.getX(), player.getY() + player.getEyeHeight(), player.getZ());
+            aoeArc.setYRot(player.getYRot());
+            aoeArc.setXRot(player.getXRot());
+            aoeArc.setBeam(player.getEyePosition().distanceTo(e.getEyePosition())).setLife(20).setArcCount(2);
+            level.addFreshEntity(aoeArc);
+        }
 
         // 熟练度
         boolean effective = hitEntity || !aoes.isEmpty();

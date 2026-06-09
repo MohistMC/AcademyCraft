@@ -1,5 +1,6 @@
 package com.mohistmc.academy.skill.ability.electromaster;
 
+import com.mohistmc.academy.client.sound.AcademySounds;
 import com.mohistmc.academy.skill.ChargingSkillEffect;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import net.minecraft.server.level.ServerPlayer;
@@ -58,6 +59,8 @@ public class BodyIntensifyEffect implements ChargingSkillEffect {
         if (!data.isDevMode()) {
             data.addOverload(overload);
         }
+        // 播放强化循环音效
+        AcademySounds.playSound(player, AcademySounds.EM_INTENSIFY_LOOP, 0.5f, 1.0f);
     }
 
     @Override
@@ -123,6 +126,8 @@ public class BodyIntensifyEffect implements ChargingSkillEffect {
         if (!data.isDevMode()) {
             data.addProficiency(getId(), 0.01f);
         }
+        // 播放激活音效
+        AcademySounds.playSound(player, AcademySounds.EM_INTENSIFY_ACTIVATE, 0.5f, 1.0f);
     }
 
     @Override

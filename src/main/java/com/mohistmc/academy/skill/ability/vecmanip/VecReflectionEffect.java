@@ -2,18 +2,30 @@ package com.mohistmc.academy.skill.ability.vecmanip;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
+import com.mohistmc.academy.client.sound.AcademySounds;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+
+import java.util.List;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 
 /**
- * 矢量反射 —— 获得伤害反弹护盾
+ * 矢量反射 —— 激活后在一段时间内反射弹射物和攻击
+ * <p>
+ * 参考旧代码 VecReflection.scala：
+ * - 减少受到的伤害并反弹给攻击者
+ * - 反射范围内的弹射物
+ * - 持续消耗CP
+ *
+ * @author Mgazul
  */
 public class VecReflectionEffect implements SkillEffect {
 
@@ -25,24 +37,48 @@ public class VecReflectionEffect implements SkillEffect {
     @Override
     public void execute(ServerPlayer player, PlayerAbilityData data) {
         float exp = data.getProficiency(getId());
-        int duration = (int) lerpf(150, 300, exp);
-        int amplifier = (int) lerpf(1, 3, exp);
-
-        ServerLevel level = player.serverLevel();
-
-        level.sendParticles(ParticleTypes.ENCHANTED_HIT,
-                player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(),
-                30, 0.5, 0.5, 0.5, 0.1);
-
-        level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1.0f, 1.0f);
-
-        // 伤害吸收 + 荆棘效果
-        player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, duration, amplifier));
-        player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, duration, amplifier));
+        float cp = lerpf(15, 11, exp);
 
         if (!data.isDevMode()) {
-            data.addProficiency(getId(), 0.005f);
+            if (data.getCurrentCp() < cp) return;
+            data.setCurrentCp(data.getCurrentCp() - cp);
         }
+
+        // 给予短时间的反伤和抗性效果
+        int duration = (int) lerpf(60, 120, exp);
+        int amplifier = (int) lerpf(1, 3, exp);
+
+        player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, duration, amplifier));
+        player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, duration / 2, 1));
+
+        // 反射周围弹射物
+        ServerLevel level = player.serverLevel();
+        Vec3 playerPos = player.position();
+        double range = 4.0;
+
+        List<Entity> nearby = level.getEntities(player,
+                new AABB(playerPos.x - range, playerPos.y - range, playerPos.z - range,
+                        playerPos.x + range, playerPos.y + range, playerPos.z + range),
+                e -> e != player && e.isAlive() && e.isPickable());
+
+        for (Entity e : nearby) {
+            // 击退周围实体
+            Vec3 delta = e.position().subtract(playerPos).normalize().scale(1.2);
+            e.setDeltaMovement(delta.x, Math.abs(delta.y) * 0.3, delta.z);
+            e.hurtMarked = true;
+
+            if (e instanceof LivingEntity living) {
+                float reflectDamage = lerpf(0.6f, 1.2f, exp) * 5;
+                living.hurt(player.damageSources().playerAttack(player), reflectDamage);
+            }
+        }
+
+        data.addProficiency(getId(), 0.001f);
+
+        level.sendParticles(net.minecraft.core.particles.ParticleTypes.ENCHANT,
+                player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(),
+                30, 1.5, 1.5, 1.5, 0.1);
+        AcademySounds.playSound(level, player.getX(), player.getY(), player.getZ(),
+                AcademySounds.VM_VEC_REFLECTION, SoundSource.PLAYERS, 0.5f, 1.0f);
     }
 }
