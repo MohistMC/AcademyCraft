@@ -16,6 +16,39 @@ import com.mohistmc.academy.skill.ability.teleporter.MarkTeleportEffect;
 import com.mohistmc.academy.skill.ability.teleporter.PenetrateTeleportEffect;
 import com.mohistmc.academy.skill.ability.teleporter.ShiftTpEffect;
 import com.mohistmc.academy.skill.ability.teleporter.ThreateningTeleportEffect;
+import com.mohistmc.academy.skill.ability.meltdowner.ElectronBombEffect;
+import com.mohistmc.academy.skill.ability.meltdowner.ElectronMissileEffect;
+import com.mohistmc.academy.skill.ability.meltdowner.JetEngineEffect;
+import com.mohistmc.academy.skill.ability.meltdowner.LightShieldEffect;
+import com.mohistmc.academy.skill.ability.meltdowner.MeltdownerEffect;
+import com.mohistmc.academy.skill.ability.meltdowner.MineRayBasicEffect;
+import com.mohistmc.academy.skill.ability.meltdowner.MineRayExpertEffect;
+import com.mohistmc.academy.skill.ability.meltdowner.MineRayLuckEffect;
+import com.mohistmc.academy.skill.ability.meltdowner.RayBarrageEffect;
+import com.mohistmc.academy.skill.ability.meltdowner.ScatterBombEffect;
+import com.mohistmc.academy.skill.ability.vecmanip.BloodRetroEffect;
+import com.mohistmc.academy.skill.ability.vecmanip.DirBlastEffect;
+import com.mohistmc.academy.skill.ability.vecmanip.DirShockEffect;
+import com.mohistmc.academy.skill.ability.vecmanip.GroundShockEffect;
+import com.mohistmc.academy.skill.ability.vecmanip.PlasmaCannonEffect;
+import com.mohistmc.academy.skill.ability.vecmanip.StormWingEffect;
+import com.mohistmc.academy.skill.ability.vecmanip.VecAccelEffect;
+import com.mohistmc.academy.skill.ability.vecmanip.VecReflectionEffect;
+import com.mohistmc.academy.skill.ability.aerohand.AeroSeparatorEffect;
+import com.mohistmc.academy.skill.ability.aerohand.AirBladeEffect;
+import com.mohistmc.academy.skill.ability.aerohand.AirCoolingEffect;
+import com.mohistmc.academy.skill.ability.aerohand.AirJetEffect;
+import com.mohistmc.academy.skill.ability.aerohand.AirWallEffect;
+import com.mohistmc.academy.skill.ability.aerohand.BomberLanceEffect;
+import com.mohistmc.academy.skill.ability.aerohand.StormCoreEffect;
+import com.mohistmc.academy.skill.ability.aerohand.VolcanicBallEffect;
+import com.mohistmc.academy.skill.ability.telekinesis.CruiseBombEffect;
+import com.mohistmc.academy.skill.ability.telekinesis.OverloadThinkingEffect;
+import com.mohistmc.academy.skill.ability.telekinesis.PaperDrillEffect;
+import com.mohistmc.academy.skill.ability.telekinesis.PsychoNeedlingEffect;
+import com.mohistmc.academy.skill.ability.telekinesis.PsychoSlamEffect;
+import com.mohistmc.academy.skill.ability.telekinesis.PsychoThrowingEffect;
+import com.mohistmc.academy.skill.ability.telekinesis.PsychoTransmissionEffect;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -85,6 +118,47 @@ public class SkillRegistry {
         registerEffect(new FleshRippingEffect());
         registerEffect(new FlashingEffect());
         registerEffect(new ShiftTpEffect());
+
+        // Meltdowner
+        registerEffect(new ElectronBombEffect());
+        registerEffect(new ScatterBombEffect());
+        registerEffect(new LightShieldEffect());
+        registerEffect(new MeltdownerEffect());
+        registerEffect(new MineRayBasicEffect());
+        registerEffect(new MineRayExpertEffect());
+        registerEffect(new MineRayLuckEffect());
+        registerEffect(new RayBarrageEffect());
+        registerEffect(new JetEngineEffect());
+        registerEffect(new ElectronMissileEffect());
+
+        // Vecmanip
+        registerEffect(new DirShockEffect());
+        registerEffect(new GroundShockEffect());
+        registerEffect(new VecAccelEffect());
+        registerEffect(new DirBlastEffect());
+        registerEffect(new StormWingEffect());
+        registerEffect(new BloodRetroEffect());
+        registerEffect(new VecReflectionEffect());
+        registerEffect(new PlasmaCannonEffect());
+
+        // Aerohand
+        registerEffect(new VolcanicBallEffect());
+        registerEffect(new AirBladeEffect());
+        registerEffect(new AirCoolingEffect());
+        registerEffect(new AirJetEffect());
+        registerEffect(new AirWallEffect());
+        registerEffect(new BomberLanceEffect());
+        registerEffect(new StormCoreEffect());
+        registerEffect(new AeroSeparatorEffect());
+
+        // Telekinesis
+        registerEffect(new PsychoThrowingEffect());
+        registerEffect(new PsychoTransmissionEffect());
+        registerEffect(new PsychoNeedlingEffect());
+        registerEffect(new CruiseBombEffect());
+        registerEffect(new OverloadThinkingEffect());
+        registerEffect(new PsychoSlamEffect());
+        registerEffect(new PaperDrillEffect());
     }
 
     private static void bindEffects() {

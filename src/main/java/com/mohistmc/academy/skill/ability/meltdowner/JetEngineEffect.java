@@ -2,8 +2,20 @@ package com.mohistmc.academy.skill.ability.meltdowner;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.phys.Vec3;
 
+import static com.mohistmc.academy.utils.MathUtils.lerpf;
+
+/**
+ * 喷射引擎 —— 向后方喷射，获得高速飞行效果
+ */
 public class JetEngineEffect implements SkillEffect {
 
     @Override
@@ -13,6 +25,35 @@ public class JetEngineEffect implements SkillEffect {
 
     @Override
     public void execute(ServerPlayer player, PlayerAbilityData data) {
-        // TODO: 实现喷射引擎技能
+        float exp = data.getProficiency(getId());
+        double force = lerpf(1.5f, 3.0f, exp);
+        int duration = (int) lerpf(100, 200, exp);
+        int amplifier = (int) lerpf(1, 3, exp);
+
+        ServerLevel level = player.serverLevel();
+        Vec3 lookVec = player.getLookAngle();
+        Vec3 thrust = lookVec.scale(-force);
+
+        // 喷射粒子
+        for (int i = 0; i < 10; i++) {
+            level.sendParticles(ParticleTypes.FLAME,
+                    player.getX(), player.getY(), player.getZ(),
+                    1, thrust.x * 0.5, thrust.y * 0.5, thrust.z * 0.5, 0.1);
+        }
+
+        level.playSound(null, player.getX(), player.getY(), player.getZ(),
+                SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 1.0f, 0.5f);
+
+        // 向后喷射推力
+        player.setDeltaMovement(player.getDeltaMovement().add(thrust));
+        player.hurtMarked = true;
+
+        // 速度提升效果
+        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, duration, amplifier));
+        player.addEffect(new MobEffectInstance(MobEffects.JUMP, duration, amplifier));
+
+        if (!data.isDevMode()) {
+            data.addProficiency(getId(), 0.005f);
+        }
     }
 }
