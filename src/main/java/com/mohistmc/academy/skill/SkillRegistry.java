@@ -362,11 +362,6 @@ public class SkillRegistry {
                 .prereq("mark_teleport", 0.8f).prereq("penetrate_teleport", 0.8f)
                 .cpCost(80).overload(40).build());
 
-        // 维度折叠定理II(被动)
-        registerSkill(new Skill.Builder("dim_folding_theorem_2", cat, 3)
-                .type(SkillType.PASSIVE)
-                .prereq("location_teleport", 0.0f).build());
-
         // 撕裂肉体
         registerSkill(new Skill.Builder("flesh_ripping", cat, 4)
                 .prereq("location_teleport", 0.5f)
