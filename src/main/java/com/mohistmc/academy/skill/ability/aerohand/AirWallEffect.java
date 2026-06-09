@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.aerohand;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -30,9 +30,7 @@ public class AirWallEffect implements SkillEffect {
 
         ServerLevel level = player.serverLevel();
 
-        level.sendParticles(ParticleTypes.POOF,
-                player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(),
-                40, 1.0, 1.0, 1.0, 0.1);
+        EffectHelper.windBurst(level, player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(), 40, 1.0);
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 1.0f, 0.5f);

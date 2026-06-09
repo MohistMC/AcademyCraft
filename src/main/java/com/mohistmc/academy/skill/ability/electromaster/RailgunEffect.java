@@ -7,7 +7,7 @@ import com.mohistmc.academy.world.AcademyEntities;
 import com.mohistmc.academy.world.AcademyItems;
 import java.util.List;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import com.mohistmc.academy.client.sound.AcademySounds;
@@ -138,9 +138,9 @@ public class RailgunEffect implements ChargingSkillEffect {
             for (Entity e : entities) {
                 if (e instanceof LivingEntity target && e != player) {
                     target.hurt(player.damageSources().playerAttack(player), damage);
-                    level.sendParticles(ParticleTypes.EXPLOSION,
+                    EffectHelper.glowBurst(level,
                             e.getX(), e.getY() + e.getBbHeight() / 2, e.getZ(),
-                            2, 0.3, 0.3, 0.3, 0.0);
+                            3, 0.3f, 0x88FFCC44, 10, 0.2f);
                     hitEntity = true;
 
                     reflectDamage(player, data, exp, e.position());

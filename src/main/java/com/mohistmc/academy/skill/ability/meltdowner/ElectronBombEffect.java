@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.meltdowner;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import com.mohistmc.academy.client.sound.AcademySounds;
@@ -50,9 +50,7 @@ public class ElectronBombEffect implements SkillEffect {
         }
 
         // 爆炸效果
-        level.sendParticles(ParticleTypes.EXPLOSION,
-                impactPos.x, impactPos.y, impactPos.z,
-                (int) (radius * 2), radius / 2, radius / 2, radius / 2, 0.1);
+        EffectHelper.glowBurst(level, impactPos.x, impactPos.y, impactPos.z, (int) (radius * 2), 0.3f, 0x88FFCC44, 12, radius / 2);
 
         level.playSound(null, impactPos.x, impactPos.y, impactPos.z,
                 AcademySounds.MD_BALLSHOOT, SoundSource.PLAYERS, 1.0f, 1.5f);

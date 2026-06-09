@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.aerohand;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -38,9 +38,7 @@ public class AirJetEffect implements SkillEffect {
 
         for (double d = 1.0; d <= range; d += 0.5) {
             Vec3 checkPos = eyePos.add(lookVec.scale(d));
-            level.sendParticles(ParticleTypes.POOF,
-                    checkPos.x, checkPos.y, checkPos.z,
-                    1, 0.1, 0.1, 0.1, 0.01);
+            EffectHelper.windBurst(level, checkPos.x, checkPos.y, checkPos.z, 1, 0.1);
 
             AABB area = new AABB(
                     checkPos.x - radius, checkPos.y - radius, checkPos.z - radius,

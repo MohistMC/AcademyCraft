@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.telekinesis;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -39,15 +39,11 @@ public class CruiseBombEffect implements SkillEffect {
         // 飞行粒子
         for (double d = 1.0; d <= range; d += 0.5) {
             Vec3 pos = eyePos.add(lookVec.scale(d));
-            level.sendParticles(ParticleTypes.FIREWORK,
-                    pos.x, pos.y, pos.z,
-                    1, 0.1, 0.1, 0.1, 0.01);
+            EffectHelper.glowBurst(level, pos.x, pos.y, pos.z, 1, 0.2f, 0xAAFFCC88, 10, 0.1);
         }
 
         // 爆炸粒子
-        level.sendParticles(ParticleTypes.EXPLOSION,
-                impactPos.x, impactPos.y, impactPos.z,
-                (int) (radius * 3), radius / 2, radius / 2, radius / 2, 0.1);
+        EffectHelper.glowBurst(level, impactPos.x, impactPos.y, impactPos.z, (int) (radius * 3), 0.3f, 0x88FFCC44, 12, radius / 2);
 
         level.playSound(null, impactPos.x, impactPos.y, impactPos.z,
                 SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 1.0f, 0.8f);

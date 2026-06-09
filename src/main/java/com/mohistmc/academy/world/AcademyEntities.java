@@ -3,6 +3,7 @@ package com.mohistmc.academy.world;
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.client.effect.ElectroArcEntity;
 import com.mohistmc.academy.client.effect.RippleMarkEntity;
+import com.mohistmc.academy.client.effect.SpriteEffectEntity;
 import com.mohistmc.academy.client.effect.WaveEffectEntity;
 import com.mohistmc.academy.entity.RailgunBeamEntity;
 import com.mohistmc.academy.world.entity.CoinEntity;
@@ -62,4 +63,12 @@ public class AcademyEntities {
             .updateInterval(1)
             .noSummon()
             .build("ripple_mark"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<SpriteEffectEntity>> SPRITE_EFFECT = ENTITIES.register("sprite_effect",
+            () -> EntityType.Builder.of(SpriteEffectEntity::new, MobCategory.MISC)
+            .sized(0.5f, 0.5f)
+            .clientTrackingRange(64)
+            .updateInterval(1)
+            .noSummon()
+            .build("sprite_effect"));
 }

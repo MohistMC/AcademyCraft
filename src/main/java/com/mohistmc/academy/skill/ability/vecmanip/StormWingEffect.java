@@ -3,7 +3,7 @@ package com.mohistmc.academy.skill.ability.vecmanip;
 import com.mohistmc.academy.skill.ChargingSkillEffect;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import com.mohistmc.academy.client.sound.AcademySounds;
@@ -111,9 +111,7 @@ public class StormWingEffect implements ChargingSkillEffect {
             }
         }
 
-        level.sendParticles(ParticleTypes.CLOUD,
-                player.getX(), player.getY(), player.getZ(),
-                50, 3, 1, 3, 0.1);
+        EffectHelper.windBurst(level, player.getX(), player.getY(), player.getZ(), 50, 3);
         AcademySounds.playSound(level, player.getX(), player.getY(), player.getZ(),
                 AcademySounds.VM_STORM_WING, SoundSource.PLAYERS, 1.0f, 0.5f);
     }

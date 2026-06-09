@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.telekinesis;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -30,9 +30,7 @@ public class OverloadThinkingEffect implements SkillEffect {
 
         ServerLevel level = player.serverLevel();
 
-        level.sendParticles(ParticleTypes.ENCHANT,
-                player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(),
-                50, 1.0, 1.0, 1.0, 0.5);
+        EffectHelper.glowBurst(level, player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(), 50, 0.15f, 0xAAFFFFFF, 10, 1.0);
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 1.0f, 1.5f);

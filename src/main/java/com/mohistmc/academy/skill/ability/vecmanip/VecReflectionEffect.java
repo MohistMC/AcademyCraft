@@ -1,6 +1,7 @@
 package com.mohistmc.academy.skill.ability.vecmanip;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import com.mohistmc.academy.skill.SkillEffect;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -75,9 +76,9 @@ public class VecReflectionEffect implements SkillEffect {
 
         data.addProficiency(getId(), 0.001f);
 
-        level.sendParticles(net.minecraft.core.particles.ParticleTypes.ENCHANT,
+        EffectHelper.glowBurst(level,
                 player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(),
-                30, 1.5, 1.5, 1.5, 0.1);
+                30, 0.2f, 0x88FF88FF, 12, 1.5f);
         AcademySounds.playSound(level, player.getX(), player.getY(), player.getZ(),
                 AcademySounds.VM_VEC_REFLECTION, SoundSource.PLAYERS, 0.5f, 1.0f);
     }

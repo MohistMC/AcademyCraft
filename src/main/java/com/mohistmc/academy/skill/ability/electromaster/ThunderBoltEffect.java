@@ -5,7 +5,7 @@ import com.mohistmc.academy.client.sound.AcademySounds;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
 import com.mohistmc.academy.world.AcademyEntities;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -91,9 +91,7 @@ public class ThunderBoltEffect implements SkillEffect {
             }
 
             // 粒子效果
-            level.sendParticles(ParticleTypes.ELECTRIC_SPARK,
-                    targetEntity.getX(), targetEntity.getY() + targetEntity.getBbHeight() / 2, targetEntity.getZ(),
-                    20, 0.5, 0.5, 0.5, 0.5);
+            EffectHelper.arcSpark(level, targetEntity.getX(), targetEntity.getY() + targetEntity.getBbHeight() / 2, targetEntity.getZ(), 20, 0.5);
         }
 
         // AOE 伤害（落点周围）
@@ -112,9 +110,7 @@ public class ThunderBoltEffect implements SkillEffect {
                         living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 3));
                     }
 
-                    level.sendParticles(ParticleTypes.ELECTRIC_SPARK,
-                            e.getX(), e.getY() + e.getBbHeight() / 2, e.getZ(),
-                            10, 0.3, 0.3, 0.3, 0.5);
+                    EffectHelper.arcSpark(level, e.getX(), e.getY() + e.getBbHeight() / 2, e.getZ(), 10, 0.3);
                 }
             }
         }

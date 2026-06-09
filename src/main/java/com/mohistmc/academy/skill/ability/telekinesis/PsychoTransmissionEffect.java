@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.telekinesis;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -28,9 +28,7 @@ public class PsychoTransmissionEffect implements SkillEffect {
 
         ServerLevel level = player.serverLevel();
 
-        level.sendParticles(ParticleTypes.HAPPY_VILLAGER,
-                player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(),
-                20, 0.5, 0.5, 0.5, 0.1);
+        EffectHelper.psychoBurst(level, player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(), 20, 0.5);
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 SoundEvents.BEACON_POWER_SELECT, SoundSource.PLAYERS, 0.8f, 1.5f);

@@ -3,7 +3,7 @@ package com.mohistmc.academy.skill.ability.vecmanip;
 import com.mohistmc.academy.skill.ChargingSkillEffect;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import com.mohistmc.academy.client.sound.AcademySounds;
@@ -112,12 +112,8 @@ public class PlasmaCannonEffect implements ChargingSkillEffect {
         }
 
         // 爆炸视觉效果和粒子
-        level.sendParticles(ParticleTypes.EXPLOSION_EMITTER,
-                destination.x, destination.y, destination.z,
-                10, radius / 2, radius / 2, radius / 2, 0.5);
-        level.sendParticles(ParticleTypes.FLASH,
-                destination.x, destination.y, destination.z,
-                5, radius / 4, radius / 4, radius / 4, 0);
+        EffectHelper.glowBurst(level, destination.x, destination.y, destination.z, 10, 0.6f, 0xAAFF8822, 15, radius / 2);
+        EffectHelper.glowBurst(level, destination.x, destination.y, destination.z, 5, 0.5f, 0xFFFFFFFF, 8, 0.1f);
 
         AcademySounds.playSound(level, destination.x, destination.y, destination.z,
                 AcademySounds.VM_PLASMA_CANNON, SoundSource.PLAYERS, 1.5f, 0.5f);

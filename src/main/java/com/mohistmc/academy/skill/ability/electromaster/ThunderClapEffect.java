@@ -3,7 +3,7 @@ package com.mohistmc.academy.skill.ability.electromaster;
 import com.mohistmc.academy.skill.ChargingSkillEffect;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import java.util.List;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -45,9 +45,7 @@ public class ThunderClapEffect implements ChargingSkillEffect {
         }
 
         ServerLevel level = player.serverLevel();
-        level.sendParticles(ParticleTypes.ELECTRIC_SPARK,
-                player.getX(), player.getY() + 1, player.getZ(),
-                20, 0.5, 0.5, 0.5, 0.1);
+        EffectHelper.arcSpark(level, player.getX(), player.getY() + 1, player.getZ(), 20, 0.5);
     }
 
     @Override

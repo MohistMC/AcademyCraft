@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.meltdowner;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import com.mohistmc.academy.client.sound.AcademySounds;
@@ -30,9 +30,7 @@ public class LightShieldEffect implements SkillEffect {
 
         ServerLevel level = player.serverLevel();
 
-        level.sendParticles(ParticleTypes.WAX_ON,
-                player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(),
-                30, 0.5, 0.5, 0.5, 0.1);
+        EffectHelper.glowBurst(level, player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(), 30, 0.3f, 0x88AADDFF, 15, 0.5);
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 AcademySounds.MD_SHIELD_STARTUP, SoundSource.PLAYERS, 1.0f, 1.5f);

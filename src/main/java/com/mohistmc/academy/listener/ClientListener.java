@@ -8,6 +8,7 @@ import com.mohistmc.academy.client.block.entity.render.PhaseLiquidRender;
 import com.mohistmc.academy.client.block.entity.render.WindGenFanRender;
 import com.mohistmc.academy.client.effect.ElectroArcEntity;
 import com.mohistmc.academy.client.effect.RippleMarkEntity;
+import com.mohistmc.academy.client.effect.SpriteEffectEntity;
 import com.mohistmc.academy.client.effect.WaveEffectEntity;
 import com.mohistmc.academy.client.entity.CoinRenderer;
 import com.mohistmc.academy.client.renderer.RailgunBeamRenderer;
@@ -58,6 +59,7 @@ public class ClientListener {
         event.registerEntityRenderer(AcademyEntities.WAVE_EFFECT.get(), WaveEffectEntity.Renderer::new);
         event.registerEntityRenderer(AcademyEntities.ELECTRO_ARC.get(), ElectroArcEntity.Renderer::new);
         event.registerEntityRenderer(AcademyEntities.RIPPLE_MARK.get(), RippleMarkEntity.Renderer::new);
+        event.registerEntityRenderer(AcademyEntities.SPRITE_EFFECT.get(), SpriteEffectEntity.Renderer::new);
     }
 
     @SubscribeEvent

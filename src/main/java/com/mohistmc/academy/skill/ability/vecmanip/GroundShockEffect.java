@@ -3,7 +3,7 @@ package com.mohistmc.academy.skill.ability.vecmanip;
 import com.mohistmc.academy.skill.ChargingSkillEffect;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import com.mohistmc.academy.client.sound.AcademySounds;
@@ -151,9 +151,7 @@ public class GroundShockEffect implements ChargingSkillEffect {
                 }
 
                 // 粒子
-                level.sendParticles(ParticleTypes.CLOUD,
-                        pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5,
-                        3, 0.3, 0.1, 0.3, 0.05);
+                EffectHelper.windBurst(level, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 3, 0.3);
             }
         }
 

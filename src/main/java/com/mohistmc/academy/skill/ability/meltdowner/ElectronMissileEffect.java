@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.meltdowner;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import com.mohistmc.academy.client.sound.AcademySounds;
@@ -38,15 +38,11 @@ public class ElectronMissileEffect implements SkillEffect {
         Vec3 missilePos = eyePos.add(lookVec.scale(5));
         for (int step = 0; step < 20; step++) {
             missilePos = missilePos.add(lookVec.scale(0.5));
-            level.sendParticles(ParticleTypes.FIREWORK,
-                    missilePos.x, missilePos.y, missilePos.z,
-                    1, 0.05, 0.05, 0.05, 0.01);
+            EffectHelper.glowBurst(level, missilePos.x, missilePos.y, missilePos.z, 1, 0.2f, 0xAAFFCC88, 10, 0.05);
         }
 
         // 爆炸效果
-        level.sendParticles(ParticleTypes.EXPLOSION,
-                missilePos.x, missilePos.y, missilePos.z,
-                (int) (radius * 3), radius / 2, radius / 2, radius / 2, 0.1);
+        EffectHelper.glowBurst(level, missilePos.x, missilePos.y, missilePos.z, (int) (radius * 3), 0.3f, 0x88FFCC44, 12, radius / 2);
 
         level.playSound(null, missilePos.x, missilePos.y, missilePos.z,
                 AcademySounds.MD_BALLSHOOT, SoundSource.PLAYERS, 1.0f, 0.5f);

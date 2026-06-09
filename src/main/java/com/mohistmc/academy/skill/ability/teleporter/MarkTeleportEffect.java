@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.teleporter;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -52,15 +52,11 @@ public class MarkTeleportEffect implements SkillEffect {
 
         ServerLevel level = player.serverLevel();
 
-        level.sendParticles(ParticleTypes.PORTAL,
-                player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(),
-                20, 0.5, 0.5, 0.5, 0.1);
+        EffectHelper.teleportBurst(level, player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(), 20);
 
         player.teleportTo(markPos.x, markPos.y, markPos.z);
 
-        level.sendParticles(ParticleTypes.PORTAL,
-                player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(),
-                20, 0.5, 0.5, 0.5, 0.1);
+        EffectHelper.teleportBurst(level, player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(), 20);
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 AcademySounds.TP_TP_PRE, SoundSource.PLAYERS, 1.0f, 1.0f);

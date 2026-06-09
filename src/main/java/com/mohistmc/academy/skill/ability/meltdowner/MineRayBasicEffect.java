@@ -3,7 +3,7 @@ package com.mohistmc.academy.skill.ability.meltdowner;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import com.mohistmc.academy.client.sound.AcademySounds;
@@ -41,9 +41,7 @@ public class MineRayBasicEffect implements SkillEffect {
             BlockState state = level.getBlockState(bp);
 
             if (isOre(state)) {
-                level.sendParticles(ParticleTypes.FLAME,
-                        checkPos.x, checkPos.y, checkPos.z,
-                        2, 0.2, 0.2, 0.2, 0.01);
+                EffectHelper.meltdownBurst(level, checkPos.x, checkPos.y, checkPos.z, 2, 0.2);
                 level.destroyBlock(bp, true, player);
                 break;
             }

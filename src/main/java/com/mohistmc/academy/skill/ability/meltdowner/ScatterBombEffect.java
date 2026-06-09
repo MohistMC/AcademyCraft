@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.meltdowner;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import com.mohistmc.academy.client.sound.AcademySounds;
@@ -42,9 +42,7 @@ public class ScatterBombEffect implements SkillEffect {
             Vec3 offset = new Vec3(Math.cos(angle) * radius, 0, Math.sin(angle) * radius);
             Vec3 targetPos = playerPos.add(offset);
 
-            level.sendParticles(ParticleTypes.EXPLOSION,
-                    targetPos.x, targetPos.y + 1, targetPos.z,
-                    2, 0.3, 0.3, 0.3, 0.1);
+            EffectHelper.glowBurst(level, targetPos.x, targetPos.y + 1, targetPos.z, 2, 0.3f, 0x88FFCC44, 12, 0.3);
 
             AABB area = new AABB(
                     targetPos.x - 2, targetPos.y - 2, targetPos.z - 2,

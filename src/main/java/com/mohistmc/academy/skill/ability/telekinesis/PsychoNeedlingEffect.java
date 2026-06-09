@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.telekinesis;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -37,9 +37,7 @@ public class PsychoNeedlingEffect implements SkillEffect {
 
         for (double d = 1.0; d <= range; d += 0.5) {
             Vec3 checkPos = eyePos.add(lookVec.scale(d));
-            level.sendParticles(ParticleTypes.END_ROD,
-                    checkPos.x, checkPos.y, checkPos.z,
-                    1, needleWidth / 2, needleWidth / 2, needleWidth / 2, 0.01);
+            EffectHelper.glowBurst(level, checkPos.x, checkPos.y, checkPos.z, 1, 0.15f, 0xAAFFFFFF, 10, needleWidth / 2);
 
             AABB area = new AABB(
                     checkPos.x - needleWidth, checkPos.y - needleWidth, checkPos.z - needleWidth,

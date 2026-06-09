@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.aerohand;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -39,9 +39,7 @@ public class StormCoreEffect implements SkillEffect {
             double dist = Math.random() * radius;
             double x = playerPos.x + Math.cos(angle) * dist;
             double z = playerPos.z + Math.sin(angle) * dist;
-            level.sendParticles(ParticleTypes.CLOUD,
-                    x, playerPos.y + 0.5 + Math.random() * 2, z,
-                    1, 0.1, 0.1, 0.1, 0.01);
+            EffectHelper.windBurst(level, x, playerPos.y + 0.5 + Math.random() * 2, z, 1, 0.1);
         }
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),

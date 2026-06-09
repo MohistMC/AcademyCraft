@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.aerohand;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -33,9 +33,7 @@ public class AirCoolingEffect implements SkillEffect {
 
         ServerLevel level = player.serverLevel();
 
-        level.sendParticles(ParticleTypes.SNOWFLAKE,
-                player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(),
-                30, radius / 2, 0.5, radius / 2, 0.1);
+        EffectHelper.windBurst(level, player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(), 30, radius / 2);
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 SoundEvents.PLAYER_HURT_FREEZE, SoundSource.PLAYERS, 1.0f, 1.5f);

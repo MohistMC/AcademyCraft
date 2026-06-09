@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.aerohand;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -39,15 +39,11 @@ public class VolcanicBallEffect implements SkillEffect {
         // 飞行粒子
         for (double d = 1.0; d <= range; d += 0.5) {
             Vec3 pos = eyePos.add(lookVec.scale(d));
-            level.sendParticles(ParticleTypes.FLAME,
-                    pos.x, pos.y, pos.z,
-                    1, 0.1, 0.1, 0.1, 0.01);
+            EffectHelper.meltdownBurst(level, pos.x, pos.y, pos.z, 1, 0.1);
         }
 
         // 爆炸粒子
-        level.sendParticles(ParticleTypes.LAVA,
-                impactPos.x, impactPos.y, impactPos.z,
-                (int) (radius * 5), radius / 2, radius / 2, radius / 2, 0.1);
+        EffectHelper.meltdownBurst(level, impactPos.x, impactPos.y, impactPos.z, (int) (radius * 5), 0.3f);
 
         level.playSound(null, impactPos.x, impactPos.y, impactPos.z,
                 SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 1.0f, 0.5f);

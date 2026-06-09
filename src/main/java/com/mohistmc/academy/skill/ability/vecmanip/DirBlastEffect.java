@@ -3,7 +3,7 @@ package com.mohistmc.academy.skill.ability.vecmanip;
 import com.mohistmc.academy.skill.ChargingSkillEffect;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import com.mohistmc.academy.client.sound.AcademySounds;
@@ -156,9 +156,7 @@ public class DirBlastEffect implements ChargingSkillEffect {
         }
 
         // 粒子
-        level.sendParticles(ParticleTypes.EXPLOSION,
-                finalPos.x, finalPos.y, finalPos.z,
-                20, AOE_RANGE / 2, AOE_RANGE / 2, AOE_RANGE / 2, 0.1);
+        EffectHelper.glowBurst(level, finalPos.x, finalPos.y, finalPos.z, 20, 0.3f, 0x88FFCC44, 12, AOE_RANGE / 2);
 
         data.addProficiency(getId(), effective ? 0.0025f : 0.0012f);
         AcademySounds.playSound(level, finalPos.x, finalPos.y, finalPos.z,

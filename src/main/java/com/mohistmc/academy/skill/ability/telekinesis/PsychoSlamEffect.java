@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.telekinesis;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -35,9 +35,7 @@ public class PsychoSlamEffect implements SkillEffect {
         ServerLevel level = player.serverLevel();
         Vec3 playerPos = player.position();
 
-        level.sendParticles(ParticleTypes.CRIT,
-                player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(),
-                30, radius / 2, 0.5, radius / 2, 0.1);
+        EffectHelper.glowBurst(level, player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(), 30, 0.15f, 0xAAFFFFFF, 10, radius / 2);
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 SoundEvents.ENDER_DRAGON_GROWL, SoundSource.PLAYERS, 1.0f, 0.8f);

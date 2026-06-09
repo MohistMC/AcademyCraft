@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.teleporter;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import com.mohistmc.academy.client.sound.AcademySounds;
@@ -51,9 +51,7 @@ public class FleshRippingEffect implements SkillEffect {
             return;
         }
 
-        level.sendParticles(ParticleTypes.DAMAGE_INDICATOR,
-                target.getX(), target.getY() + target.getBbHeight() / 2, target.getZ(),
-                10, 0.5, 0.5, 0.5, 0.1);
+        EffectHelper.bloodSplash(level, target.getX(), target.getY() + target.getBbHeight() / 2, target.getZ(), 5, 0.3f);
 
         level.playSound(null, target.getX(), target.getY(), target.getZ(),
                 AcademySounds.TP_GUTS, SoundSource.PLAYERS, 1.0f, 0.5f);

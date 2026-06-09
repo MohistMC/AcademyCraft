@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.telekinesis;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -34,9 +34,7 @@ public class PsychoThrowingEffect implements SkillEffect {
         ServerLevel level = player.serverLevel();
         Vec3 playerPos = player.position();
 
-        level.sendParticles(ParticleTypes.ENCHANTED_HIT,
-                player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(),
-                20, 1.0, 1.0, 1.0, 0.1);
+        EffectHelper.glowBurst(level, player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(), 20, 0.15f, 0xAAFFFFFF, 10, 1.0);
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 SoundEvents.ENDER_DRAGON_FLAP, SoundSource.PLAYERS, 0.8f, 1.2f);

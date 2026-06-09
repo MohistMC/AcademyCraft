@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.meltdowner;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import com.mohistmc.academy.client.sound.AcademySounds;
@@ -36,9 +36,7 @@ public class JetEngineEffect implements SkillEffect {
 
         // 喷射粒子
         for (int i = 0; i < 10; i++) {
-            level.sendParticles(ParticleTypes.FLAME,
-                    player.getX(), player.getY(), player.getZ(),
-                    1, thrust.x * 0.5, thrust.y * 0.5, thrust.z * 0.5, 0.1);
+            EffectHelper.meltdownBurst(level, player.getX(), player.getY(), player.getZ(), 1, thrust.x * 0.5);
         }
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),

@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.meltdowner;
 
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import com.mohistmc.academy.client.sound.AcademySounds;
@@ -45,9 +45,7 @@ public class RayBarrageEffect implements SkillEffect {
 
             for (double d = 1.0; d <= range; d += 0.5) {
                 Vec3 checkPos = eyePos.add(rayDir.scale(d));
-                level.sendParticles(ParticleTypes.ELECTRIC_SPARK,
-                        checkPos.x, checkPos.y, checkPos.z,
-                        1, 0.05, 0.05, 0.05, 0.01);
+                EffectHelper.arcSpark(level, checkPos.x, checkPos.y, checkPos.z, 1, 0.05);
 
                 AABB area = new AABB(
                         checkPos.x - 1, checkPos.y - 1, checkPos.z - 1,

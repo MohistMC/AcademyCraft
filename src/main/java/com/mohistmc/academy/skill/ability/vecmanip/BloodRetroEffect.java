@@ -2,7 +2,7 @@ package com.mohistmc.academy.skill.ability.vecmanip;
 
 import com.mohistmc.academy.skill.ChargingSkillEffect;
 import com.mohistmc.academy.skill.PlayerAbilityData;
-import net.minecraft.core.particles.ParticleTypes;
+import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import com.mohistmc.academy.client.sound.AcademySounds;
@@ -85,9 +85,7 @@ public class BloodRetroEffect implements ChargingSkillEffect {
                 double ox = (level.random.nextDouble() - 0.5) * target.getBbWidth();
                 double oy = level.random.nextDouble() * target.getBbHeight();
                 double oz = (level.random.nextDouble() - 0.5) * target.getBbWidth();
-                level.sendParticles(ParticleTypes.DAMAGE_INDICATOR,
-                        target.getX() + ox, target.getY() + oy, target.getZ() + oz,
-                        1, 0, 0, 0, 0);
+                EffectHelper.bloodSplash(level, target.getX() + ox, target.getY() + oy, target.getZ() + oz, 5, 0.3f);
             }
 
             data.addProficiency(getId(), 0.002f);
