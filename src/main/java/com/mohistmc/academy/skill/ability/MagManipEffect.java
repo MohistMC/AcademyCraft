@@ -15,6 +15,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import static com.mohistmc.academy.utils.MathUtils.lerpf;
+
 public class MagManipEffect implements SkillEffect {
 
     @Override
@@ -71,5 +73,10 @@ public class MagManipEffect implements SkillEffect {
                 || state.is(Blocks.HEAVY_CORE) || state.is(Blocks.NETHERITE_BLOCK)
                 || state.is(Blocks.GOLD_BLOCK) || state.is(Blocks.GOLD_ORE)
                 || state.is(Blocks.DEEPSLATE_GOLD_ORE) || state.is(Blocks.RAW_GOLD_BLOCK);
+    }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(60, 40, proficiency);
     }
 }

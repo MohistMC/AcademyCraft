@@ -63,4 +63,9 @@ public class ElectronMissileEffect implements SkillEffect {
             data.addProficiency(getId(), 0.005f);
         }
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(25, 10, proficiency);
+    }
 }

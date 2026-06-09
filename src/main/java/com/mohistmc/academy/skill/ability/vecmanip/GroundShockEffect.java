@@ -187,4 +187,9 @@ public class GroundShockEffect implements ChargingSkillEffect {
     @Override
     public void execute(ServerPlayer player, PlayerAbilityData data) {
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(50, 25, proficiency);
+    }
 }

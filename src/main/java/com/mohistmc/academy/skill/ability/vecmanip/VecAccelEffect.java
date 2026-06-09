@@ -99,4 +99,9 @@ public class VecAccelEffect implements ChargingSkillEffect {
     @Override
     public void execute(ServerPlayer player, PlayerAbilityData data) {
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(20, 10, proficiency);
+    }
 }

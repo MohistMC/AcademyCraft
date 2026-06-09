@@ -54,4 +54,9 @@ public class JetEngineEffect implements SkillEffect {
             data.addProficiency(getId(), 0.005f);
         }
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(40, 20, proficiency);
+    }
 }

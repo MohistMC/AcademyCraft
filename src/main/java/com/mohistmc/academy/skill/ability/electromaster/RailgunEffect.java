@@ -188,4 +188,9 @@ public class RailgunEffect implements ChargingSkillEffect {
             }
         }
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(100, 60, proficiency);
+    }
 }

@@ -135,4 +135,9 @@ public class DirShockEffect implements ChargingSkillEffect {
 
         return closest != null ? new EntityHitResult(closest, closestHit) : null;
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(30, 15, proficiency);
+    }
 }

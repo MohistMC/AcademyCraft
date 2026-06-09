@@ -94,4 +94,9 @@ public class FleshRippingEffect implements SkillEffect {
         }
         return null;
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(90, 40, proficiency);
+    }
 }

@@ -82,4 +82,9 @@ public class VecReflectionEffect implements SkillEffect {
         AcademySounds.playSound(level, player.getX(), player.getY(), player.getZ(),
                 AcademySounds.VM_VEC_REFLECTION, SoundSource.PLAYERS, 0.5f, 1.0f);
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(25, 12, proficiency);
+    }
 }

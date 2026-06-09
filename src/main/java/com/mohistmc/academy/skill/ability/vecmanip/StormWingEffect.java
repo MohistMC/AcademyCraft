@@ -150,4 +150,9 @@ public class StormWingEffect implements ChargingSkillEffect {
             }
         }
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(40, 20, proficiency);
+    }
 }

@@ -32,7 +32,7 @@ public class ElectronBombEffect implements SkillEffect {
     @Override
     public void execute(ServerPlayer player, PlayerAbilityData data) {
         float exp = data.getProficiency(getId());
-        float damage = lerpf(5.0f, 10.0f, exp);
+        float damage = lerpf(6.0f, 12.0f, exp);
         float radius = lerpf(2.0f, 3.5f, exp);
 
         ServerLevel level = player.serverLevel();
@@ -70,6 +70,11 @@ public class ElectronBombEffect implements SkillEffect {
         if (!data.isDevMode()) {
             data.addProficiency(getId(), 0.005f);
         }
+    }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(20, 10, proficiency);
     }
 
     private EntityHitResult rayTraceEntities(ServerPlayer player, Vec3 start, Vec3 end) {

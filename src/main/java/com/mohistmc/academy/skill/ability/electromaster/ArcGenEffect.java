@@ -156,7 +156,7 @@ public class ArcGenEffect implements SkillEffect {
             BlockPos bp = BlockPos.containing(pos.x, pos.y, pos.z);
             BlockState state = level.getBlockState(bp);
 
-            if (state.is(Blocks.WATER) && waterHit == null) {
+            if ((state.is(Blocks.WATER) || state.is(Blocks.BUBBLE_COLUMN)) && waterHit == null) {
                 waterHit = bp;
                 waterHitPos = pos;
             }
@@ -238,6 +238,11 @@ public class ArcGenEffect implements SkillEffect {
         } else {
             return lerpf(0.0018f, 0.0027f, exp);
         }
+    }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(15, 5, proficiency);
     }
 
     // ==================== 内部类 ====================

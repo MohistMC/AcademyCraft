@@ -171,4 +171,9 @@ public class ThunderBoltEffect implements SkillEffect {
         }
         return null;
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(30, 15, proficiency);
+    }
 }

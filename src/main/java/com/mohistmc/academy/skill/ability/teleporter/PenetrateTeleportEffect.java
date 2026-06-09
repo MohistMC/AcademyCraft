@@ -88,4 +88,9 @@ public class PenetrateTeleportEffect implements SkillEffect {
     private boolean isSafe(ServerLevel level, BlockPos pos) {
         return level.isEmptyBlock(pos) && level.isEmptyBlock(pos.above()) && !level.isEmptyBlock(pos.below());
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(50, 30, proficiency);
+    }
 }

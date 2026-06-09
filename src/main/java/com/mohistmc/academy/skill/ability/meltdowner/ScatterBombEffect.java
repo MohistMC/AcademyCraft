@@ -59,4 +59,9 @@ public class ScatterBombEffect implements SkillEffect {
             data.addProficiency(getId(), 0.005f);
         }
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(30, 15, proficiency);
+    }
 }

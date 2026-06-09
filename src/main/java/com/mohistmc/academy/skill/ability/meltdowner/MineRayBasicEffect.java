@@ -65,4 +65,9 @@ public class MineRayBasicEffect implements SkillEffect {
                 || state.is(BlockTags.DIAMOND_ORES)
                 || state.is(BlockTags.EMERALD_ORES);
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(15, 5, proficiency);
+    }
 }

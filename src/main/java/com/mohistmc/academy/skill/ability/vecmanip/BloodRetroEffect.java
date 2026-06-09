@@ -127,4 +127,9 @@ public class BloodRetroEffect implements ChargingSkillEffect {
         }
         return closest != null ? new EntityHitResult(closest, closestHit) : null;
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(40, 20, proficiency);
+    }
 }

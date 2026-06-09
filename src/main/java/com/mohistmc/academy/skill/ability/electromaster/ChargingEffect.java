@@ -107,4 +107,9 @@ public class ChargingEffect implements ChargingSkillEffect {
     public void execute(ServerPlayer player, PlayerAbilityData data) {
         // 蓄力技能通过 Charging 接口执行
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(20, 8, proficiency);
+    }
 }

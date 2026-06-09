@@ -81,4 +81,9 @@ public class ShiftTpEffect implements SkillEffect {
     private boolean isSafe(ServerLevel level, BlockPos pos) {
         return level.isEmptyBlock(pos) && level.isEmptyBlock(pos.above()) && !level.isEmptyBlock(pos.below());
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(100, 60, proficiency);
+    }
 }

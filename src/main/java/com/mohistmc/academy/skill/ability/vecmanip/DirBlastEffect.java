@@ -170,4 +170,9 @@ public class DirBlastEffect implements ChargingSkillEffect {
     @Override
     public void execute(ServerPlayer player, PlayerAbilityData data) {
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(35, 18, proficiency);
+    }
 }

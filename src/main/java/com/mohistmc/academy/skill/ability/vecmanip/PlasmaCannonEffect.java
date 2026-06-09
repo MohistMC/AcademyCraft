@@ -126,4 +126,9 @@ public class PlasmaCannonEffect implements ChargingSkillEffect {
     @Override
     public void execute(ServerPlayer player, PlayerAbilityData data) {
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(60, 30, proficiency);
+    }
 }

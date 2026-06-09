@@ -66,4 +66,9 @@ public class RayBarrageEffect implements SkillEffect {
             data.addProficiency(getId(), 0.005f);
         }
     }
+
+    @Override
+    public int getCooldownTicks(float proficiency) {
+        return (int) lerpf(20, 8, proficiency);
+    }
 }
