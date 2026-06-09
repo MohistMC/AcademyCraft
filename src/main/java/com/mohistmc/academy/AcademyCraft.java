@@ -1,5 +1,6 @@
 package com.mohistmc.academy;
 
+import com.mohistmc.academy.config.ACConfig;
 import com.mohistmc.academy.listener.ServerListener;
 import com.mohistmc.academy.network.LearnSkillPacket;
 import com.mohistmc.academy.network.OpenDevGuiPacket;
@@ -14,6 +15,7 @@ import com.mohistmc.academy.network.ToggleAbilityPacket;
 import com.mohistmc.academy.network.UseSkillPacket;
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.SkillRegistry;
+import com.mohistmc.academy.crafting.MFIFRecipes;
 import com.mohistmc.academy.terminal.AppRegistry;
 import com.mohistmc.academy.terminal.MediaTrackRegistry;
 import com.mohistmc.academy.world.AcademyBlockEntities;
@@ -28,6 +30,7 @@ import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -52,6 +55,10 @@ public class AcademyCraft {
         AcademySounds.SOUND_EVENTS.register(modEventBus);
         AcademyAttachments.ATTACHMENT_TYPES.register(modEventBus);
 
+        // 注册配置
+        modContainer.registerConfig(ModConfig.Type.SERVER, ACConfig.Server.SPEC);
+        modContainer.registerConfig(ModConfig.Type.CLIENT, ACConfig.Client.SPEC);
+
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::registerPayloads);
 
@@ -62,6 +69,7 @@ public class AcademyCraft {
         SkillRegistry.init();
         AppRegistry.init();
         MediaTrackRegistry.init();
+        MFIFRecipes.init();
         LOGGER.info("AcademyCraft Skill Registry initialized with {} skills", SkillRegistry.getAllSkills().size());
     }
 

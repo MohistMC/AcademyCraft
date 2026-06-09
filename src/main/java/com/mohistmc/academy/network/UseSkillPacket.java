@@ -51,6 +51,10 @@ public record UseSkillPacket(int slotIndex) implements CustomPacketPayload {
                 return;
             }
 
+            if (data.isOnCooldown(skill.getId())) {
+                return; // 冷却中，静默忽略
+            }
+
             if (!data.canUseSkill(skill)) {
                 player.sendSystemMessage(Component.literal("§c计算力不足或过载过高"));
                 return;

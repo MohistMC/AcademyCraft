@@ -15,12 +15,12 @@ public class SkillEventHandler {
 
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Post event) {
-        if (event.getEntity() instanceof ServerPlayer player) {
-            PlayerAbilityData data = player.getData(AcademyAttachments.PLAYER_ABILITY);
-            data.tick();
+        PlayerAbilityData data = event.getEntity().getData(AcademyAttachments.PLAYER_ABILITY);
+        data.tick(); // 服务端和客户端都递减冷却
 
+        if (event.getEntity() instanceof ServerPlayer player) {
             SkillChargingManager.ChargingState state = SkillChargingManager.getState(player.getUUID());
-            if (state != null && !state.releasing) { // 避免重复进入
+            if (state != null && !state.releasing) {
                 Skill skill = data.getSlotSkill(data.getCurrentPresetIndex(), state.slotIndex);
                 if (skill == null) {
                     SkillChargingManager.stopCharging(player.getUUID());
@@ -29,13 +29,12 @@ public class SkillEventHandler {
                     SkillEffect effect = skill.getEffect();
                     if (effect instanceof ChargingSkillEffect chargingEffect) {
                         state.ticks++;
-
                         PacketDistributor.sendToPlayer(player,
                                 new SyncChargingStatePacket(state.ticks, chargingEffect.getMaxChargeTicks(), skill.getId()));
 
                         boolean canContinue = chargingEffect.onChargingTick(player, data, state.ticks);
                         if (!canContinue || state.ticks >= chargingEffect.getMaxChargeTicks()) {
-                            state.releasing = true; // 标记正在释放，防止重复
+                            state.releasing = true;
                             SkillChargingManager.stopCharging(player.getUUID());
                             if (state.ticks >= chargingEffect.getMinChargeTicks()) {
                                 chargingEffect.onChargingRelease(player, data, state.ticks);

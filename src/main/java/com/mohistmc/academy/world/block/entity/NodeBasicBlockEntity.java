@@ -5,19 +5,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class NodeBasicBlockEntity extends BaseNodeBlockEntity {
-    public NodeBasicBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
-        super(AcademyBlockEntities.NODE_BASIC.get(), p_155229_, p_155230_);
+    public NodeBasicBlockEntity(BlockPos pos, BlockState state) {
+        super(AcademyBlockEntities.NODE_BASIC.get(), pos, state);
     }
 
     @Override
-    public int getContainerSize() {
-        return 2;
+    public double getRange() {
+        return 10.0;
     }
 
     @Override
-    public int getRange() {
-        return 1;
+    public int getCapacity() {
+        return 3;
     }
-
-
 }

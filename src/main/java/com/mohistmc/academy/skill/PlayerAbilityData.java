@@ -35,6 +35,9 @@ public class PlayerAbilityData {
     private int currentPreset = 0;
     private boolean abilityActive = false;
 
+    // 冷却系统: skillId → 剩余冷却ticks (package-private 供 Codec 访问)
+    final Map<String, Integer> cooldowns = new HashMap<>();
+
     private boolean terminalInstalled = false;
     private final Set<String> installedApps = new HashSet<>();
     private final Set<String> loadedMedia = new HashSet<>();
@@ -174,9 +177,40 @@ public class PlayerAbilityData {
         return true;
     }
 
+    // ==================== 冷却系统 ====================
+
+    /** 设置技能冷却（tick） */
+    public void setCooldown(String skillId, int ticks) {
+        if (ticks > 0) {
+            cooldowns.put(skillId, ticks);
+        }
+    }
+
+    /** 技能是否在冷却中 */
+    public boolean isOnCooldown(String skillId) {
+        return cooldowns.getOrDefault(skillId, 0) > 0;
+    }
+
+    /** 获取技能剩余冷却 tick */
+    public int getCooldownTicks(String skillId) {
+        return cooldowns.getOrDefault(skillId, 0);
+    }
+
+    /** 获取技能最大冷却 tick（用于 HUD 显示） */
+    public int getMaxCooldownTicks(String skillId) {
+        // 从 cooldowns 中我们只有剩余值，最大冷却存储在 setCooldown 时
+        // 这里返回一个近似值（skill effect 的 cooldown）
+        Skill skill = SkillRegistry.getSkill(skillId);
+        if (skill != null && skill.getEffect() != null) {
+            return skill.getEffect().getCooldownTicks(getProficiency(skillId));
+        }
+        return 100; // fallback
+    }
+
     public boolean canUseSkill(Skill skill) {
         if (isDevMode()) return true;
         if (!hasLearnedSkill(skill.getId())) return false;
+        if (isOnCooldown(skill.getId())) return false;
         if (currentCp < skill.getBaseCpCost()) return false;
         return !(currentOverload >= maxOverload);
     }
@@ -188,6 +222,12 @@ public class PlayerAbilityData {
             addOverload(skill.getBaseOverload());
         }
         addProficiency(skill.getId(), 0.002f);
+
+        // 设置技能冷却
+        if (skill.getEffect() != null) {
+            int cd = skill.getEffect().getCooldownTicks(getProficiency(skill.getId()));
+            setCooldown(skill.getId(), cd);
+        }
     }
 
     // ==================== 激活状态 ====================
@@ -293,6 +333,14 @@ public class PlayerAbilityData {
         float overloadFactor = 1.0f - (currentOverload / maxOverload) * 0.5f;
         currentCp = Math.min(currentCp + cpRegenRate * overloadFactor, maxCp);
         currentOverload = Math.max(currentOverload - 0.5f, 0);
+
+        // 冷却递减
+        cooldowns.entrySet().removeIf(entry -> {
+            int remaining = entry.getValue() - 1;
+            if (remaining <= 0) return true;
+            entry.setValue(remaining);
+            return false;
+        });
     }
 
     public void reset() {
@@ -390,6 +438,13 @@ public class PlayerAbilityData {
         // 保存开发者模式状态
         tag.putBoolean("dev_mode", devMode);
 
+        // 冷却数据
+        CompoundTag cdTag = new CompoundTag();
+        for (var entry : cooldowns.entrySet()) {
+            cdTag.putInt(entry.getKey(), entry.getValue());
+        }
+        tag.put("cooldowns", cdTag);
+
         return tag;
     }
 
@@ -467,6 +522,14 @@ public class PlayerAbilityData {
         // 读取开发者模式状态
         if (tag.contains("dev_mode")) {
             data.setDevMode(tag.getBoolean("dev_mode"));
+        }
+
+        // 读取冷却
+        if (tag.contains("cooldowns")) {
+            CompoundTag cdTag = tag.getCompound("cooldowns");
+            for (String key : cdTag.getAllKeys()) {
+                data.cooldowns.put(key, cdTag.getInt(key));
+            }
         }
 
         return data;

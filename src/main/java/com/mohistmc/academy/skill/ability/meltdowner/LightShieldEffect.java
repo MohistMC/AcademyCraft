@@ -1,8 +1,10 @@
 package com.mohistmc.academy.skill.ability.meltdowner;
 
+import com.mohistmc.academy.client.effect.EffectHelper;
+import com.mohistmc.academy.client.effect.ShieldEffectEntity;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import com.mohistmc.academy.client.effect.EffectHelper;
+import com.mohistmc.academy.world.AcademyEntities;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import com.mohistmc.academy.world.AcademySounds;
@@ -30,7 +32,13 @@ public class LightShieldEffect implements SkillEffect {
 
         ServerLevel level = player.serverLevel();
 
-        EffectHelper.glowBurst(level, player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(), 30, 0.3f, 0x88AADDFF, 15, 0.5);
+        // 生成护盾实体（客户端渲染半透明能量球）
+        ShieldEffectEntity shield = new ShieldEffectEntity(AcademyEntities.SHIELD_EFFECT.get(), level);
+        shield.setPos(player.getX(), player.getY(), player.getZ());
+        shield.setData(2.5f, 0x88AADDFF, 3);
+        level.addFreshEntity(shield);
+
+        EffectHelper.glowBurst(level, player.getX(), player.getY() + player.getBbHeight() / 2, player.getZ(), 20, 0.2f, 0x88AADDFF, 12, 0.4);
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 AcademySounds.MD_SHIELD_STARTUP, SoundSource.PLAYERS, 1.0f, 1.5f);

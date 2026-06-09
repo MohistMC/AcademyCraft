@@ -51,8 +51,15 @@ public class CatEngine extends BaseEntityBlock {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState p_153213_, BlockEntityType<T> p_153214_) {
-        return p_153212_.isClientSide() ? createTickerHelper(p_153214_, AcademyBlockEntities.CAT_ENGINE.get(), CatEngineBlockEntity::tickAnim) : null;
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        if (level.isClientSide()) {
+            return createTickerHelper(type, AcademyBlockEntities.CAT_ENGINE.get(), CatEngineBlockEntity::tickAnim);
+        }
+        return (l, p, s, be) -> {
+            if (be instanceof CatEngineBlockEntity e) {
+                e.tick(l, p, s);
+            }
+        };
     }
 
 }

@@ -2,7 +2,9 @@ package com.mohistmc.academy.world;
 
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.client.effect.ElectroArcEntity;
+import com.mohistmc.academy.client.effect.MeltdownBeamEntity;
 import com.mohistmc.academy.client.effect.RippleMarkEntity;
+import com.mohistmc.academy.client.effect.ShieldEffectEntity;
 import com.mohistmc.academy.client.effect.SpriteEffectEntity;
 import com.mohistmc.academy.client.effect.WaveEffectEntity;
 import com.mohistmc.academy.entity.RailgunBeamEntity;
@@ -71,4 +73,20 @@ public class AcademyEntities {
             .updateInterval(1)
             .noSummon()
             .build("sprite_effect"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<MeltdownBeamEntity>> MELTDOWN_BEAM = ENTITIES.register("meltdown_beam",
+            () -> EntityType.Builder.of(MeltdownBeamEntity::new, MobCategory.MISC)
+            .sized(0.5f, 0.5f)
+            .clientTrackingRange(64)
+            .updateInterval(1)
+            .noSummon()
+            .build("meltdown_beam"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<ShieldEffectEntity>> SHIELD_EFFECT = ENTITIES.register("shield_effect",
+            () -> EntityType.Builder.of(ShieldEffectEntity::new, MobCategory.MISC)
+            .sized(2.0f, 2.0f)
+            .clientTrackingRange(64)
+            .updateInterval(1)
+            .noSummon()
+            .build("shield_effect"));
 }

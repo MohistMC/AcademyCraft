@@ -1,12 +1,13 @@
 package com.mohistmc.academy.skill.ability.meltdowner;
 
+import com.mohistmc.academy.client.effect.EffectHelper;
+import com.mohistmc.academy.client.effect.MeltdownBeamEntity;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.BlockPos;
-import com.mohistmc.academy.client.effect.EffectHelper;
+import com.mohistmc.academy.world.AcademyEntities;
+import com.mohistmc.academy.world.AcademySounds;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import com.mohistmc.academy.world.AcademySounds;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -38,9 +39,14 @@ public class MeltdownerEffect implements SkillEffect {
         Vec3 eyePos = player.getEyePosition();
         Vec3 lookVec = player.getLookAngle();
 
+        // 生成熔毁光束实体（客户端渲染绿色射线）
+        MeltdownBeamEntity beam = new MeltdownBeamEntity(AcademyEntities.MELTDOWN_BEAM.get(), level);
+        beam.setPos(player.getX(), player.getY() + player.getEyeHeight(), player.getZ());
+        beam.setBeam(eyePos, lookVec, range);
+        level.addFreshEntity(beam);
+
         for (double d = 1.0; d <= range; d += 0.5) {
             Vec3 checkPos = eyePos.add(lookVec.scale(d));
-            EffectHelper.meltdownBurst(level, checkPos.x, checkPos.y, checkPos.z, 1, 0.1);
 
             AABB area = new AABB(
                     checkPos.x - BEAM_RADIUS, checkPos.y - BEAM_RADIUS, checkPos.z - BEAM_RADIUS,

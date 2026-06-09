@@ -20,18 +20,21 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
+/**
+ * 技能 HUD — 参照旧版 KeyHintUI，仅显示按键+图标+冷却遮罩。
+ *
+ * @author Mgazul
+ */
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(modid = AcademyCraft.MODID, value = Dist.CLIENT)
 public class AbilityHudOverlay {
 
-    // 参考旧代码 KeyHintUI 的贴图资源定义方式
-    private static final ResourceLocation TEX_BACK = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/key_hint/back.png");
-    private static final ResourceLocation TEX_ICON_BACK = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/key_hint/icon_back.png");
+    private static final ResourceLocation TEX_ICON_BACK =
+            ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/key_hint/icon_back.png");
 
-
-    private static final int SLOT_HEIGHT = 18;
-    private static final int HUD_WIDTH = 40;
-    private static final int MARGIN = 6;
+    private static final int ICON_SIZE = 18;
+    private static final int SLOT_SPACING = 6;
+    private static final int MARGIN = 12;
 
     @SubscribeEvent
     public static void onRenderOverlay(RenderGuiLayerEvent.Post event) {
@@ -41,75 +44,64 @@ public class AbilityHudOverlay {
         if (mc.player == null || mc.screen != null || mc.options.hideGui) return;
 
         PlayerAbilityData data = mc.player.getData(AcademyAttachments.PLAYER_ABILITY);
-        if (!data.hasAbility()) return;
+        if (!data.hasAbility() || !data.isAbilityActive()) return;
 
         GuiGraphics g = event.getGuiGraphics();
         int screenW = mc.getWindow().getGuiScaledWidth();
         int screenH = mc.getWindow().getGuiScaledHeight();
 
-        boolean active = data.isAbilityActive();
-
-        // ============ 技能槽位区域（上下居中） ============
-        if (!active) return;
-
         SkillPreset preset = data.getCurrentPreset();
         KeyMapping[] keys = KeyInputHandler.getSkillKeys();
 
-        // 收集有技能的槽位索引
+        // 收集有技能的槽位
         List<Integer> activeSlots = new ArrayList<>();
         for (int i = 0; i < SkillPreset.SLOT_COUNT; i++) {
-            if (preset.getSlot(i) != null) {
-                activeSlots.add(i);
-            }
+            if (preset.getSlot(i) != null) activeSlots.add(i);
         }
+        if (activeSlots.isEmpty()) return;
 
-        int slotX = screenW - HUD_WIDTH - MARGIN;
-
-        // 没有安装任何技能时，只显示预设切换文字
-        if (activeSlots.isEmpty()) {
-            String presetText = "预设 " + (data.getCurrentPresetIndex() + 1) + "/" + PlayerAbilityData.PRESET_COUNT;
-            int ptY = screenH / 2;
-            g.drawString(mc.font, presetText, slotX + (HUD_WIDTH - mc.font.width(presetText)) / 2, ptY, 0xFF999999);
-            return;
-        }
-
-        // 槽位间距
-        int slotSpacing = 2;
-
-        // 根据实际有技能的槽位数计算区域高度和居中位置（包含间距）
-        int slotAreaHeight = activeSlots.size() * SLOT_HEIGHT + (activeSlots.size() - 1) * slotSpacing;
-        int slotY = screenH / 2 - slotAreaHeight / 2;
+        int totalH = activeSlots.size() * (ICON_SIZE + 6) - 6;
+        int x = screenW - ICON_SIZE - MARGIN;
+        int y = screenH / 2 - totalH / 2;
 
         for (int idx = 0; idx < activeSlots.size(); idx++) {
-            int i = activeSlots.get(idx);
-            int iy = slotY + idx * (SLOT_HEIGHT + slotSpacing);
-            String skillId = preset.getSlot(i);
+            int slot = activeSlots.get(idx);
+            int iy = y + idx * (ICON_SIZE + 6 + SLOT_SPACING);
+            String skillId = preset.getSlot(slot);
 
-            g.blit(TEX_BACK, slotX, iy, 0, 0, HUD_WIDTH, SLOT_HEIGHT, HUD_WIDTH, SLOT_HEIGHT);
+            // 按键标签（左侧小字）
+            String keyLabel = slot < keys.length
+                    ? keys[slot].getTranslatedKeyMessage().getString() : "?";
+            int labelW = mc.font.width(keyLabel);
+            int labelX = x - labelW - 6;
+            int labelY = iy + (ICON_SIZE - mc.font.lineHeight) / 2;
+            g.drawString(mc.font, keyLabel, labelX, labelY, 0xFF4488CC, false);
 
-            String keyLabel = i < keys.length ? keys[i].getTranslatedKeyMessage().getString() : "?";
-            g.drawString(mc.font, "§7" + keyLabel, slotX + 2, iy + 5, 0xFF999999);
+            // 图标背景
+            g.blit(TEX_ICON_BACK, x, iy, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
 
+            // 图标 + 冷却遮罩
             if (skillId != null) {
                 Skill skill = SkillRegistry.getSkill(skillId);
                 if (skill != null) {
                     ResourceLocation icon = skill.getIconLocation();
+                    // 图标在背景内居中 (1px padding)
+                    int iconPad = 1;
+                    g.blit(icon, x + iconPad, iy + iconPad, 0, 0, 16, 16, 16, 16);
 
-                    // 图标背景稍大（18x18），技能图标在内部居中（16x16）
-                    int bgSize = 18;
-                    int iconSize = 16;
-                    int iconX = slotX + 22;
-                    int iconY = iy + (SLOT_HEIGHT - iconSize) / 2;
-
-                    // 背景偏移：让 16x16 图标居中在 18x18 背景内
-                    int bgX = iconX - (bgSize - iconSize) / 2;
-                    int bgY = iconY - (bgSize - iconSize) / 2;
-
-                    g.blit(TEX_ICON_BACK, bgX, bgY, 0, 0, bgSize, bgSize, bgSize, bgSize);
-
-
-                    // 绘制技能图标（在背景中居中）
-                    g.blit(icon, iconX, iconY, 0, 0, iconSize, iconSize, iconSize, iconSize);
+                    // 冷却遮罩 — 原版风格：从上往下覆盖，随冷却减少向上收缩
+                    int cdTicks = data.getCooldownTicks(skillId);
+                    if (cdTicks > 0) {
+                        int maxCd = data.getMaxCooldownTicks(skillId);
+                        float cdProgress = maxCd > 0 ? (float) cdTicks / maxCd : 0;
+                        // cdProgress: 0=冷却完毕, 1=冷却刚开始
+                        // 遮罩从顶部向下覆盖，高度 = 剩余冷却比例
+                        int cdH = (int) (ICON_SIZE * cdProgress);
+                        if (cdH > 0) {
+                            // 从顶部 (iy) 向下覆盖 cdH 高度
+                            g.fill(x, iy, x + ICON_SIZE, iy + cdH, 0xAA000000);
+                        }
+                    }
                 }
             }
         }

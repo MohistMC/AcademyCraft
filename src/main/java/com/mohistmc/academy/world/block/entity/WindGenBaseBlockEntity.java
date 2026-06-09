@@ -2,6 +2,7 @@ package com.mohistmc.academy.world.block.entity;
 
 import com.mohistmc.academy.capability.EnergyItemHelper;
 import com.mohistmc.academy.capability.IFEnergyStorage;
+import com.mohistmc.academy.energy.api.block.IWirelessGenerator;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -10,7 +11,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class WindGenBaseBlockEntity extends AcademyContainerBlockEntity implements IFEnergyStorage {
+public class WindGenBaseBlockEntity extends AcademyContainerBlockEntity
+        implements IFEnergyStorage, IWirelessGenerator {
     private boolean validBlock = false;
     private boolean validMiddle = false;
 
@@ -78,6 +80,23 @@ public class WindGenBaseBlockEntity extends AcademyContainerBlockEntity implemen
     public boolean isValidMain() {
         return validBlock;
     }
+
+    // ==================== IWirelessGenerator ====================
+
+    @Override
+    public double getProvidedEnergy(double req) {
+        double give = Math.min(req, storedEnergy);
+        storedEnergy -= (float) give;
+        if (give > 0) setChanged();
+        return give;
+    }
+
+    @Override
+    public double getBandwidth() {
+        return 50; // 风力发电机每 tick 最大输出
+    }
+
+    // ==================== IFEnergyStorage ====================
 
     @Override
     public int getEnergyStored() {

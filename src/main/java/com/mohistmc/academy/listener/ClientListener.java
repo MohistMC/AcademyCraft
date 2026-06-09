@@ -7,11 +7,15 @@ import com.mohistmc.academy.client.block.entity.render.CatEngineRender;
 import com.mohistmc.academy.client.block.entity.render.PhaseLiquidRender;
 import com.mohistmc.academy.client.block.entity.render.WindGenFanRender;
 import com.mohistmc.academy.client.effect.ElectroArcEntity;
+import com.mohistmc.academy.client.effect.MeltdownBeamEntity;
 import com.mohistmc.academy.client.effect.RippleMarkEntity;
+import com.mohistmc.academy.client.effect.ShieldEffectEntity;
 import com.mohistmc.academy.client.effect.SpriteEffectEntity;
 import com.mohistmc.academy.client.effect.WaveEffectEntity;
 import com.mohistmc.academy.client.entity.CoinRenderer;
+import com.mohistmc.academy.client.renderer.MeltdownBeamRenderer;
 import com.mohistmc.academy.client.renderer.RailgunBeamRenderer;
+import com.mohistmc.academy.client.renderer.ShieldEffectRenderer;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.AcademyEntities;
 import com.mohistmc.academy.world.block.IDevMachine;
@@ -60,6 +64,8 @@ public class ClientListener {
         event.registerEntityRenderer(AcademyEntities.ELECTRO_ARC.get(), ElectroArcEntity.Renderer::new);
         event.registerEntityRenderer(AcademyEntities.RIPPLE_MARK.get(), RippleMarkEntity.Renderer::new);
         event.registerEntityRenderer(AcademyEntities.SPRITE_EFFECT.get(), SpriteEffectEntity.Renderer::new);
+        event.registerEntityRenderer(AcademyEntities.MELTDOWN_BEAM.get(), MeltdownBeamRenderer::new);
+        event.registerEntityRenderer(AcademyEntities.SHIELD_EFFECT.get(), ShieldEffectRenderer::new);
     }
 
     @SubscribeEvent

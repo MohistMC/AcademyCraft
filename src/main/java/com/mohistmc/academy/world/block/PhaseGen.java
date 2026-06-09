@@ -1,5 +1,6 @@
 package com.mohistmc.academy.world.block;
 
+import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.block.entity.PhaseGenBlockEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -11,6 +12,8 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
@@ -61,6 +64,17 @@ public class PhaseGen extends BaseEntityBlock {
     @Override
     public RenderShape getRenderShape(BlockState p_49232_) {
         return RenderShape.MODEL;
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        if (level.isClientSide) return null;
+        return createTickerHelper(type, AcademyBlockEntities.PHASE_GEN.get(), (lvl, pos, st, be) -> {
+            if (be instanceof PhaseGenBlockEntity pgbe) {
+                pgbe.tick();
+            }
+        });
     }
 
 }

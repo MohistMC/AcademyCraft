@@ -59,6 +59,11 @@ public record SkillKeyUpPacket(int slotIndex) implements CustomPacketPayload {
             if (state.ticks >= chargingEffect.getMinChargeTicks()) {
                 chargingEffect.onChargingRelease(player, data, state.ticks);
                 data.addProficiency(skill.getId(), 0.002f);
+                // 设置冷却（不重复扣 CP/Overload，由 onChargingRelease 自行处理）
+                if (!data.isDevMode()) {
+                    int cd = effect.getCooldownTicks(data.getProficiency(skill.getId()));
+                    data.setCooldown(skill.getId(), cd);
+                }
             } else {
                 chargingEffect.onChargingAbort(player, data);
             }

@@ -13,22 +13,31 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
+/**
+ * CP 和 Overload 栏 HUD — 单色风格（CP: 白→黄→红, OL: 蓝→橙→红）。
+ * 不依赖 Shader，只用原版 GuiGraphics。
+ *
+ * @author Mgazul
+ */
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(modid = AcademyCraft.MODID, value = Dist.CLIENT)
 public class CPBarOverlay {
 
-    private static final int COLOR_TEXT_WHITE = 0xFFFFFFFF;
-    private static final int COLOR_TEXT_GRAY = 0xFF999999;
-
-    // 材质图集原始尺寸（用于计算宽高比）
     private static final int TEX_WIDTH = 964;
     private static final int TEX_HEIGHT = 147;
+    private static final int TEX_OL_Y = 21;   // OL 区域的起始像素
+    private static final int TEX_OL_H = 104;  // OL 区域的高度
+    private static final int TEX_CP_Y = 30;   // CP 区域的起始像素
+    private static final int TEX_CP_H = 84;   // CP 区域的高度
+    private static final int TEX_CP_X = 47;   // CP 区域左边距
+    private static final int TEX_CP_W = 883;  // CP 区域宽度
 
-    private static final ResourceLocation TEX_CP_BG = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/cpbar/back_normal.png");
-    private static final ResourceLocation TEX_CP_FG = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/cpbar/cp.png");
-    private static final ResourceLocation TEX_OL_BG = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/cpbar/back_overload.png");
-    private static final ResourceLocation TEX_OL_FG = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/cpbar/front_overload.png");
-    private static final ResourceLocation MASK = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/cpbar/mask.png");
+    private static final ResourceLocation TEX_CP_BG =
+            ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/cpbar/back_normal.png");
+    private static final ResourceLocation TEX_CP_FG =
+            ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/cpbar/cp.png");
+    private static final ResourceLocation TEX_OL_BG =
+            ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/cpbar/back_overload.png");
 
     @SubscribeEvent
     public static void onRenderOverlay(RenderGuiLayerEvent.Post event) {
@@ -39,35 +48,59 @@ public class CPBarOverlay {
 
         PlayerAbilityData data = mc.player.getData(AcademyAttachments.PLAYER_ABILITY);
         if (!data.hasAbility()) return;
-        boolean active = data.isAbilityActive();
-        if (!active) return;
+        if (!data.isAbilityActive()) return;
 
         GuiGraphics g = event.getGuiGraphics();
         int screenW = mc.getWindow().getGuiScaledWidth();
 
-        int HUD_WIDTH = screenW/2 - 40;
-        int hudX = screenW - HUD_WIDTH - 30;
+        int hudWidth = screenW / 2 - 40;
+        int hudX = screenW - hudWidth - 30;
+        int hudY = 15;
+        float scale = (float) hudWidth / TEX_WIDTH;
 
-        // 基于纹理原始尺寸计算等比例缩放
-        float scale = (float) HUD_WIDTH / TEX_WIDTH;
-
-        // 绘制背景（全图渲染，通过 PoseStack 缩放到目标大小）
+        // ==== Draw BG ====
         g.pose().pushPose();
-        g.pose().translate(hudX, 15, 0);
+        g.pose().translate(hudX, hudY, 0);
         g.pose().scale(scale, scale, 1.0f);
-        g.blit(TEX_CP_BG, 0, 0, 0, 0, TEX_WIDTH, TEX_HEIGHT, TEX_WIDTH, TEX_HEIGHT);
+
+        // Render overload-bg if overloaded, otherwise normal
+        if (data.getCurrentOverload() >= data.getMaxOverload() && data.getMaxOverload() > 0) {
+            g.blit(TEX_OL_BG, 0, 0, 0, 0, TEX_WIDTH, TEX_HEIGHT, TEX_WIDTH, TEX_HEIGHT);
+        } else {
+            g.blit(TEX_CP_BG, 0, 0, 0, 0, TEX_WIDTH, TEX_HEIGHT, TEX_WIDTH, TEX_HEIGHT);
+
+            // Overload progress (blue/turquoise gradient area in the top band)
+            float olRatio = data.getMaxOverload() > 0
+                    ? Math.min(1.0f, data.getCurrentOverload() / data.getMaxOverload()) : 0;
+            if (olRatio > 0) {
+                int olFillW = (int) (TEX_CP_W * olRatio);
+                // Alpha overlay: blend blue transparency
+                g.fill(TEX_CP_X, TEX_OL_Y,
+                        TEX_CP_X + olFillW, TEX_OL_Y + TEX_OL_H,
+                        (int)(olRatio * 120) << 24 | 0x00BFFF);
+            }
+
+            // CP bar (white gradient, right-aligned)
+            float cpRatio = data.getMaxCp() > 0
+                    ? Math.min(1.0f, data.getCurrentCp() / data.getMaxCp()) : 0;
+            if (cpRatio > 0) {
+                int cpFillW = (int) (TEX_CP_W * cpRatio);
+                int cpRightX = TEX_CP_X + TEX_CP_W;
+                g.blit(TEX_CP_FG,
+                        cpRightX - cpFillW, TEX_CP_Y,
+                        cpRightX - cpFillW, TEX_CP_Y,
+                        cpFillW, TEX_CP_H,
+                        TEX_WIDTH, TEX_HEIGHT);
+            }
+        }
+
         g.pose().popPose();
 
-        // 绘制前景 CP 条（按比例宽度，右对齐填充：从右向左缩短）
-        float cpRatio = data.getMaxCp() > 0 ? Math.min(1.0f, data.getCurrentCp() / data.getMaxCp()) : 0;
-        int cpTexWidth = (int) (TEX_WIDTH * cpRatio);
-        if (cpTexWidth > 0) {
-            int cpTexStart = TEX_WIDTH - cpTexWidth;
-            g.pose().pushPose();
-            g.pose().translate(hudX + 1, 15 + 1, 0);
-            g.pose().scale(scale, scale, 1.0f);
-            g.blit(TEX_CP_FG, cpTexStart, 0, cpTexStart, 0, cpTexWidth, TEX_HEIGHT, TEX_WIDTH, TEX_HEIGHT);
-            g.pose().popPose();
-        }
+        // Draw CP/OL text numbers (outside the scaled pose)
+        String cpText = String.format("CP %.0f/%.0f", data.getCurrentCp(), data.getMaxCp());
+        String olText = String.format("OL %.0f/%.0f", data.getCurrentOverload(), data.getMaxOverload());
+        int textX = hudX + 8;
+        g.drawString(mc.font, cpText, textX, hudY + 16, 0xFFFFFFFF, false);
+        g.drawString(mc.font, olText, textX, hudY + 28, 0xFFAAAAAA, false);
     }
 }
