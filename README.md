@@ -1,23 +1,58 @@
-![](https://raw.githubusercontent.com/MohistMC/AcademyCraft/master/blob/logo.png)
+![Build](https://github.com/MohistMC/AcademyCraft/actions/workflows/gradle.yml/badge.svg)
+![License](https://img.shields.io/badge/license-GPLv3-blue.svg)
+![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-green.svg)
+![Loader](https://img.shields.io/badge/loader-NeoForge-orange.svg)
+
+![](https://raw.githubusercontent.com/MohistMC/AcademyCraft/1.21.1/blob/logo.png)
+
+# AcademyCraft
 
 A Minecraft mod about superability. The inspiration of AcademyCraft comes from [A Certain Scientific Railgun (とある科学の超電磁砲)](https://en.wikipedia.org/wiki/A_Certain_Scientific_Railgun) but the mod content is not limited of the background.
 
 Original: https://github.com/LambdaInnovation/AcademyCraft
 
-## Development planning:
- Prioritize functional implementation, then consider beautification (UI, skill effects, etc.)  
- 优先实现功能，再考虑美化(UI, 技能特效等等)
+## 📌 Project Status
 
+| Branch | Minecraft | Loader | Status |
+|---------|-----------|--------|--------|
+| `1.21.1` (default) | 1.21.1 | **NeoForge** | ⚠️ In progress (`v0.0.1`) — porting, **not yet released** |
+| `1.12.2` | 1.12.2 | Forge | ✅ Stable (latest release **1.1.6**) |
 
-Issue(Idea, Bug) Submission
-============
+> The `1.21.1` line is a from-scratch **NeoForge** rewrite and is **not published yet**.
+> For a playable build today, use the `1.12.2` release. Once `1.21.1` reaches a milestone we will publish an alpha/beta on GitHub Releases (and CurseForge / Modrinth).
+
+## Development planning
+
+> Prioritize functional implementation, then consider beautification (UI, skill effects, etc.)
+> 优先实现功能，再考虑美化(UI, 技能特效等等)
+
+## Building from source
+
+Requirements: **JDK 21** (Temurin recommended), Git, and internet access (for Gradle to download dependencies).
+
+```bash
+git clone https://github.com/MohistMC/AcademyCraft.git
+cd AcademyCraft
+git checkout 1.21.1
+
+./gradlew build      # build the mod jar -> build/libs/*.jar
+./gradlew runClient  # launch a NeoForge test client (userdev)
+./gradlew runServer  # launch a test server
+```
+
+CI builds every push/PR to `1.21.1` via `.github/workflows/gradle.yml` and uploads a dev jar as a workflow artifact.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Issues labeled `good first issue` / `help wanted` are good entry points.
+
+## Issue (Idea, Bug) Submission
 
 Please go to [Issues](https://github.com/MohistMC/AcademyCraft/issues) and submit a new ticket.
 
-Misc
-====
+## Misc
 
-## Donation
+### Donation
 
 You can support developement of AcademyCraft by donating. This will secure us more time to make the mod more intriguing!
 
