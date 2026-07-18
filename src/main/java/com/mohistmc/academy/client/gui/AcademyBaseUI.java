@@ -70,10 +70,16 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
             CompoundTag tag = list.getCompound(i);
             String name = tag.getString("name");
             boolean needAuth = tag.getBoolean("needAuth");
-            boolean isMatrix = tag.getBoolean("isMatrix");
-            result.add(new NodeEntry(name, needAuth, isMatrix));
+            BlockPos pos = tag.contains("pos") ? BlockPos.of(tag.getLong("pos")) : null;
+            result.add(new NodeEntry(name, needAuth, pos));
         }
         return result;
+    }
+
+    /** 获取当前已连接的节点索引（-1 表示未连接） */
+    private static int getConnectedIndex() {
+        if (pendingNodeData == null || !pendingNodeData.contains("connectedIndex")) return -1;
+        return pendingNodeData.getInt("connectedIndex");
     }
 
     /** 清空缓存（在请求新列表前调用） */
@@ -82,12 +88,12 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
     }
 
     /** 节点列表条目 */
-    private record NodeEntry(String name, boolean needAuth, boolean isMatrix) {}
+    private record NodeEntry(String name, boolean needAuth, BlockPos pos) {}
 
     // ==================== 实例字段 ====================
 
     public final Inventory inv;
-    private boolean wireless = false;
+    protected boolean wireless = false;
     private boolean renderBg = true;
     private boolean renderWireless = true;
     public int activeNode = -1;
@@ -152,6 +158,11 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
         // 从静态缓存读取节点数据
         if (this.serverNodes.isEmpty()) {
             this.serverNodes.addAll(getCachedNodes());
+            // 恢复已连接状态
+            int ci = getConnectedIndex();
+            if (ci >= 0 && ci < this.serverNodes.size()) {
+                this.activeNode = ci;
+            }
         }
 
         if (!this.wireless)
@@ -196,39 +207,40 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
                     RenderUtils.renderText(stack, "未连接", ((this.width - GUI_WIDTH) / 2) + 32, ((this.height - GUI_HEIGHT) / 2) + 41);
                 }
 
-                // 节点列表
+                // 可用节点列表 (过滤掉已连接的节点)
+                int availIndex = 0;
                 for (int i = 0; i < serverNodes.size(); i++) {
-                    if (i >= 8) break;
+                    if (availIndex >= 8) break;
+                    if (i == activeNode) continue; // 跳过已连接的节点
+
                     NodeEntry node = serverNodes.get(i);
                     RenderSystem.setShaderColor(1, 1, 1, 0.7f);
                     RenderSystem.enableBlend();
                     RenderSystem.defaultBlendFunc();
 
                     if (node.needAuth()) {
-                        RenderUtils.renderCenterTop(-8, 65 + (i * 13), 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_KEY);
-                        RenderUtils.renderCenterTop(-5, 62 + (i * 13), 150, 16, this.width, (this.height - GUI_HEIGHT) / 2, stack, ELEMENT_BG_300_32_I);
+                        RenderUtils.renderCenterTop(-8, 65 + (availIndex * 13), 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_KEY);
+                        RenderUtils.renderCenterTop(-5, 62 + (availIndex * 13), 150, 16, this.width, (this.height - GUI_HEIGHT) / 2, stack, ELEMENT_BG_300_32_I);
                     } else {
-                        RenderUtils.renderCenterTop(-5, 62 + (i * 13), 150, 16, this.width, (this.height - GUI_HEIGHT) / 2, stack, ELEMENT_BG_300_32);
+                        RenderUtils.renderCenterTop(-5, 62 + (availIndex * 13), 150, 16, this.width, (this.height - GUI_HEIGHT) / 2, stack, ELEMENT_BG_300_32);
                     }
-                    RenderUtils.renderCenterTop(-(160 / 2) + 16 - 4, 65 + (i * 13), 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_MATRIX);
+                    RenderUtils.renderCenterTop(-(160 / 2) + 16 - 4, 65 + (availIndex * 13), 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_MATRIX);
 
-                    float cnAlpha = this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 16 - 6, ((this.height - GUI_HEIGHT) / 2) + 65 + (i * 13), 15, 15, mouseX, mouseY) ? 1 : 0.7f;
+                    float cnAlpha = this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 16 - 6, ((this.height - GUI_HEIGHT) / 2) + 65 + (availIndex * 13), 15, 15, mouseX, mouseY) ? 1 : 0.7f;
                     RenderSystem.setShaderColor(1, 1, 1, cnAlpha);
-                    if (activeNode == i) {
-                        RenderUtils.renderCenterTop((160 / 2) - 16 - 6, 65 + (i * 13), 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_CONNECTED);
-                    } else {
-                        RenderUtils.renderCenterTop((160 / 2) - 16 - 6, 65 + (i * 13), 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_UNCONNECTED);
-                    }
+                    RenderUtils.renderCenterTop((160 / 2) - 16 - 6, 65 + (availIndex * 13), 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_UNCONNECTED);
                     RenderSystem.disableBlend();
-                    RenderUtils.renderText(stack, node.name(), ((this.width - GUI_WIDTH) / 2) + 32 - 4, ((this.height - GUI_HEIGHT) / 2) + 67 + (i * 13));
+                    RenderUtils.renderText(stack, node.name(), ((this.width - GUI_WIDTH) / 2) + 32 - 4, ((this.height - GUI_HEIGHT) / 2) + 67 + (availIndex * 13));
 
                     if (waitPass == i) {
                         StringBuilder sb = new StringBuilder();
                         for (int qw = 0; qw < inputPass.length(); qw++) {
                             sb.append("*");
                         }
-                        RenderUtils.renderText(stack, sb.toString(), ((this.width - GUI_WIDTH) / 2) + 85, ((this.height - GUI_HEIGHT) / 2) + 67 + (i * 13));
+                        RenderUtils.renderText(stack, sb.toString(), ((this.width - GUI_WIDTH) / 2) + 85, ((this.height - GUI_HEIGHT) / 2) + 67 + (availIndex * 13));
                     }
+
+                    availIndex++;
                 }
             }
         }
@@ -312,24 +324,29 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
                         activeNode = -1;
                     }
                 }
-                // 点击节点连接
+                // 点击节点连接 (availIndex 是视觉位置，i 是 serverNodes 索引)
+                int availIndex = 0;
                 for (int i = 0; i < serverNodes.size(); i++) {
-                    if (i >= 8) break;
+                    if (availIndex >= 8) break;
+                    if (i == activeNode) continue; // 跳过已连接的节点
+
                     NodeEntry node = serverNodes.get(i);
-                    if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 16 - 6, ((this.height - GUI_HEIGHT) / 2) + 65 + (i * 13), 15, 15, mouseX, mouseY) && activeNode != i) {
+                    if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 16 - 6, ((this.height - GUI_HEIGHT) / 2) + 65 + (availIndex * 13), 15, 15, mouseX, mouseY)) {
                         if (node.needAuth()) {
                             waitPass = i;
                             inputPass = new StringBuilder();
-                        } else if (this.menu.pos != null) {
-                            // 直接连接（服务器端验证）
-                            PacketDistributor.sendToServer(new ConnectToNodePacket(this.menu.pos, BlockPos.ZERO, java.util.Optional.empty()));
-                            activeNode = i;
+                        } else if (this.menu.pos != null && node.pos() != null) {
+                            // 直接连接
+                            PacketDistributor.sendToServer(new ConnectToNodePacket(this.menu.pos, node.pos(), java.util.Optional.empty()));
+                            activeNode = i; // 设置为已连接，节点自动从列表消失
                         }
                     }
-                    if (node.needAuth() && this.isHoveringButton(((this.width - GUI_WIDTH) / 2) - 10, ((this.height - GUI_HEIGHT) / 2) + 62 + (i * 13), 150, 16, mouseX, mouseY) && activeNode != i) {
+                    if (node.needAuth() && this.isHoveringButton(((this.width - GUI_WIDTH) / 2) - 10, ((this.height - GUI_HEIGHT) / 2) + 62 + (availIndex * 13), 150, 16, mouseX, mouseY)) {
                         waitPass = i;
                         inputPass = new StringBuilder();
                     }
+
+                    availIndex++;
                 }
             }
         }
@@ -367,11 +384,12 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
             }
         }
         if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 335) || InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 257)) {
-            if (waitPass != -1) {
+            if (waitPass != -1 && waitPass < serverNodes.size()) {
                 // 密码输入完成，发送带密码的连接请求
-                if (this.menu.pos != null) {
+                NodeEntry targetNode = serverNodes.get(waitPass);
+                if (this.menu.pos != null && targetNode.pos() != null) {
                     PacketDistributor.sendToServer(new ConnectToNodePacket(
-                            this.menu.pos, BlockPos.ZERO,
+                            this.menu.pos, targetNode.pos(),
                             java.util.Optional.of(inputPass.toString())
                     ));
                     activeNode = waitPass;

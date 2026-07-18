@@ -1,12 +1,9 @@
 package com.mohistmc.academy.client.gui;
 
-import com.mohistmc.academy.AcademyCraft;
-import com.mohistmc.academy.terminal.FreqTransmitterHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -68,14 +65,6 @@ public class FreqTransmitterGui extends Screen {
         y += 16;
 
         // 当前状态
-        if (Minecraft.getInstance().player != null) {
-            var selected = FreqTransmitterHandler.getSelectedNode(Minecraft.getInstance().player);
-            if (selected != null) {
-                graphics.drawString(this.font, "§a✓ 已选择节点: " + selected.toShortString(), guiLeft + 8, y, 0xFF2ecc71);
-            } else {
-                graphics.drawString(this.font, "§7○ 未选择任何节点", guiLeft + 8, y, 0xFF888888);
-            }
-        }
 
         graphics.pose().popPose();
     }

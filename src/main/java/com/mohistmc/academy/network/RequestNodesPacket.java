@@ -1,18 +1,17 @@
 package com.mohistmc.academy.network;
 
 import com.mohistmc.academy.AcademyCraft;
-import com.mohistmc.academy.capability.AcademyNode;
 import com.mohistmc.academy.energy.api.block.IWirelessGenerator;
 import com.mohistmc.academy.energy.api.block.IWirelessNode;
 import com.mohistmc.academy.energy.api.block.IWirelessReceiver;
+import com.mohistmc.academy.energy.impl.NodeConn;
 import com.mohistmc.academy.energy.impl.WiWorldData;
-import com.mohistmc.academy.energy.impl.WirelessNet;
 import io.netty.buffer.ByteBuf;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -26,6 +25,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * 客户端→服务端：请求附近的无线节点列表。
+ * 扫描世界中所有 IWirelessNode 方块返回给客户端。
  *
  * @author Mgazul
  */
@@ -50,31 +50,73 @@ public record RequestNodesPacket(BlockPos machinePos) implements CustomPacketPay
             if (context.player() instanceof ServerPlayer player) {
                 ServerLevel level = player.serverLevel();
                 WiWorldData data = WiWorldData.getNonCreate(level);
-                if (data == null) return;
 
-                // 搜索附近节点 (范围64格)
-                Collection<WirelessNet> nets = data.rangeSearch(
-                        packet.machinePos().getX(),
-                        packet.machinePos().getY(),
-                        packet.machinePos().getZ(),
-                        64, 32
-                );
+                // 扫描附近所有的 IWirelessNode 方块（步长1，范围32格）
+                Set<BlockPos> foundNodes = new HashSet<>();
+                BlockPos center = packet.machinePos();
+                int range = 32;
 
-                // 构建节点列表数据
+                for (int dx = -range; dx <= range; dx++) {
+                    for (int dz = -range; dz <= range; dz++) {
+                        int distXZ = dx * dx + dz * dz;
+                        if (distXZ > range * range) continue;
+                        int maxDy = (int) Math.sqrt(range * range - distXZ);
+                        for (int dy = -maxDy; dy <= maxDy; dy++) {
+                            BlockPos bp = center.offset(dx, dy, dz);
+                            if (!level.isLoaded(bp)) continue;
+                            BlockEntity be = level.getBlockEntity(bp);
+                            if (be instanceof IWirelessNode) {
+                                foundNodes.add(bp.immutable());
+                            }
+                        }
+                    }
+                }
+
+                // 检查当前机器是否已连接到某个节点
+                long connectedPos = 0;
+                BlockEntity machineBe = level.getBlockEntity(packet.machinePos());
+                if (machineBe != null && data != null) {
+                    NodeConn existingConn = null;
+                    if (machineBe instanceof IWirelessGenerator gen) {
+                        existingConn = data.getNodeConnection(gen);
+                    } else if (machineBe instanceof IWirelessReceiver rec) {
+                        existingConn = data.getNodeConnection(rec);
+                    }
+                    if (existingConn != null) {
+                        com.mohistmc.academy.energy.api.block.IWirelessNode node = existingConn.getNode();
+                        if (node instanceof BlockEntity nodeBe) {
+                            connectedPos = nodeBe.getBlockPos().asLong();
+                        }
+                    }
+                }
+
+                // 构建节点列表
                 CompoundTag response = new CompoundTag();
                 ListTag nodeList = new ListTag();
                 int index = 0;
+                int connectedIndex = -1;
 
-                for (WirelessNet net : nets) {
+                for (BlockPos nodePos : foundNodes) {
+                    BlockEntity be = level.getBlockEntity(nodePos);
+                    if (!(be instanceof IWirelessNode node)) continue;
+
                     CompoundTag nodeTag = new CompoundTag();
-                    nodeTag.putString("name", net.getSSID());
-                    nodeTag.putBoolean("needAuth", !net.getPassword().isEmpty());
-                    nodeTag.putBoolean("isMatrix", true);
-                    nodeTag.putInt("index", index++);
+                    nodeTag.putString("name", node.getNodeName());
+                    nodeTag.putBoolean("needAuth", !node.getPassword().isEmpty());
+                    nodeTag.putLong("pos", nodePos.asLong());
+                    nodeTag.putInt("index", index);
                     nodeList.add(nodeTag);
+
+                    if (nodePos.asLong() == connectedPos) {
+                        connectedIndex = index;
+                    }
+
+                    index++;
+                    if (index >= 32) break;
                 }
 
                 response.put("nodes", nodeList);
+                response.putInt("connectedIndex", connectedIndex);
                 PacketDistributor.sendToPlayer(player, new NodeListSyncPacket(response));
             }
         });
