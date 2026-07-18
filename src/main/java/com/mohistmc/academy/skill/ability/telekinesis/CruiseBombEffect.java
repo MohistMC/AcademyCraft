@@ -1,8 +1,8 @@
 package com.mohistmc.academy.skill.ability.telekinesis;
 
+import com.mohistmc.academy.client.effect.EffectHelper;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;

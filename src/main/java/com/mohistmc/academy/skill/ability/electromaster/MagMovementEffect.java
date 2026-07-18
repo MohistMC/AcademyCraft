@@ -1,9 +1,8 @@
 package com.mohistmc.academy.skill.ability.electromaster;
 
-import com.mohistmc.academy.world.AcademySounds;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
-import net.minecraft.core.BlockPos;
+import com.mohistmc.academy.world.AcademySounds;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;

@@ -1,8 +1,8 @@
 package com.mohistmc.academy.skill.ability;
 
-import com.mohistmc.academy.world.AcademySounds;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
+import com.mohistmc.academy.world.AcademySounds;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;

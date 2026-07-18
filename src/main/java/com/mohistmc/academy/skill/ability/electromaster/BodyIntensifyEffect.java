@@ -1,15 +1,14 @@
 package com.mohistmc.academy.skill.ability.electromaster;
 
-import com.mohistmc.academy.world.AcademySounds;
 import com.mohistmc.academy.skill.ChargingSkillEffect;
 import com.mohistmc.academy.skill.PlayerAbilityData;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-
+import com.mohistmc.academy.world.AcademySounds;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 

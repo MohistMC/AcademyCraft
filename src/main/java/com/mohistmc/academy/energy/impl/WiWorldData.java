@@ -11,6 +11,13 @@ import com.mohistmc.academy.energy.impl.VBlocks.VNReceiver;
 import com.mohistmc.academy.energy.impl.VBlocks.VWMatrix;
 import com.mohistmc.academy.energy.impl.VBlocks.VWNode;
 import com.mojang.logging.LogUtils;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -20,14 +27,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.slf4j.Logger;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * 维度级无线能源世界数据。

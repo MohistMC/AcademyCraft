@@ -1,11 +1,11 @@
 package com.mohistmc.academy.client.gui;
 
 import com.mohistmc.academy.client.sound.ClientSoundUtils;
-import com.mohistmc.academy.world.AcademySounds;
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.terminal.AppRegistry;
 import com.mohistmc.academy.terminal.TerminalApp;
+import com.mohistmc.academy.world.AcademySounds;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Minecraft;

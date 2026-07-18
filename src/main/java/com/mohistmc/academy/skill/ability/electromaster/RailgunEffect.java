@@ -1,16 +1,16 @@
 package com.mohistmc.academy.skill.ability.electromaster;
 
+import com.mohistmc.academy.client.effect.EffectHelper;
 import com.mohistmc.academy.entity.RailgunBeamEntity;
 import com.mohistmc.academy.skill.ChargingSkillEffect;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.world.AcademyEntities;
 import com.mohistmc.academy.world.AcademyItems;
+import com.mohistmc.academy.world.AcademySounds;
 import java.util.List;
 import net.minecraft.core.BlockPos;
-import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import com.mohistmc.academy.world.AcademySounds;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;

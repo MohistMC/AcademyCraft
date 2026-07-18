@@ -1,8 +1,6 @@
 package com.mohistmc.academy.world.block;
 
-import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.block.entity.MetalFomerBlockEntity;
-import com.mohistmc.academy.world.menu.AcademyMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;

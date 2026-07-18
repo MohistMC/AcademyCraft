@@ -15,8 +15,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 
-import java.util.List;
-
 /**
  * AcademyCraft 世界生成 —— 矿石和 PhaseLiquid 湖。
  * 使用 NeoForge 1.21.1 的 BiomeModifier / datapack 方式实现矿物生成。

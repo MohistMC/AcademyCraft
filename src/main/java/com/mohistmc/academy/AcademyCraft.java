@@ -1,6 +1,7 @@
 package com.mohistmc.academy;
 
 import com.mohistmc.academy.config.ACConfig;
+import com.mohistmc.academy.crafting.MFIFRecipes;
 import com.mohistmc.academy.listener.ServerListener;
 import com.mohistmc.academy.network.LearnSkillPacket;
 import com.mohistmc.academy.network.OpenDevGuiPacket;
@@ -15,7 +16,6 @@ import com.mohistmc.academy.network.ToggleAbilityPacket;
 import com.mohistmc.academy.network.UseSkillPacket;
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.SkillRegistry;
-import com.mohistmc.academy.crafting.MFIFRecipes;
 import com.mohistmc.academy.terminal.AppRegistry;
 import com.mohistmc.academy.terminal.MediaTrackRegistry;
 import com.mohistmc.academy.world.AcademyBlockEntities;

@@ -4,6 +4,9 @@ import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.entity.RailgunBeamEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -14,10 +17,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class RailgunBeamRenderer extends EntityRenderer<RailgunBeamEntity> {
 

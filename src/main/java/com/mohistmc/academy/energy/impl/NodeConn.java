@@ -8,16 +8,15 @@ import com.mohistmc.academy.energy.impl.VBlocks.VNGenerator;
 import com.mohistmc.academy.energy.impl.VBlocks.VNNode;
 import com.mohistmc.academy.energy.impl.VBlocks.VNReceiver;
 import com.mojang.logging.LogUtils;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.world.level.Level;
-import org.slf4j.Logger;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.Level;
+import org.slf4j.Logger;
 
 /**
  * 节点连接 —— 一个节点 + M 个发电机 + K 个接收器。

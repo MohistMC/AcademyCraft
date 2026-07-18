@@ -1,20 +1,19 @@
 package com.mohistmc.academy.energy.impl;
 
-import com.mohistmc.academy.energy.impl.VBlocks.VWMatrix;
-import com.mohistmc.academy.energy.impl.VBlocks.VWNode;
 import com.mohistmc.academy.energy.api.block.IWirelessMatrix;
 import com.mohistmc.academy.energy.api.block.IWirelessNode;
+import com.mohistmc.academy.energy.impl.VBlocks.VWMatrix;
+import com.mohistmc.academy.energy.impl.VBlocks.VWNode;
 import com.mohistmc.academy.utils.MathUtils;
 import com.mojang.logging.LogUtils;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.world.level.Level;
-import org.slf4j.Logger;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.Level;
+import org.slf4j.Logger;
 
 /**
  * 无线网络 —— 一个矩阵 + N 个节点，在节点间均衡能量。

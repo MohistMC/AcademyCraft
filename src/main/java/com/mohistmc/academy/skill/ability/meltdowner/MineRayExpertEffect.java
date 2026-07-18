@@ -1,12 +1,12 @@
 package com.mohistmc.academy.skill.ability.meltdowner;
 
+import com.mohistmc.academy.client.effect.EffectHelper;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
+import com.mohistmc.academy.world.AcademySounds;
 import net.minecraft.core.BlockPos;
-import com.mohistmc.academy.client.effect.EffectHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import com.mohistmc.academy.world.AcademySounds;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.state.BlockState;

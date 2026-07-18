@@ -1,6 +1,5 @@
 package com.mohistmc.academy.skill.ability.meltdowner;
 
-import com.mohistmc.academy.client.effect.EffectHelper;
 import com.mohistmc.academy.client.effect.MeltdownBeamEntity;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;

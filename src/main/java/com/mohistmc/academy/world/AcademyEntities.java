@@ -10,7 +10,6 @@ import com.mohistmc.academy.client.effect.WaveEffectEntity;
 import com.mohistmc.academy.entity.RailgunBeamEntity;
 import com.mohistmc.academy.world.entity.CoinEntity;
 import com.mohistmc.academy.world.entity.OreHighlightEntity;
-import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;

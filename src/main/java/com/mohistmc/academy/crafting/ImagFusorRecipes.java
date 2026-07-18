@@ -1,9 +1,8 @@
 package com.mohistmc.academy.crafting;
 
-import net.minecraft.world.item.ItemStack;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * 想象熔炉配方注册。

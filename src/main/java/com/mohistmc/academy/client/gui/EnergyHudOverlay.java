@@ -2,9 +2,6 @@ package com.mohistmc.academy.client.gui;
 
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.energy.api.block.IWirelessNode;
-import com.mohistmc.academy.energy.impl.NodeConn;
-import com.mohistmc.academy.energy.impl.WirelessNet;
-import com.mohistmc.academy.energy.impl.WirelessSystem;
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import net.minecraft.client.Minecraft;

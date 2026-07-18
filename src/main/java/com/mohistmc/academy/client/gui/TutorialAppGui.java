@@ -2,7 +2,6 @@ package com.mohistmc.academy.client.gui;
 
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.skill.AcademyAttachments;
-import com.mohistmc.academy.skill.PlayerAbilityData;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Minecraft;

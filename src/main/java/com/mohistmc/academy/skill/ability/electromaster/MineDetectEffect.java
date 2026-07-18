@@ -1,10 +1,12 @@
 package com.mohistmc.academy.skill.ability.electromaster;
 
-import com.mohistmc.academy.world.AcademySounds;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
 import com.mohistmc.academy.world.AcademyEntities;
+import com.mohistmc.academy.world.AcademySounds;
 import com.mohistmc.academy.world.entity.OreHighlightEntity;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,9 +15,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.block.state.BlockState;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 

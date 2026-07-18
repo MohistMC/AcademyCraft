@@ -1,11 +1,12 @@
 package com.mohistmc.academy.skill.ability.electromaster;
 
+import com.mohistmc.academy.client.effect.EffectHelper;
 import com.mohistmc.academy.client.effect.ElectroArcEntity;
-import com.mohistmc.academy.world.AcademySounds;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.SkillEffect;
 import com.mohistmc.academy.world.AcademyEntities;
-import com.mohistmc.academy.client.effect.EffectHelper;
+import com.mohistmc.academy.world.AcademySounds;
+import java.util.List;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -17,8 +18,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.List;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 
