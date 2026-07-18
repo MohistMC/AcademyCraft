@@ -1,0 +1,22 @@
+{
+  "parent": "academy:electromaster",
+  "display": {
+    "icon": {"id": "academy:reso_crystal"},
+    "title": "全能者",
+    "description": "集齐六大职业能力因子，登临能力之巅。",
+    "frame": "challenge"
+  },
+  "criteria": {
+    "e": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": ["academy:factor_electromaster"]}]}},
+    "m": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": ["academy:factor_meltdowner"]}]}},
+    "t": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": ["academy:factor_teleporter"]}]}},
+    "v": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": ["academy:factor_vecmanip"]}]}},
+    "a": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": ["academy:factor_aerohand"]}]}},
+    "k": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": ["academy:factor_telekinesis"]}]}}
+  },
+  "requirements": [["e", "m", "t", "v", "a", "k"]],
+  "rewards": {
+    "experience": 1000,
+    "title": "学院荣誉学员"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "parent": "academy:root",
+  "display": {
+    "icon": {"id": "academy:energy_unit"},
+    "title": "能量核心",
+    "description": "获得能量单元，为你的设备供能。",
+    "frame": "task"
+  },
+  "criteria": {
+    "get": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": ["academy:energy_unit"]}]}}
+  }
+}

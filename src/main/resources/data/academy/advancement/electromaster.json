@@ -1,0 +1,12 @@
+{
+  "parent": "academy:first_skill",
+  "display": {
+    "icon": {"id": "academy:factor_electromaster"},
+    "title": "电磁使",
+    "description": "获得电磁使因子，掌控雷电之力。",
+    "frame": "goal"
+  },
+  "criteria": {
+    "get": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": ["academy:factor_electromaster"]}]}}
+  }
+}

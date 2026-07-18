@@ -60,6 +60,8 @@ public class AcademySounds {
 
     // ==================== Entity ====================
     public static final Holder<SoundEvent> ENTITY_FLIPCOIN = register("entity.flipcoin");
+    public static final Holder<SoundEvent> ENTITY_SILBARN_HEAVY = register("entity.silbarn_heavy");
+    public static final Holder<SoundEvent> ENTITY_SILBARN_LIGHT = register("entity.silbarn_light");
 
     // ==================== Ability ====================
     public static final Holder<SoundEvent> ABILITY_DENY = register("ability.deny");
@@ -74,6 +76,10 @@ public class AcademySounds {
     public static final Holder<SoundEvent> MEDIA_RAILGUN = register("media.only_my_railgun");
     public static final Holder<SoundEvent> MEDIA_JUDGELIGHT = register("media.level5_judgelight");
     public static final Holder<SoundEvent> MEDIA_NOISE = register("media.sisters_noise");
+
+    // ==================== Machine ====================
+    public static final Holder<SoundEvent> MACHINE_IMAG_FUSOR_WORK = register("machine.imag_fusor_work");
+    public static final Holder<SoundEvent> MACHINE_MACHINE_WORK = register("machine.machine_work");
 
     private static Holder<SoundEvent> register(String name) {
         return SOUND_EVENTS.register(name, SoundEvent::createVariableRangeEvent);
