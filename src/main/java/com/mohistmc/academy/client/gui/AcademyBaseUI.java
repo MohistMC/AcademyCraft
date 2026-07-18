@@ -3,6 +3,10 @@ package com.mohistmc.academy.client.gui;
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.capability.AcademyNode;
 import com.mohistmc.academy.capability.IFEnergyStorage;
+import com.mohistmc.academy.network.ConnectToNodePacket;
+import com.mohistmc.academy.network.DisconnectFromNodePacket;
+import com.mohistmc.academy.network.NodeListSyncPacket;
+import com.mohistmc.academy.network.RequestNodesPacket;
 import com.mohistmc.academy.utils.RenderUtils;
 import com.mohistmc.academy.world.block.entity.SolarGenBlockEntity;
 import com.mohistmc.academy.world.block.entity.WindGenBaseBlockEntity;
@@ -10,16 +14,20 @@ import com.mohistmc.academy.world.block.entity.WindGenMainBlockEntity;
 import com.mohistmc.academy.world.menu.AcademyMenu;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractContainerScreen<T> {
 
@@ -39,6 +47,45 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
     private static final ResourceLocation ELEMENT_BG_300_32_I = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/element/element_background300x32_input.png");
     private static final ResourceLocation BTN_ARROW_UP = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/button/button_arrowupb.png");
     private static final ResourceLocation BTN_ARROW_DOWN = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/button/button_arrowdownb.png");
+
+    // ==================== 静态节点列表缓存（从 server 同步） ====================
+
+    /** 最近一次收到的节点列表 NBT */
+    private static CompoundTag pendingNodeData = null;
+
+    /**
+     * 由 NodeListSyncPacket 调用，在渲染线程安全读取。
+     */
+    public static void receiveNodeList(CompoundTag data) {
+        pendingNodeData = data;
+    }
+
+    /** 获取缓存的节点列表，若没有则返回空列表 */
+    private static List<NodeEntry> getCachedNodes() {
+        List<NodeEntry> result = new ArrayList<>();
+        if (pendingNodeData == null) return result;
+        if (!pendingNodeData.contains("nodes")) return result;
+        ListTag list = pendingNodeData.getList("nodes", 10);
+        for (int i = 0; i < list.size(); i++) {
+            CompoundTag tag = list.getCompound(i);
+            String name = tag.getString("name");
+            boolean needAuth = tag.getBoolean("needAuth");
+            boolean isMatrix = tag.getBoolean("isMatrix");
+            result.add(new NodeEntry(name, needAuth, isMatrix));
+        }
+        return result;
+    }
+
+    /** 清空缓存（在请求新列表前调用） */
+    public static void clearNodeCache() {
+        pendingNodeData = null;
+    }
+
+    /** 节点列表条目 */
+    private record NodeEntry(String name, boolean needAuth, boolean isMatrix) {}
+
+    // ==================== 实例字段 ====================
+
     public final Inventory inv;
     private boolean wireless = false;
     private boolean renderBg = true;
@@ -47,26 +94,14 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
     private int waitPass = -1;
     private StringBuilder inputPass = new StringBuilder();
     private boolean renderEnergyTree = false;
+    private boolean nodesRequested = false; // 是否已向服务端请求过节点
+
+    // 缓存的服务端节点列表（实例级）
+    private final List<NodeEntry> serverNodes = new ArrayList<>();
 
     public AcademyBaseUI(T t, Inventory inv, Component p_97743_) {
         super(t, inv, p_97743_);
         this.inv = inv;
-        addOrSetNode(null, null);
-        addOrSetNode(null, null);
-        addOrSetNode(null, null);
-        addOrSetNode(null, "sws", null);
-        addOrSetNode(null, null);
-        addOrSetNode(null, null);
-        addOrSetNode(null, "rwr", null);
-        addOrSetNode(null, null);
-        addOrSetNode(null, null);
-        addOrSetNode(null, null);
-        addOrSetNode(null, null);
-        addOrSetNode(null, null);
-        addOrSetNode(null, "ewe", null);
-        addOrSetNode(null, null);
-        addOrSetNode(null, null);
-        addOrSetNode(null, "qwq", null);
     }
 
     public void setRenderBg(boolean renderBg) {
@@ -90,7 +125,7 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
             // 背包页面
             this.renderBackground(var1, var3, var4, var2);
         } else {
-            // 无线ui
+            // 无线 UI
             RenderUtils.renderCenter(GUI_WIDTH, GUI_HEIGHT, this.width, this.height, var1, PARENT_BACKGROUND);
             RenderUtils.renderCenterTop(-(GUI_WIDTH / 2) + 20, 10, 18, 18, this.width, (this.height - GUI_HEIGHT) / 2, var1, IC_TOMATRIX);
 
@@ -105,19 +140,20 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
         RenderSystem.disableBlend();
     }
 
-    private final NonNullList<AcademyNode> nodes = NonNullList.create();
-    private int page = 1;
-
-    private void addOrSetNode(BlockPos pos, Level level) {
-        nodes.add(new AcademyNode(nodes.size() + "Node", null, null));
-    }
-
-    private void addOrSetNode(BlockPos pos, String pass, Level level) {
-        nodes.add(new AcademyNode(nodes.size() + "Node", pass, null, null));
-    }
-
     @Override
     public void render(GuiGraphics stack, int mouseX, int mouseY, float p_97798_) {
+        // 当切换到无线面板时，请求节点列表
+        if (this.wireless && !this.nodesRequested && this.menu.pos != null) {
+            this.nodesRequested = true;
+            clearNodeCache();
+            PacketDistributor.sendToServer(new RequestNodesPacket(this.menu.pos));
+        }
+
+        // 从静态缓存读取节点数据
+        if (this.serverNodes.isEmpty()) {
+            this.serverNodes.addAll(getCachedNodes());
+        }
+
         if (!this.wireless)
             super.render(stack, mouseX, mouseY, p_97798_);
         super.renderBackground(stack, mouseX, mouseY, p_97798_);
@@ -125,89 +161,68 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
         this.renderBg(stack, p_97798_, mouseX, mouseY);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) - 20, ((this.height - GUI_HEIGHT) / 2), 18, 18, mouseX, mouseY) || !wireless) {
-            RenderSystem.setShaderColor(1, 1, 1, 1);
-        } else {
-            RenderSystem.setShaderColor(1, 1, 1, 0.8f);
-        }
+
         // 背包图标(左上1)
+        float invAlpha = this.isHoveringButton(((this.width - GUI_WIDTH) / 2) - 20, ((this.height - GUI_HEIGHT) / 2), 18, 18, mouseX, mouseY) || !wireless ? 1 : 0.8f;
+        RenderSystem.setShaderColor(1, 1, 1, invAlpha);
         RenderUtils.renderCenterTop(-(GUI_WIDTH / 2) - 10, 0, 18, 18, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_INV);
+
         if (this.renderWireless) {
-            if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) - 20, ((this.height - GUI_HEIGHT) / 2) + 20, 18, 18, mouseX, mouseY) || wireless) {
-                //System.out.println("wireless");
-                RenderSystem.setShaderColor(1, 1, 1, 1);
-            } else {
-                RenderSystem.setShaderColor(1, 1, 1, 0.8f);
-            }
-            // 无线图标(左上2)
+            float wlAlpha = this.isHoveringButton(((this.width - GUI_WIDTH) / 2) - 20, ((this.height - GUI_HEIGHT) / 2) + 20, 18, 18, mouseX, mouseY) || wireless ? 1 : 0.8f;
+            RenderSystem.setShaderColor(1, 1, 1, wlAlpha);
             RenderUtils.renderCenterTop(-(GUI_WIDTH / 2) - 10, 20, 18, 18, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_WIRELESS);
+
             if (this.wireless) {
-                if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 5, ((this.height - GUI_HEIGHT) / 2) + 65, 15, 15, mouseX, mouseY)) {
-                    //System.out.println("wireless");
-                    RenderSystem.setShaderColor(1, 1, 1, 1);
-                } else {
-                    RenderSystem.setShaderColor(1, 1, 1, 0.8f);
-                }
-                // 无线内上翻页图标
+                // 上下翻页按钮
+                float upAlpha = this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 5, ((this.height - GUI_HEIGHT) / 2) + 65, 15, 15, mouseX, mouseY) ? 1 : 0.8f;
+                RenderSystem.setShaderColor(1, 1, 1, upAlpha);
                 RenderUtils.renderCenterTop((160 / 2) - 5, 65, 15, 15, this.width, (this.height - GUI_HEIGHT) / 2, stack, BTN_ARROW_UP);
-                if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 5, ((this.height - GUI_HEIGHT) / 2) + 65 + (7 * 13), 15, 15, mouseX, mouseY)) {
-                    //System.out.println("wireless");
-                    RenderSystem.setShaderColor(1, 1, 1, 1);
-                } else {
-                    RenderSystem.setShaderColor(1, 1, 1, 0.8f);
-                }
-                // 无线内下翻页图标
+
+                float downAlpha = this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 5, ((this.height - GUI_HEIGHT) / 2) + 65 + (7 * 13), 15, 15, mouseX, mouseY) ? 1 : 0.8f;
+                RenderSystem.setShaderColor(1, 1, 1, downAlpha);
                 RenderUtils.renderCenterTop((160 / 2) - 5, 65 + (7 * 13), 15, 15, this.width, (this.height - GUI_HEIGHT) / 2, stack, BTN_ARROW_DOWN);
-                if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 16, ((this.height - GUI_HEIGHT) / 2) + 39, 15, 15, mouseX, mouseY)) {
-                    //System.out.println("wireless");
-                    RenderSystem.setShaderColor(1, 1, 1, 1);
-                } else {
-                    RenderSystem.setShaderColor(1, 1, 1, 0.8f);
-                }
-                // 无线内当前节点
+
+                // 当前连接状态
+                float disconnectAlpha = this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 16, ((this.height - GUI_HEIGHT) / 2) + 39, 15, 15, mouseX, mouseY) ? 1 : 0.8f;
+                RenderSystem.setShaderColor(1, 1, 1, disconnectAlpha);
                 if (activeNode != -1) {
                     RenderUtils.renderCenterTop((160 / 2) - 16, 39, 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_CONNECTED);
                     RenderSystem.disableBlend();
-                    RenderUtils.renderText(stack, nodes.get(activeNode).getName(), ((this.width - GUI_WIDTH) / 2) + 32, ((this.height - GUI_HEIGHT) / 2) + 41);
+                    String nodeName = activeNode < serverNodes.size() ? serverNodes.get(activeNode).name() : "Node" + activeNode;
+                    RenderUtils.renderText(stack, nodeName, ((this.width - GUI_WIDTH) / 2) + 32, ((this.height - GUI_HEIGHT) / 2) + 41);
                 } else {
                     RenderUtils.renderCenterTop((160 / 2) - 16, 39, 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_UNCONNECTED);
                     RenderSystem.disableBlend();
                     RenderUtils.renderText(stack, "未连接", ((this.width - GUI_WIDTH) / 2) + 32, ((this.height - GUI_HEIGHT) / 2) + 41);
                 }
-                // 无线内节点列表
-                for (int i = 0; i < nodes.size(); i++) {
-                    int index = i;
-                    if (page > 1) {
-                        // 多于一页
-                        index = i + (page - 1) * 8;
-                    }
-                    if (i >= 8 || index >= nodes.size()) break;
-                    AcademyNode node = nodes.get(index);
-                    String name = node.getName();
+
+                // 节点列表
+                for (int i = 0; i < serverNodes.size(); i++) {
+                    if (i >= 8) break;
+                    NodeEntry node = serverNodes.get(i);
                     RenderSystem.setShaderColor(1, 1, 1, 0.7f);
                     RenderSystem.enableBlend();
                     RenderSystem.defaultBlendFunc();
-                    if (node.isNeedAuth()) {
+
+                    if (node.needAuth()) {
                         RenderUtils.renderCenterTop(-8, 65 + (i * 13), 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_KEY);
                         RenderUtils.renderCenterTop(-5, 62 + (i * 13), 150, 16, this.width, (this.height - GUI_HEIGHT) / 2, stack, ELEMENT_BG_300_32_I);
                     } else {
                         RenderUtils.renderCenterTop(-5, 62 + (i * 13), 150, 16, this.width, (this.height - GUI_HEIGHT) / 2, stack, ELEMENT_BG_300_32);
                     }
                     RenderUtils.renderCenterTop(-(160 / 2) + 16 - 4, 65 + (i * 13), 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_MATRIX);
-                    // TODO: 加密节点的绘制
-                    if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 16 - 6, ((this.height - GUI_HEIGHT) / 2) + 65 + (i * 13), 15, 15, mouseX, mouseY)) {
-                        RenderSystem.setShaderColor(1, 1, 1, 1);
-                    } else {
-                        RenderSystem.setShaderColor(1, 1, 1, 0.7f);
-                    }
-                    if (activeNode == index) {
+
+                    float cnAlpha = this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 16 - 6, ((this.height - GUI_HEIGHT) / 2) + 65 + (i * 13), 15, 15, mouseX, mouseY) ? 1 : 0.7f;
+                    RenderSystem.setShaderColor(1, 1, 1, cnAlpha);
+                    if (activeNode == i) {
                         RenderUtils.renderCenterTop((160 / 2) - 16 - 6, 65 + (i * 13), 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_CONNECTED);
                     } else {
                         RenderUtils.renderCenterTop((160 / 2) - 16 - 6, 65 + (i * 13), 11, 11, this.width, (this.height - GUI_HEIGHT) / 2, stack, IC_UNCONNECTED);
                     }
                     RenderSystem.disableBlend();
-                    RenderUtils.renderText(stack, name, ((this.width - GUI_WIDTH) / 2) + 32 - 4, ((this.height - GUI_HEIGHT) / 2) + 67 + (i * 13));
-                    if (waitPass == index) {
+                    RenderUtils.renderText(stack, node.name(), ((this.width - GUI_WIDTH) / 2) + 32 - 4, ((this.height - GUI_HEIGHT) / 2) + 67 + (i * 13));
+
+                    if (waitPass == i) {
                         StringBuilder sb = new StringBuilder();
                         for (int qw = 0; qw < inputPass.length(); qw++) {
                             sb.append("*");
@@ -268,7 +283,6 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
     }
 
     public boolean isHoveringButton(int x, int y, int w, int h, double mx, double my) {
-
         return ((x + w) > mx && mx > x) && ((y + h) > my && my > y);
     }
 
@@ -280,54 +294,47 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
         if (this.renderWireless) {
             if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) - 20, ((this.height - GUI_HEIGHT) / 2) + 20, 18, 18, mouseX, mouseY)) {
                 this.wireless = true;
+                this.nodesRequested = false;
             }
             if (wireless) {
+                // 翻页按钮
+                // 由于使用服务器数据，简化翻页逻辑
                 if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 5, ((this.height - GUI_HEIGHT) / 2) + 65, 15, 15, mouseX, mouseY)) {
-                    if (page > 1) {
-                        page--;
-                    }
+                    // 上翻页 - 简化处理
                 }
                 if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 5, ((this.height - GUI_HEIGHT) / 2) + 65 + (7 * 13), 15, 15, mouseX, mouseY)) {
-                    if (page * 8 < nodes.size()) {
-                        page++;
-                    }
+                    // 下翻页 - 简化处理
                 }
+                // 断开当前连接
                 if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 16, ((this.height - GUI_HEIGHT) / 2) + 39, 15, 15, mouseX, mouseY)) {
-                    if (activeNode != -1) {
+                    if (activeNode != -1 && this.menu.pos != null) {
+                        PacketDistributor.sendToServer(new DisconnectFromNodePacket(this.menu.pos));
                         activeNode = -1;
                     }
                 }
-                for (int i = 0; i < nodes.size(); i++) {
-                    int index = i;
-                    if (page > 1) {
-                        // 多于一页
-                        index = i + (page - 1) * 8;
-                    }
-                    if (i >= 8 || index >= nodes.size()) break;
-                    AcademyNode node = nodes.get(index);
-
-                    if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 16 - 6, ((this.height - GUI_HEIGHT) / 2) + 65 + (i * 13), 15, 15, mouseX, mouseY) && activeNode != index) {
-                        if (node.isNeedAuth()) {
-                            waitPass = index;
+                // 点击节点连接
+                for (int i = 0; i < serverNodes.size(); i++) {
+                    if (i >= 8) break;
+                    NodeEntry node = serverNodes.get(i);
+                    if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) + (160 / 2) * 2 - 16 - 6, ((this.height - GUI_HEIGHT) / 2) + 65 + (i * 13), 15, 15, mouseX, mouseY) && activeNode != i) {
+                        if (node.needAuth()) {
+                            waitPass = i;
                             inputPass = new StringBuilder();
-                        } else activeNode = index;
-
+                        } else if (this.menu.pos != null) {
+                            // 直接连接（服务器端验证）
+                            PacketDistributor.sendToServer(new ConnectToNodePacket(this.menu.pos, BlockPos.ZERO, java.util.Optional.empty()));
+                            activeNode = i;
+                        }
                     }
-
-                    if (node.isNeedAuth() && this.isHoveringButton(((this.width - GUI_WIDTH) / 2) - 10, ((this.height - GUI_HEIGHT) / 2) + 62 + (i * 13), 150, 16, mouseX, mouseY) && activeNode != index) {
-                        if (node.isNeedAuth()) {
-                            waitPass = index;
-                            inputPass = new StringBuilder();
-                        } else activeNode = index;
-
+                    if (node.needAuth() && this.isHoveringButton(((this.width - GUI_WIDTH) / 2) - 10, ((this.height - GUI_HEIGHT) / 2) + 62 + (i * 13), 150, 16, mouseX, mouseY) && activeNode != i) {
+                        waitPass = i;
+                        inputPass = new StringBuilder();
                     }
                 }
-
             }
         }
         if (!this.wireless)
             return super.mouseClicked(mouseX, mouseY, p_97750_);
-
         return true;
     }
 
@@ -340,17 +347,13 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
             return super.keyPressed(p_97765_, p_97766_, p_97767_);
         }
         if (inputPass.length() < 11) {
-            // 0-9,a-z
             for (int i = 48; i <= 90; i++) {
-                // 不考虑大小写/符号，只有数字/小写字母
                 if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), i)) {
                     InputConstants.Key key = InputConstants.getKey(p_97765_, p_97766_);
                     inputPass.append(key.getName().replace("key.keyboard.", ""));
                 }
             }
-            // 0-9
             for (int i = 320; i <= 329; i++) {
-                // 不考虑大小写/符号，只有数字/小写字母
                 if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), i)) {
                     InputConstants.Key key = InputConstants.getKey(p_97765_, p_97766_);
                     inputPass.append(key.getName().replace("key.keyboard.keypad.", ""));
@@ -364,23 +367,19 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
             }
         }
         if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 335) || InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 257)) {
-            // 按下回车
             if (waitPass != -1) {
-                AcademyNode node = nodes.get(waitPass);
-                if (node.isNeedAuth()) {
-                    if (node.getPass() != null && inputPass != null && inputPass.toString().contentEquals(node.getPass())) {
-                        activeNode = waitPass;
-                        waitPass = -1;
-                    }
-                } else {
+                // 密码输入完成，发送带密码的连接请求
+                if (this.menu.pos != null) {
+                    PacketDistributor.sendToServer(new ConnectToNodePacket(
+                            this.menu.pos, BlockPos.ZERO,
+                            java.util.Optional.of(inputPass.toString())
+                    ));
                     activeNode = waitPass;
-                    waitPass = -1;
                 }
+                waitPass = -1;
                 inputPass = new StringBuilder();
             }
         }
-
         return true;
     }
-
 }

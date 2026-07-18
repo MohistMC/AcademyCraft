@@ -2,11 +2,18 @@ package com.mohistmc.academy.world.block;
 
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.block.entity.PhaseGenBlockEntity;
+import com.mohistmc.academy.world.menu.PhaseGenMenu;
 import com.mojang.serialization.MapCodec;
+import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
@@ -16,6 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
@@ -23,11 +31,13 @@ import org.jetbrains.annotations.Nullable;
 public class PhaseGen extends BaseEntityBlock {
     public static final MapCodec<PhaseGen> CODEC = simpleCodec(PhaseGen::new);
     private static final IntegerProperty WORKING = IntegerProperty.create("working", 0, 4);
+    private static final BooleanProperty LIT = BooleanProperty.create("lit");
 
     public PhaseGen(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.getStateDefinition().any().setValue(WORKING, 0));
-
+        this.registerDefaultState(this.getStateDefinition().any()
+                .setValue(WORKING, 0)
+                .setValue(LIT, false));
     }
 
     @Override
@@ -36,33 +46,48 @@ public class PhaseGen extends BaseEntityBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_49915_) {
-        p_49915_.add(WORKING);
-        super.createBlockStateDefinition(p_49915_);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(WORKING, LIT);
+        super.createBlockStateDefinition(builder);
     }
 
     @Override
-    public InteractionResult useWithoutItem(BlockState p_60503_, Level p_60504_, BlockPos p_60505_, Player player, BlockHitResult p_60508_) {
-
-        // TODO: 打开GUI
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (!level.isClientSide()) {
+            player.openMenu(getMenuProvider(state, level, pos));
+            return InteractionResult.CONSUME;
+        }
         return InteractionResult.CONSUME;
-
-    }
-
-
-    @Override
-    public void animateTick(BlockState p_220827_, Level p_220828_, BlockPos p_220829_, RandomSource p_220830_) {
-
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-        return new PhaseGenBlockEntity(p_153215_, p_153216_);
+    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        return new MenuProvider() {
+            @Override
+            public Component getDisplayName() {
+                return Component.empty();
+            }
+
+            @Override
+            public AbstractContainerMenu createMenu(int windowId, Inventory inv, Player player) {
+                return new PhaseGenMenu(windowId, inv, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos));
+            }
+        };
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState p_49232_) {
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new PhaseGenBlockEntity(pos, state);
+    }
+
+    @Override
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
@@ -73,8 +98,13 @@ public class PhaseGen extends BaseEntityBlock {
         return createTickerHelper(type, AcademyBlockEntities.PHASE_GEN.get(), (lvl, pos, st, be) -> {
             if (be instanceof PhaseGenBlockEntity pgbe) {
                 pgbe.tick();
+                // 更新方块状态
+                boolean working = pgbe.isWorking();
+                BlockState current = lvl.getBlockState(pos);
+                if (current.getValue(LIT) != working) {
+                    lvl.setBlock(pos, current.setValue(LIT, working), 3);
+                }
             }
         });
     }
-
 }

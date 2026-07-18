@@ -1,6 +1,7 @@
 package com.mohistmc.academy.world.block.entity;
 
 import com.mohistmc.academy.energy.api.block.IWirelessNode;
+import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -22,6 +23,7 @@ public abstract class BaseNodeBlockEntity extends AcademyContainerBlockEntity im
     private double bandwidth = DEFAULT_BANDWIDTH;
     private String nodeName = "Unnamed";
     private String password = "";
+    private UUID ownerUUID = null;
 
     public BaseNodeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -78,6 +80,16 @@ public abstract class BaseNodeBlockEntity extends AcademyContainerBlockEntity im
     public void setMaxEnergy(double maxEnergy) { this.maxEnergy = maxEnergy; setChanged(); }
     public void setBandwidth(double bandwidth) { this.bandwidth = bandwidth; setChanged(); }
 
+    // ==================== Owner ====================
+
+    public UUID getOwnerUUID() { return ownerUUID; }
+    public void setOwnerUUID(UUID uuid) { this.ownerUUID = uuid; setChanged(); }
+
+    /** 检查玩家是否为所有者 */
+    public boolean isOwner(net.minecraft.world.entity.player.Player player) {
+        return ownerUUID == null || player.getUUID().equals(ownerUUID);
+    }
+
     // ==================== NBT ====================
 
     @Override
@@ -88,6 +100,7 @@ public abstract class BaseNodeBlockEntity extends AcademyContainerBlockEntity im
         if (tag.contains("node_bandwidth")) bandwidth = tag.getDouble("node_bandwidth");
         if (tag.contains("node_name")) nodeName = tag.getString("node_name");
         if (tag.contains("node_pass")) password = tag.getString("node_pass");
+        if (tag.contains("ownerUUID")) ownerUUID = UUID.fromString(tag.getString("ownerUUID"));
     }
 
     @Override
@@ -98,5 +111,6 @@ public abstract class BaseNodeBlockEntity extends AcademyContainerBlockEntity im
         tag.putDouble("node_bandwidth", bandwidth);
         tag.putString("node_name", nodeName);
         tag.putString("node_pass", password);
+        if (ownerUUID != null) tag.putString("ownerUUID", ownerUUID.toString());
     }
 }

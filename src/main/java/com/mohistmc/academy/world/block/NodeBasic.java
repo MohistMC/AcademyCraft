@@ -15,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -64,12 +65,19 @@ public class NodeBasic extends BaseEntityBlock {
     }
 
     @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @org.jetbrains.annotations.Nullable LivingEntity placer, net.minecraft.world.item.ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+        if (placer != null && level.getBlockEntity(pos) instanceof com.mohistmc.academy.world.block.entity.BaseNodeBlockEntity be) {
+            be.setOwnerUUID(placer.getUUID());
+        }
+    }
+
+    @Override
     public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult p_60508_) {
         if (!level.isClientSide()) {
             player.openMenu(getMenuProvider(state, level, pos));
             return InteractionResult.CONSUME;
         }
-        // TODO: 打开GUI
         return InteractionResult.CONSUME;
 
     }

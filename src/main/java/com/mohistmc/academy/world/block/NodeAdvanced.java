@@ -1,16 +1,27 @@
 package com.mohistmc.academy.world.block;
 
+import com.mohistmc.academy.world.block.entity.NodeAdvancedBlockEntity;
+import com.mohistmc.academy.world.menu.NodeAdvancedMenu;
+import com.mojang.serialization.MapCodec;
+import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -19,56 +30,88 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class NodeAdvanced extends Block {
-
+public class NodeAdvanced extends BaseEntityBlock {
+    public static final MapCodec<NodeAdvanced> CODEC = simpleCodec(NodeAdvanced::new);
     private static final IntegerProperty WORKING = IntegerProperty.create("working", 0, 4);
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     private static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
 
-
-    public NodeAdvanced() {
-        super(Properties.of()
-                .sound(SoundType.STONE)
-                .noOcclusion()
-                .strength(4.0f)
-                .requiresCorrectToolForDrops()
-        );
+    public NodeAdvanced(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.getStateDefinition().any()
                 .setValue(WORKING, 0)
                 .setValue(CONNECTED, false)
                 .setValue(FACING, Direction.NORTH));
-
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_49915_) {
-        p_49915_.add(WORKING, FACING, CONNECTED);
-        super.createBlockStateDefinition(p_49915_);
+    protected MapCodec<NodeAdvanced> codec() {
+        return CODEC;
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(WORKING, FACING, CONNECTED);
+        super.createBlockStateDefinition(builder);
     }
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext p_49820_) {
-        return this.defaultBlockState().setValue(FACING, p_49820_.getHorizontalDirection().getOpposite());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    public InteractionResult useWithoutItem(BlockState p_60503_, Level p_60504_, BlockPos p_60505_, Player player, BlockHitResult p_60508_) {
+    public void setPlacedBy(net.minecraft.world.level.Level level, BlockPos pos, BlockState state, @org.jetbrains.annotations.Nullable net.minecraft.world.entity.LivingEntity placer, net.minecraft.world.item.ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+        if (placer != null && level.getBlockEntity(pos) instanceof com.mohistmc.academy.world.block.entity.BaseNodeBlockEntity be) {
+            be.setOwnerUUID(placer.getUUID());
+        }
+    }
 
-        // TODO: 打开GUI
+    @Override
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (!level.isClientSide()) {
+            player.openMenu(getMenuProvider(state, level, pos));
+            return InteractionResult.CONSUME;
+        }
         return InteractionResult.CONSUME;
-
     }
 
+    @Nullable
+    @Override
+    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        return new MenuProvider() {
+            @Override
+            public Component getDisplayName() {
+                return Component.empty();
+            }
+
+            @Override
+            public AbstractContainerMenu createMenu(int windowId, Inventory inv, Player player) {
+                return new NodeAdvancedMenu(windowId, inv, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos));
+            }
+        };
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new NodeAdvancedBlockEntity(pos, state);
+    }
 
     @Override
-    public BlockState rotate(BlockState p_48722_, Rotation p_48723_) {
-        return p_48722_.setValue(FACING, p_48723_.rotate(p_48722_.getValue(FACING)));
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    public BlockState mirror(BlockState p_48719_, Mirror p_48720_) {
-        return p_48719_.rotate(p_48720_.getRotation(p_48719_.getValue(FACING)));
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
+    }
 }

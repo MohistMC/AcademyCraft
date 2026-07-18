@@ -2,11 +2,21 @@ package com.mohistmc.academy.world.block;
 
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.block.entity.MatrixBlockEntity;
+import com.mohistmc.academy.world.menu.MatrixMenu;
 import com.mojang.serialization.MapCodec;
+import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.AirBlock;
@@ -36,6 +46,39 @@ public class Matrix extends BaseEntityBlock {
         return CODEC;
     }
 
+
+    @Override
+    public void setPlacedBy(net.minecraft.world.level.Level level, BlockPos pos, BlockState state, @org.jetbrains.annotations.Nullable net.minecraft.world.entity.LivingEntity placer, net.minecraft.world.item.ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+        if (placer != null && level.getBlockEntity(pos) instanceof com.mohistmc.academy.world.block.entity.MatrixBlockEntity be) {
+            be.setOwnerUUID(placer.getUUID());
+        }
+    }
+
+    @Override
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (!level.isClientSide()) {
+            player.openMenu(getMenuProvider(state, level, pos));
+            return InteractionResult.CONSUME;
+        }
+        return InteractionResult.CONSUME;
+    }
+
+    @Nullable
+    @Override
+    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        return new MenuProvider() {
+            @Override
+            public Component getDisplayName() {
+                return Component.empty();
+            }
+
+            @Override
+            public AbstractContainerMenu createMenu(int windowId, Inventory inv, Player player) {
+                return new MatrixMenu(windowId, inv, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos));
+            }
+        };
+    }
 
     @Override
     public void animateTick(BlockState p_220827_, Level p_220828_, BlockPos p_220829_, RandomSource p_220830_) {

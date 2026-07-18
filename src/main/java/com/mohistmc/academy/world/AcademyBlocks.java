@@ -58,8 +58,16 @@ public class AcademyBlocks {
             .noOcclusion()
             .strength(4.0f)
             .requiresCorrectToolForDrops()));
-    public static final DeferredBlock<Block> NODE_ADVANCED = BLOCKS.register("node_advanced", NodeAdvanced::new);
-    public static final DeferredBlock<Block> NODE_STANDARD = BLOCKS.register("node_standard", NodeStandard::new);
+    public static final DeferredBlock<Block> NODE_STANDARD = BLOCKS.register("node_standard", () -> new NodeStandard(Properties.of()
+            .sound(SoundType.STONE)
+            .noOcclusion()
+            .strength(4.0f)
+            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> NODE_ADVANCED = BLOCKS.register("node_advanced", () -> new NodeAdvanced(Properties.of()
+            .sound(SoundType.STONE)
+            .noOcclusion()
+            .strength(4.0f)
+            .requiresCorrectToolForDrops()));
     public static final DeferredBlock<Block> DEV_NORMAL = BLOCKS.register("dev_normal", () -> new DevNormal(Properties.of()
             .sound(SoundType.STONE)
             .noOcclusion()

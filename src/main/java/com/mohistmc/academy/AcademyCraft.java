@@ -3,7 +3,13 @@ package com.mohistmc.academy;
 import com.mohistmc.academy.config.ACConfig;
 import com.mohistmc.academy.crafting.MFIFRecipes;
 import com.mohistmc.academy.listener.ServerListener;
+import com.mohistmc.academy.network.ConnectToNodePacket;
+import com.mohistmc.academy.network.ConsoleCommandPacket;
+import com.mohistmc.academy.network.DisconnectFromNodePacket;
+import com.mohistmc.academy.network.InitMatrixPacket;
 import com.mohistmc.academy.network.LearnSkillPacket;
+import com.mohistmc.academy.network.NodeListSyncPacket;
+import com.mohistmc.academy.network.RequestNodesPacket;
 import com.mohistmc.academy.network.OpenDevGuiPacket;
 import com.mohistmc.academy.network.OpenTutorialGuiPacket;
 import com.mohistmc.academy.network.SetSkillSlotPacket;
@@ -17,6 +23,7 @@ import com.mohistmc.academy.network.UseSkillPacket;
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.SkillRegistry;
 import com.mohistmc.academy.terminal.AppRegistry;
+import com.mohistmc.academy.terminal.FreqTransmitterHandler;
 import com.mohistmc.academy.terminal.MediaTrackRegistry;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.AcademyBlocks;
@@ -63,6 +70,7 @@ public class AcademyCraft {
         modEventBus.addListener(this::registerPayloads);
 
         NeoForge.EVENT_BUS.register(new ServerListener());
+        NeoForge.EVENT_BUS.register(FreqTransmitterHandler.class);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
@@ -129,6 +137,36 @@ public class AcademyCraft {
                 SyncChargingStatePacket.TYPE,
                 SyncChargingStatePacket.STREAM_CODEC,
                 SyncChargingStatePacket::handle
+        );
+        registrar.playToServer(
+                InitMatrixPacket.TYPE,
+                InitMatrixPacket.STREAM_CODEC,
+                InitMatrixPacket::handle
+        );
+        registrar.playToServer(
+                RequestNodesPacket.TYPE,
+                RequestNodesPacket.STREAM_CODEC,
+                RequestNodesPacket::handle
+        );
+        registrar.playToClient(
+                NodeListSyncPacket.TYPE,
+                NodeListSyncPacket.STREAM_CODEC,
+                NodeListSyncPacket::handle
+        );
+        registrar.playToServer(
+                ConnectToNodePacket.TYPE,
+                ConnectToNodePacket.STREAM_CODEC,
+                ConnectToNodePacket::handle
+        );
+        registrar.playToServer(
+                DisconnectFromNodePacket.TYPE,
+                DisconnectFromNodePacket.STREAM_CODEC,
+                DisconnectFromNodePacket::handle
+        );
+        registrar.playToServer(
+                ConsoleCommandPacket.TYPE,
+                ConsoleCommandPacket.STREAM_CODEC,
+                ConsoleCommandPacket::handle
         );
     }
 }

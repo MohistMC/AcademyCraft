@@ -10,7 +10,9 @@ import com.mohistmc.academy.world.block.entity.ImagFusorBlockEntity;
 import com.mohistmc.academy.world.block.entity.MatrixBlockEntity;
 import com.mohistmc.academy.world.block.entity.MatrixSubBlockEntity;
 import com.mohistmc.academy.world.block.entity.MetalFomerBlockEntity;
+import com.mohistmc.academy.world.block.entity.NodeAdvancedBlockEntity;
 import com.mohistmc.academy.world.block.entity.NodeBasicBlockEntity;
+import com.mohistmc.academy.world.block.entity.NodeStandardBlockEntity;
 import com.mohistmc.academy.world.block.entity.PhaseGenBlockEntity;
 import com.mohistmc.academy.world.block.entity.PhaseLiquidBlockEntity;
 import com.mohistmc.academy.world.block.entity.SolarGenBlockEntity;
@@ -44,6 +46,8 @@ public class AcademyBlockEntities {
     public static final Supplier<BlockEntityType<WindGenPillarBlockEntity>> WINDGEN_PILLAR = BLOCK_ENTITIES.register("windgen_pillar", () -> BlockEntityType.Builder.of(WindGenPillarBlockEntity::new, AcademyBlocks.WINDGEN_PILLAR.get()).build(null));
     public static final Supplier<BlockEntityType<PhaseLiquidBlockEntity>> PHASE_LIQUID = BLOCK_ENTITIES.register("phase_liquid", () -> BlockEntityType.Builder.of(PhaseLiquidBlockEntity::new, AcademyBlocks.PHASE_LIQUID.get()).build(null));
     public static final Supplier<BlockEntityType<NodeBasicBlockEntity>> NODE_BASIC = BLOCK_ENTITIES.register("node_basic", () -> BlockEntityType.Builder.of(NodeBasicBlockEntity::new, AcademyBlocks.NODE_BASIC.get()).build(null));
+    public static final Supplier<BlockEntityType<NodeStandardBlockEntity>> NODE_STANDARD = BLOCK_ENTITIES.register("node_standard", () -> BlockEntityType.Builder.of(NodeStandardBlockEntity::new, AcademyBlocks.NODE_STANDARD.get()).build(null));
+    public static final Supplier<BlockEntityType<NodeAdvancedBlockEntity>> NODE_ADVANCED = BLOCK_ENTITIES.register("node_advanced", () -> BlockEntityType.Builder.of(NodeAdvancedBlockEntity::new, AcademyBlocks.NODE_ADVANCED.get()).build(null));
     public static final Supplier<BlockEntityType<ImagFusorBlockEntity>> IMAG_FUSOR = BLOCK_ENTITIES.register("imag_fusor", () -> BlockEntityType.Builder.of(ImagFusorBlockEntity::new, AcademyBlocks.IMAG_FUSOR.get()).build(null));
     public static final Supplier<BlockEntityType<MetalFomerBlockEntity>> METAL_FORMER = BLOCK_ENTITIES.register("metal_former", () -> BlockEntityType.Builder.of(MetalFomerBlockEntity::new, AcademyBlocks.METAL_FORMER.get()).build(null));
 

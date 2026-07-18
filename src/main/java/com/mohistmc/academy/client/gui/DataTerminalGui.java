@@ -73,6 +73,7 @@ public class DataTerminalGui extends Screen {
         AppRegistry.bindOpenAction(AppRegistry.SETTINGS, mc -> mc.setScreen(new SettingsAppGui()));
         AppRegistry.bindOpenAction(AppRegistry.TUTORIAL, mc -> mc.setScreen(new TutorialAppGui(true)));
         AppRegistry.bindOpenAction(AppRegistry.MEDIA_PLAYER, mc -> mc.setScreen(new MediaPlayerAppGui()));
+        AppRegistry.bindOpenAction(AppRegistry.FREQ_TRANSMITTER, mc -> mc.setScreen(new FreqTransmitterGui()));
     }
 
     @Override
