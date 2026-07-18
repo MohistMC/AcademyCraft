@@ -1,6 +1,10 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "academy:item/developer_portable_empty"
-    }
+        "layer0": "academy:item/developer_portable_full"
+    },
+    "overrides": [
+        { "predicate": { "damage": 0.5 }, "model": "academy:item/developer_portable_half" },
+        { "predicate": { "damage": 1 }, "model": "academy:item/developer_portable_empty" }
+    ]
 }

@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "academy:cat_"
+          "name": "academy:cat_engine"
         }
       ],
       "conditions": [

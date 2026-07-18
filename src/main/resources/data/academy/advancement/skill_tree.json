@@ -1,0 +1,12 @@
+{
+  "parent": "academy:first_terminal",
+  "display": {
+    "icon": {"id": "academy:app_skill_tree"},
+    "title": "技能图谱",
+    "description": "获得技能树应用，开始研习能力。",
+    "frame": "task"
+  },
+  "criteria": {
+    "get": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": ["academy:app_skill_tree"]}]}}
+  }
+}

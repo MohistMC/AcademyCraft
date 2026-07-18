@@ -1,0 +1,11 @@
+{
+  "display": {
+    "icon": {"id": "academy:logo"},
+    "title": "学院之门",
+    "description": "欢迎来到 AcademyCraft —— 一个关于能力与科技的奇幻模组。",
+    "frame": "task"
+  },
+  "criteria": {
+    "tick": {"trigger": "minecraft:tick"}
+  }
+}

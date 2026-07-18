@@ -131,7 +131,7 @@ public class AcademyItems {
     public static final DeferredItem<Item> NODE_ADVANCED = ITEMS.register("node_advanced", () -> new BlockItem(AcademyBlocks.NODE_ADVANCED.get(), new Item.Properties()));
     public static final DeferredItem<Item> NODE_STANDARD = ITEMS.register("node_standard", () -> new BlockItem(AcademyBlocks.NODE_STANDARD.get(), new Item.Properties()));
     public static final DeferredItem<Item> DEV_NORMAL_SUB = ITEMS.register("dev_normal_sub", () -> new BlockItem(AcademyBlocks.DEV_NORMAL_SUB.get(), new Item.Properties()));
-    public static final DeferredItem<Item> DEV_ADVANCED_SUB = ITEMS.register("dev_advanced_sub", () -> new BlockItem(AcademyBlocks.DEV_NORMAL_SUB.get(), new Item.Properties()));
+    public static final DeferredItem<Item> DEV_ADVANCED_SUB = ITEMS.register("dev_advanced_sub", () -> new BlockItem(AcademyBlocks.DEV_ADVANCED_SUB.get(), new Item.Properties()));
     public static final DeferredItem<Item> PHASE_GEN = ITEMS.register("phase_gen", () -> new BlockItem(AcademyBlocks.PHASE_GEN.get(), new Item.Properties()));
     public static final DeferredItem<Item> RESO_ORE = ITEMS.register("reso_ore", () -> new BlockItem(AcademyBlocks.RESO_ORE.get(), new Item.Properties()));
     public static final DeferredItem<Item> SOLAR_GEN = ITEMS.register("solar_gen", () -> new BlockItem(AcademyBlocks.SOLAR_GEN.get(), new Item.Properties()));

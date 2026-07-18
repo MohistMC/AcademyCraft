@@ -1,0 +1,12 @@
+{
+  "parent": "academy:root",
+  "display": {
+    "icon": {"id": "academy:developer_portable"},
+    "title": "初识终端",
+    "description": "获得便携开发机，开启你的能力之旅。",
+    "frame": "task"
+  },
+  "criteria": {
+    "get": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": ["academy:developer_portable"]}]}}
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "parent": "academy:first_skill",
+  "display": {
+    "icon": {"id": "academy:factor_meltdowner"},
+    "title": "原子崩坏者",
+    "description": "获得原子崩坏者因子，操纵辐射能量。",
+    "frame": "goal"
+  },
+  "criteria": {
+    "get": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": ["academy:factor_meltdowner"]}]}}
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "parent": "academy:skill_tree",
+  "display": {
+    "icon": {"id": "academy:brain_component"},
+    "title": "初次觉醒",
+    "description": "获得脑组件，掌握你的第一项能力。",
+    "frame": "task"
+  },
+  "criteria": {
+    "get": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": ["academy:brain_component"]}]}}
+  }
+}
