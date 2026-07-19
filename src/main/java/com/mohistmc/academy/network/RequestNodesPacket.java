@@ -105,6 +105,17 @@ public record RequestNodesPacket(BlockPos machinePos) implements CustomPacketPay
                     nodeTag.putBoolean("needAuth", !node.getPassword().isEmpty());
                     nodeTag.putLong("pos", nodePos.asLong());
                     nodeTag.putInt("index", index);
+
+                    // 节点连接信息
+                    NodeConn conn = data != null ? data.getNodeConnection(node) : null;
+                    if (conn != null) {
+                        nodeTag.putInt("load", conn.getLoad());
+                        nodeTag.putInt("capacity", conn.getCapacity());
+                    } else {
+                        nodeTag.putInt("load", 0);
+                        nodeTag.putInt("capacity", node.getCapacity());
+                    }
+
                     nodeList.add(nodeTag);
 
                     if (nodePos.asLong() == connectedPos) {

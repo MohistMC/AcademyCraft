@@ -75,7 +75,7 @@ public class NodeBasic extends BaseEntityBlock {
     @Override
     public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult p_60508_) {
         if (!level.isClientSide()) {
-            player.openMenu(getMenuProvider(state, level, pos));
+            player.openMenu(getMenuProvider(state, level, pos), pos);
             return InteractionResult.CONSUME;
         }
         return InteractionResult.CONSUME;

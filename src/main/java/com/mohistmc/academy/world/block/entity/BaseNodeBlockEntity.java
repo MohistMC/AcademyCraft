@@ -5,6 +5,9 @@ import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -56,6 +59,10 @@ public abstract class BaseNodeBlockEntity extends AcademyContainerBlockEntity im
     public void setEnergy(double value) {
         this.energy = Math.max(0, Math.min(value, maxEnergy));
         setChanged();
+        // 节流同步到客户端，最多每秒刷新一次
+        if (level != null && !level.isClientSide() && level.getGameTime() % 20 == 0) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
     }
 
     @Override
@@ -64,7 +71,7 @@ public abstract class BaseNodeBlockEntity extends AcademyContainerBlockEntity im
     @Override
     public int getCapacity() {
         // 子类可覆盖以提供不同的负载容量
-        return 5;
+        return 10;
     }
 
     @Override
@@ -75,8 +82,22 @@ public abstract class BaseNodeBlockEntity extends AcademyContainerBlockEntity im
 
     // ==================== Setters ====================
 
-    public void setNodeName(String name) { this.nodeName = name; setChanged(); }
-    public void setPassword(String password) { this.password = password; setChanged(); }
+    public void setNodeName(String name) {
+        System.out.println("[AcademyDebug] BaseNodeBE.setNodeName: " + this.nodeName + " -> " + name);
+        this.nodeName = name;
+        setChanged();
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+    public void setPassword(String password) {
+        System.out.println("[AcademyDebug] BaseNodeBE.setPassword: " + this.password + " -> " + password);
+        this.password = password;
+        setChanged();
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
     public void setMaxEnergy(double maxEnergy) { this.maxEnergy = maxEnergy; setChanged(); }
     public void setBandwidth(double bandwidth) { this.bandwidth = bandwidth; setChanged(); }
 
@@ -112,5 +133,19 @@ public abstract class BaseNodeBlockEntity extends AcademyContainerBlockEntity im
         tag.putString("node_name", nodeName);
         tag.putString("node_pass", password);
         if (ownerUUID != null) tag.putString("ownerUUID", ownerUUID.toString());
+    }
+
+    // ==================== 客户端同步 ====================
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+        CompoundTag tag = super.getUpdateTag(provider);
+        saveAdditional(tag, provider);
+        return tag;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 }

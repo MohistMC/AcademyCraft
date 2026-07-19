@@ -17,7 +17,7 @@ public abstract class BaseNodeGui<T extends BaseNodeMenu> extends AcademyBaseUI<
     private boolean connected = false;
 
     public BaseNodeGui(T t, Inventory inv, Component p_97743_) {
-        super(t, inv, p_97743_);
+        super(t, inv, p_97743_, WirelessState.NODE);
     }
 
 

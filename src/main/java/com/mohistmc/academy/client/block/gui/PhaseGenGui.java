@@ -21,7 +21,7 @@ public class PhaseGenGui extends AcademyBaseUI<PhaseGenMenu> {
     private static final ResourceLocation UI_PHASE_GEN = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/ui/ui_phasegen.png");
 
     public PhaseGenGui(PhaseGenMenu menu, Inventory inv, Component title) {
-        super(menu, inv, title);
+        super(menu, inv, title, WirelessState.DEFAULT);
         setRenderEnergyTree(true);
     }
 

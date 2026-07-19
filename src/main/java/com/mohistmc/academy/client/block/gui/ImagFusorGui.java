@@ -21,7 +21,7 @@ public class ImagFusorGui extends AcademyBaseUI<ImagFusorMenu> {
     private final Inventory inv;
 
     public ImagFusorGui(ImagFusorMenu menu, Inventory inv, Component title) {
-        super(menu, inv, title);
+        super(menu, inv, title, WirelessState.DEFAULT);
         this.inv = inv;
         setRenderWireless(false);
     }

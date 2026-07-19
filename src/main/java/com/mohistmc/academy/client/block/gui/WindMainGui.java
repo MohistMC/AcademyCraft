@@ -19,7 +19,7 @@ public class WindMainGui extends AcademyBaseUI<WindGenMainMenu> {
     private final Inventory inv;
 
     public WindMainGui(WindGenMainMenu menu, Inventory inv, Component p_97743_) {
-        super(menu, inv, p_97743_);
+        super(menu, inv, p_97743_, WirelessState.WIFI);
         this.inv = inv;
         setRenderWireless(false);
     }

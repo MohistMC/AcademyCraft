@@ -34,7 +34,7 @@ public class DevAdvancedGui extends AcademyBaseUI<DevAdvancedMenu> {
     private boolean inputActive = false;
 
     public DevAdvancedGui(DevAdvancedMenu menu, Inventory inv, Component title) {
-        super(menu, inv, title);
+        super(menu, inv, title, WirelessState.DEFAULT);
         setRenderEnergyTree(true);
     }
 

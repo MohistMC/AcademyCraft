@@ -31,7 +31,7 @@ public class SolarGenGui extends AcademyBaseUI<SolarGenMenu> {
     private static final int DRAW_HEIGHT = 35;
 
     public SolarGenGui(SolarGenMenu menu, Inventory inv, Component title) {
-        super(menu, inv, title);
+        super(menu, inv, title, WirelessState.WIFI);
         setRenderEnergyTree(true);
     }
 

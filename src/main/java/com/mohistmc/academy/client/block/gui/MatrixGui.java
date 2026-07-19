@@ -31,7 +31,7 @@ public class MatrixGui extends AcademyBaseUI<MatrixMenu> {
     private final StringBuilder passwordInput = new StringBuilder();
 
     public MatrixGui(MatrixMenu menu, Inventory inv, Component title) {
-        super(menu, inv, title);
+        super(menu, inv, title, WirelessState.DEFAULT);
         setRenderEnergyTree(false);
     }
 

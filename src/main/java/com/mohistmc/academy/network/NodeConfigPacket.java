@@ -3,6 +3,7 @@ package com.mohistmc.academy.network;
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.world.block.entity.BaseNodeBlockEntity;
 import io.netty.buffer.ByteBuf;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -17,7 +18,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  *
  * @author Mgazul
  */
-public record NodeConfigPacket(BlockPos pos, String name, String password) implements CustomPacketPayload {
+public record NodeConfigPacket(BlockPos pos, Optional<String> name, Optional<String> password) implements CustomPacketPayload {
 
     public static final Type<NodeConfigPacket> TYPE =
             new Type<>(ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "node_config"));
@@ -25,8 +26,8 @@ public record NodeConfigPacket(BlockPos pos, String name, String password) imple
     public static final StreamCodec<ByteBuf, NodeConfigPacket> STREAM_CODEC =
             StreamCodec.composite(
                     BlockPos.STREAM_CODEC, NodeConfigPacket::pos,
-                    ByteBufCodecs.STRING_UTF8, NodeConfigPacket::name,
-                    ByteBufCodecs.STRING_UTF8, NodeConfigPacket::password,
+                    ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8), NodeConfigPacket::name,
+                    ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8), NodeConfigPacket::password,
                     NodeConfigPacket::new
             );
 
@@ -39,19 +40,32 @@ public record NodeConfigPacket(BlockPos pos, String name, String password) imple
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer player) {
                 BlockEntity be = player.level().getBlockEntity(packet.pos());
+                System.out.println("[AcademyDebug] NodeConfigPacket: received pos=" + packet.pos()
+                    + " hasName=" + packet.name().isPresent() + " hasPassword=" + packet.password().isPresent());
                 if (be instanceof BaseNodeBlockEntity node) {
+                    System.out.println("[AcademyDebug] NodeConfigPacket: found node " + node.getNodeName());
                     if (!node.isOwner(player)) {
-                        player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§c只有节点所有者才能修改配置"));
+                        player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§cOnly owner can modify node config"));
+                        System.out.println("[AcademyDebug] NodeConfigPacket: rejected - not owner player=" + player.getName().getString());
                         return;
                     }
-                    if (packet.name() != null && !packet.name().isEmpty()) {
-                        node.setNodeName(packet.name());
-                    }
-                    if (packet.password() != null) {
-                        node.setPassword(packet.password());
-                    }
+                    packet.name().ifPresent(n -> {
+                        if (!n.isEmpty()) {
+                            System.out.println("[AcademyDebug] NodeConfigPacket: setName old=" + node.getNodeName() + " new=" + n);
+                            node.setNodeName(n);
+                        } else {
+                            System.out.println("[AcademyDebug] NodeConfigPacket: skip empty name");
+                        }
+                    });
+                    packet.password().ifPresent(p -> {
+                        System.out.println("[AcademyDebug] NodeConfigPacket: setPassword old=" + node.getPassword() + " new=" + p);
+                        node.setPassword(p);
+                    });
                     node.setChanged();
-                    player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§a节点配置已更新"));
+                    System.out.println("[AcademyDebug] NodeConfigPacket: write done");
+                    player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§aNode config updated"));
+                } else {
+                    System.out.println("[AcademyDebug] NodeConfigPacket: no node entity found entity=" + be);
                 }
             }
         });
