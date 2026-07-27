@@ -24,6 +24,8 @@ public final class ACConfig {
         public static final ModConfigSpec.DoubleValue SKILL_DAMAGE_MULTIPLIER;
         public static final ModConfigSpec.DoubleValue SKILL_RANGE_MULTIPLIER;
         public static final ModConfigSpec.BooleanValue PVP_ENABLED;
+        public static final ModConfigSpec.BooleanValue CROSS_SERVER_SYNC;
+        public static final ModConfigSpec.StringValue CROSS_SERVER_SYNC_DIR;
 
         static {
             ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -46,6 +48,17 @@ public final class ACConfig {
                     .define("pvpEnabled", true);
             builder.pop();
 
+            builder.push("crossServer");
+            CROSS_SERVER_SYNC = builder
+                    .comment("Enable cross-server ability persistence for BungeeCord/Velocity networks (Issue #16). "
+                            + "When true, ability data is also written to crossServerSyncDir and reloaded on login.")
+                    .define("crossServerSync", false);
+            CROSS_SERVER_SYNC_DIR = builder
+                    .comment("Shared directory (accessible by all backend servers, e.g. a mounted volume) "
+                            + "where per-player ability .dat files are stored when crossServerSync is enabled.")
+                    .define("crossServerSyncDir", "academy_cross_server");
+            builder.pop();
+
             SPEC = builder.build();
         }
 
@@ -53,6 +66,8 @@ public final class ACConfig {
         public static double damageMul() { return SKILL_DAMAGE_MULTIPLIER.get(); }
         public static double rangeMul() { return SKILL_RANGE_MULTIPLIER.get(); }
         public static boolean pvpEnabled() { return PVP_ENABLED.get(); }
+        public static boolean crossServerSync() { return CROSS_SERVER_SYNC.get(); }
+        public static String crossServerSyncDir() { return CROSS_SERVER_SYNC_DIR.get(); }
     }
 
     // ==================== 客户端配置 ====================

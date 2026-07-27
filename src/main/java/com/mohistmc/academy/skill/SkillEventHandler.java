@@ -1,6 +1,7 @@
 package com.mohistmc.academy.skill;
 
 import com.mohistmc.academy.AcademyCraft;
+import com.mohistmc.academy.config.ACConfig;
 import com.mohistmc.academy.network.LearnSkillPacket;
 import com.mohistmc.academy.network.SyncChargingStatePacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -59,7 +60,20 @@ public class SkillEventHandler {
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer sp) {
+            if (ACConfig.Server.crossServerSync()) {
+                CrossServerAbilityStore.load(sp).ifPresent(data ->
+                        sp.setData(AcademyAttachments.PLAYER_ABILITY, data));
+            }
             LearnSkillPacket.syncToClient(sp);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (event.getEntity() instanceof ServerPlayer sp) {
+            if (ACConfig.Server.crossServerSync()) {
+                CrossServerAbilityStore.save(sp);
+            }
         }
     }
 
