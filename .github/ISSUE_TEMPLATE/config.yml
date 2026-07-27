@@ -1,0 +1,10 @@
+# Issue template configuration
+# https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository
+blank_issues_enabled: false
+contact_links:
+  - name: "💬 General question"
+    url: https://github.com/MohistMC/AcademyCraft/issues
+    about: Ask a question or start a discussion using the "Question" label.
+  - name: "🌐 Localization / 翻译"
+    url: https://github.com/MohistMC/AcademyCraft/issues
+    about: Help keep the language files (en/ja/ko/ru/zh_cn/zh_tw) in sync.

@@ -1,3 +1,10 @@
+![Build](https://github.com/MohistMC/AcademyCraft/actions/workflows/gradle.yml/badge.svg)
+![License](https://img.shields.io/badge/license-GPLv3-blue.svg)
+![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-green.svg)
+![Loader](https://img.shields.io/badge/loader-NeoForge-orange.svg)
+
+![](https://raw.githubusercontent.com/MohistMC/AcademyCraft/1.21.1/blob/logo.png)
+
 # AcademyCraft
 
 > A Minecraft mod about superability. The inspiration of AcademyCraft comes from [A Certain Scientific Railgun (とある科学の超電磁砲)](https://en.wikipedia.org/wiki/A_Certain_Scientific_Railgun) but the mod content is not limited of the background.
@@ -5,9 +12,19 @@
 原作 / Original: [LambdaInnovation/AcademyCraft](https://github.com/LambdaInnovation/AcademyCraft)
 本分支 / This fork: NeoForge **1.21.1** 重制版（Java 21），由 [MohistMC](https://github.com/MohistMC/AcademyCraft) 维护，[ghshhf](https://github.com/ghshhf/AcademyCraft) 参与开发。
 
-开发优先级 / Development planning: 优先实现功能，再考虑美化（UI、技能特效等）/ Prioritize functional implementation, then consider beautification.
+## 📌 Project Status
 
----
+| Branch | Minecraft | Loader | Status |
+|---------|-----------|--------|--------|
+| `1.21.1` (default) | 1.21.1 | **NeoForge** | ⚠️ In progress (`v0.0.4`) — alpha released |
+| `1.12.2` | 1.12.2 | Forge | ✅ Stable (latest release **1.1.6**) |
+
+> The `1.21.1` line is a from-scratch **NeoForge** rewrite. An alpha (`v0.0.4`) is published on GitHub Releases; for the latest stable experience, `1.12.2` remains the recommended playable build.
+
+## Development planning
+
+> Prioritize functional implementation, then consider beautification (UI, skill effects, etc.)
+> 优先实现功能，再考虑美化(UI, 技能特效等等)
 
 ## 已实现功能 / Features
 

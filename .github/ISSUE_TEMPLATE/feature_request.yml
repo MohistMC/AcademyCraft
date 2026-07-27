@@ -1,0 +1,36 @@
+name: Feature request
+description: Suggest a new ability, feature, or improvement for AcademyCraft
+title: "[Idea] "
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: branch
+    attributes:
+      label: Which line should this target?
+      options:
+        - "1.21.1 (NeoForge, in development)"
+        - "1.12.2 (Forge, stable)"
+        - "Both / not sure"
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Is your request related to a problem? Describe it.
+    validations:
+      required: false
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the solution you'd like
+      description: A clear and concise description of the ability / feature.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: References, lore from the Railgun/Index universe, mockups, etc.
+    validations:
+      required: false
