@@ -1,7 +1,6 @@
 package com.mohistmc.academy.world.fluid;
 
 import com.mohistmc.academy.world.AcademyBlocks;
-import com.mohistmc.academy.world.AcademyFluidTypes;
 import com.mohistmc.academy.world.AcademyFluids;
 import com.mohistmc.academy.world.AcademyItems;
 import java.util.Optional;
@@ -25,7 +24,7 @@ import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 
 public abstract class PhaseFluid extends BaseFlowingFluid {
 
-    public static final BaseFlowingFluid.Properties PROPERTIES = new BaseFlowingFluid.Properties(AcademyFluidTypes.PHASE_LIQUID_TYPE, AcademyFluids.PHASE_LIQUID, AcademyFluids.FLOWING_PHASE_LIQUID)
+    public static final BaseFlowingFluid.Properties PROPERTIES = new BaseFlowingFluid.Properties(AcademyFluids.PHASE_LIQUID_TYPE, AcademyFluids.PHASE_LIQUID, AcademyFluids.FLOWING_PHASE_LIQUID)
             .explosionResistance(100f).bucket(AcademyItems.PHASE_BUCKET).block(() -> (LiquidBlock) AcademyBlocks.PHASE_LIQUID.get());
 
     private PhaseFluid() {

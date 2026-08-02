@@ -26,43 +26,30 @@ public class PhaseLiquidType extends FluidType {
     public PhaseLiquidType() {
         super(FluidType.Properties.create()
                 .descriptionId("block.academy.phase")
-                .fallDistanceModifier(0F)
-                .canExtinguish(true)
-                .canConvertToSource(false)
-                .supportsBoating(true)
+                .lightLevel(8)
+                .viscosity(6000)
+                .temperature(0)
+                .supportsBoating(false)
                 .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
                 .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
                 .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH)
-                .canHydrate(true));
+                .density(1)
+        );
     }
-
-    @Override
-    public @Nullable PathType getBlockPathType(FluidState state, BlockGetter level, BlockPos pos, @Nullable Mob mob, boolean canFluidLog) {
-        return canFluidLog ? super.getBlockPathType(state, level, pos, mob, true) : null;
-    }
-
 
     @Override
     public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
         consumer.accept(new IClientFluidTypeExtensions() {
-            private static final ResourceLocation UNDERWATER_LOCATION = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/block/black.png"),
-                    WATER_STILL = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "block/phase_liquid"),
-                    WATER_FLOW = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "block/phase_liquid"),
-                    WATER_OVERLAY = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "block/phase_liquid");
+            private static final ResourceLocation UNDERWATER_LOCATION = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/block/black.png");
 
             @Override
             public @NotNull ResourceLocation getStillTexture() {
-                return WATER_STILL;
+                return UNDERWATER_LOCATION;
             }
 
             @Override
             public @NotNull ResourceLocation getFlowingTexture() {
-                return WATER_FLOW;
-            }
-
-            @Override
-            public ResourceLocation getOverlayTexture() {
-                return WATER_OVERLAY;
+                return UNDERWATER_LOCATION;
             }
 
             @Override
@@ -72,12 +59,12 @@ public class PhaseLiquidType extends FluidType {
 
             @Override
             public int getTintColor() {
-                return 0xFF3F76E4;
+                return 0xFF000000;
             }
 
             @Override
             public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                return BiomeColors.getAverageWaterColor(getter, pos) | 0xFF000000;
+                return 0xFF000000;
             }
 
             @Override

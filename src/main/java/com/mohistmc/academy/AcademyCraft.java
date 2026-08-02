@@ -28,7 +28,6 @@ import com.mohistmc.academy.terminal.MediaTrackRegistry;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyEntities;
-import com.mohistmc.academy.world.AcademyFluidTypes;
 import com.mohistmc.academy.world.AcademyFluids;
 import com.mohistmc.academy.world.AcademyItems;
 import com.mohistmc.academy.world.AcademyMenus;
@@ -55,7 +54,7 @@ public class AcademyCraft {
         AcademyItems.ITEMS.register(modEventBus);
         AcademyItems.TABS.register(modEventBus);
         AcademyBlocks.BLOCKS.register(modEventBus);
-        AcademyFluidTypes.FLUID_TYPES.register(modEventBus);
+        AcademyFluids.FLUID_TYPES.register(modEventBus);
         AcademyFluids.FLUIDS.register(modEventBus);
         AcademyEntities.ENTITIES.register(modEventBus);
         AcademyBlockEntities.BLOCK_ENTITIES.register(modEventBus);
