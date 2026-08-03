@@ -29,7 +29,7 @@ public final class IFItemManager implements EnergyItemManager {
     @Override
     public void setEnergy(ItemStack stack, double amt) {
         ImagEnergyItem item = (ImagEnergyItem) stack.getItem();
-        amt = Math.min(item.getMaxEnergy(), amt);
+        amt = Math.max(0, Math.min(item.getMaxEnergy(), amt));
         StackUtils.loadTag(stack).setDouble("energy", amt);
 
         int approxDamage = (int) Math.round((1 - amt / getMaxEnergy(stack)) * stack.getMaxDamage());
@@ -63,7 +63,10 @@ public final class IFItemManager implements EnergyItemManager {
         double namt = Math.signum(amt) * Math.min(Math.abs(amt), lim);
         spare += amt - namt;
 
-        setEnergy(stack, cur + namt);
+        double newEnergy = Math.max(0, cur + namt);
+        spare += (cur + namt) - newEnergy;
+
+        setEnergy(stack, newEnergy);
         return spare;
     }
 
