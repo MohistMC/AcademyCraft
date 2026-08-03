@@ -173,7 +173,7 @@ public class EntityBlock extends EntityAdvanced {
                     if (isPlace) {
                         int metadata = block.getMetaFromState(_blockState);
                         Item item = Item.getItemFromBlock(block);
-                        if (item instanceof ItemBlock) {
+                        if (item instanceof ItemBlock && player != null && player.canPlayerEdit(placePos, event.result.sideHit, ItemStack.EMPTY)) {
                             ((ItemBlock) item).placeBlockAt(
                                     new ItemStack(block, 0, metadata), player, world, placePos, event.result.sideHit,
                                     placePos.getX(), placePos.getY(), placePos.getZ(), _blockState);
@@ -190,7 +190,7 @@ public class EntityBlock extends EntityAdvanced {
                             } else {
                                 int metadata = block.getMetaFromState(_blockState);
                                 Item item = Item.getItemFromBlock(block);
-                                if (item instanceof ItemBlock) {
+                                if (item instanceof ItemBlock && player != null && player.canPlayerEdit(new BlockPos(tx, ty, tz), event.result.sideHit, ItemStack.EMPTY)) {
                                     ((ItemBlock) item).placeBlockAt(
                                             new ItemStack(block, 0, metadata), player, world, new BlockPos(tx, ty, tz), event.result.sideHit,
                                             tx, ty, tz, _blockState);

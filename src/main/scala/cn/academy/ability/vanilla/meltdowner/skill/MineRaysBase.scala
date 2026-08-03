@@ -80,7 +80,7 @@ abstract class MRContext(p: EntityPlayer, _skill: MineRaysBase) extends Context(
           x = pos.getX
           y = pos.getY
           z = pos.getZ
-          hardnessLeft = block.getBlockHardness(is, world, pos)
+          hardnessLeft = is.getBlockHardness(world, pos)
           if (hardnessLeft < 0) hardnessLeft = Float.MaxValue
         } else {
           x = -1

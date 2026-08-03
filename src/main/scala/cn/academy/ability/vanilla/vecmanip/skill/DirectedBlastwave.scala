@@ -134,7 +134,7 @@ class BlastwaveContext(p: EntityPlayer) extends Context(p, DirectedBlastwave) wi
             val state = world.getBlockState(bPos)
             val block = state.getBlock
             val meta = block.getMetaFromState(state)
-            val hardness = block.getBlockHardness(state, world, null)
+            val hardness = state.getBlockHardness(world, null)
             if (0 <= hardness && hardness <= breakHardness && ctx.getSkillExp==1f)
             {
               if (ctx.canBreakBlock(player.world, bPos)) { //Can place

@@ -99,9 +99,9 @@ class GroundshockContext(p: EntityPlayer) extends Context(p, Groundshock) with I
         val block = state.getBlock
 
         if (ctx.canBreakBlock(world, x, y, z)) {
-          block.getBlockHardness(state,world,blockPos) match {
+          state.getBlockHardness(world,blockPos) match {
             case hardnessEnergy if hardnessEnergy >= 0 =>
-              if (energy >= hardnessEnergy && block != Blocks.FARMLAND && !block.getMaterial(state).isLiquid) {
+              if (energy >= hardnessEnergy && block != Blocks.FARMLAND && !state.getMaterial.isLiquid) {
                 energy -= hardnessEnergy
 
                 if (drop && RandUtils.nextFloat() < dropRate) {
