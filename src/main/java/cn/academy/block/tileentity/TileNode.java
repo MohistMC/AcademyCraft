@@ -74,7 +74,7 @@ public class TileNode extends TileInventory implements IWirelessNode, IInventory
 
                 NetworkMessage.sendToAllAround(TargetPoints.convert(this, 20),
                         this, MSG_SYNC,
-                        enabled, chargingIn, chargingOut, energy, name, password, placerName);
+                        enabled, chargingIn, chargingOut, energy, name, placerName);
                 rebuildBlockState();
             }
             
@@ -204,13 +204,12 @@ public class TileNode extends TileInventory implements IWirelessNode, IInventory
 
     @Listener(channel=MSG_SYNC, side=Side.CLIENT)
     void hSync(boolean enabled, boolean chargingIn, boolean chargingOut,
-               double energy, String name, String pass, String placerName) {
+               double energy, String name, String placerName) {
         this.enabled = enabled;
         this.chargingIn = chargingIn;
         this.chargingOut = chargingOut;
         this.energy = energy;
         this.name = name;
-        this.password = pass;
         this.placerName = placerName;
     }
 

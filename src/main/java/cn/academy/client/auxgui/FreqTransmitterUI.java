@@ -67,53 +67,58 @@ public class FreqTransmitterUI extends AuxGui {
 
         private static Object delegate = NetworkMessage.staticCaller(Syncs.class);
 
-        public static void querySSID(IWirelessMatrix matrix, Future<String> future) {
-            send(MSG_QUERY_SSID, matrix, future);
+        private static boolean inRange(EntityPlayer player, TileEntity tile) {
+            return tile != null && player.getDistanceSq(tile.getPos()) < 64;
         }
 
-        public static void authorizeMatrix(IWirelessMatrix matrix, String password, Future<Boolean> future) {
-            send(MSG_AUTH_MATRIX, matrix, password, future);
+        public static void querySSID(IWirelessMatrix matrix, EntityPlayer player, Future<String> future) {
+            send(MSG_QUERY_SSID, matrix, player, future);
         }
 
-        public static void authorizeNode(IWirelessNode node, String password, Future<Boolean> future) {
-            send(MSG_AUTH_NODE, node, password, future);
+        public static void authorizeMatrix(IWirelessMatrix matrix, EntityPlayer player, String password, Future<Boolean> future) {
+            send(MSG_AUTH_MATRIX, matrix, player, password, future);
         }
 
-        public static void linkNodeToMatrix(IWirelessNode node, IWirelessMatrix matrix, String password, Future<Boolean> future) {
-            send(MSG_LINK_NODE, node, matrix, password, future);
+        public static void authorizeNode(IWirelessNode node, EntityPlayer player, String password, Future<Boolean> future) {
+            send(MSG_AUTH_NODE, node, player, password, future);
         }
 
-        public static void linkUserToNode(IWirelessUser user, IWirelessNode node, Future<Boolean> future) {
-            send(MSG_LINK_USER, user, node, future);
+        public static void linkNodeToMatrix(IWirelessNode node, IWirelessMatrix matrix, EntityPlayer player, String password, Future<Boolean> future) {
+            send(MSG_LINK_NODE, node, matrix, player, password, future);
+        }
+
+        public static void linkUserToNode(IWirelessUser user, IWirelessNode node, EntityPlayer player, String password, Future<Boolean> future) {
+            send(MSG_LINK_USER, user, node, player, password, future);
         }
 
         @NetworkMessage.Listener(channel=MSG_QUERY_SSID, side=Side.SERVER)
-        private static void hQuerySSID(IWirelessMatrix matrix, Future<String> future) {
-            WirelessNet net = WirelessHelper.getWirelessNet(matrix);
+        private static void hQuerySSID(IWirelessMatrix matrix, EntityPlayer player, Future<String> future) {
+            WirelessNet net = inRange(player, (TileEntity) matrix) ? WirelessHelper.getWirelessNet(matrix) : null;
             future.sendResult(net != null ? net.getSSID() : null);
         }
 
         @NetworkMessage.Listener(channel=MSG_AUTH_MATRIX, side=Side.SERVER)
-        private static void hAuthorizeMatrix(IWirelessMatrix matrix, String password, Future<Boolean> future) {
-            WirelessNet net = WirelessHelper.getWirelessNet(matrix);
+        private static void hAuthorizeMatrix(IWirelessMatrix matrix, EntityPlayer player, String password, Future<Boolean> future) {
+            WirelessNet net = inRange(player, (TileEntity) matrix) ? WirelessHelper.getWirelessNet(matrix) : null;
             future.sendResult(net != null && net.getPassword().equals(password));
         }
 
         @NetworkMessage.Listener(channel=MSG_LINK_NODE, side=Side.SERVER)
-        private static void hLinkNodeToMatrix(IWirelessNode node, IWirelessMatrix matrix, String password, Future<Boolean> future) {
-            WirelessNet net = WirelessHelper.getWirelessNet(matrix);
-            future.sendResult(net != null &&
+        private static void hLinkNodeToMatrix(IWirelessNode node, IWirelessMatrix matrix, EntityPlayer player, String password, Future<Boolean> future) {
+            WirelessNet net = inRange(player, (TileEntity) matrix) ? WirelessHelper.getWirelessNet(matrix) : null;
+            future.sendResult(net != null && inRange(player, (TileEntity) node) &&
                 !MinecraftForge.EVENT_BUS.post(new LinkNodeEvent(node, net.getMatrix(), password)));
         }
 
         @NetworkMessage.Listener(channel=MSG_LINK_USER, side=Side.SERVER)
-        private static void hLinkUserToNode(IWirelessUser user, IWirelessNode node, Future<Boolean> future) {
-            future.sendResult(!MinecraftForge.EVENT_BUS.post(new LinkUserEvent(user, node)));
+        private static void hLinkUserToNode(IWirelessUser user, IWirelessNode node, EntityPlayer player, String password, Future<Boolean> future) {
+            future.sendResult(inRange(player, (TileEntity) node) && inRange(player, (TileEntity) user) &&
+                !MinecraftForge.EVENT_BUS.post(new LinkUserEvent(user, node, password)));
         }
 
         @NetworkMessage.Listener(channel=MSG_AUTH_NODE, side=Side.SERVER)
-        private static void hAuthNode(IWirelessNode node, String pass, Future<Boolean> future) {
-            future.sendResult(node.getPassword().equals(pass));
+        private static void hAuthNode(IWirelessNode node, EntityPlayer player, String pass, Future<Boolean> future) {
+            future.sendResult(inRange(player, (TileEntity) node) && node.getPassword().equals(pass));
         }
 
         private static void send(String channel, Object... args) {
@@ -394,7 +399,7 @@ public class FreqTransmitterUI extends AuxGui {
                 
                 final IWirelessMatrix mat2 = mat;
                 startTransmitting();
-                Syncs.querySSID(mat, Future.create(ssid -> {
+                Syncs.querySSID(mat, player, Future.create(ssid -> {
                     if(current == StateStart.this) {
                         if(ssid == null) {
                             setState(new StateNotifyAndQuit("e0"));
@@ -453,7 +458,7 @@ public class FreqTransmitterUI extends AuxGui {
                 State state = new StateNotify("s1_1");
                 setState(state);
                 state.startTransmitting();
-                Syncs.authorizeMatrix(matrix, pass, Future.create(result -> {
+                Syncs.authorizeMatrix(matrix, player, pass, Future.create(result -> {
                     if(state == FreqTransmitterUI.this.current) {
                         if(result) {
                             setState(new StateDoMatrixLink(matrix, pass));
@@ -512,7 +517,7 @@ public class FreqTransmitterUI extends AuxGui {
                 State state = new StateNotify("s1_1");
                 setState(state);
                 state.startTransmitting();
-                Syncs.authorizeNode(node, pass, Future.create(result -> {
+                Syncs.authorizeNode(node, player, pass, Future.create(result -> {
                     if(state == FreqTransmitterUI.this.current) {
                         if(result) {
                             setState(new StateDoNodeLink(node, pass));
@@ -558,7 +563,7 @@ public class FreqTransmitterUI extends AuxGui {
                 State state = new StateNotify("e5");
                 setState(state);
                 state.startTransmitting();
-                Syncs.linkNodeToMatrix(node, matrix, pass, Future.create(res -> {
+                Syncs.linkNodeToMatrix(node, matrix, player, pass, Future.create(res -> {
                     if(FreqTransmitterUI.this.current == state) {
                         if(res) {
                             setState(new StateNotifyAndReturn("e6", StateDoMatrixLink.this));
@@ -606,7 +611,7 @@ public class FreqTransmitterUI extends AuxGui {
                 State state = new StateNotify("e5");
                 setState(state);
                 state.startTransmitting();
-                Syncs.linkUserToNode((IWirelessUser) tile, node, Future.create(res -> {
+                Syncs.linkUserToNode((IWirelessUser) tile, node, player, pass, Future.create(res -> {
                     if(FreqTransmitterUI.this.current == state) {
                         if(res) {
                             setState(new StateNotifyAndReturn("e6", StateDoNodeLink.this));

@@ -74,8 +74,8 @@ object GuiMatrix2 {
               .blank(1)
               .button("INIT", () => {
                 val (ssidBox, passBox) = (ssidCell(0), passwordCell(0))
-                send(MSG_INIT, tile, ssidBox.content, passBox.content, Future.create2((_: Boolean) =>
-                  send(MSG_GATHER_INFO, tile, Future.create2((inf: InitData) => rebuildInfo(inf)))
+                send(MSG_INIT, tile, thePlayer, ssidBox.content, passBox.content, Future.create2((_: Boolean) =>
+                  send(MSG_GATHER_INFO, tile, thePlayer, Future.create2((inf: InitData) => rebuildInfo(inf)))
                 ))
               })
           } else {
@@ -84,7 +84,7 @@ object GuiMatrix2 {
         }
       }
 
-      send(MSG_GATHER_INFO, tile, Future.create2((inf: InitData) => rebuildInfo(inf)))
+      send(MSG_GATHER_INFO, tile, thePlayer, Future.create2((inf: InitData) => rebuildInfo(inf)))
     }
 
     ret
@@ -122,8 +122,8 @@ private object MatrixNetProxy {
   final val MSG_CHANGE_SSID = "ssid"
 
   @Listener(channel=MSG_GATHER_INFO, side=Array(Side.SERVER))
-  def gatherInfo(matrix: TileMatrix, future: Future[InitData]) = {
-    val optNetwork = Option(WirelessHelper.getWirelessNet(matrix))
+  def gatherInfo(matrix: TileMatrix, player: EntityPlayer, future: Future[InitData]) = {
+    val optNetwork = if (player.getDistanceSq(matrix.getPos()) < 64) Option(WirelessHelper.getWirelessNet(matrix)) else None
     val result = new InitData
     optNetwork match {
       case Some(net) =>
@@ -137,10 +137,13 @@ private object MatrixNetProxy {
   }
 
   @Listener(channel=MSG_INIT, side=Array(Side.SERVER))
-  def init(matrix: TileMatrix, ssid: String, pwd: String, fut: Future[Boolean]) = {
-    MinecraftForge.EVENT_BUS.post(new CreateNetworkEvent(matrix, ssid, pwd))
-
-    fut.sendResult(true)
+  def init(matrix: TileMatrix, player: EntityPlayer, ssid: String, pwd: String, fut: Future[Boolean]) = {
+    if (matrix.getPlacerName == player.getName) {
+      MinecraftForge.EVENT_BUS.post(new CreateNetworkEvent(matrix, ssid, pwd))
+      fut.sendResult(true)
+    } else {
+      fut.sendResult(false)
+    }
   }
 
   @Listener(channel=MSG_CHANGE_PASSWORD, side=Array(Side.SERVER))
