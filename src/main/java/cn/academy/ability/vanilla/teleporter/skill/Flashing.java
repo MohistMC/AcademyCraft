@@ -236,6 +236,9 @@ public class Flashing extends Skill {
 
         @Listener(channel=MSG_PERFORM, side=Side.SERVER)
         void serverPerform(int keyid) {
+            if (keyid < 1 || keyid >= dirs.length) {
+                return;
+            }
             if (ctx.consume(0, consumption)) {
                 Vec3d dest = getDest(keyid);
                 if(player.isRiding())
