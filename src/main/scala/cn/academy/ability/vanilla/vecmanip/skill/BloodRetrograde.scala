@@ -15,6 +15,7 @@ import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
 object BloodRetrograde extends Skill("blood_retro", 4) {
 
+  setContextFactory(p => new BloodRetroContext(p))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyid: Int) = activateSingleKey(rt, keyid, p => new BloodRetroContext(p))
 

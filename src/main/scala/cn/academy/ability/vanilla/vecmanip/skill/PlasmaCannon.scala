@@ -20,6 +20,7 @@ import net.minecraft.world.Explosion
 
 object PlasmaCannon extends Skill("plasma_cannon", 5) {
 
+  setContextFactory(p => new PlasmaCannonContext(p))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyid: Int) = activateSingleKey(rt, keyid, p => new PlasmaCannonContext(p))
 

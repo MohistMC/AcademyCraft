@@ -47,6 +47,7 @@ public class MagManip extends Skill
     public MagManip()
     {
         super("mag_manip", 2);
+        setContextFactory(MagManipContext::new);
     }
 
     @SideOnly(Side.CLIENT)

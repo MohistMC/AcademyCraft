@@ -17,6 +17,7 @@ import net.minecraft.world.World
   */
 object MineRayBasic extends MineRaysBase("basic", 3) {
 
+  setContextFactory(p => new BasicMRContext(p))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyID: Int) = activateSingleKey(rt, keyID, p => new BasicMRContext(p))
 

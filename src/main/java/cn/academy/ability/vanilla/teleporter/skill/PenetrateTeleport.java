@@ -30,6 +30,7 @@ public class PenetrateTeleport extends Skill
     public PenetrateTeleport()
     {
         super("penetrate_teleport", 2);
+        setContextFactory(PTContext::new);
     }
 
     @SideOnly(Side.CLIENT)

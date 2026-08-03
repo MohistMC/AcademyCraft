@@ -46,6 +46,7 @@ object MagMovement extends Skill("mag_movement", 2) {
     }
   }
 
+  setContextFactory(p => new MovementContext(p))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyid: Int) = activateSingleKey(rt, keyid, p => new MovementContext(p))
 

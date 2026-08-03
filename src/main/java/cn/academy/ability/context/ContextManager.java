@@ -2,7 +2,11 @@ package cn.academy.ability.context;
 
 import cn.academy.AcademyCraft;
 import cn.academy.ability.context.Context.Status;
+import cn.academy.ability.Skill;
 import cn.academy.analytic.events.AnalyticSkillEvent;
+import cn.academy.datapart.AbilityData;
+import cn.academy.datapart.CPData;
+import cn.academy.datapart.CooldownData;
 import cn.academy.event.ability.CategoryChangeEvent;
 import cn.academy.event.ability.OverloadEvent;
 import cn.lambdalib2.s11n.network.NetworkMessage;
@@ -19,7 +23,9 @@ import cn.lambdalib2.util.WorldUtils;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import io.netty.buffer.ByteBuf;
+import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
@@ -48,8 +54,6 @@ import java.util.stream.Stream;
  */
 public enum ContextManager {
     instance;
-
-    private static final boolean DEBUG_LOG = false;
 
     private static final double
             T_KA_TOL = 1.5, // Tile tolerance of receiving keepAlive packets
@@ -162,22 +166,9 @@ public enum ContextManager {
         return new IllegalStateException("Illegal state: alive context not found in data!");
     }
 
-    private static Object writeContextType(Class<? extends Context> type) {
-        return type.getName();
-    }
-
     private static void log(Object msg) {
-        if (AcademyCraft.DEBUG_MODE && DEBUG_LOG)
-             AcademyCraft.log.info("CM: " + msg);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static Class<? extends Context> readContextType(Object in) {
-        try  {
-            return (Class) Class.forName((String) in);
-        } catch (ClassNotFoundException ex) {
-            throw Throwables.propagate(ex);
-        }
+        if (AcademyCraft.DEBUG_MODE)
+            AcademyCraft.log.info("CM: {}", msg);
     }
 
     @NetworkS11nType
@@ -200,7 +191,7 @@ public enum ContextManager {
 
             suspended.put(nextClientID, data);
             NetworkMessage.sendToServer(ServerManager.instance, M_BEGIN_LINK,
-                    writeContextType(ctx.getClass()), player(), nextClientID);
+                    ctx.skill, player(), nextClientID);
 
             nextClientID += 1;
 
@@ -415,36 +406,46 @@ public enum ContextManager {
         }
 
         @Listener(channel=M_BEGIN_LINK, side=Side.SERVER)
-        @SuppressWarnings("unchecked")
-        private void hBeginLink(Object typein, EntityPlayerMP player, int clientID) {
-            try {
-                Class<? extends Context> type = readContextType(typein);
-                Context ctx = type.getConstructor(EntityPlayer.class).newInstance(player);
-                ContextData data = new ContextData();
-                data.ctx = ctx;
+        private void hBeginLink(Skill skill, EntityPlayerMP player, int clientID) {
 
-                Set<EntityPlayerMP> players = new HashSet<>((List) WorldUtils.getEntities(player, 25, EntitySelectors.player()));
-                players.remove(player);
-
-                data.targets = players.toArray(new EntityPlayerMP[players.size()]);
-
-                data.ctx.status = Status.ALIVE;
-                data.serverID = nextServerID;
-                data.ctx.serverID = nextServerID;
-
-                alive.add(data);
-                NetworkMessage.sendToSelf(data.ctx, Context.MSG_MADEALIVE);
-
-                NetworkMessage.sendTo(player, LocalManager.instance, M_ESTABLISH_LINK, clientID, nextServerID);
-                NetworkMessage.sendToPlayers(data.targets, ClientManager.instance, M_MAKEALIVE,
-                        writeContextType(ctx.getClass()), player, nextServerID);
-                MinecraftForge.EVENT_BUS.post(new AnalyticSkillEvent(data.ctx.player,data.ctx.skill));
-                nextServerID += 1;
-
-                log("[SVR] BeginLink");
-            } catch (Exception ex) {
-                Throwables.propagate(ex);
+            if (skill == null || skill.getContextFactory() == null
+                    || !AbilityData.get(player).isSkillLearned(skill)
+                    || !CPData.get(player).canUseAbility()) {
+                return;
             }
+            Context ctx = skill.getContextFactory().apply(player);
+
+            if (CooldownData.of(player).isInCooldown(ctx.skill)) {
+                return;
+            }
+
+            ContextData data = new ContextData();
+            data.ctx = ctx;
+
+            List<Entity> entityList = WorldUtils.getEntities(player, 25, EntitySelectors.player());
+
+            Set<EntityPlayerMP> players = entityList.stream()
+                    .filter(EntityPlayerMP.class::isInstance)
+                    .map(EntityPlayerMP.class::cast)
+                    .collect(Collectors.toSet());
+            players.remove(player);
+
+            data.targets = players.toArray(new EntityPlayerMP[0]);
+
+            data.ctx.status = Status.ALIVE;
+            data.serverID = nextServerID;
+            data.ctx.serverID = nextServerID;
+
+            alive.add(data);
+            NetworkMessage.sendToSelf(data.ctx, Context.MSG_MADEALIVE);
+
+            NetworkMessage.sendTo(player, LocalManager.instance, M_ESTABLISH_LINK, clientID, nextServerID);
+            NetworkMessage.sendToPlayers(data.targets, ClientManager.instance, M_MAKEALIVE,
+                    ctx.skill, player, nextServerID);
+            MinecraftForge.EVENT_BUS.post(new AnalyticSkillEvent(data.ctx.player, data.ctx.skill));
+            nextServerID += 1;
+
+            log("[SVR] BeginLink");
         }
 
         @Listener(channel=M_TERM_ATLOCAL, side=Side.SERVER)
@@ -553,10 +554,12 @@ public enum ContextManager {
         List<ContextData> alive = new LinkedList<>();
 
         @Listener(channel=M_MAKEALIVE, side=Side.CLIENT)
-        private void hMakeAlive(Object typein, EntityPlayer player, int serverID) {
+        private void hMakeAlive(Skill skill, EntityPlayer player, int serverID) {
             try {
-                Class<? extends Context> type = readContextType(typein);
-                Context ctx = type.getConstructor(EntityPlayer.class).newInstance(player);
+                if (skill == null || skill.getContextFactory() == null) {
+                    return;
+                }
+                Context ctx = skill.getContextFactory().apply(player);
                 ContextData data = new ContextData();
 
                 data.ctx = ctx;

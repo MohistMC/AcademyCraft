@@ -17,6 +17,7 @@ import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
 object DirectedShock extends Skill("dir_shock", 1) {
 
+  setContextFactory(p => new ShockContext(p))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyid: Int) = activateSingleKey(rt, keyid, p => new ShockContext(p))
 

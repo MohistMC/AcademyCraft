@@ -24,6 +24,7 @@ import net.minecraft.util.math.{RayTraceResult, Vec3d}
   */
 object ScatterBomb extends Skill("scatter_bomb", 2) {
 
+  setContextFactory(p => new SBContext(p))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyID: Int) = activateSingleKey(rt, keyID, p => new SBContext(p))
 

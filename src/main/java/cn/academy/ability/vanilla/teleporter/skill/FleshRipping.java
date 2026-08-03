@@ -41,6 +41,7 @@ public class FleshRipping extends Skill
     public FleshRipping()
     {
         super("flesh_ripping", 3);
+        setContextFactory(FRContext::new);
     }
 
     @Override

@@ -27,6 +27,7 @@ object ThunderBolt extends Skill("thunder_bolt", 4) {
   final val RANGE = 20d
   final val AOE_RANGE = 8d
 
+  setContextFactory(p => new ThunderBoltContext(p))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyId: Int) = activateSingleKey(rt, keyId, p => new ThunderBoltContext(p))
 

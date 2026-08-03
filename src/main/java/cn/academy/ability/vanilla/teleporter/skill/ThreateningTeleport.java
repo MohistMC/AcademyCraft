@@ -36,6 +36,7 @@ public class ThreateningTeleport extends Skill
     public ThreateningTeleport()
     {
         super("threatening_teleport", 1);
+        setContextFactory(TTContext::new);
     }
 
     @SideOnly(Side.CLIENT)

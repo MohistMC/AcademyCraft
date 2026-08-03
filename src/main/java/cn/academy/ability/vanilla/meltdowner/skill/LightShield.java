@@ -44,6 +44,7 @@ public class LightShield extends Skill
     public LightShield()
     {
         super("light_shield", 2);
+        setContextFactory(LSContext::new);
         MinecraftForge.EVENT_BUS.register(this);
     }
 

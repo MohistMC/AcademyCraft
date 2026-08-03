@@ -24,6 +24,7 @@ import scala.collection.JavaConversions._
   */
 object CurrentCharging extends Skill("charging", 1) {
 
+  setContextFactory(p => new ChargingContext(p))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyid: Int) = {
     activateSingleKey(rt, keyid, p => new ChargingContext(p))

@@ -19,6 +19,7 @@ import net.minecraft.util.math.Vec3d
   */
 object ElectronMissile extends Skill("electron_missile", 5) {
 
+  setContextFactory(p => new EMContext(p))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyID: Int) = activateSingleKey(rt, keyID, p => new EMContext(p))
   

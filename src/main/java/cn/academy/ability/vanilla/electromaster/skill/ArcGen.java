@@ -39,6 +39,7 @@ public class ArcGen extends Skill
     public ArcGen()
     {
         super("arc_gen", 1);
+        setContextFactory(ArcGenContext::new);
     }
 
     @SideOnly(Side.CLIENT)

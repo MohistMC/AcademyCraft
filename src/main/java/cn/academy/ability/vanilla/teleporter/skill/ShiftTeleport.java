@@ -54,6 +54,7 @@ public class ShiftTeleport extends Skill
     public ShiftTeleport()
     {
       super("shift_tp", 4);
+        setContextFactory(STContext::new);
     }
 
     @Override

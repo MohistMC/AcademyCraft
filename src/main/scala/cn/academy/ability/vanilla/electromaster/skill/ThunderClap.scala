@@ -25,6 +25,7 @@ object ThunderClap extends Skill("thunder_clap", 5) {
   def getRange(exp: Float) = lerpf(15, 30, exp)
   def getCooldown(exp: Float, ticks: Int): Int = (ticks * lerpf(10, 6, exp)).toInt
 
+  setContextFactory(p => new ThunderClapContext(p))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyid: Int) = activateSingleKey(rt, keyid, p => new ThunderClapContext(p))
 

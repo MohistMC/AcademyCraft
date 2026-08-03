@@ -49,6 +49,7 @@ public class Flashing extends Skill {
 
     private Flashing() {
         super("flashing", 5);
+        setContextFactory(MainContext::new);
     }
 
     @SideOnly(Side.CLIENT)

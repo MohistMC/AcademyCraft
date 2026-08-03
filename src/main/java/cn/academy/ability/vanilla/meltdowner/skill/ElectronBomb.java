@@ -25,6 +25,7 @@ public class ElectronBomb extends Skill {
 
     private ElectronBomb() {
         super("electron_bomb", 1);
+        setContextFactory(Ctx::new);
     }
 
     @Override
