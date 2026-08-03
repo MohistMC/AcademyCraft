@@ -24,14 +24,32 @@ public class AbilityPipeline {
      * @return Whether we can break any block at all
      */
     static boolean canBreakBlock(World world) {
-        return propDestroyBlocks.getBoolean() ||
-                ArrayUtils.contains(propWorldsDestroyingBlocks.getStringList(), String.valueOf(world.provider.getDimension())) ||
-                ArrayUtils.contains(propWorldsDestroyingBlocks.getStringList(), world.provider.getSaveFolder());
-                //||ArrayUtils.contains(propWorldsDestroyingBlocks.getStringList(), world.provider.g);
+        if (propDestroyBlocks.getBoolean()) {
+            return true;
+        }
+        String[] whitelist = getWorldWhitelist();
+        return ArrayUtils.contains(whitelist, String.valueOf(world.provider.getDimension())) ||
+                ArrayUtils.contains(whitelist, world.provider.getSaveFolder()) ||
+                ArrayUtils.contains(whitelist, world.getWorldInfo().getWorldName());
+    }
+
+    private static String[] getWorldWhitelist() {
+        if (propWorldsDestroyingBlocks.isList()) {
+            return propWorldsDestroyingBlocks.getStringList();
+        }
+        String raw = propWorldsDestroyingBlocks.getString();
+        if (raw == null || raw.trim().isEmpty()) {
+            return new String[0];
+        }
+        String[] ret = raw.split(",");
+        for (int i = 0; i < ret.length; ++i) {
+            ret[i] = ret[i].trim();
+        }
+        return ret;
     }
 
     static boolean isAllWorldDisableBreakBlock() {
-        return !propDestroyBlocks.getBoolean() && propWorldsDestroyingBlocks.getIntList().length == 0;
+        return !propDestroyBlocks.getBoolean() && getWorldWhitelist().length == 0;
     }
 
     /**
