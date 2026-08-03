@@ -37,7 +37,11 @@ public class ItemTutorial extends Item {
     @Listener(channel=MSG_TRIGGER, side = Side.SERVER)
     public void onTrigger(EntityPlayer player)
     {
-        ACAdvancements.trigger(player, ACAdvancements.open_misaka_cloud.ID);
+        ItemStack main = player.getHeldItemMainhand();
+        ItemStack off = player.getHeldItemOffhand();
+        if (main.getItem() == this || off.getItem() == this) {
+            ACAdvancements.trigger(player, ACAdvancements.open_misaka_cloud.ID);
+        }
     }
     
 }

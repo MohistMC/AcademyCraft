@@ -129,9 +129,9 @@ public class CooldownData extends DataPart<EntityPlayer> {
         doSet(ctrl, id, cd);
 
         if (isClient()) {
-            sendMessage("cross", ctrl, id, cd);
+            sendMessage("cross", getEntity(), ctrl, id, cd);
         } else {
-            sendToLocal("cross", ctrl, id, cd);
+            sendToLocal("cross", getEntity(), ctrl, id, cd);
         }
     }
 
@@ -174,8 +174,10 @@ public class CooldownData extends DataPart<EntityPlayer> {
     }
 
     @Listener(channel="cross", side={Side.CLIENT, Side.SERVER})
-    private void hCrossSet(Controllable ctrl, int id, int cd) {
-        doSet(ctrl, id, cd);
+    private void hCrossSet(EntityPlayer player, Controllable ctrl, int id, int cd) {
+        if (player == getEntity() && id >= 0 && cd >= 0 && cd <= 32767) {
+            doSet(ctrl, id, cd);
+        }
     }
 
     private void trySync() {

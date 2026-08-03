@@ -19,6 +19,7 @@ import cn.academy.datapart.{AbilityData, CPData}
 import cn.academy.util.LocalHelper
 import cn.lambdalib2.cgui.{CGui, CGuiScreen, Widget}
 import cn.lambdalib2.cgui.loader.CGUIDocument
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.client.Minecraft
 import cn.lambdalib2.cgui.ScalaCGUI._
 import cn.lambdalib2.cgui.component.TextBox.ConfirmInputEvent
@@ -590,7 +591,7 @@ private object Common {
           devData.reset()
           canClose = false
 
-          send(NetDelegate.MSG_START_LEVEL, devData, developer)
+          send(NetDelegate.MSG_START_LEVEL, devData, devData.getEntity, developer)
           ret.listens[FrameEvent](() => devData.getState match {
             case DevState.IDLE =>
 
@@ -733,7 +734,7 @@ private object Common {
               val devData = DevelopData.get(player)
               devData.reset()
 
-              send(NetDelegate.MSG_START_SKILL, devData, developer, skill)
+              send(NetDelegate.MSG_START_SKILL, devData, devData.getEntity, developer, skill)
               canClose = false
               ret.listens[FrameEvent](() => {
                 devData.getState match {
@@ -860,7 +861,7 @@ private object Common {
       if (DevelopActionReset.canReset(data.getEntity, developer)) {
         console.enqueue(printTask(Console.localized("reset_begin")))
         console.enqueue(printTask(Console.localized("progress", fmt(0))))
-        send(NetDelegate.MSG_RESET, data, developer)
+        send(NetDelegate.MSG_RESET, data, data.getEntity, developer)
         data.reset()
 
         console.enqueue(new Task {
@@ -1184,13 +1185,17 @@ private object NetDelegate {
   }
 
   @Listener(channel=MSG_START_SKILL, side=Array(Side.SERVER))
-  private def hStartSkill(data: DevelopData, developer: IDeveloper, skill: Skill) = {
-    data.startDeveloping(developer, new DevelopActionSkill(skill))
+  private def hStartSkill(data: DevelopData, player: EntityPlayer, developer: IDeveloper, skill: Skill) = {
+    if (data.getEntity == player) {
+      data.startDeveloping(developer, new DevelopActionSkill(skill))
+    }
   }
 
   @Listener(channel=MSG_START_LEVEL, side=Array(Side.SERVER))
-  private def hStartLevel(data: DevelopData, developer: IDeveloper) = {
-    data.startDeveloping(developer, new DevelopActionLevel())
+  private def hStartLevel(data: DevelopData, player: EntityPlayer, developer: IDeveloper) = {
+    if (data.getEntity == player) {
+      data.startDeveloping(developer, new DevelopActionLevel())
+    }
   }
 
   @Listener(channel=MSG_GET_NODE, side=Array(Side.SERVER))
@@ -1202,8 +1207,10 @@ private object NetDelegate {
   }
 
   @Listener(channel=MSG_RESET, side=Array(Side.SERVER))
-  private def hStartReset(data: DevelopData, developer: IDeveloper) = {
-    data.startDeveloping(developer, new DevelopActionReset)
+  private def hStartReset(data: DevelopData, player: EntityPlayer, developer: IDeveloper) = {
+    if (data.getEntity == player) {
+      data.startDeveloping(developer, new DevelopActionReset)
+    }
   }
 
 }
