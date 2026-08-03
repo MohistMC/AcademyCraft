@@ -9,7 +9,7 @@ import cn.academy.ability.context.{ClientRuntime, KeyDelegate}
 import cn.academy.client.sound.ACSounds
 import cn.academy.ability.vanilla.teleporter.util.TPSkillHelper
 import cn.academy.advancements.ACAdvancements
-import cn.academy.datapart.AbilityData
+import cn.academy.datapart.{AbilityData, CooldownData}
 import cn.lambdalib2.cgui.component.TextBox.ConfirmInputEvent
 import cn.lambdalib2.cgui.{CGuiScreen, Widget}
 import cn.lambdalib2.cgui.component._
@@ -84,6 +84,10 @@ object LocationTeleport extends Skill("location_teleport", 3) {
     override def test(t: Entity): Boolean = t.width * t.width * t.height < 80f
   })
 
+  val noOtherPlayers = new Predicate[Entity] {
+    override def test(t: Entity): Boolean = !t.isInstanceOf[EntityPlayer]
+  }
+
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyID: Int): Unit = {
     rt.addKey(keyID, new KeyDelegate {
@@ -138,29 +142,39 @@ object LocationTeleport extends Skill("location_teleport", 3) {
 
     val ctx = AbilityContext.of(player, this)
 
-    val (o, cp) = getConsumption(player, dest)
-    ctx.consumeWithForce(o, cp)
+    if (AbilityData.get(player).isSkillLearned(this) &&
+      !CooldownData.of(player).isInCooldown(this) &&
+      LocTeleportData(player).locations.exists(loc => loc.id == dest.id &&
+        loc.dim == dest.dim && loc.x == dest.x && loc.y == dest.y && loc.z == dest.z) &&
+      DimensionManager.isDimensionRegistered(dest.dim) &&
+      (!isCrossDim(player, dest) || canCrossDimension(player))) {
 
-    val entitiesToTeleport: List[Entity] = player :: WorldUtils.getEntities(player, 5,
-      teleportSelector.and(EntitySelectors.exclude(player))).toList
+      val (o, cp) = getConsumption(player, dest)
+      if (ctx.canConsumeCP(cp)) {
+        ctx.consume(o, cp)
 
-    if (isCrossDim(player, dest)) {
-      entitiesToTeleport.foreach(_.changeDimension(dest.dim))
+        val entitiesToTeleport: List[Entity] = player :: WorldUtils.getEntities(player, 5,
+          teleportSelector.and(EntitySelectors.exclude(player)).and(noOtherPlayers)).toList
+
+        if (isCrossDim(player, dest)) {
+          entitiesToTeleport.foreach(_.changeDimension(dest.dim))
+        }
+
+        val dist = player.getDistance(dest.x, dest.y, dest.z)
+        val expincr = if (dist >= 200) 0.03f else 0.015f
+        val (px, py, pz) = (player.posX, player.posY, player.posZ)
+        entitiesToTeleport.foreach(e => {
+          val (dx, dy, dz) = (e.posX - px, e.posY - py, e.posZ - pz)
+          if(e.isRiding)e.dismountRidingEntity()
+          e.setPositionAndUpdate(dest.x + dx, dest.y + dy, dest.z + dz)
+        })
+
+        ctx.addSkillExp(expincr)
+        ctx.setCooldown(MathUtils.lerpf(30, 20, ctx.getSkillExp).toInt)
+
+        TPSkillHelper.incrTPCount(player)
+      }
     }
-
-    val dist = player.getDistance(dest.x, dest.y, dest.z)
-    val expincr = if (dist >= 200) 0.03f else 0.015f
-    val (px, py, pz) = (player.posX, player.posY, player.posZ)
-    entitiesToTeleport.foreach(e => {
-      val (dx, dy, dz) = (e.posX - px, e.posY - py, e.posZ - pz)
-      if(e.isRiding)e.dismountRidingEntity()
-      e.setPositionAndUpdate(dest.x + dx, dest.y + dy, dest.z + dz)
-    })
-
-    ctx.addSkillExp(expincr)
-    ctx.setCooldown(MathUtils.lerpf(30, 20, ctx.getSkillExp).toInt)
-
-    TPSkillHelper.incrTPCount(player)
   }
 
   private def isCrossDim(player: EntityPlayer, dest: Location) = player.world.provider.getDimension != dest.dim

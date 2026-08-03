@@ -57,14 +57,6 @@ public class PresetData extends DataPart<EntityPlayer> {
         });
     }
 
-    @Override
-    protected void onSynchronized() {
-        if (!isClient() && _syncRollback != null) {
-            NetworkS11n.deserializeRecursivelyInto(Unpooled.wrappedBuffer(_syncRollback), this, (Class) getClass());
-            _syncRollback = null;
-        }
-    }
-
 
     @StateEventCallback
     private static void init(FMLInitializationEvent ev) {
@@ -228,6 +220,10 @@ public class PresetData extends DataPart<EntityPlayer> {
 
     @Override
     protected void onSynchronized() {
+        if (!isClient() && _syncRollback != null) {
+            NetworkS11n.deserializeRecursivelyInto(Unpooled.wrappedBuffer(_syncRollback), this, (Class) getClass());
+            _syncRollback = null;
+        }
         debug("OnSynchronized " + isClient() + " " + getCurrentPreset());
         firePresetUpdate();
     }
