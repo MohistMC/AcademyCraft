@@ -147,8 +147,9 @@ public class ClientRuntime extends DataPart<EntityPlayer> {
      *  yields an error.
      */
     public void addKey(String group, int keyID, KeyDelegate delegate) {
-        // Using same key multiple times is currently not supported.
-        Preconditions.checkState(!delegateGroups.containsKey(keyID));
+        if (delegateGroups.containsKey(keyID)) {
+            return;
+        }
 
         DelegateNode node = new DelegateNode(delegate, keyID);
         delegates.put(keyID, node);
