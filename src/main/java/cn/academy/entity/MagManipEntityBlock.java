@@ -126,9 +126,14 @@ public class MagManipEntityBlock extends EntityBlock
         {
             case ActMoveTo:
                 double dist = this.getDistanceSq(tx, ty, tz);
-                Vec3d delta = new Vec3d(tx - posX, ty - posY, tz - posZ).normalize();
-                Vec3d mo = delta.scale(0.2).scale(dist<4?dist/4:1.0);
-                VecUtils.setMotion(this, mo);
+                double dx = tx - posX, dy = ty - posY, dz = tz - posZ;
+                if (dx == 0 && dy == 0 && dz == 0) {
+                    VecUtils.setMotion(this, new Vec3d(0, 0, 0));
+                } else {
+                    Vec3d delta = new Vec3d(dx, dy, dz).normalize();
+                    Vec3d mo = delta.scale(0.2).scale(dist<4?dist/4:1.0);
+                    VecUtils.setMotion(this, mo);
+                }
                 break;
             case ActNothing:
                 motionY -=0.04;

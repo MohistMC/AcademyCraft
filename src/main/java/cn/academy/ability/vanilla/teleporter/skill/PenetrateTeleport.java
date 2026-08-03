@@ -22,6 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
+import static cn.lambdalib2.util.MathUtils.clampf;
 import static cn.lambdalib2.util.MathUtils.lerpf;
 
 public class PenetrateTeleport extends Skill
@@ -62,11 +63,12 @@ public class PenetrateTeleport extends Skill
         @Listener(channel=MSG_EXECUTE, side=Side.SERVER)
         private void s_execute(float dist)
         {
-            curDist = dist;
+            curDist = clampf(minDist, maxDist, dist);
             dest = getDest();
             if(!dest.available)
             {
                 terminate();
+                return;
             }
 
             double x = dest.pos.x;
@@ -164,7 +166,7 @@ public class PenetrateTeleport extends Skill
         public Dest getDest()
         {
             World world = player.world;
-            double dist = curDist;
+            double dist = Math.min(curDist, maxDist);
             double cplim = ctx.cpData.getCP() / getConsumption(ctx.getSkillExp());
             dist = Math.min(dist, cplim);
             final double STEP = 0.8;

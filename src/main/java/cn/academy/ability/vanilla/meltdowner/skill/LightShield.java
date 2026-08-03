@@ -60,10 +60,10 @@ public class LightShield extends Skill
         if(event.getEntityLiving() instanceof EntityPlayer)
         {
             Optional<LSContext> context = ContextManager.instance.find(LSContext.class);
-            if(context.isPresent())
+            if(context.isPresent() && context.get().player == event.getEntityLiving())
             {
                 event.setAmount(context.get().handleAttacked(event.getSource(), event.getAmount()));
-                if (event.getAmount() == 0) 
+                if (event.getAmount() == 0)
                     event.setCanceled(true);
             }
         }
@@ -179,7 +179,7 @@ public class LightShield extends Skill
             //dy = e.posY - player.posY,
             double dz = e.posZ - player.posZ;
             double yaw = -MathUtils.toDegrees(Math.atan2(dx, dz));
-            return Math.abs(yaw - player.rotationYaw) % 360 < 60;
+            return Math.abs(yaw - player.rotationYaw) % 360 < 60 && player.getDistanceSq(e) < 64;
         }
 
         @SideOnly(Side.CLIENT)

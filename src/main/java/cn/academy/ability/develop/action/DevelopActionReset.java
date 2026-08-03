@@ -52,7 +52,11 @@ public class DevelopActionReset implements IDevelopAction {
     public void onLearned(EntityPlayer player) {
         AbilityData data = AbilityData.get(player);
 
-        ItemStack factor = getFactor(player).get();
+        Optional<ItemStack> factorOpt = getFactor(player);
+        if (!factorOpt.isPresent()) {
+            throw new IllegalStateException("Induction factor lost during development");
+        }
+        ItemStack factor = factorOpt.get();
 
         Category newCat = ItemInductionFactor.getCategory(factor);
 

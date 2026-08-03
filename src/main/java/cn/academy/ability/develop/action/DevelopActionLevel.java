@@ -42,7 +42,9 @@ public class DevelopActionLevel implements IDevelopAction {
         if (inductedCategory.isPresent()) {
             ItemStack factor = inductedCategory.get();
             int factorIdx = player.inventory.mainInventory.indexOf(factor);
-            player.inventory.setInventorySlotContents(factorIdx, ItemStack.EMPTY);
+            if (factorIdx >= 0) {
+                player.inventory.setInventorySlotContents(factorIdx, ItemStack.EMPTY);
+            }
             return ItemInductionFactor.getCategory(factor);
         } else {
             CategoryManager man = CategoryManager.INSTANCE;
