@@ -325,7 +325,7 @@ public enum ContextManager {
                         data.disposed = true;
                     } else {
                         if (time - data.lastSentKeepAlive > T_KA) {
-                            NetworkMessage.sendToServer(ServerManager.instance, M_KEEPALIVE, data.serverID);
+                            NetworkMessage.sendToServer(ServerManager.instance, M_KEEPALIVE, data.serverID, Minecraft.getMinecraft().player);
 
                             data.lastSentKeepAlive = time;
                         }
@@ -340,7 +340,7 @@ public enum ContextManager {
                     if (data.disposed) {
                         data.ctx.status = Status.TERMINATED;
                         NetworkMessage.sendToSelf(data.ctx, Context.MSG_TERMINATED);
-                        NetworkMessage.sendToServer(ServerManager.instance, M_TERM_ATLOCAL, data.serverID);
+                        NetworkMessage.sendToServer(ServerManager.instance, M_TERM_ATLOCAL, data.serverID, Minecraft.getMinecraft().player);
                         itr.remove();
 
                         log("[LOC] Dispose");
@@ -449,14 +449,17 @@ public enum ContextManager {
         }
 
         @Listener(channel=M_TERM_ATLOCAL, side=Side.SERVER)
-        private void hTerminate(int serverID) {
-            Optional.ofNullable(findOrNull(serverID)).ifPresent(x -> x.disposed = true);
+        private void hTerminate(int serverID, EntityPlayerMP player) {
+            ContextData data = findOrNull(serverID);
+            if (data != null && data.ctx.player == player) {
+                data.disposed = true;
+            }
         }
 
         @Listener(channel=M_KEEPALIVE, side=Side.SERVER)
-        private void hKeepAlive(int serverID) {
+        private void hKeepAlive(int serverID, EntityPlayerMP player) {
             ContextData data = findOrNull(serverID);
-            if (data != null) {
+            if (data != null && data.ctx.player == player) {
                 data.lastKeepAlive = time();
 
                 log("[SVR] KeepAlive");
