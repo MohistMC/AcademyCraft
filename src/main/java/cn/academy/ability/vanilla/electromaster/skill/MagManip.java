@@ -135,6 +135,10 @@ public class MagManip extends Skill
                     IBlockState ibs = world().getBlockState(pos);
                     Block block = ibs.getBlock();
                     int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+                    if (!ctx.canBreakBlock(world(), pos)) {
+                        terminate();
+                        return;
+                    }
                     if (block instanceof BlockDoor) // FIXME: Dirty hack
                     {
                         BlockPos bPos = new BlockPos(x, y - 1, z);
