@@ -11,7 +11,7 @@ import cn.academy.ability.client.ui.Common.{Cover, RebuildEvent, TreeScreen}
 import cn.academy.ability.develop.DevelopData.DevState
 import cn.academy.ability.develop.action.{DevelopActionLevel, DevelopActionReset, DevelopActionSkill}
 import cn.academy.ability.develop.condition.IDevCondition
-import cn.academy.ability.develop.{DevelopData, DeveloperType, IDeveloper, LearningHelper}
+import cn.academy.ability.develop.{DevelopData, DeveloperType, IDeveloper, LearningHelper, PortableDevData}
 import cn.academy.core.client.ui.{TechUI, WirelessPage}
 import cn.academy.energy.api.WirelessHelper
 import cn.academy.block.tileentity.TileDeveloper
@@ -1184,16 +1184,22 @@ private object NetDelegate {
     NetworkS11n.addDirectInstance(NetDelegate)
   }
 
+  private def isValidDeveloper(player: EntityPlayer, developer: IDeveloper) = developer match {
+    case tile: TileDeveloper => tile.getUser == player
+    case portable: PortableDevData => portable == PortableDevData.get(player)
+    case _ => false
+  }
+
   @Listener(channel=MSG_START_SKILL, side=Array(Side.SERVER))
   private def hStartSkill(data: DevelopData, player: EntityPlayer, developer: IDeveloper, skill: Skill) = {
-    if (data.getEntity == player) {
+    if (data.getEntity == player && isValidDeveloper(player, developer)) {
       data.startDeveloping(developer, new DevelopActionSkill(skill))
     }
   }
 
   @Listener(channel=MSG_START_LEVEL, side=Array(Side.SERVER))
   private def hStartLevel(data: DevelopData, player: EntityPlayer, developer: IDeveloper) = {
-    if (data.getEntity == player) {
+    if (data.getEntity == player && isValidDeveloper(player, developer)) {
       data.startDeveloping(developer, new DevelopActionLevel())
     }
   }
@@ -1208,7 +1214,7 @@ private object NetDelegate {
 
   @Listener(channel=MSG_RESET, side=Array(Side.SERVER))
   private def hStartReset(data: DevelopData, player: EntityPlayer, developer: IDeveloper) = {
-    if (data.getEntity == player) {
+    if (data.getEntity == player && isValidDeveloper(player, developer)) {
       data.startDeveloping(developer, new DevelopActionReset)
     }
   }
