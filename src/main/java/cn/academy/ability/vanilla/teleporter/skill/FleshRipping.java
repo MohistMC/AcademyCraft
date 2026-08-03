@@ -75,9 +75,9 @@ public class FleshRipping extends Skill
         @Listener(channel=MSG_END, side=Side.SERVER)
         private void s_end(){
             sendToClient(MSG_EFFECT_END, target);
-            if(target.target == null)
+            if(target == null || target.target == null)
                 sendToSelf(MSG_ABORT);
-            else {
+            else if (ctx.canConsumeCP(getConsumption())) {
                 ctx.consumeWithForce(getOverload(), getConsumption());
                 TPSkillHelper.attackIgnoreArmor(ctx, target.target, getDamage());
                 if(RandUtils.ranged(0, 1) < getDisgustProb())
