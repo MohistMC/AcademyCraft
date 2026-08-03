@@ -20,6 +20,7 @@ import cn.lambdalib2.util.{EntitySelectors, WorldUtils}
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
 import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
+import net.minecraft.client.Minecraft
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.ISidedInventory
 import net.minecraft.item.ItemStack
@@ -148,28 +149,43 @@ class TileAbilityInterferer extends TileReceiverBase("ability_interferer",1,1000
   private def signalFuture(cb: () => Any) = Future.create(new Consumer[Any] {
     override def accept(t: Any): Unit = cb()})
 
-  def setRangeClient(value: Double, callback: () => Any) = send(MSG_UPDATE_RANGE, value, signalFuture(callback))
+  def setRangeClient(value: Double, callback: () => Any) = send(MSG_UPDATE_RANGE, Minecraft.getMinecraft.player, value, signalFuture(callback))
 
-  def setEnabledClient(value: Boolean, callback: () => Any) = send(MSG_UPDATE_ENABLED, value, signalFuture(callback))
+  def setEnabledClient(value: Boolean, callback: () => Any) = send(MSG_UPDATE_ENABLED, Minecraft.getMinecraft.player, value, signalFuture(callback))
 
-  def setWhitelistClient(value: Iterable[String], callback: () => Any) = send(MSG_UPDATE_WHITELIST, value.toArray, signalFuture(callback))
+  def setWhitelistClient(value: Iterable[String], callback: () => Any) = send(MSG_UPDATE_WHITELIST, Minecraft.getMinecraft.player, value.toArray, signalFuture(callback))
+
+  private def canControl(player: EntityPlayer) =
+    player.getDistanceSq(pos) < 64 && placer_.forall(_ == player.getName)
 
   @Listener(channel=MSG_UPDATE_RANGE, side=Array(Side.SERVER))
-  private def hSetRange(value: Double, fut: Future[Boolean]) = {
-    range_ = MathUtils.clampd(minRange, maxRange, value)
-    fut.sendResult(true)
+  private def hSetRange(player: EntityPlayer, value: Double, fut: Future[Boolean]) = {
+    if (canControl(player)) {
+      range_ = MathUtils.clampd(minRange, maxRange, value)
+      fut.sendResult(true)
+    } else {
+      fut.sendResult(false)
+    }
   }
 
   @Listener(channel=MSG_UPDATE_ENABLED, side=Array(Side.SERVER))
-  private def hSetEnabled(value: Boolean, fut: Future[Boolean]) = {
-    enabled_ = value
-    fut.sendResult(true)
+  private def hSetEnabled(player: EntityPlayer, value: Boolean, fut: Future[Boolean]) = {
+    if (canControl(player)) {
+      enabled_ = value
+      fut.sendResult(true)
+    } else {
+      fut.sendResult(false)
+    }
   }
 
   @Listener(channel=MSG_UPDATE_WHITELIST, side=Array(Side.SERVER))
-  private def hSetWhitelist(value: Array[String], fut: Future[Boolean]) = {
-    whitelist_ = SortedSet(value: _*)
-    fut.sendResult(true)
+  private def hSetWhitelist(player: EntityPlayer, value: Array[String], fut: Future[Boolean]) = {
+    if (canControl(player)) {
+      whitelist_ = SortedSet(value: _*)
+      fut.sendResult(true)
+    } else {
+      fut.sendResult(false)
+    }
   }
 
   override def readFromNBT(tag: NBTTagCompound) = {
