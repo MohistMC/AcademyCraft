@@ -27,7 +27,7 @@ import net.minecraft.util.SoundCategory
   */
 object Meltdowner extends Skill("meltdowner", 3) {
 
-  setContextFactory(p => new MDContext(p))
+  setContextFactoryScala(p => new MDContext(p))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyid: Int) = {
     activateSingleKey(rt, keyid, p => new MDContext(p))

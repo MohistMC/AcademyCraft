@@ -18,7 +18,7 @@ import net.minecraft.util.{EnumFacing, SoundCategory}
   */
 object MarkTeleport extends Skill("mark_teleport", 2) {
 
-  setContextFactory(p => new MTContext(p))
+  setContextFactoryScala(p => new MTContext(p))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyID: Int) = activateSingleKey(rt, keyID, p => new MTContext(p))
 

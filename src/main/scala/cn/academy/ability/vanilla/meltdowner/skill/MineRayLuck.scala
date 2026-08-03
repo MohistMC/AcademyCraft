@@ -16,7 +16,7 @@ import net.minecraft.world.World
   */
 object MineRayLuck extends MineRaysBase("luck", 5) {
 
-  setContextFactory(p => new LuckMRContext(p))
+  setContextFactoryScala(p => new LuckMRContext(p))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyID: Int) = activateSingleKey(rt, keyID, p => new LuckMRContext(p))
 

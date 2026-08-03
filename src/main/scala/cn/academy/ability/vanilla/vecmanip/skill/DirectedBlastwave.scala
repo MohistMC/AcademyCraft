@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
 object DirectedBlastwave extends Skill("dir_blast", 3) {
 
-  setContextFactory(player => new BlastwaveContext(player))
+  setContextFactoryScala(player => new BlastwaveContext(player))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyid: Int) = {
     activateSingleKey(rt, keyid, player => new BlastwaveContext(player))

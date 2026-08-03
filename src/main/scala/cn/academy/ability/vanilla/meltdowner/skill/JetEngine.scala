@@ -17,7 +17,7 @@ import net.minecraft.util.math.{RayTraceResult, Vec3d}
   */
 object JetEngine extends Skill("jet_engine", 4) {
 
-  setContextFactory(p => new JEContext(p))
+  setContextFactoryScala(p => new JEContext(p))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyID: Int) = activateSingleKey(rt, keyID, p => new JEContext(p))
 

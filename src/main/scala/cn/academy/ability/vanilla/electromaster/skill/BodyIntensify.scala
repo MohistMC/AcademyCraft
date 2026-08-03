@@ -37,7 +37,7 @@ object BodyIntensify extends Skill("body_intensify", 3) {
 
   def createEffect(effect: PotionEffect, level: Int, duration: Int) = new PotionEffect(effect.getPotion, duration, Math.min(level, effect.getAmplifier), effect.getIsAmbient, true)
 
-  setContextFactory(p => new IntensifyContext(p))
+  setContextFactoryScala(p => new IntensifyContext(p))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyid: Int) = {
     activateSingleKey(rt, keyid, p => new IntensifyContext(p))

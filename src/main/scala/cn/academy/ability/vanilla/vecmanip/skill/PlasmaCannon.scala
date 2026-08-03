@@ -20,7 +20,7 @@ import net.minecraft.world.Explosion
 
 object PlasmaCannon extends Skill("plasma_cannon", 5) {
 
-  setContextFactory(p => new PlasmaCannonContext(p))
+  setContextFactoryScala(p => new PlasmaCannonContext(p))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyid: Int) = activateSingleKey(rt, keyid, p => new PlasmaCannonContext(p))
 
@@ -87,7 +87,7 @@ class PlasmaCannonContext(p: EntityPlayer) extends Context(p, PlasmaCannon) with
   }
 
   @Listener(channel=MSG_PERFORM, side=Array(Side.SERVER))
-  def s_perform() = {
+  def s_perform(): Unit = {
     if (localTicker < chargeTime) {
       terminate()
       return

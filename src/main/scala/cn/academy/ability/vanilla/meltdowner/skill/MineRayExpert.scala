@@ -16,7 +16,7 @@ import net.minecraft.world.World
   */
 object MineRayExpert extends MineRaysBase("expert", 4) {
 
-  setContextFactory(p => new ExpertMRContext(p))
+  setContextFactoryScala(p => new ExpertMRContext(p))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyID: Int) = activateSingleKey(rt, keyID, p => new ExpertMRContext(p))
 

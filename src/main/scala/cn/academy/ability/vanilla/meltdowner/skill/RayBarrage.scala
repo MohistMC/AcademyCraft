@@ -19,7 +19,7 @@ import net.minecraft.util.math.{AxisAlignedBB, MathHelper, RayTraceResult, Vec3d
   */
 object RayBarrage extends Skill("ray_barrage", 4) {
 
-  setContextFactory(p => new RBContext(p))
+  setContextFactoryScala(p => new RBContext(p))
   @SideOnly(Side.CLIENT)
   override def activate(rt: ClientRuntime, keyID: Int) = activateSingleKey(rt, keyID, p => new RBContext(p))
 

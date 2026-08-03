@@ -3,7 +3,6 @@ package cn.academy.ability.context;
 import cn.academy.AcademyCraft;
 import cn.academy.ability.context.Context.Status;
 import cn.academy.ability.Skill;
-import cn.academy.analytic.events.AnalyticSkillEvent;
 import cn.academy.datapart.AbilityData;
 import cn.academy.datapart.CPData;
 import cn.academy.datapart.CooldownData;
@@ -442,7 +441,6 @@ public enum ContextManager {
             NetworkMessage.sendTo(player, LocalManager.instance, M_ESTABLISH_LINK, clientID, nextServerID);
             NetworkMessage.sendToPlayers(data.targets, ClientManager.instance, M_MAKEALIVE,
                     ctx.skill, player, nextServerID);
-            MinecraftForge.EVENT_BUS.post(new AnalyticSkillEvent(data.ctx.player, data.ctx.skill));
             nextServerID += 1;
 
             log("[SVR] BeginLink");

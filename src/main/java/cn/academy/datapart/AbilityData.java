@@ -4,7 +4,6 @@ import cn.academy.ACConfig;
 import cn.academy.ability.Category;
 import cn.academy.ability.CategoryManager;
 import cn.academy.ability.Skill;
-import cn.academy.analytic.events.AnalyticLevelUpEvent;
 import cn.academy.event.ability.CategoryChangeEvent;
 import cn.academy.event.ability.LevelChangeEvent;
 import cn.academy.event.ability.SkillExpAddedEvent;
@@ -161,9 +160,6 @@ public class AbilityData extends DataPart<EntityPlayer> {
         checkLearned();
 
         if(level != lv) {
-            if(level<lv){
-                MinecraftForge.EVENT_BUS.post(new AnalyticLevelUpEvent(getEntity()));
-            }
             level = lv;
             expAddedThisLevel = 0;
             MinecraftForge.EVENT_BUS.post(new LevelChangeEvent(getEntity()));
