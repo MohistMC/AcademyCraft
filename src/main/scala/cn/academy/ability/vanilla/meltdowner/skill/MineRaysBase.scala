@@ -4,7 +4,6 @@ import cn.academy.ability.Skill
 import cn.academy.ability.context.{ClientContext, Context}
 import cn.academy.client.render.particle.MdParticleFactory
 import cn.academy.client.sound.{ACSounds, FollowEntitySound}
-import cn.academy.event.BlockDestroyEvent
 import cn.lambdalib2.particle.Particle
 import cn.lambdalib2.s11n.network.NetworkMessage.Listener
 import cn.lambdalib2.util.entityx.handlers.Rigidbody
@@ -18,7 +17,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.{ResourceLocation, SoundCategory}
 import net.minecraft.util.math.{BlockPos, RayTraceResult, Vec3d}
 import net.minecraft.world.World
-import net.minecraftforge.common.MinecraftForge
 
 /**
   * @author WeAthFolD, KSkun
@@ -77,7 +75,7 @@ abstract class MRContext(p: EntityPlayer, _skill: MineRaysBase) extends Context(
       if (pos.getX != x || pos.getY != y || pos.getZ != z) {
         val is = world.getBlockState(pos)
         val block: Block = is.getBlock
-        if (!MinecraftForge.EVENT_BUS.post(new BlockDestroyEvent(player, pos)) &&
+        if (ctx.canBreakBlock(world, pos.getX, pos.getY, pos.getZ) &&
           block.getHarvestLevel(is) <= harvestLevel) {
           x = pos.getX
           y = pos.getY

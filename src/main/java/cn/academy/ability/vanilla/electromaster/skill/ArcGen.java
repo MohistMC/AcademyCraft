@@ -121,7 +121,7 @@ public class ArcGen extends Skill
                             if (RandUtils.ranged(0, 1) < igniteProb)
                             {
                                 pos = pos.add(0, 1, 0);
-                                if (world.isAirBlock(pos))
+                                if (world.isAirBlock(pos) && ctx.canBreakBlock(world, pos))
                                 {
                                     world.setBlockState(pos, Blocks.FIRE.getDefaultState());
 //                                    ACAdvancements.trigger(player, ACAdvancements.ac_milestone.ID);

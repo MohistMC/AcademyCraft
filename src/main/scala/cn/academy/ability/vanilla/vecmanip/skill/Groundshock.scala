@@ -135,10 +135,10 @@ class GroundshockContext(p: EntityPlayer) extends Context(p, Groundshock) with I
               dejavu_blocks += pos
 
               block match {
-                case Blocks.STONE =>
+                case Blocks.STONE if ctx.canBreakBlock(world, pos.getX, pos.getY, pos.getZ) =>
                   world.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState)
                   energy -= 0.4
-                case Blocks.GRASS =>
+                case Blocks.GRASS if ctx.canBreakBlock(world, pos.getX, pos.getY, pos.getZ) =>
                   world.setBlockState(pos, Blocks.DIRT.getDefaultState)
                   energy -= 0.2
                 case Blocks.FARMLAND =>

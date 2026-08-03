@@ -11,6 +11,7 @@ import cn.lambdalib2.util.entityx.EntityCallback
 import net.minecraft.entity.Entity
 import net.minecraft.entity.effect.EntityLightningBolt
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.util.math.BlockPos
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
 /**
@@ -91,8 +92,10 @@ class ThunderClapContext(p: EntityPlayer) extends Context(p, ThunderClap) {
       return
     }
 
-    val lightning = new EntityLightningBolt(player.world, hitX, hitY, hitZ, true)
-    player.getEntityWorld.addWeatherEffect(lightning)
+    if (ctx.canBreakBlock(player.world, new BlockPos(hitX, hitY, hitZ))) {
+      val lightning = new EntityLightningBolt(player.world, hitX, hitY, hitZ, true)
+      player.getEntityWorld.addWeatherEffect(lightning)
+    }
     ctx.attackRange(hitX, hitY, hitZ, ThunderClap.getRange(exp), getDamage(exp, ticks), EntitySelectors.exclude(player))
 
     ctx.setCooldown(getCooldown(exp, ticks))
