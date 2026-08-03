@@ -88,6 +88,10 @@ class PlasmaCannonContext(p: EntityPlayer) extends Context(p, PlasmaCannon) with
 
   @Listener(channel=MSG_PERFORM, side=Array(Side.SERVER))
   def s_perform() = {
+    if (localTicker < chargeTime) {
+      terminate()
+      return
+    }
     ctx.addSkillExp(0.008f)
 
     destination = Raytrace.getLookingPos(player, 100, EntitySelectors.living).getLeft

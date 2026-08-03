@@ -50,6 +50,12 @@ public class ElectronBomb extends Skill {
         @Listener(channel = MSG_MADEALIVE, side = Side.SERVER)
         private void s_Execute() {
             float exp = ctx.getSkillExp();
+            float overload = MathUtils.lerpf(18, 11, exp);
+            float cp = MathUtils.lerpf(30, 70, exp);
+            if (!ctx.consume(overload, cp)) {
+                terminate();
+                return;
+            }
             EntityMdBall ball = new EntityMdBall(
                 player,
                 ctx.getSkillExp() > 0.8f ? LifeImproved : Life,
