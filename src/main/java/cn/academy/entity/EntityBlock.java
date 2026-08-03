@@ -172,9 +172,12 @@ public class EntityBlock extends EntityAdvanced {
 
                     if (isPlace) {
                         int metadata = block.getMetaFromState(_blockState);
-                        ((ItemBlock) Item.getItemFromBlock(block)).placeBlockAt(
-                                new ItemStack(block, 0, metadata), player, world, placePos, event.result.sideHit,
-                                placePos.getX(), placePos.getY(), placePos.getZ(), _blockState);
+                        Item item = Item.getItemFromBlock(block);
+                        if (item instanceof ItemBlock) {
+                            ((ItemBlock) item).placeBlockAt(
+                                    new ItemStack(block, 0, metadata), player, world, placePos, event.result.sideHit,
+                                    placePos.getX(), placePos.getY(), placePos.getZ(), _blockState);
+                        }
                     } else {
                         int iter = 10;
                         while (iter --> 0) {
@@ -186,10 +189,13 @@ public class EntityBlock extends EntityAdvanced {
                                 tz += event.result.sideHit.getDirectionVec().getZ();
                             } else {
                                 int metadata = block.getMetaFromState(_blockState);
-                                ((ItemBlock) Item.getItemFromBlock(block)).placeBlockAt(
-                                        new ItemStack(block, 0, metadata), player, world, new BlockPos(tx, ty, tz), event.result.sideHit,
-                                        tx, ty, tz, _blockState);
-                                isPlace = true;
+                                Item item = Item.getItemFromBlock(block);
+                                if (item instanceof ItemBlock) {
+                                    ((ItemBlock) item).placeBlockAt(
+                                            new ItemStack(block, 0, metadata), player, world, new BlockPos(tx, ty, tz), event.result.sideHit,
+                                            tx, ty, tz, _blockState);
+                                    isPlace = true;
+                                }
                                 break;
                             }
                         }

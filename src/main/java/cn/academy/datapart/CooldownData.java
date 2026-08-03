@@ -170,7 +170,7 @@ public class CooldownData extends DataPart<EntityPlayer> {
     }
 
     private int toID(Controllable ctrl, int id) {
-        return ctrl.getControlID() << 2 + id;
+        return (ctrl.getControlID() << 2) + id;
     }
 
     @Listener(channel="cross", side={Side.CLIENT, Side.SERVER})

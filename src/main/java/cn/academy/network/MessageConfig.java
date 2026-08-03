@@ -10,10 +10,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -39,24 +35,11 @@ public class MessageConfig implements IMessage
     @Override
     public void fromBytes(ByteBuf byteBuf)
     {
-        File file=new File("cache/academy-craft-data.conf");
-        if(!file.exists())
-            (new File(file.getParent())).mkdirs();
+        String string = byteBuf.toString(Charsets.UTF_8);
         try {
-            file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            String string = byteBuf.toString(Charsets.UTF_8);
-            FileWriter fw = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(string);
-            bw.close();
-            config=ConfigFactory.parseFile(file);
-            file.delete();
-        } catch (IOException e) {
-            e.printStackTrace();
+            config = ConfigFactory.parseString(string);
+        } catch (Exception ex) {
+            config = null;
         }
     }
 

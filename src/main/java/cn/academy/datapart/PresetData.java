@@ -1,6 +1,7 @@
 package cn.academy.datapart;
 
 import cn.academy.ability.Controllable;
+import cn.academy.ability.Skill;
 import cn.academy.event.ability.CategoryChangeEvent;
 import cn.academy.event.ability.PresetUpdateEvent;
 import cn.lambdalib2.s11n.SerializeExcluded;
@@ -209,13 +210,28 @@ public class PresetData extends DataPart<EntityPlayer> {
 
     @Listener(channel=MSG_SYNC_SWITCH, side=Side.SERVER)
     private void handleSwitch(int idx) {
-        switchCurrent(idx);
+        if (idx >= 0 && idx < MAX_PRESETS) {
+            switchCurrent(idx);
+        }
     }
 
     @Listener(channel=MSG_SYNC_UPDATE, side=Side.SERVER)
     private void handleSet(int idx, Preset mapping) {
-        setPreset(idx, mapping);
-        firePresetUpdate();
+        if (idx >= 0 && idx < MAX_PRESETS && isPresetValid(mapping)) {
+            setPreset(idx, mapping);
+            firePresetUpdate();
+        }
+    }
+
+    private boolean isPresetValid(Preset p) {
+        AbilityData aData = AbilityData.get(getEntity());
+        for (int i = 0; i < MAX_KEYS; ++i) {
+            Controllable c = p.getControllable(i);
+            if (c != null && !(c instanceof Skill && aData.isSkillLearned((Skill) c))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

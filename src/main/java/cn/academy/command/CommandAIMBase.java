@@ -167,6 +167,10 @@ public abstract class CommandAIMBase extends ACCommand {
     
     protected void matchCommands(ICommandSender ics, EntityPlayer player, String[] pars) {
         AbilityData aData = AbilityData.get(player);
+        if (pars.length == 0) {
+            sendChat(ics, getLoc("help"));
+            return;
+        }
         switch(pars[0]) {
 
         case "cat": {
@@ -200,6 +204,10 @@ public abstract class CommandAIMBase extends ACCommand {
         }
         
         case "learn": {
+            if (pars.length < 2) {
+                sendChat(ics, this.locInvalid());
+                return;
+            }
             if (aData.hasCategory()) {
                 Skill s = tryParseSkill(aData.getCategory(), pars[1]);
                 if(s == null) {
@@ -214,6 +222,10 @@ public abstract class CommandAIMBase extends ACCommand {
         }
         
         case "unlearn": {
+            if (pars.length < 2) {
+                sendChat(ics, this.locInvalid());
+                return;
+            }
             if (aData.hasCategory()) {
                 Category cat = aData.getCategory();
                 Skill s = tryParseSkill(cat, pars[1]);
@@ -324,7 +336,7 @@ public abstract class CommandAIMBase extends ACCommand {
                             sendChat(ics, this.getLoc("curexp"), skill.getDisplayName(), aData.getSkillExp(skill) * 100);
                         } else if(pars.length == 3) {
                             Float exp = tryParseFloat(pars[2]);
-                            if(exp < 0 || exp > 1) {
+                            if(exp == null || exp < 0 || exp > 1) {
                                 sendChat(ics, this.getLoc("outofrange"), 0.0f, 1.0f);
                             } else {
                                 aData.setSkillExp(skill, exp);

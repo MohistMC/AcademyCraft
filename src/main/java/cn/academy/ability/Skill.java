@@ -266,10 +266,6 @@ public abstract class Skill extends Controllable {
 
     private Function<EntityPlayer, Context> contextFactory;
 
-    protected final void setContextFactory(Function<EntityPlayer, Context> factory) {
-        contextFactory = factory;
-    }
-
     protected final void setContextFactory(Function1<EntityPlayer, Context> factory) {
         contextFactory = factory::apply;
     }

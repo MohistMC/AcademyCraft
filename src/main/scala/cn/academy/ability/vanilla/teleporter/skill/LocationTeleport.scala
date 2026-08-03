@@ -59,7 +59,8 @@ private object LTNetDelegate {
   @Listener(channel=MSG_ADD, side=Array(Side.SERVER))
   private def hAdd(player: EntityPlayer, name: String, future: Future[util.List[Location]]) = {
     val data = LocTeleportData(player)
-    data.add(name, player.world.provider.getDimension,
+    val safeName = if (name == null) "" else name.take(32)
+    data.add(safeName, player.world.provider.getDimension,
       (player.posX.toFloat, player.posY.toFloat, player.posZ.toFloat))
     future.sendResult(new util.ArrayList(data.locations))
   }
@@ -67,7 +68,9 @@ private object LTNetDelegate {
   @Listener(channel=MSG_REMOVE, side=Array(Side.SERVER))
   private def hRemove(player: EntityPlayer, id: Int, future: Future[util.List[Location]]) = {
     val data = LocTeleportData(player)
-    data.remove(id)
+    if (id >= 0 && id < data.locations.size) {
+      data.remove(id)
+    }
     future.sendResult(new util.ArrayList(data.locations))
   }
 

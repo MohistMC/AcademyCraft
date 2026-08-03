@@ -7,7 +7,6 @@ import cn.academy.ability.Skill
 import cn.academy.ability.context.{ClientRuntime, Context}
 import cn.academy.client.render.util.ACRenderingHelper
 import cn.academy.entity.{EntityMdBall, EntityMdRaySmall}
-import cn.academy.network.NetworkManager
 import cn.lambdalib2.registry.StateEventCallback
 import cn.lambdalib2.s11n.network.NetworkMessage.Listener
 import cn.lambdalib2.s11n.network.{NetworkMessage, NetworkS11n, NetworkS11nType, TargetPoints}
