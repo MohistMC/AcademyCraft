@@ -3,6 +3,7 @@ package cn.academy.datapart;
 import cn.academy.ability.Controllable;
 import cn.academy.event.ability.CategoryChangeEvent;
 import cn.academy.event.ability.PresetUpdateEvent;
+import cn.lambdalib2.s11n.SerializeExcluded;
 import cn.lambdalib2.datapart.DataPart;
 import cn.lambdalib2.datapart.EntityData;
 import cn.lambdalib2.datapart.RegDataPart;
@@ -21,6 +22,7 @@ import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Preconditions;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
@@ -30,6 +32,8 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.Unpooled;
 
 /**
  * Handles preset.
@@ -37,6 +41,30 @@ import java.util.stream.IntStream;
  */
 @RegDataPart(EntityPlayer.class)
 public class PresetData extends DataPart<EntityPlayer> {
+    @SerializeExcluded
+    private byte[] _syncRollback;
+
+    @Listener(channel = "itn_sync", side = Side.SERVER)
+    private void onSyncIntercept(ByteBuf buf) {
+        ByteBuf snap = Unpooled.buffer(512);
+        NetworkS11n.serializeRecursively(snap, this, (Class) getClass());
+        _syncRollback = ByteBufUtil.getBytes(snap);
+        ((EntityPlayerMP) getEntity()).getServerWorld().addScheduledTask(() -> {
+            if (_syncRollback != null) {
+                NetworkS11n.deserializeRecursivelyInto(Unpooled.wrappedBuffer(_syncRollback), this, (Class) getClass());
+                _syncRollback = null;
+            }
+        });
+    }
+
+    @Override
+    protected void onSynchronized() {
+        if (!isClient() && _syncRollback != null) {
+            NetworkS11n.deserializeRecursivelyInto(Unpooled.wrappedBuffer(_syncRollback), this, (Class) getClass());
+            _syncRollback = null;
+        }
+    }
+
 
     @StateEventCallback
     private static void init(FMLInitializationEvent ev) {

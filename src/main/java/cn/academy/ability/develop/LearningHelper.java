@@ -33,7 +33,6 @@ public class LearningHelper {
      * @return Whether the given skill can be learned.
      */
     public static boolean canLearn(AbilityData data, IDeveloper dev, Skill skill) {
-        // 玩家已有类别时，只允许学习本类别的技能，防止跨类别学习在服务端触发异常
         if (data.hasCategory() && skill.getCategory() != data.getCategory()) {
             return false;
         }

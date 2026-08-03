@@ -3,6 +3,7 @@ package cn.academy.tutorial;
 import cn.academy.ACItems;
 import cn.academy.AcademyCraft;
 import cn.academy.event.TutorialActivatedEvent;
+import cn.lambdalib2.s11n.SerializeExcluded;
 import cn.lambdalib2.datapart.DataPart;
 import cn.lambdalib2.datapart.EntityData;
 import cn.lambdalib2.datapart.RegDataPart;
@@ -15,6 +16,7 @@ import cn.lambdalib2.util.TickScheduler;
 import com.google.common.base.Preconditions;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
@@ -23,12 +25,40 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.BitSet;
 import java.util.HashSet;
+import cn.lambdalib2.s11n.network.NetworkS11n;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.Unpooled;
 
 /**
  * This class simply stores activate data that trigger-type condition needs.
  */
 @RegDataPart(EntityPlayer.class)
 public class TutorialData extends DataPart<EntityPlayer> {
+    @SerializeExcluded
+    private byte[] _syncRollback;
+
+    @Listener(channel = "itn_sync", side = Side.SERVER)
+    private void onSyncIntercept(ByteBuf buf) {
+        ByteBuf snap = Unpooled.buffer(512);
+        NetworkS11n.serializeRecursively(snap, this, (Class) getClass());
+        _syncRollback = ByteBufUtil.getBytes(snap);
+        ((EntityPlayerMP) getEntity()).getServerWorld().addScheduledTask(() -> {
+            if (_syncRollback != null) {
+                NetworkS11n.deserializeRecursivelyInto(Unpooled.wrappedBuffer(_syncRollback), this, (Class) getClass());
+                _syncRollback = null;
+            }
+        });
+    }
+
+    @Override
+    protected void onSynchronized() {
+        if (!isClient() && _syncRollback != null) {
+            NetworkS11n.deserializeRecursivelyInto(Unpooled.wrappedBuffer(_syncRollback), this, (Class) getClass());
+            _syncRollback = null;
+        }
+    }
+
 
     @StateEventCallback
     private static void __init(FMLInitializationEvent ev) {

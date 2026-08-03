@@ -2,11 +2,17 @@ package cn.academy.misc.media
 
 import java.util
 
+import cn.lambdalib2.s11n.SerializeExcluded
 import cn.lambdalib2.s11n.SerializeIncluded
 import cn.lambdalib2.datapart.{DataPart, EntityData, RegDataPart}
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList, NBTTagString}
+import cn.lambdalib2.s11n.network.NetworkMessage.Listener
+import cn.lambdalib2.s11n.network.NetworkS11n
+import io.netty.buffer.{ByteBuf, ByteBufUtil, Unpooled}
+
 
 object MediaAcquireData {
   def apply(player: EntityPlayer) = EntityData.get(player).getPart(classOf[MediaAcquireData])
@@ -15,6 +21,31 @@ object MediaAcquireData {
 
 @RegDataPart(value=classOf[EntityPlayer])
 class MediaAcquireData extends DataPart[EntityPlayer] {
+  @SerializeExcluded
+  private var _syncRollback: Array[Byte] = null
+
+  @Listener(channel = "itn_sync", side = Array(Side.SERVER))
+  private def onSyncIntercept(buf: ByteBuf) = {
+    val snap = Unpooled.buffer(512)
+    NetworkS11n.serializeRecursively(snap, this, getClass.asInstanceOf[Class[AnyRef]])
+    _syncRollback = ByteBufUtil.getBytes(snap)
+    getEntity.asInstanceOf[EntityPlayerMP].getServerWorld.addScheduledTask(new Runnable {
+      override def run(): Unit = {
+        if (_syncRollback != null) {
+          NetworkS11n.deserializeRecursivelyInto(Unpooled.wrappedBuffer(_syncRollback), this, getClass.asInstanceOf[Class[AnyRef]])
+          _syncRollback = null
+        }
+      }
+    })
+  }
+
+  override protected def onSynchronized(): Unit = {
+    if (!isClient() && _syncRollback != null) {
+      NetworkS11n.deserializeRecursivelyInto(Unpooled.wrappedBuffer(_syncRollback), this, getClass.asInstanceOf[Class[AnyRef]])
+      _syncRollback = null
+    }
+  }
+
 
   @SerializeIncluded
   private var bitset = new util.BitSet() // Var for synchronization

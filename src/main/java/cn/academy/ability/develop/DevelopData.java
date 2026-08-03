@@ -2,6 +2,7 @@ package cn.academy.ability.develop;
 
 import cn.academy.AcademyCraft;
 import cn.academy.ability.develop.action.IDevelopAction;
+import cn.lambdalib2.s11n.SerializeExcluded;
 import cn.lambdalib2.datapart.DataPart;
 import cn.lambdalib2.datapart.EntityData;
 import cn.lambdalib2.datapart.RegDataPart;
@@ -9,10 +10,40 @@ import cn.lambdalib2.s11n.SerializeDynamic;
 import cn.lambdalib2.s11n.SerializeIncluded;
 import cn.lambdalib2.s11n.SerializeNullable;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.relauncher.Side;
+import cn.lambdalib2.s11n.network.NetworkMessage.Listener;
+import cn.lambdalib2.s11n.network.NetworkS11n;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.Unpooled;
 
 @RegDataPart(EntityPlayer.class)
 public class DevelopData extends DataPart<EntityPlayer> {
+    @SerializeExcluded
+    private byte[] _syncRollback;
+
+    @Listener(channel = "itn_sync", side = Side.SERVER)
+    private void onSyncIntercept(ByteBuf buf) {
+        ByteBuf snap = Unpooled.buffer(512);
+        NetworkS11n.serializeRecursively(snap, this, (Class) getClass());
+        _syncRollback = ByteBufUtil.getBytes(snap);
+        ((EntityPlayerMP) getEntity()).getServerWorld().addScheduledTask(() -> {
+            if (_syncRollback != null) {
+                NetworkS11n.deserializeRecursivelyInto(Unpooled.wrappedBuffer(_syncRollback), this, (Class) getClass());
+                _syncRollback = null;
+            }
+        });
+    }
+
+    @Override
+    protected void onSynchronized() {
+        if (!isClient() && _syncRollback != null) {
+            NetworkS11n.deserializeRecursivelyInto(Unpooled.wrappedBuffer(_syncRollback), this, (Class) getClass());
+            _syncRollback = null;
+        }
+    }
+
 
     public static DevelopData get(EntityPlayer player) {
         return EntityData.get(player).getPart(DevelopData.class);
@@ -159,7 +190,6 @@ public class DevelopData extends DataPart<EntityPlayer> {
                                 type.onLearned(player);
                             }
                         } catch (Exception ex) {
-                            // 防御：开发动作抛出的任何异常（如感应因子中途丢失）都不应导致服务器崩溃，按失败处理
                             AcademyCraft.log.warn("Failed to perform develop action for player " + player.getName(), ex);
                         }
                         resetProgress(!success);

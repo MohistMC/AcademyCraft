@@ -264,29 +264,16 @@ public abstract class Skill extends Controllable {
         return 0.0f;
     }
 
-    //--- Context factory
-    // The factory to create the skill's Context, registered in constructor (both sides).
-    // It replaces the previous reflection-based (Class.forName) context creation.
     private Function<EntityPlayer, Context> contextFactory;
 
-    /**
-     * Registers the context factory. Must be called in the constructor so that both
-     *  client and server can resolve the skill's context without reflection.
-     */
     protected final void setContextFactory(Function<EntityPlayer, Context> factory) {
         contextFactory = factory;
     }
 
-    /**
-     * Scala version of {@link #setContextFactory(Function)}.
-     */
     protected final void setContextFactory(Function1<EntityPlayer, Context> factory) {
         contextFactory = factory::apply;
     }
 
-    /**
-     * @return The registered context factory, or null if the skill has no activatable context.
-     */
     public final Function<EntityPlayer, Context> getContextFactory() {
         return contextFactory;
     }
