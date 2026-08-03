@@ -1,5 +1,6 @@
 package cn.academy.ability.develop;
 
+import cn.academy.AcademyCraft;
 import cn.academy.ability.develop.action.IDevelopAction;
 import cn.lambdalib2.datapart.DataPart;
 import cn.lambdalib2.datapart.EntityData;
@@ -151,9 +152,15 @@ public class DevelopData extends DataPart<EntityPlayer> {
 
                     if(stim >= maxStim) {
                         // try perform the action.
-                        boolean success = type.validate(player, developer);
-                        if(success) {
-                            type.onLearned(player);
+                        boolean success = false;
+                        try {
+                            success = type.validate(player, developer);
+                            if(success) {
+                                type.onLearned(player);
+                            }
+                        } catch (Exception ex) {
+                            // 防御：开发动作抛出的任何异常（如感应因子中途丢失）都不应导致服务器崩溃，按失败处理
+                            AcademyCraft.log.warn("Failed to perform develop action for player " + player.getName(), ex);
                         }
                         resetProgress(!success);
                         if (success) {
