@@ -14,16 +14,7 @@ import net.minecraft.world.phys.Vec3;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 
-/**
- * 等离子炮 —— 蓄力后发射高能等离子球，在目标位置产生大爆炸
- * <p>
- * 参考旧代码 PlasmaCannon.scala：
- * - 蓄力时间：lerpf(60, 30, exp) ticks
- * - 爆炸伤害：lerpf(80, 150, exp)，爆炸半径：lerpf(12, 15, exp)
- * - 冷却：lerpf(1000, 600, exp) ticks
- *
- * @author Mgazul
- */
+/** 等离子炮 —— 蓄力后发射高能等离子球，在目标位置产生大爆炸 */
 public class PlasmaCannonEffect implements ChargingSkillEffect {
 
     @Override
@@ -62,7 +53,6 @@ public class PlasmaCannonEffect implements ChargingSkillEffect {
         }
 
         if (ticks == chargeTime) {
-            // 蓄力完成提示音
             ServerLevel level = player.serverLevel();
             AcademySounds.playSound(level, player.getX(), player.getY(), player.getZ(),
                     AcademySounds.VM_PLASMA_CANNON_T, SoundSource.PLAYERS, 0.5f, 2.0f);
@@ -77,24 +67,21 @@ public class PlasmaCannonEffect implements ChargingSkillEffect {
         int chargeTime = (int) lerpf(60, 30, exp);
 
         if (ticks < chargeTime) {
-            return; // 蓄力不足
+            return;
         }
 
         data.addProficiency(getId(), 0.008f);
 
         ServerLevel level = player.serverLevel();
 
-        // 目标位置：玩家视线方向100格
         Vec3 lookDir = player.getLookAngle();
         Vec3 destination = player.getEyePosition().add(lookDir.scale(100));
 
-        // 检查方块碰撞
         var blockHit = player.pick(100, 0, false);
         if (blockHit != null) {
             destination = blockHit.getLocation();
         }
 
-        // 爆炸
         float damage = lerpf(80, 150, exp);
         float radius = lerpf(12, 15, exp);
 
@@ -111,7 +98,6 @@ public class PlasmaCannonEffect implements ChargingSkillEffect {
             }
         }
 
-        // 爆炸视觉效果和粒子
         EffectHelper.glowBurst(level, destination.x, destination.y, destination.z, 10, 0.6f, 0xAAFF8822, 15, radius / 2);
         EffectHelper.glowBurst(level, destination.x, destination.y, destination.z, 5, 0.5f, 0xFFFFFFFF, 8, 0.1f);
 

@@ -5,9 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * 改良无线虚能节点 —— 中等性能。
- * 范围 20，容量 8。
- *
+ * 改良无线虚能节点 —— 中等性能,范围 20,容量 8。
  * @author Mgazul
  */
 public class NodeStandardBlockEntity extends BaseNodeBlockEntity {

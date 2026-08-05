@@ -10,9 +10,6 @@ import net.minecraft.world.level.Level;
 
 /**
  * 能量护盾实体 — 半透明发光球形/圆形护盾。
- * 用于 LightShieldEffect 的视觉表现。
- *
- * @author Mgazul
  */
 public class ShieldEffectEntity extends Entity {
 

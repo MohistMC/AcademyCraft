@@ -17,16 +17,7 @@ import net.minecraft.world.phys.Vec3;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 
-/**
- * 血液回流 —— 操纵目标血液，造成高额伤害
- * <p>
- * 参考旧代码 BloodRetrograde.scala：
- * - 近战范围2格，自动锁定目标
- * - 蓄力时减慢玩家移速，30tick后自动释放
- * - 高额伤害：lerpf(30, 60, exp)
- *
- * @author Mgazul
- */
+/** 血液回流 —— 操纵目标血液，造成高额伤害 */
 public class BloodRetroEffect implements ChargingSkillEffect {
 
     private static final int AUTO_RELEASE_TICKS = 30;
@@ -78,7 +69,6 @@ public class BloodRetroEffect implements ChargingSkillEffect {
         if (hit != null && hit.getEntity() instanceof LivingEntity target) {
             target.hurt(player.damageSources().playerAttack(player), damage);
 
-            // 血液粒子效果
             for (int i = 0; i < 8; i++) {
                 double ox = (level.random.nextDouble() - 0.5) * target.getBbWidth();
                 double oy = level.random.nextDouble() * target.getBbHeight();

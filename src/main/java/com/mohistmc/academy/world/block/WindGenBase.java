@@ -134,7 +134,6 @@ public class WindGenBase extends BaseEntityBlock {
 
     @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos neighbor, boolean p_60514_) {
-        //Block block = level.getBlockState(pos).getBlock();
         if (block instanceof WindGenBaseSubBlock && level.getBlockState(neighbor).getBlock() instanceof AirBlock) {
             level.destroyBlock(pos, false);
         }

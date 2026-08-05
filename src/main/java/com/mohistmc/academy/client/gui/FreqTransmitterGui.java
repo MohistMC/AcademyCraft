@@ -9,8 +9,6 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 /**
  * 频率变送器 App 界面 —— 显示操作指南和当前状态。
- *
- * @author Mgazul
  */
 @OnlyIn(Dist.CLIENT)
 public class FreqTransmitterGui extends Screen {

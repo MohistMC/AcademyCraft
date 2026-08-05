@@ -16,31 +16,10 @@ import net.neoforged.api.distmarker.OnlyIn;
 public class WindMainGui extends AcademyBaseUI<WindGenMainMenu> {
 
     private static final ResourceLocation UI_WIN_MAIN = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/ui/ui_windmain.png");
-    private final Inventory inv;
 
     public WindMainGui(WindGenMainMenu menu, Inventory inv, Component p_97743_) {
         super(menu, inv, p_97743_, WirelessState.WIFI);
-        this.inv = inv;
         setRenderWireless(false);
-    }
-
-
-    @Override
-    protected void init() {
-        super.init();
-    }
-
-
-    @Override
-    public void render(GuiGraphics p_97795_, int p_97796_, int p_97797_, float p_97798_) {
-        super.renderBackground(p_97795_, p_97796_, p_97797_, p_97798_);
-        super.render(p_97795_, p_97796_, p_97797_, p_97798_);
-        super.renderTooltip(p_97795_, p_97796_, p_97797_);
-    }
-
-    @Override
-    protected void renderLabels(GuiGraphics p_97808_, int p_97809_, int p_97810_) {
-        //TODO: nothing
     }
 
     @Override
@@ -50,5 +29,7 @@ public class WindMainGui extends AcademyBaseUI<WindGenMainMenu> {
         RenderSystem.defaultBlendFunc();
         RenderUtils.renderCenter(176, 187, this.width, this.height, p_300197_, UI_WIN_MAIN);
         RenderSystem.disableBlend();
+
+        renderEnergyInfoPanel(p_300197_);
     }
 }

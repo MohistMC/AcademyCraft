@@ -18,9 +18,6 @@ import org.joml.Matrix4f;
 
 /**
  * 波环特效实体 —— 冲击波扩散环。
- * 与旧代码 WaveEffect 视觉相似：多个逐渐扩大的发光环。
- *
- * @author Mgazul
  */
 public class WaveEffectEntity extends Entity {
 

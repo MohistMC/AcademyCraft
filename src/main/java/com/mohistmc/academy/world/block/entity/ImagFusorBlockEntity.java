@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * 想象熔炉方块实体 —— 可实现 IWirelessReceiver 从 IF 能源网络获取能量。
- *
  * @author Mgazul
  */
 public class ImagFusorBlockEntity extends AcademyContainerBlockEntity implements IWirelessReceiver {
@@ -49,7 +48,6 @@ public class ImagFusorBlockEntity extends AcademyContainerBlockEntity implements
 
     @Override
     public double getRequiredEnergy() {
-        // 处理时需要能量
         if (processingTime > 0) return 20;
         return 0;
     }
@@ -75,7 +73,6 @@ public class ImagFusorBlockEntity extends AcademyContainerBlockEntity implements
     public void tick() {
         if (level == null || level.isClientSide) return;
 
-        // 1. PhaseLiquid 输入
         ItemStack fluidInput = getItems().get(FLUID_INPUT_SLOT);
         if (!fluidInput.isEmpty() && fluidInput.is(AcademyItems.MATTER_UNIT_PHASE_LIQUID.get())) {
             if (fluidAmount + PHASE_LIQUID_PER_UNIT <= MAX_FLUID) {
@@ -91,7 +88,6 @@ public class ImagFusorBlockEntity extends AcademyContainerBlockEntity implements
             }
         }
 
-        // 2. 配方处理
         ItemStack input = getItems().get(INPUT_SLOT);
         ItemStack output = getItems().get(OUTPUT_SLOT);
 
@@ -100,7 +96,6 @@ public class ImagFusorBlockEntity extends AcademyContainerBlockEntity implements
             return;
         }
 
-        // 动态配方查找
         ImagFusorRecipes.IFRecipe recipe = ImagFusorRecipes.INSTANCE.getRecipe(input);
         if (recipe == null) {
             processingTime = 0;

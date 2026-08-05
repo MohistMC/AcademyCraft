@@ -16,10 +16,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author Mgazul
- * @date 2026/5/31 04:04
- */
 public abstract class MediaItem extends AcademyItem {
 
     public MediaItem() {

@@ -11,7 +11,7 @@ public class WindGenBaseMenu extends AcademyMenu {
     public WindGenBaseMenu(int windowId, Inventory inv, FriendlyByteBuf data) {
         super(AcademyMenus.WIND_BASE_MENU.get(), windowId, inv, data, true);
 
-        addAcademySlot(new Slot(container, 0, 44, 70) {
+        addAcademySlot(new Slot(container, 0, 44, 80) {
             @Override
             public boolean mayPlace(ItemStack item) {
                 return EnergyItemHelper.isEnergyItem(item);

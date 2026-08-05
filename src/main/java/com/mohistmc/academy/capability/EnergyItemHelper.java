@@ -3,8 +3,7 @@ package com.mohistmc.academy.capability;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * @author Mgazul
- * @date 2026/6/2 04:36
+ * 能量物品的工具类
  */
 public final class EnergyItemHelper {
 

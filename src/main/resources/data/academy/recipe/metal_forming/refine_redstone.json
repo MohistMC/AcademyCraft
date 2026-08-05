@@ -1,0 +1,11 @@
+{
+  "type": "academy:metal_forming",
+  "mode": "refine",
+  "input": {
+    "tag": "c:ores/redstone"
+  },
+  "output": {
+    "count": 1,
+    "id": "minecraft:redstone_block"
+  }
+}

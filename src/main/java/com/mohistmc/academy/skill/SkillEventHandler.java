@@ -18,6 +18,7 @@ public class SkillEventHandler {
         PlayerAbilityData data = event.getEntity().getData(AcademyAttachments.PLAYER_ABILITY);
         data.tick(); // 服务端和客户端都递减冷却
 
+
         if (event.getEntity() instanceof ServerPlayer player) {
             SkillChargingManager.ChargingState state = SkillChargingManager.getState(player.getUUID());
             if (state != null && !state.releasing) {

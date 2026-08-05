@@ -1,0 +1,12 @@
+{
+  "type": "academy:metal_forming",
+  "mode": "plate",
+  "input": {
+    "item": "academy:reinforced_iron_plate"
+  },
+  "output": {
+    "count": 3,
+    "id": "academy:coin"
+  },
+  "count": 2
+}

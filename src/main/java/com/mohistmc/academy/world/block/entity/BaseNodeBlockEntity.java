@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * 无线节点基类 —— 实现 IWirelessNode 接口以参与 IF 能源系统。
- *
  * @author Mgazul
  */
 public abstract class BaseNodeBlockEntity extends AcademyContainerBlockEntity implements IWirelessNode {
@@ -43,7 +42,6 @@ public abstract class BaseNodeBlockEntity extends AcademyContainerBlockEntity im
 
     /** 是否已连接到矩阵网络 */
     public boolean isConnected() {
-        // TODO: 检查 WiWorldData 中是否存在此节点
         return false;
     }
 
@@ -83,7 +81,6 @@ public abstract class BaseNodeBlockEntity extends AcademyContainerBlockEntity im
     // ==================== Setters ====================
 
     public void setNodeName(String name) {
-        System.out.println("[AcademyDebug] BaseNodeBE.setNodeName: " + this.nodeName + " -> " + name);
         this.nodeName = name;
         setChanged();
         if (level != null && !level.isClientSide()) {
@@ -91,7 +88,6 @@ public abstract class BaseNodeBlockEntity extends AcademyContainerBlockEntity im
         }
     }
     public void setPassword(String password) {
-        System.out.println("[AcademyDebug] BaseNodeBE.setPassword: " + this.password + " -> " + password);
         this.password = password;
         setChanged();
         if (level != null && !level.isClientSide()) {

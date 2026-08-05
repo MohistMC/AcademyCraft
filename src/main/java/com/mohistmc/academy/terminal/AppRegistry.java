@@ -8,10 +8,6 @@ import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import org.slf4j.Logger;
 
-/**
- * @author Mgazul
- * @date 2026/5/31 04:09
- */
 public class AppRegistry {
 
     public static final BuiltinApp SKILL_TREE = new BuiltinApp("skill_tree", "item.academy.app_skill_tree");

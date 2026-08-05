@@ -26,7 +26,6 @@ public class MatterUnitPhaseLiquid extends AcademyItem {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
-        // 射线检测获取玩家视线目标
         BlockHitResult hitResult = getPlayerPOVHitResult(level, player);
 
         if (hitResult.getType() == HitResult.Type.BLOCK) {
@@ -34,14 +33,12 @@ public class MatterUnitPhaseLiquid extends AcademyItem {
             Direction direction = hitResult.getDirection();
             BlockPos placePos = pos.relative(direction);
 
-            // 检查玩家是否有权限在此位置放置
             if (!level.mayInteract(player, pos)) {
                 return InteractionResultHolder.pass(stack);
             }
 
             BlockState placeState = level.getBlockState(placePos);
 
-            // 目标位置必须是空气或可替换
             if (placeState.isAir() || placeState.canBeReplaced()) {
                 if (!level.isClientSide) {
                     // 如果目标位置有可被替换的方块（如高草），先破坏
@@ -49,7 +46,6 @@ public class MatterUnitPhaseLiquid extends AcademyItem {
                         level.destroyBlock(placePos, true);
                     }
 
-                    // 放置虚相位液体源块
                     level.setBlock(placePos, AcademyBlocks.PHASE_LIQUID.get().defaultBlockState(), 3);
                     level.playSound(null, placePos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
 
@@ -60,10 +56,8 @@ public class MatterUnitPhaseLiquid extends AcademyItem {
                         ItemStack emptyStack = new ItemStack(AcademyItems.MATTER_UNIT_NONE.get());
 
                         if (result.isEmpty()) {
-                            // 手中没有剩余，直接替换为空单元
                             return InteractionResultHolder.success(emptyStack);
                         } else {
-                            // 手中还有剩余液体单元，将空单元放入背包
                             if (!player.addItem(emptyStack)) {
                                 player.drop(emptyStack, false);
                             }

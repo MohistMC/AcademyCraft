@@ -10,9 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * 无线矩阵方块实体 —— 无线能源网络的核心。
- * 实现 IWirelessMatrix 接口以参与 IF 能源系统。
- *
+ * 无线矩阵方块实体 —— 无线能源网络的核心,实现 IWirelessMatrix 接口以参与 IF 能源系统。
  * @author Mgazul
  */
 public class MatrixBlockEntity extends BlockEntity implements IWirelessMatrix {

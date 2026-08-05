@@ -15,8 +15,6 @@ import org.slf4j.Logger;
 
 /**
  * 服务器事件监听器
- *
- * @author lliiooll, Mgazul
  */
 public class ServerListener {
 

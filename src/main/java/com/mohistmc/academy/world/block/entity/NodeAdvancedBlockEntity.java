@@ -5,9 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * 高级无线虚能节点 —— 最高性能。
- * 范围 30，容量 16。
- *
+ * 高级无线虚能节点 —— 最高性能,范围 30,容量 16。
  * @author Mgazul
  */
 public class NodeAdvancedBlockEntity extends BaseNodeBlockEntity {

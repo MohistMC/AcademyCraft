@@ -56,10 +56,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * @author Mgazul
- * @date 2026/5/30 20:27
- */
 public class SkillRegistry {
 
     private static final Map<String, Skill> SKILLS = new HashMap<>();

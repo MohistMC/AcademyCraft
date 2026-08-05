@@ -21,8 +21,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * 客户端→服务端：高级开发机控制台命令。
- *
- * @author Mgazul
  */
 public record ConsoleCommandPacket(BlockPos pos, String command) implements CustomPacketPayload {
 
@@ -57,9 +55,7 @@ public record ConsoleCommandPacket(BlockPos pos, String command) implements Cust
 
             switch (packet.command()) {
                 case "learn" -> {
-                    // 打开技能树GUI (通过现有机制)
-                    // 由于 DevMachineBase 已经有通过 OpenDevGuiPacket 打开技能树的逻辑，
-                    // 这里直接触发相同的流程
+                    // 技能学习走技能树 GUI 流程（OpenDevGuiPacket）
                     player.sendSystemMessage(Component.literal("§a请在技能树界面选择要学习的技能"));
                 }
                 case "reset" -> {
@@ -77,7 +73,6 @@ public record ConsoleCommandPacket(BlockPos pos, String command) implements Cust
                         return;
                     }
 
-                    // 获取因子中存储的能力类型
                     ItemStack factorStack = dev.getItems().get(1);
                     if (!(factorStack.getItem() instanceof BaseFactor factor)) {
                         player.sendSystemMessage(Component.literal("§c请放入能力诱导因子"));
@@ -90,13 +85,13 @@ public record ConsoleCommandPacket(BlockPos pos, String command) implements Cust
                         return;
                     }
 
-                    // 消耗线圈和因子
                     dev.getItems().get(0).shrink(1);
                     dev.getItems().get(1).shrink(1);
                     dev.setChanged();
 
                     // 执行重置：保留等级-1，更换能力
                     int newLevel = Math.max(1, data.getPlayerLevel() - 1);
+
                     data.reset();
                     data.setCurrentAbility(newAbility);
                     data.setPlayerLevel(newLevel);

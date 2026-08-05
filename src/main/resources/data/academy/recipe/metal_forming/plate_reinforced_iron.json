@@ -1,0 +1,11 @@
+{
+  "type": "academy:metal_forming",
+  "mode": "plate",
+  "input": {
+    "item": "minecraft:iron_ingot"
+  },
+  "output": {
+    "count": 1,
+    "id": "academy:reinforced_iron_plate"
+  }
+}

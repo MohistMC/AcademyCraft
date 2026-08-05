@@ -2,8 +2,6 @@ package com.mohistmc.academy.energy;
 
 /**
  * IF 能源系统常量。
- *
- * @author WeAthFolD (original), Mgazul (port)
  */
 public final class IFConstants {
 

@@ -47,7 +47,6 @@ public class MineRayLuckEffect implements SkillEffect {
                 EffectHelper.meltdownBurst(level, checkPos.x, checkPos.y, checkPos.z, 2, 0.2);
                 level.destroyBlock(bp, true, player);
 
-                // 幸运额外掉落
                 if (level.random.nextFloat() < extraDropChance) {
                     net.minecraft.world.entity.item.ItemEntity drop = new net.minecraft.world.entity.item.ItemEntity(
                             level, bp.getX() + 0.5, bp.getY() + 0.5, bp.getZ() + 0.5,

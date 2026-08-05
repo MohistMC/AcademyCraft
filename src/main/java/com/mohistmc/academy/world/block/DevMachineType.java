@@ -1,9 +1,5 @@
 package com.mohistmc.academy.world.block;
 
-/**
- * @author Mgazul
- * @date 2026/6/2 05:22
- */
 public enum DevMachineType {
     PORTABLE(2, 30, "便携"),
     NORMAL(3, 60, "基础"),

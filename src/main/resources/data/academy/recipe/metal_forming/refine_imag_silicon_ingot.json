@@ -1,0 +1,11 @@
+{
+  "type": "academy:metal_forming",
+  "mode": "refine",
+  "input": {
+    "item": "academy:imagsil_ore"
+  },
+  "output": {
+    "count": 4,
+    "id": "academy:imag_silicon_ingot"
+  }
+}

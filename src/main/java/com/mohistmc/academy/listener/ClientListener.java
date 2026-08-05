@@ -31,8 +31,6 @@ import org.slf4j.Logger;
 
 /**
  * 客户端事件监听器
- *
- * @author lliiooll
  */
 @EventBusSubscriber(modid = AcademyCraft.MODID, value = Dist.CLIENT)
 public class ClientListener {

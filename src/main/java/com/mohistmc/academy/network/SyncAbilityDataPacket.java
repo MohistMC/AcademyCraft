@@ -14,8 +14,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 
 /**
- * @author Mgazul
- * @date 2026/5/30 21:04
+ * 服务端→客户端：同步玩家能力数据。
  */
 public record SyncAbilityDataPacket(CompoundTag data) implements CustomPacketPayload {
 

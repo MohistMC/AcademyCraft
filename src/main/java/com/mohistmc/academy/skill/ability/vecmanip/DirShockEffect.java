@@ -15,15 +15,7 @@ import net.minecraft.world.phys.Vec3;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 
-/**
- * 定向冲击 —— 蓄力后向前猛击，击退目标并造成伤害
- * <p>
- * 参考旧代码 DirectedShock.scala：
- * - 近战范围3格，命中造成伤害+击退
- * - 最低蓄力6tick，最大可接受50tick，最大容忍200tick
- *
- * @author Mgazul
- */
+/** 定向冲击 —— 蓄力后向前猛击，击退目标并造成伤害 */
 public class DirShockEffect implements ChargingSkillEffect {
 
     private static final int MIN_TICKS = 6;

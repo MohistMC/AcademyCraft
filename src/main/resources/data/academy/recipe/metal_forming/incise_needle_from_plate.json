@@ -1,0 +1,11 @@
+{
+  "type": "academy:metal_forming",
+  "mode": "incise",
+  "input": {
+    "item": "academy:reinforced_iron_plate"
+  },
+  "output": {
+    "count": 6,
+    "id": "academy:needle"
+  }
+}

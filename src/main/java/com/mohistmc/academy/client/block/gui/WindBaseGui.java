@@ -26,12 +26,10 @@ public class WindBaseGui extends AcademyBaseUI<WindGenBaseMenu> {
     public WindBaseGui(WindGenBaseMenu menu, Inventory inv, Component p_97743_) {
         super(menu, inv, p_97743_, WirelessState.WIFI);
         this.inv = inv;
-        setRenderEnergyTree(true);
     }
 
     @Override
     protected void renderLabels(GuiGraphics p_97808_, int p_97809_, int p_97810_) {
-        //TODO: nothing
     }
 
     @Override
@@ -45,27 +43,29 @@ public class WindBaseGui extends AcademyBaseUI<WindGenBaseMenu> {
         if (this.menu.pos != null) {
             BlockEntity entity = inv.player.level().getBlockEntity(this.menu.pos);
             if (entity instanceof WindGenBaseBlockEntity blockEntity) {
-                RenderUtils.renderCenterTop(0, 49, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_BASE);// 基座
+                RenderUtils.renderCenterTop(0, 49, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_BASE);
                 if (blockEntity.isValidMiddle()) {
                     RenderSystem.setShaderColor(1, 1, 1, 1);
                 } else {
                     RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
                 }
-                RenderUtils.renderCenterTop(0, 31, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_MIDDLE);// 中部
+                RenderUtils.renderCenterTop(0, 31, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_MIDDLE);
                 if (blockEntity.isValidMain()) {
                     RenderSystem.setShaderColor(1, 1, 1, 1);
                 } else {
                     RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
                 }
-                RenderUtils.renderCenterTop(0, 13, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_MAIN);// 头部
+                RenderUtils.renderCenterTop(0, 13, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_MAIN);
                 RenderSystem.disableBlend();
+                renderEnergyInfoPanel(stack);
                 return;
             }
 
         }
-        RenderUtils.renderCenterTop(0, 49, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_BASE);// 基座
-        RenderUtils.renderCenterTop(0, 31, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_MIDDLE);// 中部
-        RenderUtils.renderCenterTop(0, 13, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_MAIN);// 头部
+        RenderUtils.renderCenterTop(0, 49, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_BASE);
+        RenderUtils.renderCenterTop(0, 31, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_MIDDLE);
+        RenderUtils.renderCenterTop(0, 13, 24, 24, this.width, (this.height - 187) / 2, stack, IC_WIN_MAIN);
         RenderSystem.disableBlend();
+        renderEnergyInfoPanel(stack);
     }
 }

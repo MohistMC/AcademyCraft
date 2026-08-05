@@ -15,9 +15,6 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 /**
  * CP 和 Overload 栏 HUD — 单色风格（CP: 白→黄→红, OL: 蓝→橙→红）。
- * 不依赖 Shader，只用原版 GuiGraphics。
- *
- * @author Mgazul
  */
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(modid = AcademyCraft.MODID, value = Dist.CLIENT)

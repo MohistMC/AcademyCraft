@@ -6,10 +6,7 @@ import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 /**
- * AcademyCraft 配置系统。
- * 使用 NeoForge ModConfigSpec 替代旧版 Typesafe Config。
- *
- * @author Mgazul
+ * AcademyCraft 配置系统(基于 NeoForge ModConfigSpec)
  */
 @EventBusSubscriber(modid = "academy", bus = EventBusSubscriber.Bus.MOD)
 public final class ACConfig {
@@ -111,11 +108,9 @@ public final class ACConfig {
 
     @SubscribeEvent
     public static void onLoad(final ModConfigEvent.Loading event) {
-        // 配置加载时触发
     }
 
     @SubscribeEvent
     public static void onReload(final ModConfigEvent.Reloading event) {
-        // 配置重载时触发
     }
 }

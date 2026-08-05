@@ -10,16 +10,14 @@ import net.minecraft.world.item.ItemStack;
 public abstract class BaseNodeMenu extends AcademyMenu {
     public BaseNodeMenu(MenuType<?> menuType, int windowId, Inventory inv, FriendlyByteBuf data, boolean hasInventory) {
         super(menuType, windowId, inv, data, hasInventory);
-        // IN
-        addAcademySlot(new Slot(container, 0, 44, 0) {
+        addAcademySlot(new Slot(container, 0, 44, 10) {
             @Override
             public boolean mayPlace(ItemStack item) {
                 return item.is(AcademyItems.ENERGY_UNIT.get());
             }
         });
 
-        //OUT
-        addAcademySlot(new Slot(container, 1, 44, 70) {
+        addAcademySlot(new Slot(container, 1, 44, 80) {
             @Override
             public boolean mayPlace(ItemStack item) {
                 return item.is(AcademyItems.ENERGY_UNIT.get());

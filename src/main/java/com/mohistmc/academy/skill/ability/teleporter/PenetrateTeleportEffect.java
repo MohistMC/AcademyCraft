@@ -39,7 +39,6 @@ public class PenetrateTeleportEffect implements SkillEffect {
 
         ServerLevel level = player.serverLevel();
 
-        // 对路径上的实体造成伤害
         double minX = Math.min(player.getX(), target.getX() + 0.5);
         double minY = Math.min(player.getY(), target.getY());
         double minZ = Math.min(player.getZ(), target.getZ() + 0.5);

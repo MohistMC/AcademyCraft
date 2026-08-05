@@ -21,8 +21,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * 客户端→服务端：连接机器到指定节点。
- *
- * @author Mgazul
  */
 public record ConnectToNodePacket(BlockPos machinePos, BlockPos nodePos, Optional<String> password) implements CustomPacketPayload {
 

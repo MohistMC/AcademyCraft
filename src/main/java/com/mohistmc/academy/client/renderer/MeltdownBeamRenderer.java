@@ -17,8 +17,6 @@ import org.joml.Matrix4f;
 
 /**
  * 熔毁光束渲染器 — 绿色能量射线，类似 Railgun 但颜色不同。
- *
- * @author Mgazul
  */
 public class MeltdownBeamRenderer extends EntityRenderer<MeltdownBeamEntity> {
 

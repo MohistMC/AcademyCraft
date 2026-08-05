@@ -38,7 +38,6 @@ public class WindGenMainBlockEntity extends AcademyContainerBlockEntity implemen
             default -> pos;
         };
 
-        // 更新风扇旋转状态
         BlockEntity fanEntity = level.getBlockEntity(fanPos);
         if (fanEntity instanceof WindGenFanBlockEntity fan) {
             boolean hasFanBlock = level.getBlockState(fanPos).is(AcademyBlocks.WINDGEN_FAN.get());

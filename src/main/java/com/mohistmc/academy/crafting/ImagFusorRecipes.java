@@ -6,8 +6,6 @@ import net.minecraft.world.item.ItemStack;
 
 /**
  * 想象熔炉配方注册。
- *
- * @author WeAthFolD (original), Mgazul (port)
  */
 public class ImagFusorRecipes {
 

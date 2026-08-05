@@ -3,8 +3,6 @@ package com.mohistmc.academy.energy.api.block;
 /**
  * 无线发电机接口 —— 产能设备（如太阳能发电机、风力发电机）。
  * 连接到节点后向节点提供能量。
- *
- * @author WeAthFolD (original), Mgazul (port)
  */
 public interface IWirelessGenerator extends IWirelessUser {
 

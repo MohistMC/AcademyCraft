@@ -33,7 +33,6 @@ public class PsychoTransmissionEffect implements SkillEffect {
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 SoundEvents.BEACON_POWER_SELECT, SoundSource.PLAYERS, 0.8f, 1.5f);
 
-        // 恢复CP并减少过载
         data.setCurrentCp(data.getCurrentCp() + cpRestore);
         data.setCurrentOverload(data.getCurrentOverload() - overloadReduce);
 

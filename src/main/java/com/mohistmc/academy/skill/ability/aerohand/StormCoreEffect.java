@@ -33,7 +33,6 @@ public class StormCoreEffect implements SkillEffect {
         ServerLevel level = player.serverLevel();
         Vec3 playerPos = player.position();
 
-        // 风暴粒子效果
         for (int i = 0; i < 50; i++) {
             double angle = Math.random() * Math.PI * 2;
             double dist = Math.random() * radius;

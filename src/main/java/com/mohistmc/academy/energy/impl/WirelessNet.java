@@ -17,8 +17,6 @@ import org.slf4j.Logger;
 
 /**
  * 无线网络 —— 一个矩阵 + N 个节点，在节点间均衡能量。
- *
- * @author WeAthFolD (original), Mgazul (port)
  */
 public class WirelessNet {
 

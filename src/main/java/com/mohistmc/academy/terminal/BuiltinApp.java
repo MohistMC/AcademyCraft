@@ -4,10 +4,6 @@ import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 
-/**
- * @author Mgazul
- * @date 2026/5/31 04:09
- */
 public class BuiltinApp implements TerminalApp {
 
     private final String appId;

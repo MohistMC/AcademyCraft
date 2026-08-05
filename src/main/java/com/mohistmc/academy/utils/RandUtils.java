@@ -3,8 +3,7 @@ package com.mohistmc.academy.utils;
 import java.util.Random;
 
 /**
- * @author Mgazul
- * @date 2026/6/2 01:12
+ * 随机数工具类
  */
 public class RandUtils {
 

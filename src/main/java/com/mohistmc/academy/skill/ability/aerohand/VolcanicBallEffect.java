@@ -36,13 +36,11 @@ public class VolcanicBallEffect implements SkillEffect {
         Vec3 lookVec = player.getLookAngle();
         Vec3 impactPos = eyePos.add(lookVec.scale(range));
 
-        // 飞行粒子
         for (double d = 1.0; d <= range; d += 0.5) {
             Vec3 pos = eyePos.add(lookVec.scale(d));
             EffectHelper.meltdownBurst(level, pos.x, pos.y, pos.z, 1, 0.1);
         }
 
-        // 爆炸粒子
         EffectHelper.meltdownBurst(level, impactPos.x, impactPos.y, impactPos.z, (int) (radius * 5), 0.3f);
 
         level.playSound(null, impactPos.x, impactPos.y, impactPos.z,

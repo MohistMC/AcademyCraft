@@ -1,0 +1,11 @@
+{
+  "type": "academy:metal_forming",
+  "mode": "refine",
+  "input": {
+    "tag": "c:ores/coal"
+  },
+  "output": {
+    "count": 2,
+    "id": "minecraft:coal"
+  }
+}

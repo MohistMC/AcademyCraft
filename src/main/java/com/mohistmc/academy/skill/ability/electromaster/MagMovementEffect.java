@@ -17,16 +17,7 @@ import net.minecraft.world.phys.Vec3;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 
-/**
- * 电磁牵引 —— 将玩家拉向准星对准的金属方块或实体
- * <p>
- * 参考旧代码 MagMovement.scala：
- * - 射线追踪找金属目标（方块或实体）
- * - 每 tick 向目标加速移动
- * - 目标必须是金属类方块/实体
- *
- * @author Mgazul
- */
+/** 电磁牵引 —— 将玩家拉向准星对准的金属方块或实体 */
 public class MagMovementEffect implements SkillEffect {
 
     private static final double ACCEL = 0.08;
@@ -43,7 +34,6 @@ public class MagMovementEffect implements SkillEffect {
         float proficiency = data.getProficiency(getId());
         double range = lerpf(15, 30, proficiency);
 
-        // 射线追踪找目标
         HitResult hit = findTarget(player, range, proficiency);
         if (hit == null) return;
 
@@ -71,7 +61,6 @@ public class MagMovementEffect implements SkillEffect {
         dir = dir.normalize();
         Vec3 currentMotion = player.getDeltaMovement();
 
-        // 平滑加速
         double newMx = tryAdjust(currentMotion.x, dir.x * VELOCITY);
         double newMy = tryAdjust(currentMotion.y, dir.y * VELOCITY);
         double newMz = tryAdjust(currentMotion.z, dir.z * VELOCITY);
@@ -103,7 +92,6 @@ public class MagMovementEffect implements SkillEffect {
         BlockHitResult blockHit = (BlockHitResult) player.pick(range, 0, false);
         EntityHitResult entityHit = rayTraceEntities(player, eyePos, lookVec, range);
 
-        // 检查方块是否为金属
         if (blockHit != null && blockHit.getType() != HitResult.Type.MISS) {
             BlockState state = player.serverLevel().getBlockState(blockHit.getBlockPos());
             if (isMetalBlock(state, proficiency)) {
@@ -119,7 +107,6 @@ public class MagMovementEffect implements SkillEffect {
             }
         }
 
-        // 没有有效方块目标，检查实体
         if (entityHit != null && entityHit.getEntity() instanceof LivingEntity) {
             return entityHit;
         }

@@ -23,18 +23,7 @@ import net.minecraft.world.phys.Vec3;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 
-/**
- * 电弧激发 —— 向前方发射一道电弧，命中实体造成伤害，命中水面有概率电出熟鱼，命中方块有概率点火
- * <p>
- * 参考旧代码 ArcGen.java：
- * - 射程 6~15（随熟练度）
- * - 伤害 5~9（随熟练度）
- * - 命中水方块且熟练度>0.5 有10%概率生成熟鱼
- * - 命中普通方块有概率在方块上方点火（0%~60%）
- * - 熟练度>=1.0 可以眩晕敌人
- *
- * @author Mgazul
- */
+/** 电弧激发 —— 向前方发射电弧，命中实体造成伤害，命中水面有概率电出熟鱼，命中方块有概率点火 */
 public class ArcGenEffect implements SkillEffect {
 
     @Override
@@ -66,10 +55,8 @@ public class ArcGenEffect implements SkillEffect {
         Vec3 eyePos = player.getEyePosition();
         Vec3 lookVec = player.getLookAngle();
 
-        // 射线追踪：实体 + 方块（包括水）
         TraceResult result = trace(player, eyePos, lookVec, range);
 
-        // 播放电弧音效
         AcademySounds.playSound(level, player.getX(), player.getY(), player.getZ(),
                 AcademySounds.EM_ARC_WEAK, SoundSource.PLAYERS, 0.5f, 1.0f);
 
@@ -90,7 +77,6 @@ public class ArcGenEffect implements SkillEffect {
                 Entity target = result.entity;
                 target.hurt(player.damageSources().playerAttack(player), damage);
 
-                // 眩晕效果（熟练度满时）
                 if (canStun && target instanceof LivingEntity living) {
                     // 通过强伤害造成类似眩晕的效果
                     living.hurtMarked = true;
@@ -103,7 +89,6 @@ public class ArcGenEffect implements SkillEffect {
                 BlockState state = level.getBlockState(result.blockPos);
 
                 if (state.is(Blocks.WATER)) {
-                    // 水中电鱼
                     if (level.random.nextDouble() < fishProb) {
                         Vec3 pos = result.hitPos != null ? result.hitPos : Vec3.atCenterOf(result.blockPos);
                         ItemEntity fish = new ItemEntity(level,
@@ -112,7 +97,6 @@ public class ArcGenEffect implements SkillEffect {
                         level.addFreshEntity(fish);
                     }
                 } else {
-                    // 普通方块：概率点火
                     if (level.random.nextDouble() < igniteProb) {
                         BlockPos firePos = result.blockPos.above();
                         if (level.isEmptyBlock(firePos)) {
@@ -132,10 +116,8 @@ public class ArcGenEffect implements SkillEffect {
         // 冷却时间（由 SkillRegistry 的 Builder 处理基础冷却，这里不强制设置）
     }
 
-    /**
-     * 射线追踪，检测实体和方块（包括水）。
-     * 与旧代码 Raytrace.traceLiving 一致：水流也算作"击中"
-     */
+
+    /** 射线追踪，检测实体和方块（包括水）。 */
     private TraceResult trace(ServerPlayer player, Vec3 start, Vec3 dir, double range) {
         ServerLevel level = player.serverLevel();
 
@@ -167,12 +149,10 @@ public class ArcGenEffect implements SkillEffect {
         }
 
         // 3. 决定返回哪个结果——最近者优先
-        // 实体
         double entityDist = entityHit != null ? start.distanceTo(entityHit.getLocation()) : Double.MAX_VALUE;
         double solidDist = solidHit != null ? start.distanceTo(solidHitPos) : Double.MAX_VALUE;
         double waterDist = waterHit != null ? start.distanceTo(waterHitPos) : Double.MAX_VALUE;
 
-        // 找最近的命中
         TraceResult best = null;
         double bestDist = Double.MAX_VALUE;
 

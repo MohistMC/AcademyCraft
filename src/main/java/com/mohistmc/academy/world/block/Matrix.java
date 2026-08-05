@@ -58,7 +58,7 @@ public class Matrix extends BaseEntityBlock {
     @Override
     public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (!level.isClientSide()) {
-            player.openMenu(getMenuProvider(state, level, pos));
+            player.openMenu(getMenuProvider(state, level, pos), pos);
             return InteractionResult.CONSUME;
         }
         return InteractionResult.CONSUME;
@@ -83,20 +83,6 @@ public class Matrix extends BaseEntityBlock {
     @Override
     public void animateTick(BlockState p_220827_, Level p_220828_, BlockPos p_220829_, RandomSource p_220830_) {
     }
-
-    /*
-    @Override
-    public VoxelShape getShape(BlockState p_60555_, BlockGetter p_60556_, BlockPos p_60557_, CollisionContext p_60558_) {
-        Direction direction = p_60555_.getValue(HorizontalDirectionalBlock.FACING).getOpposite();
-        return switch (direction) {
-            case DOWN, UP, SOUTH -> Shapes.box(0, 0, 0, 1, 3, 3);
-            case NORTH -> Shapes.box(0, 0, -2, 1, 3, 1);
-            case EAST -> Shapes.box(0, 0, 0, 3, 3, 1);
-            case WEST -> Shapes.box(-2, 0, 0, 1, 3, 1);
-        };
-    }
-
-     */
 
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState p_60569_, boolean p_60570_) {
@@ -155,7 +141,6 @@ public class Matrix extends BaseEntityBlock {
 
     @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos neighbor, boolean p_60514_) {
-        //Block block = level.getBlockState(pos).getBlock();
         if ((block instanceof MatrixSubBlock) && level.getBlockState(neighbor).getBlock() instanceof AirBlock) {
             level.destroyBlock(pos, false);
         }

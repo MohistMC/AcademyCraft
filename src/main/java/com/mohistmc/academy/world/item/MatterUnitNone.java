@@ -22,7 +22,6 @@ public class MatterUnitNone extends AcademyItem {
         BlockPos clickedPos = context.getClickedPos();
         BlockState clickedState = level.getBlockState(clickedPos);
 
-        // 如果点击的位置本身就是虚相位液体源块
         if (isPhaseLiquidSource(clickedState)) {
             return handleInteraction(context, clickedPos);
         }

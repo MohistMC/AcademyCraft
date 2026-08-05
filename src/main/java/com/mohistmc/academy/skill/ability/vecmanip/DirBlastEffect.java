@@ -19,16 +19,7 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 
-/**
- * 定向爆破 —— 蓄力后向目标位置释放爆破冲击，伤害敌人并破坏方块
- * <p>
- * 参考旧代码 DirectedBlastwave.scala：
- * - 射线追踪4格找目标位置
- * - AOE 半径3格伤害 + 击退
- * - 破坏周围方块，硬度上限随熟练度提升
- *
- * @author Mgazul
- */
+/** 定向爆破 —— 蓄力后向目标位置释放爆破冲击，伤害敌人并破坏方块 */
 public class DirBlastEffect implements ChargingSkillEffect {
 
     private static final int MIN_TICKS = 6;
@@ -85,12 +76,10 @@ public class DirBlastEffect implements ChargingSkillEffect {
         else if (exp < 0.5f) breakHardness = 25f;
         else breakHardness = 55f;
 
-        // 找目标位置
         Vec3 lookDir = player.getLookAngle();
         Vec3 eyePos = player.getEyePosition();
         Vec3 position = eyePos.add(lookDir.scale(RANGE));
 
-        // 检查实体命中
         var entities = level.getEntities(player,
                 player.getBoundingBox().inflate(RANGE),
                 e -> e.isAlive() && e.isPickable());
@@ -102,7 +91,6 @@ public class DirBlastEffect implements ChargingSkillEffect {
             }
         }
 
-        // 伤害AOE内的实体
         Vec3 finalPos = position;
         AABB aoeArea = new AABB(
                 finalPos.x - AOE_RANGE, finalPos.y - AOE_RANGE, finalPos.z - AOE_RANGE,
@@ -113,7 +101,6 @@ public class DirBlastEffect implements ChargingSkillEffect {
         for (Entity e : level.getEntities(player, aoeArea, Entity::isAlive)) {
             if (e instanceof LivingEntity living && e != player) {
                 living.hurt(player.damageSources().playerAttack(player), damage);
-                // 击退
                 Vec3 delta = player.getEyePosition().subtract(living.getEyePosition()).normalize();
                 delta = new Vec3(delta.x, delta.y - 0.4, delta.z).normalize();
                 living.setDeltaMovement(delta.x * -1.2, delta.y * -1.2, delta.z * -1.2);
@@ -122,7 +109,6 @@ public class DirBlastEffect implements ChargingSkillEffect {
             }
         }
 
-        // 破坏周围方块
         int cx = (int) Math.round(finalPos.x);
         int cy = (int) Math.round(finalPos.y);
         int cz = (int) Math.round(finalPos.z);
@@ -152,7 +138,6 @@ public class DirBlastEffect implements ChargingSkillEffect {
             }
         }
 
-        // 粒子
         EffectHelper.glowBurst(level, finalPos.x, finalPos.y, finalPos.z, 20, 0.3f, 0x88FFCC44, 12, AOE_RANGE / 2);
 
         data.addProficiency(getId(), effective ? 0.0025f : 0.0012f);

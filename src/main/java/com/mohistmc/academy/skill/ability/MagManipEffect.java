@@ -33,7 +33,6 @@ public class MagManipEffect implements SkillEffect {
         Vec3 eyePos = player.getEyePosition();
         Vec3 lookVec = player.getLookAngle();
 
-        // 寻找前方最近的可磁化方块
         BlockPos targetBlock = null;
         for (double d = 1.0; d <= range; d += 0.5) {
             Vec3 checkPos = eyePos.add(lookVec.scale(d));
@@ -46,10 +45,8 @@ public class MagManipEffect implements SkillEffect {
         }
 
         if (targetBlock != null) {
-            // 获取方块并移除
             level.destroyBlock(targetBlock, false);
 
-            // 对目标方向造成范围伤害
             Vec3 targetVec = Vec3.atCenterOf(targetBlock);
             float damage = 6.0f + proficiency * 6.0f;
             List<Entity> entities = level.getEntities(player, new AABB(targetVec.x - 2, targetVec.y - 2, targetVec.z - 2,

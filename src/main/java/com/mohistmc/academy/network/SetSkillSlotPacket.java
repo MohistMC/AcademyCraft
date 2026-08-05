@@ -13,8 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
- * @author Mgazul
- * @date 2026/5/30 22:31
+ * 客户端→服务端：设置技能槽位。
  */
 public record SetSkillSlotPacket(int presetIndex, int slotIndex, String skillId) implements CustomPacketPayload {
 

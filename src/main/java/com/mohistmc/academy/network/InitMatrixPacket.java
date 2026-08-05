@@ -16,8 +16,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * 客户端→服务端：初始化矩阵网络。
- *
- * @author Mgazul
  */
 public record InitMatrixPacket(BlockPos pos, String ssid, String password) implements CustomPacketPayload {
 
@@ -58,7 +56,6 @@ public record InitMatrixPacket(BlockPos pos, String ssid, String password) imple
                     matrix.applyCoreLevel(0); // 默认基础核心
                     matrix.setInitialized(true);
 
-                    // 创建无线网络
                     boolean created = WirelessSystem.createNetwork(level, matrix, packet.ssid(), packet.password());
                     if (created) {
                         player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§a矩阵初始化成功！网络: " + packet.ssid()));

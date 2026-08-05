@@ -1,0 +1,11 @@
+{
+  "type": "academy:metal_forming",
+  "mode": "etch",
+  "input": {
+    "item": "academy:data_chip"
+  },
+  "output": {
+    "count": 1,
+    "id": "academy:calc_chip"
+  }
+}

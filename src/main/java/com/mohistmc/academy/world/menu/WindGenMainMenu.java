@@ -11,7 +11,7 @@ public class WindGenMainMenu extends AcademyMenu {
     public WindGenMainMenu(int windowId, Inventory inv, FriendlyByteBuf data) {
         super(AcademyMenus.WIND_MAIN_MENU.get(), windowId, inv, data, true);
 
-        addAcademySlot(new Slot(container, 0, 80, 0) {
+        addAcademySlot(new Slot(container, 0, 80, 9) {
             @Override
             public boolean mayPlace(ItemStack item) {
                 return item.is(AcademyItems.WINDGEN_FAN.get());

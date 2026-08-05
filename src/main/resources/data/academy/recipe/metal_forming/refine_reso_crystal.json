@@ -1,0 +1,11 @@
+{
+  "type": "academy:metal_forming",
+  "mode": "refine",
+  "input": {
+    "item": "academy:reso_ore"
+  },
+  "output": {
+    "count": 3,
+    "id": "academy:reso_crystal"
+  }
+}

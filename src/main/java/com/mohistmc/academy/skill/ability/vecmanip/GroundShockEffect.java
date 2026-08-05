@@ -21,17 +21,7 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 
-/**
- * 地面冲击 —— 向地面释放冲击波，破坏地形并伤害敌人
- * <p>
- * 参考旧代码 Groundshock.scala：
- * - 必须站在地面上才能释放
- * - 消耗能量预算破坏/转化前方扇形区域方块
- * - 石头变圆石，草变泥土等
- * - 熟练度=1时破坏大范围弱方块
- *
- * @author Mgazul
- */
+/** 地面冲击 —— 向地面释放冲击波，破坏地形并伤害敌人 */
 public class GroundShockEffect implements ChargingSkillEffect {
 
     private static final int MIN_TICKS = 5;
@@ -113,7 +103,6 @@ public class GroundShockEffect implements ChargingSkillEffect {
 
                 if (state.isAir()) continue;
 
-                // 方块转化
                 if (state.is(Blocks.STONE)) {
                     level.setBlockAndUpdate(pos, Blocks.COBBLESTONE.defaultBlockState());
                     energy -= 0.4;
@@ -126,7 +115,6 @@ public class GroundShockEffect implements ChargingSkillEffect {
                     energy -= 0.5;
                 }
 
-                // 概率破坏方块
                 if (level.random.nextDouble() < groundBreakProb) {
                     BlockEvent.BreakEvent breakEvent = new BlockEvent.BreakEvent(level, pos, state, player);
                     NeoForge.EVENT_BUS.post(breakEvent);
@@ -135,7 +123,6 @@ public class GroundShockEffect implements ChargingSkillEffect {
                     }
                 }
 
-                // 伤害实体
                 AABB aabb = new AABB(pos.getX() - 0.2, pos.getY() - 0.2, pos.getZ() - 0.2,
                         pos.getX() + 1.2, pos.getY() + 2.2, pos.getZ() + 1.2);
                 for (Entity e : level.getEntities(player, aabb, Entity::isAlive)) {
@@ -149,7 +136,6 @@ public class GroundShockEffect implements ChargingSkillEffect {
                     }
                 }
 
-                // 粒子
                 EffectHelper.windBurst(level, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 3, 0.3);
             }
         }

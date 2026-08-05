@@ -32,12 +32,10 @@ public class SolarGenGui extends AcademyBaseUI<SolarGenMenu> {
 
     public SolarGenGui(SolarGenMenu menu, Inventory inv, Component title) {
         super(menu, inv, title, WirelessState.WIFI);
-        setRenderEnergyTree(true);
     }
 
     @Override
     protected void renderLabels(@NotNull GuiGraphics p_97808_, int p_97809_, int p_97810_) {
-        //TODO: nothing
     }
 
     @Override
@@ -50,11 +48,13 @@ public class SolarGenGui extends AcademyBaseUI<SolarGenMenu> {
         renderWeatherIcon(graphics);
 
         RenderSystem.disableBlend();
+
+        // 右侧能量信息面板
+        renderEnergyInfoPanel(graphics);
     }
 
     /**
      * 根据当前世界的天气和时间渲染对应的状态图标
-     * effect_solar.png 包含3个垂直排列的图标：白天(0)、夜晚(1)、雨天(2)
      */
     private void renderWeatherIcon(GuiGraphics graphics) {
         if (this.inv == null || this.menu.pos == null) return;

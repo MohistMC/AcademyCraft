@@ -4,6 +4,7 @@ import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.client.block.gui.DevAdvancedGui;
 import com.mohistmc.academy.client.block.gui.ImagFusorGui;
 import com.mohistmc.academy.client.block.gui.MatrixGui;
+import com.mohistmc.academy.client.block.gui.MetalFomerGui;
 import com.mohistmc.academy.client.block.gui.NodeAdvancedGui;
 import com.mohistmc.academy.client.block.gui.NodeBasicGui;
 import com.mohistmc.academy.client.block.gui.NodeStandardGui;
@@ -25,8 +26,6 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 /**
  * 通用事件监听器
- *
- * @author lliiooll
  */
 @EventBusSubscriber(modid = AcademyCraft.MODID)
 public class CommonListener {
@@ -53,6 +52,7 @@ public class CommonListener {
         event.register(AcademyMenus.SOLAR_GEN_MENU.get(), SolarGenGui::new);
         event.register(AcademyMenus.PHASE_GEN_MENU.get(), PhaseGenGui::new);
         event.register(AcademyMenus.MATRIX_MENU.get(), MatrixGui::new);
+        event.register(AcademyMenus.METAL_FORMER_MENU.get(), MetalFomerGui::new);
         event.register(AcademyMenus.DEV_ADVANCED_MENU.get(), DevAdvancedGui::new);
     }
 

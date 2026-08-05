@@ -9,16 +9,13 @@ import net.minecraft.world.item.ItemStack;
 
 /**
  * 无线虚能矩阵菜单 —— 矩阵核心槽 + 约束金属板槽。
- *
- * @author Mgazul
  */
 public class MatrixMenu extends AcademyMenu {
 
     public MatrixMenu(int windowId, Inventory inv, FriendlyByteBuf data) {
         super(AcademyMenus.MATRIX_MENU.get(), windowId, inv, data, true);
 
-        // 矩阵核心槽 (位置索引0)
-        addAcademySlot(new Slot(container, 0, 44, 20) {
+        addAcademySlot(new Slot(container, 0, 80, 36) {
             @Override
             public boolean mayPlace(ItemStack item) {
                 return item.is(AcademyItems.MAT_CORE_0.get())
@@ -27,11 +24,9 @@ public class MatrixMenu extends AcademyMenu {
             }
         });
 
-        // 约束金属板槽位 (位置索引1-3，需要3块)
+        int[][] platePos = {{55, 60}, {106, 60}, {80, 11}};
         for (int i = 0; i < 3; i++) {
-            int slotIndex = i;
-            int yPos = 20 + i * 18;
-            addAcademySlot(new Slot(container, 1 + i, 116, yPos) {
+            addAcademySlot(new Slot(container, 1 + i, platePos[i][0], platePos[i][1]) {
                 @Override
                 public boolean mayPlace(ItemStack item) {
                     return item.is(AcademyItems.CONSTRAINT_PLATE.get());

@@ -47,7 +47,6 @@ public class PsychoSlamEffect implements SkillEffect {
 
         for (Entity e : level.getEntities(player, area, Entity::isAlive)) {
             if (e instanceof LivingEntity living && e != player) {
-                // 将敌人拉向地面
                 living.setDeltaMovement(0, -2.0, 0);
                 living.hurtMarked = true;
                 living.hurt(player.damageSources().playerAttack(player), damage);

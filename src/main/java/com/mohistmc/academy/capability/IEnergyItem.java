@@ -3,8 +3,7 @@ package com.mohistmc.academy.capability;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * @author Mgazul
- * @date 2026/6/5 02:14
+ * 可存储能量的物品接口
  */
 public interface IEnergyItem {
     int getEnergyStored(ItemStack stack);

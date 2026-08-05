@@ -51,7 +51,6 @@ public abstract class BaseNodeGui<T extends BaseNodeMenu> extends AcademyBaseUI<
                 176, 75,
                 this.width, this.height, stack, EFFECT_NODE,
                 75 * animIndex, 0, 176, 750);
-        //TODO: 检测是否链接矩阵，播放动画
         RenderSystem.disableBlend();
     }
 }

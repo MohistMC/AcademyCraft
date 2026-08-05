@@ -21,9 +21,6 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * 高级能力开发机 —— 控制台界面。
- * 输入 "learn" 学习技能，输入 "reset" 重置能力。
- *
- * @author Mgazul
  */
 @OnlyIn(Dist.CLIENT)
 public class DevAdvancedGui extends AcademyBaseUI<DevAdvancedMenu> {
@@ -35,7 +32,6 @@ public class DevAdvancedGui extends AcademyBaseUI<DevAdvancedMenu> {
 
     public DevAdvancedGui(DevAdvancedMenu menu, Inventory inv, Component title) {
         super(menu, inv, title, WirelessState.DEFAULT);
-        setRenderEnergyTree(true);
     }
 
     @Override
@@ -67,11 +63,9 @@ public class DevAdvancedGui extends AcademyBaseUI<DevAdvancedMenu> {
         // 控制台内容
         BlockEntity be = this.inv.player.level().getBlockEntity(this.menu.pos);
         if (be instanceof DevAdvancedBlockEntity dev) {
-            // 显示状态信息
             String status = dev.isReadyForReset() ? "§a[就绪] 可以重置" : "§e[待机] 放入线圈和因子";
             graphics.drawString(this.font, status, consoleX + 4, consoleY + 4, 0xFFcccccc);
 
-            // 显示物品状态
             boolean hasCoil = dev.hasCoil();
             boolean hasFactor = dev.hasFactor();
             String coilStatus = hasCoil ? "§a✓ 线圈" : "§c✗ 线圈";
@@ -89,6 +83,9 @@ public class DevAdvancedGui extends AcademyBaseUI<DevAdvancedMenu> {
         graphics.drawString(this.font, "§7输入 'learn' 学习技能 | 'reset' 重置能力", consoleX + 4, inputY + 14, 0xFF888888);
 
         RenderSystem.disableBlend();
+
+        // 右侧能量信息面板
+        renderEnergyInfoPanel(graphics);
     }
 
     @Override

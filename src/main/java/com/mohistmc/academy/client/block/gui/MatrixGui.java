@@ -32,7 +32,6 @@ public class MatrixGui extends AcademyBaseUI<MatrixMenu> {
 
     public MatrixGui(MatrixMenu menu, Inventory inv, Component title) {
         super(menu, inv, title, WirelessState.DEFAULT);
-        setRenderEnergyTree(false);
     }
 
     @Override
@@ -108,7 +107,6 @@ public class MatrixGui extends AcademyBaseUI<MatrixMenu> {
             int btnX = guiLeft + 62;
             int btnY = guiTop + 100;
             if (mouseX >= btnX && mouseX <= btnX + 50 && mouseY >= btnY && mouseY <= btnY + 18) {
-                // 发送初始化数据包
                 PacketDistributor.sendToServer(new InitMatrixPacket(
                         this.menu.pos,
                         ssidInput.isEmpty() ? "Unnamed" : ssidInput.toString(),

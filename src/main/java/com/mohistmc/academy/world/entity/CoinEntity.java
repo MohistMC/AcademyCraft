@@ -14,10 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-/**
- * @author Mgazul
- * @date 2025/11/13 21:41
- */
 public class CoinEntity extends Entity {
     private static final EntityDataAccessor<Float> SPIN_SPEED =
             SynchedEntityData.defineId(CoinEntity.class, EntityDataSerializers.FLOAT);

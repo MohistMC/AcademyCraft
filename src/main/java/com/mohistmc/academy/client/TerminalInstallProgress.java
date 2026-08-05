@@ -8,10 +8,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 
-/**
- * @author Mgazul
- * @date 2026/6/2 03:47
- */
 @EventBusSubscriber(modid = AcademyCraft.MODID, value = Dist.CLIENT)
 public class TerminalInstallProgress {
     private static boolean installing = false;

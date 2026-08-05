@@ -36,7 +36,6 @@ public class AeroSeparatorEffect implements SkillEffect {
         ServerLevel level = player.serverLevel();
         Vec3 targetPos = player.getEyePosition().add(player.getLookAngle().scale(8.0));
 
-        // 真空粒子效果
         for (int i = 0; i < 60; i++) {
             double angle = Math.random() * Math.PI * 2;
             double dist = Math.random() * radius;
@@ -55,7 +54,6 @@ public class AeroSeparatorEffect implements SkillEffect {
 
         for (Entity e : level.getEntities(player, area, Entity::isAlive)) {
             if (e instanceof LivingEntity living && e != player) {
-                // 将敌人拉向真空中心
                 Vec3 pull = new Vec3(
                         targetPos.x - e.getX(),
                         targetPos.y - e.getY(),
@@ -64,7 +62,6 @@ public class AeroSeparatorEffect implements SkillEffect {
                 living.setDeltaMovement(living.getDeltaMovement().add(pull));
                 living.hurtMarked = true;
 
-                // 窒息伤害
                 living.hurt(player.damageSources().playerAttack(player), damage);
                 living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 2));
                 living.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 60, 1));

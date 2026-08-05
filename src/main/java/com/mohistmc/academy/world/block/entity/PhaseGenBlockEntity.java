@@ -11,9 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * 虚相位能量发生机 —— 消耗 PhaseLiquid 单元产生 IF 能量。
- * 实现 IWirelessGenerator 向无线能源网络供电。
- *
+ * 虚相位能量发生机 —— 消耗 PhaseLiquid 单元产生 IF 能量,实现 IWirelessGenerator 向无线能源网络供电。
  * @author Mgazul
  */
 public class PhaseGenBlockEntity extends AcademyContainerBlockEntity implements IWirelessGenerator {
@@ -44,7 +42,6 @@ public class PhaseGenBlockEntity extends AcademyContainerBlockEntity implements 
         ItemStack input = getItems().get(0);
         ItemStack output = getItems().get(1);
 
-        // 检查是否有 PhaseLiquid 单元可消耗
         if (!input.isEmpty() && input.is(AcademyItems.MATTER_UNIT_PHASE_LIQUID.get())) {
             boolean canOutput = output.isEmpty()
                     || (output.is(AcademyItems.MATTER_UNIT_NONE.get())

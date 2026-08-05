@@ -5,10 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.resources.ResourceLocation;
 
-/**
- * @author Mgazul
- * @date 2026/5/30 20:26
- */
 public class Skill {
     private final String id;
     private final AbilityCategory category;

@@ -179,7 +179,7 @@ public class DataTerminalGui extends Screen {
                     && mouseY >= y && mouseY < y + APP_ICON_SIZE;
             if (isHovered) hoveredApp = i;
 
-            // 终端选择音效（对应旧代码 terminal.select）
+            // 悬停选择音效
             if (isHovered && hoveredApp != prevHoveredApp) {
                 ClientSoundUtils.playClient(AcademySounds.TERMINAL_SELECT, SoundSource.MASTER, 0.2f, 1.0f);
             }
@@ -259,7 +259,7 @@ public class DataTerminalGui extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (hoveredApp >= 0 && button == 0) {
-            // 终端确认音效（对应旧代码 terminal.confirm）
+            // 终端确认音效
             ClientSoundUtils.playClient(AcademySounds.TERMINAL_CONFIRM, SoundSource.MASTER, 0.5f, 1.0f);
             openApp(appEntries.get(hoveredApp).appId);
             return true;

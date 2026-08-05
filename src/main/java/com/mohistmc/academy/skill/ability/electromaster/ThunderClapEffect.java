@@ -101,13 +101,13 @@ public class ThunderClapEffect implements ChargingSkillEffect {
 
     @Override
     public void onChargingAbort(ServerPlayer player, PlayerAbilityData data) {
-        // 蓄力取消，不执行效果
     }
 
     @Override
     public void execute(ServerPlayer player, PlayerAbilityData data) {
         // 蓄力技能通过 Charging 接口执行，此处留空
     }
+
 
     private Vec3 getTargetPos(ServerPlayer player) {
         BlockHitResult hit = (BlockHitResult) player.pick(40.0, 0, false);

@@ -17,10 +17,6 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author Mgazul
- * @date 2025/11/13 21:46
- */
 public class CoinRenderer extends EntityRenderer<CoinEntity> {
     private static final ResourceLocation COIN_TEXTURE =
             ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/item/coin_front.png");
@@ -55,7 +51,7 @@ public class CoinRenderer extends EntityRenderer<CoinEntity> {
 
         // 使用物品渲染器渲染硬币物品
         Minecraft.getInstance().getItemRenderer().renderStatic(
-                new ItemStack(AcademyItems.COIN.get()), // 替换为实际的硬币物品
+                new ItemStack(AcademyItems.COIN.get()),
                 ItemDisplayContext.GROUND,
                 packedLight,
                 OverlayTexture.NO_OVERLAY,

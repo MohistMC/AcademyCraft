@@ -12,10 +12,6 @@ import net.minecraft.util.RandomSource;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
-/**
- * @author Mgazul
- * @date 2026/5/31 03:36
- */
 @OnlyIn(Dist.CLIENT)
 public class MediaPlayerManager {
 

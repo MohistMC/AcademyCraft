@@ -15,28 +15,7 @@ import org.joml.Matrix4f;
 
 public class RenderUtils {
     /**
-     * 来自newbing：
-     *
-     * @param strack    PoseStack类型，用于存储渲染状态的矩阵堆栈。
-     * @param consumer  VertexConsumer类型，用于渲染顶点数据。
-     * @param p_112158_ float类型，表示第一个四边形的左上角x坐标。
-     * @param p_112159_ float类型，表示第一个四边形的左上角y坐标。
-     * @param p_112160_ float类型，表示第一个四边形的左上角z坐标。
-     * @param p_112161_ float类型，表示第一个四边形的右下角x坐标。
-     * @param p_112162_ int类型，表示第一个四边形的纹理左上角u坐标。
-     * @param p_112163_ int类型，表示第一个四边形的纹理左上角v坐标。
-     * @param p_112164_ float类型，表示第二个四边形的左上角x坐标。
-     * @param p_112165_ float类型，表示第二个四边形的左上角y坐标。
-     * @param p_112166_ float类型，表示第二个四边形的左上角z坐标。
-     * @param p_112167_ float类型，表示第二个四边形的右下角x坐标。
-     * @param p_112168_ int类型，表示第二个四边形的纹理左上角u坐标。
-     * @param p_112169_ int类型，表示第二个四边形的纹理左上角v坐标。
-     * @param p_112170_ float类型，表示第三个四边形的左上角x坐标。
-     * @param p_112171_ float类型，表示第三个四边形的左上角y坐标。
-     * @param p_112172_ float类型，表示第三个四边形的左上角z坐标。
-     * @param p_112173_ float类型，表示第三个四边形的右下角x坐标。
-     * @param p_112174_ int类型，表示第三个四边形的纹理左上角u坐标。
-     * @param p_112175_ int类型，表示第三个四边形的纹理左上角v坐标。
+     * 渲染由四个四边形组合成的部件
      */
     public static void renderPart(PoseStack strack, VertexConsumer consumer, float p_112158_, float p_112159_, float p_112160_, float p_112161_, int p_112162_, int p_112163_, float p_112164_, float p_112165_, float p_112166_, float p_112167_, float p_112168_, float p_112169_, float p_112170_, float p_112171_, float p_112172_, float p_112173_, float p_112174_, float p_112175_) {
         PoseStack.Pose pose = strack.last();

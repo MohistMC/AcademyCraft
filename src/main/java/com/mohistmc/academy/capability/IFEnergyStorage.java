@@ -3,8 +3,7 @@ package com.mohistmc.academy.capability;
 import net.minecraft.nbt.CompoundTag;
 
 /**
- * @author Mgazul
- * @date 2026/6/2 04:28
+ * 方块能量存储接口
  */
 public interface IFEnergyStorage {
 

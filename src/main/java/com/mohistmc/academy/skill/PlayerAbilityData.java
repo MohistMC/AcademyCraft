@@ -223,7 +223,6 @@ public class PlayerAbilityData {
         }
         addProficiency(skill.getId(), 0.002f);
 
-        // 设置技能冷却
         if (skill.getEffect() != null) {
             int cd = skill.getEffect().getCooldownTicks(getProficiency(skill.getId()));
             setCooldown(skill.getId(), cd);
@@ -334,7 +333,6 @@ public class PlayerAbilityData {
         currentCp = Math.min(currentCp + cpRegenRate * overloadFactor, maxCp);
         currentOverload = Math.max(currentOverload - 0.5f, 0);
 
-        // 冷却递减
         cooldowns.entrySet().removeIf(entry -> {
             int remaining = entry.getValue() - 1;
             if (remaining <= 0) return true;
@@ -435,10 +433,8 @@ public class PlayerAbilityData {
         }
         tag.put("loaded_media", mediaList);
 
-        // 保存开发者模式状态
         tag.putBoolean("dev_mode", devMode);
 
-        // 冷却数据
         CompoundTag cdTag = new CompoundTag();
         for (var entry : cooldowns.entrySet()) {
             cdTag.putInt(entry.getKey(), entry.getValue());
@@ -519,12 +515,10 @@ public class PlayerAbilityData {
             }
         }
 
-        // 读取开发者模式状态
         if (tag.contains("dev_mode")) {
             data.setDevMode(tag.getBoolean("dev_mode"));
         }
 
-        // 读取冷却
         if (tag.contains("cooldowns")) {
             CompoundTag cdTag = tag.getCompound("cooldowns");
             for (String key : cdTag.getAllKeys()) {

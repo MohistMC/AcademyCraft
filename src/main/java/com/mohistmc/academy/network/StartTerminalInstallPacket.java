@@ -9,8 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
- * @author Mgazul
- * @date 2026/6/2 03:47
+ * 服务端→客户端：开始终端安装流程。
  */
 public record StartTerminalInstallPacket() implements CustomPacketPayload {
 

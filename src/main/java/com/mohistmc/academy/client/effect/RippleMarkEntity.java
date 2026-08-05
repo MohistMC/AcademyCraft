@@ -18,11 +18,6 @@ import org.joml.Matrix4f;
 
 /**
  * 波纹标记实体 —— 地面上的脉冲波纹标记。
- * 替代旧代码 EntityRippleMark + RippleMarkRender。
- * <p>
- * 由 ThunderClap 使用，显示蓄力目标位置。
- *
- * @author Mgazul
  */
 public class RippleMarkEntity extends Entity {
 

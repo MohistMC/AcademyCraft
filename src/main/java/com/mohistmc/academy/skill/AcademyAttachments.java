@@ -7,10 +7,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 
-/**
- * @author Mgazul
- * @date 2026/5/30 20:29
- */
 public class AcademyAttachments {
 
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES =

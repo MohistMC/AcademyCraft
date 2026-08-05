@@ -31,8 +31,6 @@ import org.slf4j.Logger;
 /**
  * 维度级无线能源世界数据。
  * 存储所有 WirelessNet 和 NodeConn，每 tick 更新。
- *
- * @author WeAthFolD (original), Mgazul (port)
  */
 public class WiWorldData extends SavedData {
 

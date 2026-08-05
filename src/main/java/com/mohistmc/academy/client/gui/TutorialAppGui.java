@@ -13,7 +13,6 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 /**
  * GitHub 风格教程 GUI。
- * 支持完整 Markdown 渲染：标题、粗体/斜体/删除线、代码块、列表、引用、图片、表格。
  */
 @OnlyIn(Dist.CLIENT)
 public class TutorialAppGui extends AcademyScreen {
@@ -254,7 +253,6 @@ public class TutorialAppGui extends AcademyScreen {
         int imgX = x + (w - maxW) / 2;
         ResourceLocation img = line.image() != null ? line.image() : IMG_PLACEHOLDER;
 
-        // Border + background
         g.fill(imgX - 1, y - 1, imgX + maxW + 1, y + imgH + 1, AcademyColors.BORDER_ACTIVE);
         g.fill(imgX, y, imgX + maxW, y + imgH, 0xFF1a2a3e);
 

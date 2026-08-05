@@ -21,16 +21,7 @@ import net.minecraft.world.phys.Vec3;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 
-/**
- * 雷击之枪 —— 对视线方向发射闪电，命中目标+AOE伤害
- * <p>
- * 参考旧代码 ThunderBolt.scala：
- * - 射线追踪找目标（RANGE=20）
- * - 主目标伤害 + 落点周围 AOE（AOE_RANGE=8）
- * - 熟练度 > 0.2 时有概率附加减速效果
- *
- * @author Mgazul
- */
+/** 雷击之枪 —— 对视线方向发射闪电，命中目标+AOE伤害 */
 public class ThunderBoltEffect implements SkillEffect {
 
     private static final double RANGE = 20.0;
@@ -49,14 +40,11 @@ public class ThunderBoltEffect implements SkillEffect {
         float damage = lerpf(10, 25, proficiency);
         float aoeDamage = lerpf(6, 15, proficiency);
 
-        // 射线追踪找目标
         Vec3 eyePos = player.getEyePosition();
         Vec3 lookVec = player.getLookAngle();
         Vec3 endPos = eyePos.add(lookVec.scale(RANGE));
 
-        // 先检查实体命中
         EntityHitResult entityHit = rayTraceEntities(player, eyePos, endPos);
-        // 检查方块命中
         BlockHitResult blockHit = (BlockHitResult) player.pick(RANGE, 0, false);
 
         Vec3 impactPoint;
@@ -67,7 +55,6 @@ public class ThunderBoltEffect implements SkillEffect {
             double entityDist = eyePos.distanceTo(entityHit.getLocation());
             double blockDist = eyePos.distanceTo(blockHit.getLocation());
             if (entityDist < blockDist) {
-                // 命中实体
                 targetEntity = entityHit.getEntity();
                 impactPoint = targetEntity.getEyePosition();
                 hitEntity = true;
@@ -80,20 +67,16 @@ public class ThunderBoltEffect implements SkillEffect {
             impactPoint = blockHit.getLocation();
         }
 
-        // 主目标伤害
         if (hitEntity && targetEntity != null && targetEntity.isAlive()) {
             targetEntity.hurt(player.damageSources().lightningBolt(), damage);
 
-            // 减速效果（熟练度 > 0.2 且 80% 概率）
             if (proficiency > 0.2 && Math.random() < 0.8 && targetEntity instanceof LivingEntity living) {
                 living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 3));
             }
 
-            // 粒子效果
             EffectHelper.arcSpark(level, targetEntity.getX(), targetEntity.getY() + targetEntity.getBbHeight() / 2, targetEntity.getZ(), 20, 0.5);
         }
 
-        // AOE 伤害（落点周围）
         List<Entity> aoes = level.getEntities(player,
                 new AABB(impactPoint.x - AOE_RANGE, impactPoint.y - AOE_RANGE, impactPoint.z - AOE_RANGE,
                         impactPoint.x + AOE_RANGE, impactPoint.y + AOE_RANGE, impactPoint.z + AOE_RANGE),
@@ -114,7 +97,6 @@ public class ThunderBoltEffect implements SkillEffect {
             }
         }
 
-        // 音效
         AcademySounds.playSound(level, impactPoint.x, impactPoint.y, impactPoint.z,
                 AcademySounds.EM_ARC_STRONG, SoundSource.PLAYERS, 0.6f, 1.0f);
 
@@ -138,7 +120,6 @@ public class ThunderBoltEffect implements SkillEffect {
             level.addFreshEntity(aoeArc);
         }
 
-        // 熟练度
         boolean effective = hitEntity || !aoes.isEmpty();
         data.addProficiency(getId(), effective ? 0.005f : 0.003f);
     }

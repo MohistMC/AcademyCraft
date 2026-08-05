@@ -16,11 +16,8 @@ public class WindGenBaseBlockEntity extends AcademyContainerBlockEntity
     private boolean validBlock = false;
     private boolean validMiddle = false;
 
-    // 风力发电基础速率
     private static final int GENERATION_RATE = 1;
-    // 内部存储上限
     private static final int MAX_STORAGE = 20000;
-    // 当前存储的能量
     private float storedEnergy = 0.0f;
 
     public WindGenBaseBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
@@ -38,7 +35,6 @@ public class WindGenBaseBlockEntity extends AcademyContainerBlockEntity
             // 所处海拔越高，产生能量越多：每超出基础高度1格，发电速率+1
             int generationRate = GENERATION_RATE + Math.max(0, mainHeight - 5);
 
-            // 累积能量到存储池
             storedEnergy = Math.min(MAX_STORAGE, storedEnergy + generationRate);
         }
 

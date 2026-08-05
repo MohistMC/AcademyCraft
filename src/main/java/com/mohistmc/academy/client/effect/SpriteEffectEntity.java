@@ -20,20 +20,6 @@ import org.joml.Matrix4f;
 
 /**
  * 通用粒子精灵特效实体 —— 使用自定义纹理渲染单个 billboard 粒子。
- * <p>
- * 替代所有原版 ParticleTypes 调用，可使用项目内的所有自定义纹理：
- * <ul>
- *   <li>effects/glow_circle.png — 光环/爆炸</li>
- *   <li>effects/glow_line.png — 光线/电弧</li>
- *   <li>effects/md_particle.png — 熔毁粒子</li>
- *   <li>effects/blood_splash/*.png — 血液飞溅</li>
- *   <li>effects/tp_particle.png — 传送粒子</li>
- *   <li>effects/smokes.png — 烟雾</li>
- *   <li>effects/ripple.png — 波纹</li>
- *   <li>effect 动画序列 (arc_burst, arcs, arcw, formula 等)</li>
- * </ul>
- *
- * @author Mgazul
  */
 public class SpriteEffectEntity extends Entity {
 

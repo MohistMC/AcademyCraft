@@ -12,16 +12,7 @@ import net.minecraft.world.effect.MobEffects;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 
-/**
- * 生物电强化 —— 蓄力后获得多种药水效果
- * <p>
- * 参考旧代码 BodyIntensify.scala：
- * - 蓄力时间越长，buff 强度越高，持续时间越久
- * - 概率性获取 buff（熟练度越高概率越大）
- * - 有饥饿 debuff
- *
- * @author Mgazul
- */
+/** 生物电强化 —— 蓄力后获得多种药水效果 */
 public class BodyIntensifyEffect implements ChargingSkillEffect {
 
     private static final int MIN_TICKS = 10;
@@ -58,7 +49,6 @@ public class BodyIntensifyEffect implements ChargingSkillEffect {
         if (!data.isDevMode()) {
             data.addOverload(overload);
         }
-        // 播放强化循环音效
         AcademySounds.playSound(player, AcademySounds.EM_INTENSIFY_LOOP, 0.5f, 1.0f);
     }
 
@@ -86,22 +76,19 @@ public class BodyIntensifyEffect implements ChargingSkillEffect {
     @Override
     public void onChargingRelease(ServerPlayer player, PlayerAbilityData data, int ticks) {
         if (ticks < MIN_TICKS) {
-            return; // 蓄力不足
+            return;
         }
 
         float exp = data.getProficiency(getId());
         int effectiveTicks = Math.min(ticks, MAX_TICKS);
 
-        // 计算概率和 buff 时长
         double probability = (effectiveTicks - 10.0) / 18.0;
         int buffTime = (int) ((1 + (int) (Math.random() * 2)) * effectiveTicks * lerpf(1.5f, 2.5f, exp));
         int buffLevel = (int) Math.floor(probability);
 
-        // 随机排列效果列表
         List<MobEffectInstance> shuffled = new ArrayList<>(BASE_EFFECTS);
         Collections.shuffle(shuffled);
 
-        // 概率性应用 buff
         double p = probability;
         int idx = 0;
         while (p > 0 && idx < shuffled.size()) {
@@ -125,13 +112,11 @@ public class BodyIntensifyEffect implements ChargingSkillEffect {
         if (!data.isDevMode()) {
             data.addProficiency(getId(), 0.01f);
         }
-        // 播放激活音效
         AcademySounds.playSound(player, AcademySounds.EM_INTENSIFY_ACTIVATE, 0.5f, 1.0f);
     }
 
     @Override
     public void onChargingAbort(ServerPlayer player, PlayerAbilityData data) {
-        // 蓄力取消，不产生效果
     }
 
     @Override

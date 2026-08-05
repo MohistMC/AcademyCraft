@@ -22,8 +22,6 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 /**
  * 技能 HUD — 参照旧版 KeyHintUI，仅显示按键+图标+冷却遮罩。
- *
- * @author Mgazul
  */
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(modid = AcademyCraft.MODID, value = Dist.CLIENT)
@@ -98,7 +96,6 @@ public class AbilityHudOverlay {
                         // 遮罩从顶部向下覆盖，高度 = 剩余冷却比例
                         int cdH = (int) (ICON_SIZE * cdProgress);
                         if (cdH > 0) {
-                            // 从顶部 (iy) 向下覆盖 cdH 高度
                             g.fill(x, iy, x + ICON_SIZE, iy + cdH, 0xAA000000);
                         }
                     }

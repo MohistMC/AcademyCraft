@@ -1,0 +1,11 @@
+{
+  "type": "academy:metal_forming",
+  "mode": "incise",
+  "input": {
+    "item": "academy:wafer"
+  },
+  "output": {
+    "count": 4,
+    "id": "academy:imag_silicon_piece"
+  }
+}

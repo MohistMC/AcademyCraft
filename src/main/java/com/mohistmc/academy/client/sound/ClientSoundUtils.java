@@ -10,8 +10,6 @@ import net.minecraft.util.RandomSource;
 
 /**
  * 客户端音效播放工具（仅用于无位置的 UI 音效）。
- *
- * @author Mgazul
  */
 public class ClientSoundUtils {
 

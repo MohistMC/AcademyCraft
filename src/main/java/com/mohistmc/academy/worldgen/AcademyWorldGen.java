@@ -17,9 +17,6 @@ import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 
 /**
  * AcademyCraft 世界生成 —— 矿石和 PhaseLiquid 湖。
- * 使用 NeoForge 1.21.1 的 BiomeModifier / datapack 方式实现矿物生成。
- *
- * @author Mgazul
  */
 @EventBusSubscriber(modid = AcademyCraft.MODID)
 public final class AcademyWorldGen {

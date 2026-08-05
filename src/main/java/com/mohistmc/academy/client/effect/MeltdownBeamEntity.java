@@ -11,9 +11,6 @@ import net.minecraft.world.phys.Vec3;
 
 /**
  * 熔毁光束实体 — 客户端渲染的绿色高能射线。
- * 用于 MeltdownerEffect 的视觉表现。
- *
- * @author Mgazul
  */
 public class MeltdownBeamEntity extends Entity {
 

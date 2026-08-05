@@ -18,17 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 
-/**
- * 矿物探测 —— 致盲玩家，高亮显示周围矿物位置
- * <p>
- * 参考旧代码 MineDetect.scala：
- * - 失明效果持续 100 tick
- * - 探测范围随熟练度增加（15~30）
- * - 熟练度 > 0.5 且等级 >= 4 时显示矿物等级颜色
- * - 最多探测 8400 个方块（性能限制）
- *
- * @author Mgazul
- */
+/** 矿物探测 —— 致盲玩家，高亮显示周围矿物位置 */
 public class MineDetectEffect implements SkillEffect {
 
     private static final int BLIND_TIME = 100;
@@ -45,15 +35,12 @@ public class MineDetectEffect implements SkillEffect {
         int range = (int) lerpf(15, 30, proficiency);
         boolean advanced = proficiency > 0.5f && data.getPlayerLevel() >= 4;
 
-        // 致盲效果
         player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, BLIND_TIME, 0));
 
-        // 播放音效
         ServerLevel level = player.serverLevel();
         AcademySounds.playSound(level, player.getX(), player.getY(), player.getZ(),
                 AcademySounds.EM_MINEDETECT, SoundSource.PLAYERS, 0.5f, 1.0f);
 
-        // 扫描周围矿物
         BlockPos playerPos = player.blockPosition();
         List<OreHighlightEntity> spawnedOres = new ArrayList<>();
 

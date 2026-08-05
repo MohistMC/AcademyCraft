@@ -5,10 +5,6 @@ import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 
-/**
- * @author Mgazul
- * @date 2026/6/2 17:02
- */
 public final class GuiUtils {
     private GuiUtils() {}
 

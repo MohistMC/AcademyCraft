@@ -1,6 +1,8 @@
 package com.mohistmc.academy;
 
 import com.mohistmc.academy.config.ACConfig;
+import com.mohistmc.academy.crafting.AcademyRecipeSerializers;
+import com.mohistmc.academy.crafting.AcademyRecipeTypes;
 import com.mohistmc.academy.crafting.MFIFRecipes;
 import com.mohistmc.academy.listener.ServerListener;
 import com.mohistmc.academy.network.ConnectToNodePacket;
@@ -8,6 +10,7 @@ import com.mohistmc.academy.network.ConsoleCommandPacket;
 import com.mohistmc.academy.network.DisconnectFromNodePacket;
 import com.mohistmc.academy.network.InitMatrixPacket;
 import com.mohistmc.academy.network.LearnSkillPacket;
+import com.mohistmc.academy.network.MetalFormerActionMessage;
 import com.mohistmc.academy.network.NodeConfigPacket;
 import com.mohistmc.academy.network.NodeListSyncPacket;
 import com.mohistmc.academy.network.OpenDevGuiPacket;
@@ -38,6 +41,8 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -60,6 +65,8 @@ public class AcademyCraft {
         AcademyBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         AcademySounds.SOUND_EVENTS.register(modEventBus);
         AcademyAttachments.ATTACHMENT_TYPES.register(modEventBus);
+        AcademyRecipeTypes.RECIPE_TYPES.register(modEventBus);
+        AcademyRecipeSerializers.SERIALIZERS.register(modEventBus);
 
         // 注册配置
         modContainer.registerConfig(ModConfig.Type.SERVER, ACConfig.Server.SPEC);
@@ -67,8 +74,18 @@ public class AcademyCraft {
 
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::registerPayloads);
+        modEventBus.addListener(this::registerCapabilities);
 
         NeoForge.EVENT_BUS.register(new ServerListener());
+    }
+
+    private void registerCapabilities(final RegisterCapabilitiesEvent event) {
+        // 金属成型机：侧面自动输入输出
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                AcademyBlockEntities.METAL_FORMER.get(),
+                (be, side) -> be.getHandlerForSide(side)
+        );
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
@@ -170,6 +187,11 @@ public class AcademyCraft {
                 NodeConfigPacket.TYPE,
                 NodeConfigPacket.STREAM_CODEC,
                 NodeConfigPacket::handle
+        );
+        registrar.playToServer(
+                MetalFormerActionMessage.TYPE,
+                MetalFormerActionMessage.STREAM_CODEC,
+                MetalFormerActionMessage::handle
         );
     }
 }

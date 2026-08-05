@@ -13,28 +13,28 @@ public class ImagFusorMenu extends AcademyMenu {
     public ImagFusorMenu(int windowId, Inventory inv, FriendlyByteBuf data) {
         super(AcademyMenus.IMAG_FUSOR_MENU.get(), windowId, inv, data, true);
 
-        addAcademySlot(new Slot(container, 0, 16, 0) {
+        addAcademySlot(new Slot(container, 0, 15, 10) {
             @Override
             public boolean mayPlace(ItemStack item) {
                 return item.is(AcademyItems.MATTER_UNIT_PHASE_LIQUID.get());
             }
         });
 
-        addAcademySlot(new Slot(container, 1, 148, 0) {
+        addAcademySlot(new Slot(container, 1, 145, 10) {
             @Override
             public boolean mayPlace(ItemStack item) {
                 return false;
             }
         });
 
-        addAcademySlot(new Slot(container, 2, 16, 40) {
+        addAcademySlot(new Slot(container, 2, 15, 49) {
             @Override
             public boolean mayPlace(ItemStack item) {
                 return item.is(AcademyItems.CRYSTAL_LOW.get()) || item.is(AcademyItems.CRYSTAL_NORMAL.get());
             }
         });
 
-        addAcademySlot(new Slot(container, 3, 148, 40) {
+        addAcademySlot(new Slot(container, 3, 145, 49) {
             @Override
             public boolean mayPlace(ItemStack item) {
                 return false;

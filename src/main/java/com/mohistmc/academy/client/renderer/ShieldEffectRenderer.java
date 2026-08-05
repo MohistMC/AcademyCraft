@@ -17,8 +17,6 @@ import org.joml.Matrix4f;
 
 /**
  * 护盾渲染器 — 多层半透明球面，带呼吸动画。
- *
- * @author Mgazul
  */
 public class ShieldEffectRenderer extends EntityRenderer<ShieldEffectEntity> {
 

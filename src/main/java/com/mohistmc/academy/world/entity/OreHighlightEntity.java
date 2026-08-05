@@ -25,9 +25,6 @@ import net.minecraft.world.level.Level;
 
 /**
  * 单个矿物高亮实体 —— 固定在矿石方块位置，渲染一个带颜色着色的纹理立方体后自动消失。
- *
- * @author Mgazul
- * @date 2026/6/9
  */
 public class OreHighlightEntity extends Entity {
 
@@ -157,37 +154,31 @@ public class OreHighlightEntity extends Entity {
 
         private void renderFullCube(VertexConsumer vc, PoseStack.Pose pose,
                                     float r, float g, float b, float a) {
-            // 底面 (y = 0)
             v(vc, pose, 0, 0, 1, 0, 1, r, g, b, a);
             v(vc, pose, 1, 0, 1, 1, 1, r, g, b, a);
             v(vc, pose, 1, 0, 0, 1, 0, r, g, b, a);
             v(vc, pose, 0, 0, 0, 0, 0, r, g, b, a);
 
-            // 顶面 (y = 1)
             v(vc, pose, 0, 1, 0, 0, 0, r, g, b, a);
             v(vc, pose, 1, 1, 0, 1, 0, r, g, b, a);
             v(vc, pose, 1, 1, 1, 1, 1, r, g, b, a);
             v(vc, pose, 0, 1, 1, 0, 1, r, g, b, a);
 
-            // 前面 (z = 1)
             v(vc, pose, 0, 1, 1, 0, 0, r, g, b, a);
             v(vc, pose, 1, 1, 1, 1, 0, r, g, b, a);
             v(vc, pose, 1, 0, 1, 1, 1, r, g, b, a);
             v(vc, pose, 0, 0, 1, 0, 1, r, g, b, a);
 
-            // 后面 (z = 0)
             v(vc, pose, 0, 0, 0, 0, 1, r, g, b, a);
             v(vc, pose, 1, 0, 0, 1, 1, r, g, b, a);
             v(vc, pose, 1, 1, 0, 1, 0, r, g, b, a);
             v(vc, pose, 0, 1, 0, 0, 0, r, g, b, a);
 
-            // 左面 (x = 0)
             v(vc, pose, 0, 0, 0, 0, 1, r, g, b, a);
             v(vc, pose, 0, 1, 0, 0, 0, r, g, b, a);
             v(vc, pose, 0, 1, 1, 1, 0, r, g, b, a);
             v(vc, pose, 0, 0, 1, 1, 1, r, g, b, a);
 
-            // 右面 (x = 1)
             v(vc, pose, 1, 0, 1, 1, 1, r, g, b, a);
             v(vc, pose, 1, 1, 1, 1, 0, r, g, b, a);
             v(vc, pose, 1, 1, 0, 0, 0, r, g, b, a);

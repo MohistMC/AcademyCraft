@@ -44,7 +44,6 @@ public class CatEngine extends BaseEntityBlock {
         BlockEntity entity = level.getBlockEntity(pos);
         if (entity instanceof CatEngineBlockEntity blockEntity) {
             blockEntity.enable = !blockEntity.enable;
-            // TODO: 自动链接到周围节点
         }
         return InteractionResult.PASS;
     }

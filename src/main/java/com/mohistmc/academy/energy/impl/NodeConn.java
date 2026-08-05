@@ -21,8 +21,6 @@ import org.slf4j.Logger;
 /**
  * 节点连接 —— 一个节点 + M 个发电机 + K 个接收器。
  * 每 tick 先从发电机收集能量到节点，再从节点分配能量到接收器。
- *
- * @author WeAthFolD (original), Mgazul (port)
  */
 public class NodeConn {
 

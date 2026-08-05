@@ -34,7 +34,6 @@ public class JetEngineEffect implements SkillEffect {
         Vec3 lookVec = player.getLookAngle();
         Vec3 thrust = lookVec.scale(-force);
 
-        // 喷射粒子
         for (int i = 0; i < 10; i++) {
             EffectHelper.meltdownBurst(level, player.getX(), player.getY(), player.getZ(), 1, thrust.x * 0.5);
         }
@@ -42,11 +41,9 @@ public class JetEngineEffect implements SkillEffect {
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 AcademySounds.MD_SIMPLE_CHARGE, SoundSource.PLAYERS, 1.0f, 0.5f);
 
-        // 向后喷射推力
         player.setDeltaMovement(player.getDeltaMovement().add(thrust));
         player.hurtMarked = true;
 
-        // 速度提升效果
         player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, duration, amplifier));
         player.addEffect(new MobEffectInstance(MobEffects.JUMP, duration, amplifier));
 

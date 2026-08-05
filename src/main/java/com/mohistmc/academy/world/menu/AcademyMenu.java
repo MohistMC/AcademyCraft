@@ -17,9 +17,17 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public abstract class AcademyMenu extends AbstractContainerMenu {
 
+    /** 背包栏坐标常量 */
+    public static final int INV_X = 8;
+    public static final int INV_Y = 105;
+    public static final int HOTBAR_Y = 163;
+
     public final Inventory inv;
     public final AcademyMenuContainer container = new AcademyMenuContainer(this);
     public BlockPos pos;
+
+    /** 翻页时是否禁用槽位交互(机器页=0 激活,无线页=1 禁用) */
+    private boolean slotsActive = true;
 
     public AcademyMenu(MenuType<?> menuType, int windowId, Inventory inv, FriendlyByteBuf data, boolean hasInventory) {
         super(menuType, windowId);
@@ -27,25 +35,63 @@ public abstract class AcademyMenu extends AbstractContainerMenu {
         if (data != null)
             this.pos = data.readBlockPos();
         if (hasInventory) {
-            // 背包
             for (int k = 0; k < 3; ++k) {
                 for (int i1 = 0; i1 < 9; ++i1) {
-                    this.addSlot(new Slot(inv, i1 + k * 9 + 9, 8 + i1 * 18, 94 + k * 18));
+                    this.addSlot(pagedSlot(inv, i1 + k * 9 + 9, INV_X + i1 * 18, INV_Y + k * 18));
                 }
             }
 
-            // 快捷栏
             for (int l = 0; l < 9; ++l) {
-                this.addSlot(new Slot(inv, l, 8 + l * 18, 152));
+                this.addSlot(pagedSlot(inv, l, INV_X + l * 18, HOTBAR_Y));
             }
         }
         container.reloadItems();
     }
 
+    /** 返回方块位置(与 Return 框架的 getPos 一致) */
+    public BlockPos getPos() {
+        return pos;
+    }
+
+    public void setSlotsActive(boolean active) {
+        this.slotsActive = active;
+    }
+
+    public boolean areSlotsActive() {
+        return slotsActive;
+    }
+
+    private Slot pagedSlot(Inventory inv, int index, int x, int y) {
+        return new Slot(inv, index, x, y) {
+            @Override
+            public boolean isActive() {
+                return slotsActive;
+            }
+        };
+    }
+
     public Slot addAcademySlot(Slot slot) {
-        addSlot(slot);
-        container.addSlot(slot);
-        return slot;
+        // 包装为响应 slotsActive 的槽位
+        Slot paged = new Slot(slot.container, slot.getSlotIndex(), slot.x, slot.y) {
+            @Override
+            public boolean isActive() {
+                return slotsActive;
+            }
+
+            @Override
+            public boolean mayPlace(ItemStack item) {
+                // 手持为空时允许悬停高亮（findSlot 依赖 mayPlace(EMPTY)==true）
+                return item.isEmpty() || slot.mayPlace(item);
+            }
+
+            @Override
+            public boolean mayPickup(net.minecraft.world.entity.player.Player player) {
+                return slot.mayPickup(player);
+            }
+        };
+        addSlot(paged);
+        container.addSlot(paged);
+        return paged;
     }
 
 

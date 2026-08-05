@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * 太阳能发电机 —— 实现 IWirelessGenerator 接口以向 IF 能源网络供电。
- *
  * @author Mgazul
  */
 public class SolarGenBlockEntity extends AcademyContainerBlockEntity

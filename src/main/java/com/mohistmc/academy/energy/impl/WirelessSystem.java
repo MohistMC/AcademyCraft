@@ -12,8 +12,6 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
  * 无线能源系统入口 —— 监听服务端 tick，驱动所有网络和节点连接的更新。
- *
- * @author WeAthFolD (original), Mgazul (port)
  */
 @EventBusSubscriber
 public class WirelessSystem {

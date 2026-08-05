@@ -3,8 +3,6 @@ package com.mohistmc.academy.energy.api.block;
 /**
  * 无线节点接口 —— 能量分配枢纽。
  * 连接到一个无线网络，负责为连接的发电机和接收器分配能量。
- *
- * @author WeAthFolD (original), Mgazul (port)
  */
 public interface IWirelessNode extends IWirelessTile {
 

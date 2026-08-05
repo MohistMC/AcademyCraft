@@ -18,12 +18,6 @@ public class AcademyItem extends Item {
         String key = getDescriptionId() + ".desc";
         Component tag = Component.translatable(key);
         if (!key.equalsIgnoreCase(tag.getString())) {
-            /*
-            CompoundTag compoundtag = itemStack.getTagElement(this.getDescriptionId());
-            if (compoundtag == null){
-                compoundtag = itemStack.getOrCreateTagElement(this.getDescriptionId());
-            }
-             */
             p_41423_.add(Component.translatable(key).withStyle(ChatFormatting.GRAY));
         }
         super.appendHoverText(p_41421_, p_333372_, p_41423_, p_41424_);

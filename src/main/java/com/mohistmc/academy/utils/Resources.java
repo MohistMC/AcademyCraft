@@ -3,8 +3,7 @@ package com.mohistmc.academy.utils;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * @author Mgazul
- * @date 2026/8/3 05:57
+ * 资源工具类
  */
 public class Resources {
 

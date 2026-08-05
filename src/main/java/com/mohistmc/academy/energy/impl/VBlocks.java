@@ -13,8 +13,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 /**
  * 虚拟方块 —— 用坐标定位方块实体，支持延迟加载。
  * 替代旧版 LambdaLib2 的世界查找。
- *
- * @author WeAthFolD (original), Mgazul (port)
  */
 public final class VBlocks {
 

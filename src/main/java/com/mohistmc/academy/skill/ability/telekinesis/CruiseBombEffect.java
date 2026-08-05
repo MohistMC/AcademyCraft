@@ -36,13 +36,11 @@ public class CruiseBombEffect implements SkillEffect {
         Vec3 lookVec = player.getLookAngle();
         Vec3 impactPos = eyePos.add(lookVec.scale(range));
 
-        // 飞行粒子
         for (double d = 1.0; d <= range; d += 0.5) {
             Vec3 pos = eyePos.add(lookVec.scale(d));
             EffectHelper.glowBurst(level, pos.x, pos.y, pos.z, 1, 0.2f, 0xAAFFCC88, 10, 0.1);
         }
 
-        // 爆炸粒子
         EffectHelper.glowBurst(level, impactPos.x, impactPos.y, impactPos.z, (int) (radius * 3), 0.3f, 0x88FFCC44, 12, radius / 2);
 
         level.playSound(null, impactPos.x, impactPos.y, impactPos.z,

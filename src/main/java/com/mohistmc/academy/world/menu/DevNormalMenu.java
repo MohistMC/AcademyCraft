@@ -6,10 +6,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-/**
- * @author Mgazul
- * @date 2026/5/30 20:54
- */
 public class DevNormalMenu extends AcademyMenu {
     public DevNormalMenu(int windowId, Inventory inv, FriendlyByteBuf data) {
         super(AcademyMenus.DEV_NORMAL_MENU.get(), windowId, inv, data, false);

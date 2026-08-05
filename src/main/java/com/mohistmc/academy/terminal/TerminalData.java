@@ -3,10 +3,6 @@ package com.mohistmc.academy.terminal;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * @author Mgazul
- * @date 2026/5/31 02:45
- */
 public class TerminalData {
 
     private boolean installed = false;

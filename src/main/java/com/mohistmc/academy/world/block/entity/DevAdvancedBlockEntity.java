@@ -14,8 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * 高级能力开发机方块实体 —— 支持物品槽（线圈+因子）和 IF 能量接收。
- *
+ * 高级能力开发机方块实体 —— 支持物品槽(线圈+因子)和 IF 能量接收。
  * @author Mgazul
  */
 public class DevAdvancedBlockEntity extends AcademyContainerBlockEntity

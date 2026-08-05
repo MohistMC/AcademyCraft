@@ -10,6 +10,7 @@ import com.mohistmc.academy.network.NodeListSyncPacket;
 import com.mohistmc.academy.network.RequestNodesPacket;
 import com.mohistmc.academy.utils.RenderUtils;
 import com.mohistmc.academy.world.block.entity.BaseNodeBlockEntity;
+import com.mohistmc.academy.world.block.entity.MetalFomerBlockEntity;
 import com.mohistmc.academy.world.block.entity.SolarGenBlockEntity;
 import com.mohistmc.academy.world.block.entity.WindGenBaseBlockEntity;
 import com.mohistmc.academy.world.block.entity.WindGenMainBlockEntity;
@@ -117,8 +118,8 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
     private boolean renderBg = true;
     private boolean renderWireless = true;
     public int activeNode = -1;
-    /** 用户是否主动点击侧边栏切换面板 */
-    private boolean panelActive = false;
+    /** 用户是否主动点击侧边栏切换面板（机器页=false，无线/节点页=true） */
+    protected boolean panelActive = false;
     private int waitPass = -1;
     private StringBuilder inputPass = new StringBuilder();
     private StringBuilder renameInput = new StringBuilder();
@@ -130,7 +131,6 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
     private boolean renameInitialized = false;
     /** 客户端平滑显示的能量值（插值过渡，避免一顿一顿） */
     private double smoothEnergy = 0;
-    private boolean renderEnergyTree = false;
     private boolean nodesRequested = false;
 
     // 缓存的服务端节点列表（实例级）
@@ -138,6 +138,10 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
 
     public AcademyBaseUI(T t, Inventory inv, Component title, WirelessState initialState) {
         super(t, inv, title);
+        // 关键：必须与 GUI 纹理尺寸一致，否则槽位渲染 topPos 与背景纹理错位
+        // (AbstractContainerScreen 默认 imageHeight=166, 而纹理按 187 渲染, 差 10.5px)
+        this.imageWidth = GUI_WIDTH;
+        this.imageHeight = GUI_HEIGHT;
         this.inv = inv;
         this.initialState = initialState;
         this.wirelessState = initialState;
@@ -149,10 +153,6 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
 
     public void setRenderWireless(boolean wireless) {
         this.renderWireless = wireless;
-    }
-
-    public void setRenderEnergyTree(boolean renderEnergyTree) {
-        this.renderEnergyTree = renderEnergyTree;
     }
 
     // ==================== 辅助方法 ====================
@@ -200,12 +200,12 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        // 无面板激活时渲染默认背包页面
+        // 无面板激活时渲染默认背包页面（先垫半透明黑色背景，再贴机器纹理）
         if (!panelActive) {
+            InfoArea.drawPanel(var1, this.leftPos, this.topPos, GUI_WIDTH, GUI_HEIGHT);
             this.renderBackground(var1, var3, var4, var2);
         }
 
-        renderEnergyTreePanel(var1);
         RenderSystem.disableBlend();
     }
 
@@ -229,13 +229,15 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
             }
         }
 
-        // 无面板激活时渲染基础容器（背包/物品栏），面板激活时隐藏以免叠加
+        // 先画全屏背景与机器纹理
+        super.renderBackground(stack, mouseX, mouseY, p_97798_);
+        this.renderBg(stack, p_97798_, mouseX, mouseY);
+
+        // 再画槽位物品与悬停高亮（保证高亮在纹理之上，否则被纹理盖住）
         if (!panelActive) {
             super.render(stack, mouseX, mouseY, p_97798_);
             super.renderTooltip(stack, mouseX, mouseY);
         }
-        super.renderBackground(stack, mouseX, mouseY, p_97798_);
-        this.renderBg(stack, p_97798_, mouseX, mouseY);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
@@ -448,43 +450,28 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
         RenderUtils.renderText(stack, text, panelLeft + 13, guiTop + yOffset + 4);
     }
 
-    private void renderEnergyTreePanel(GuiGraphics graphics) {
-        if (!renderEnergyTree || this.menu == null || this.menu.pos == null || this.inv == null) return;
-        if (panelActive && this.wirelessState == WirelessState.WIFI) return;
+    /** 渲染右侧能量信息面板（InfoArea 直方图） */
+    protected void renderEnergyInfoPanel(GuiGraphics graphics) {
+        if (this.menu == null || this.menu.pos == null || this.inv == null) return;
 
         BlockEntity be = this.inv.player.level().getBlockEntity(this.menu.pos);
+        if (be == null) return;
 
-        int current, max;
+        InfoArea info = new InfoArea();
         if (be instanceof IFEnergyStorage storage) {
-            current = storage.getEnergyStored();
-            max = Math.max(1, storage.getMaxEnergyStored());
+            info.histogram(InfoArea.histEnergy(storage.getEnergyStored(), Math.max(1, storage.getMaxEnergyStored())));
+            info.property("速率", getEnergyRateText(be));
+        } else if (be instanceof MetalFomerBlockEntity former) {
+            info.histogram(InfoArea.histEnergy(former.getEnergy(), Math.max(1, former.getMaxEnergy())));
+            info.property("模式", former.getMode().name());
         } else if (be instanceof BaseNodeBlockEntity nodeBe) {
-            current = (int) nodeBe.getEnergy();
-            max = (int) Math.max(1, nodeBe.getMaxEnergy());
+            info.histogram(InfoArea.histEnergy(nodeBe.getEnergy(), Math.max(1, nodeBe.getMaxEnergy())));
+            info.property("带宽", (int) nodeBe.getBandwidth() + " IF/t");
+            info.property("范围", (int) nodeBe.getRange() + " 格");
         } else {
             return;
         }
-
-        int guiLeft = (this.width - GUI_WIDTH) / 2;
-        int guiTop = (this.height - GUI_HEIGHT) / 2;
-
-        int barX = guiLeft + GUI_WIDTH - 20;
-        int barY = guiTop + 24;
-
-        // 背景
-        graphics.fill(barX, barY, barX + 4, barY + 44, 0xFF2a2a3a);
-
-        // 填充（从下到上）
-        int filled = (int) ((long) current * 44 / max);
-        graphics.fill(barX, barY + 44 - filled, barX + 4, barY + 44, 0xFFf1c40f);
-
-        // IF 数值
-        String energyText = current + "/" + max + " IF";
-        graphics.drawString(this.font, energyText, barX + (4 - this.font.width(energyText)) / 2, barY - 10, 0xFFcccccc);
-
-        // IF/t 速率
-        String rateText = getEnergyRateText(be);
-        graphics.drawString(this.font, rateText, barX + (4 - this.font.width(rateText)) / 2, barY + 46, 0xFFaaaaaa);
+        info.draw(graphics, this.leftPos, this.topPos);
     }
 
     private String getEnergyRateText(BlockEntity be) {
@@ -506,14 +493,37 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
         return ((x + w) > mx && mx > x) && ((y + h) > my && my > y);
     }
 
+    // ==================== 绘制工具 ====================
+
+    /** 渲染 alpha-mask 图标(纯白剪影纹理),支持 alpha 透明度 */
+    protected void drawIcon(GuiGraphics gg, ResourceLocation icon, int x, int y, int size, float alpha, int srcSize) {
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShaderColor(1, 1, 1, alpha);
+        gg.blit(icon, x, y, size, size, 0, 0, srcSize, srcSize, srcSize, srcSize);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.disableBlend();
+    }
+
+    /** 渲染 alpha-mask 图标并染色(RGB 用于给白色剪影着色) */
+    protected void drawIcon(GuiGraphics gg, ResourceLocation icon, int x, int y, int size,
+                            float r, float g, float b, float alpha, int srcSize) {
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShaderColor(r, g, b, alpha);
+        gg.blit(icon, x, y, size, size, 0, 0, srcSize, srcSize, srcSize, srcSize);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.disableBlend();
+    }
+
     // ==================== 输入处理 ====================
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int p_97750_) {
-        // 背包图标 -> DEFAULT
         if (this.isHoveringButton(((this.width - GUI_WIDTH) / 2) - 20, ((this.height - GUI_HEIGHT) / 2), 18, 18, mouseX, mouseY)) {
             switchState(WirelessState.DEFAULT);
             panelActive = false;
+            this.menu.setSlotsActive(true);
         }
         if (this.renderWireless) {
             // 侧边栏图标：优先根据当前 wirelessState 决定，回退到 initialState
@@ -526,6 +536,7 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
                 }
                 switchState(targetState);
                 panelActive = true;
+                this.menu.setSlotsActive(false);
                 if (targetState == WirelessState.WIFI) {
                     this.nodesRequested = false;
                 }
@@ -539,7 +550,8 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
                 }
             }
         }
-        if (this.wirelessState == WirelessState.DEFAULT)
+        // 机器页（面板未激活）时交给容器处理槽位点击，无线/节点页拦截
+        if (!this.panelActive)
             return super.mouseClicked(mouseX, mouseY, p_97750_);
         return true;
     }
@@ -587,11 +599,7 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
 
         // "保存节点设置"按钮 -> 同时保存节点名和密码
         if (this.isHoveringButton(panelLeft + 40, guiTop + 78, 96, 16, mouseX, mouseY)) {
-            System.out.println("[AcademyDebug] NodePanel: save button clicked");
             if (this.menu.pos != null && isNodeBlock()) {
-                System.out.println("[AcademyDebug] NodePanel: sending NodeConfigPacket pos=" + this.menu.pos
-                        + " name=" + renameInput.toString()
-                        + " password=" + nodePassInput.toString());
                 PacketDistributor.sendToServer(new NodeConfigPacket(
                         this.menu.pos,
                         java.util.Optional.of(renameInput.toString()),
@@ -603,9 +611,6 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
                         break;
                     }
                 }
-                System.out.println("[AcademyDebug] NodePanel: packet sent");
-            } else {
-                System.out.println("[AcademyDebug] NodePanel: save FAILED menu.pos=" + this.menu.pos + " isNodeBlock=" + isNodeBlock());
             }
             return;
         }
@@ -654,7 +659,6 @@ public abstract class AcademyBaseUI<T extends AcademyMenu> extends AbstractConta
         if (this.wirelessState == WirelessState.NODE) {
             if (keyCode == 257 || keyCode == 335) { // Enter
                 if (this.menu.pos != null && isNodeBlock()) {
-                    System.out.println("[AcademyDebug] NodePanel: Enter save name=" + renameInput + " password=" + nodePassInput);
                     PacketDistributor.sendToServer(new NodeConfigPacket(
                             this.menu.pos,
                             java.util.Optional.of(renameInput.toString()),

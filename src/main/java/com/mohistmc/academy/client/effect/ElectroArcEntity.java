@@ -23,14 +23,6 @@ import org.joml.Matrix4f;
 
 /**
  * 电弧特效实体 —— 渲染真实的闪电/电弧视觉效果。
- * <p>
- * 替代旧代码 EntityArc + EntitySurroundArc：
- * - MODE_BEAM: 沿方向发射电弧（EntityArc 替代）
- * - MODE_SURROUND: 环绕实体/位置生成电弧环（EntitySurroundArc 替代）
- * <p>
- * 使用现代 Minecraft 1.21.1 渲染管线（PoseStack + VertexConsumer）。
- *
- * @author Mgazul
  */
 public class ElectroArcEntity extends Entity {
 

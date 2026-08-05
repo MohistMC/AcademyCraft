@@ -5,6 +5,7 @@ import com.mohistmc.academy.world.menu.DevAdvancedMenu;
 import com.mohistmc.academy.world.menu.DevNormalMenu;
 import com.mohistmc.academy.world.menu.ImagFusorMenu;
 import com.mohistmc.academy.world.menu.MatrixMenu;
+import com.mohistmc.academy.world.menu.MetalFomerMenu;
 import com.mohistmc.academy.world.menu.NodeAdvancedMenu;
 import com.mohistmc.academy.world.menu.NodeBasicMenu;
 import com.mohistmc.academy.world.menu.NodeStandardMenu;
@@ -33,5 +34,6 @@ public class AcademyMenus {
     public static final Supplier<MenuType<SolarGenMenu>> SOLAR_GEN_MENU = MENUS.register("solar_gen_menu", () -> IMenuTypeExtension.create(SolarGenMenu::new));
     public static final Supplier<MenuType<PhaseGenMenu>> PHASE_GEN_MENU = MENUS.register("phase_gen_menu", () -> IMenuTypeExtension.create(PhaseGenMenu::new));
     public static final Supplier<MenuType<MatrixMenu>> MATRIX_MENU = MENUS.register("matrix_menu", () -> IMenuTypeExtension.create(MatrixMenu::new));
+    public static final Supplier<MenuType<MetalFomerMenu>> METAL_FORMER_MENU = MENUS.register("metal_former_menu", () -> IMenuTypeExtension.create(MetalFomerMenu::new));
 
 }

@@ -1,8 +1,7 @@
 package com.mohistmc.academy.utils;
 
 /**
- * @author Mgazul
- * @date 2026/6/9 15:36
+ * 数学工具类
  */
 public class MathUtils {
 
@@ -46,16 +45,11 @@ public class MathUtils {
             return ss <= sa || sa <= se;
         }
 
-        //System.out.println(ss + " " + se + " " + sa);
         return ss <= sa && sa <= se;
     }
 
     /**
-     * Perform a simple linear lerp between a and b
-     * @param a
-     * @param b
-     * @param lambda The weight of b
-     * @return The lerp value
+     * 在 a 和 b 之间进行线性插值
      */
     public static double lerp(double a, double b, double lambda) {
         return a + lambda * (b - a);

@@ -34,20 +34,17 @@ public class ElectronMissileEffect implements SkillEffect {
         Vec3 eyePos = player.getEyePosition();
         Vec3 lookVec = player.getLookAngle();
 
-        // 模拟导弹飞行轨迹
         Vec3 missilePos = eyePos.add(lookVec.scale(5));
         for (int step = 0; step < 20; step++) {
             missilePos = missilePos.add(lookVec.scale(0.5));
             EffectHelper.glowBurst(level, missilePos.x, missilePos.y, missilePos.z, 1, 0.2f, 0xAAFFCC88, 10, 0.05);
         }
 
-        // 爆炸效果
         EffectHelper.glowBurst(level, missilePos.x, missilePos.y, missilePos.z, (int) (radius * 3), 0.3f, 0x88FFCC44, 12, radius / 2);
 
         level.playSound(null, missilePos.x, missilePos.y, missilePos.z,
                 AcademySounds.MD_BALLSHOOT, SoundSource.PLAYERS, 1.0f, 0.5f);
 
-        // AOE伤害
         AABB area = new AABB(
                 missilePos.x - radius, missilePos.y - radius, missilePos.z - radius,
                 missilePos.x + radius, missilePos.y + radius, missilePos.z + radius

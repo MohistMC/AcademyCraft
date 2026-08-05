@@ -73,7 +73,8 @@ public class ImagFusor extends BaseEntityBlock {
     @Override
     public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (!level.isClientSide()) {
-            player.openMenu(getMenuProvider(state, level, pos));
+            // 必须带 pos 重载，否则客户端 Menu 收到的 buf 为空，menu.pos 为 null
+            player.openMenu(getMenuProvider(state, level, pos), pos);
         }
         return InteractionResult.CONSUME;
     }

@@ -1,0 +1,11 @@
+{
+  "type": "academy:metal_forming",
+  "mode": "refine",
+  "input": {
+    "tag": "c:ores/lapis"
+  },
+  "output": {
+    "count": 12,
+    "id": "minecraft:lapis_lazuli"
+  }
+}

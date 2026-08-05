@@ -10,8 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
- * @author Mgazul
- * @date 2026/6/2 03:16
+ * 服务端→客户端：打开教程界面。
  */
 public record OpenTutorialGuiPacket() implements CustomPacketPayload {
 

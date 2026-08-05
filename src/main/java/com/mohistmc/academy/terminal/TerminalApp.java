@@ -4,10 +4,6 @@ import com.mohistmc.academy.AcademyCraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 
-/**
- * @author Mgazul
- * @date 2026/5/31 04:08
- */
 public interface TerminalApp {
 
     String getAppId();

@@ -11,8 +11,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * 服务端→客户端：同步可用节点列表。
- *
- * @author Mgazul
  */
 public record NodeListSyncPacket(CompoundTag data) implements CustomPacketPayload {
 
@@ -32,8 +30,7 @@ public record NodeListSyncPacket(CompoundTag data) implements CustomPacketPayloa
 
     public static void handle(NodeListSyncPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
-            // 客户端处理：在 AcademyBaseUI 中接收
-            // 数据存储在客户端的临时缓存中
+            // 客户端处理：在 AcademyBaseUI 中接收并缓存
             if (context.player().level().isClientSide()) {
                 com.mohistmc.academy.client.gui.AcademyBaseUI.receiveNodeList(packet.data());
             }

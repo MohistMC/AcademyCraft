@@ -54,7 +54,7 @@ public class PhaseGen extends BaseEntityBlock {
     @Override
     public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (!level.isClientSide()) {
-            player.openMenu(getMenuProvider(state, level, pos));
+            player.openMenu(getMenuProvider(state, level, pos), pos);
             return InteractionResult.CONSUME;
         }
         return InteractionResult.CONSUME;
@@ -98,7 +98,6 @@ public class PhaseGen extends BaseEntityBlock {
         return createTickerHelper(type, AcademyBlockEntities.PHASE_GEN.get(), (lvl, pos, st, be) -> {
             if (be instanceof PhaseGenBlockEntity pgbe) {
                 pgbe.tick();
-                // 更新方块状态
                 boolean working = pgbe.isWorking();
                 BlockState current = lvl.getBlockState(pos);
                 if (current.getValue(LIT) != working) {

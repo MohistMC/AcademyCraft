@@ -10,16 +10,7 @@ import net.minecraft.world.phys.Vec3;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 
-/**
- * 矢量加速 —— 蓄力后向前方高速冲刺
- * <p>
- * 参考旧代码 VecAccel.scala：
- * - 最大速度 2.5，蓄力最多20tick
- * - 速度曲线: sin(lerp(0.4, 1, clamp(0, 1, tick/20))) * 2.5
- * - 熟练度>0.5 可在空中使用
- *
- * @author Mgazul
- */
+/** 矢量加速 —— 蓄力后向前方高速冲刺 */
 public class VecAccelEffect implements ChargingSkillEffect {
 
     private static final int MAX_CHARGE = 20;
@@ -69,12 +60,10 @@ public class VecAccelEffect implements ChargingSkillEffect {
             data.addOverload(overload);
         }
 
-        // 计算速度
         int effectiveTicks = Math.min(ticks, MAX_CHARGE);
         double prog = Math.max(0, Math.min(1, effectiveTicks / (double) MAX_CHARGE));
         double speed = Math.sin(lerpf(0.4f, 1.0f, (float) prog)) * MAX_VELOCITY;
 
-        // 方向：玩家视角方向，略微向下
         Vec3 dir = player.getLookAngle().scale(speed);
         dir = new Vec3(dir.x, dir.y - 0.2 * speed, dir.z);
 

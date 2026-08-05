@@ -33,7 +33,7 @@ public class SkillTreeGui extends AcademyScreen {
     private static final int LEVEL_HEADER_HEIGHT = 14;
     private static final int INFO_PANEL_WIDTH = 120;
 
-    // 技能树业务颜色（保留）
+    // 技能树业务颜色
     private static final int COLOR_LEARNED = 0xFF2ecc71;
     private static final int COLOR_LEARNED_BORDER = 0xFF27ae60;
     private static final int COLOR_AVAILABLE = 0xFF3498db;
@@ -349,7 +349,7 @@ public class SkillTreeGui extends AcademyScreen {
                 float prof = data.getProficiency(skill.getId());
                 tooltip.add(Component.literal("§e熟练度: " + String.format("%.1f%%", prof * 100)));
             }
-            // 修复：当开发机能量不足时追加提示
+            // 开发机能量不足时追加提示
             if (!fromTerminal && devType != null && energy <= 0) {
                 tooltip.add(Component.literal("§c[开发机能量不足] 该技能暂不可用"));
             }
@@ -360,7 +360,7 @@ public class SkillTreeGui extends AcademyScreen {
             } else if (skill.getLevel() > devType.maxLevel) {
                 tooltip.add(Component.literal("§c[同步率不足] 该开发机无法支持此等级技能"));
             } else if (!fromTerminal && devType != null && energy <= 0) {
-                // 修复：能量不足时优先提示
+                // 能量不足时优先提示
                 tooltip.add(Component.literal("§c[开发机能量不足] 暂无法学习该技能"));
             } else {
                 int cost = devType.applySyncRate(100 + skill.getLevel() * 50);

@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 public class SolarGenMenu extends AcademyMenu {
     public SolarGenMenu(int windowId, Inventory inv, FriendlyByteBuf data) {
         super(AcademyMenus.SOLAR_GEN_MENU.get(), windowId, inv, data, true);
-        addAcademySlot(new Slot(container, 0, 44, 70) {
+        addAcademySlot(new Slot(container, 0, 44, 81) {
             @Override
             public boolean mayPlace(ItemStack item) {
                 return EnergyItemHelper.isEnergyItem(item);

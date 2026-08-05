@@ -25,9 +25,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * 客户端→服务端：请求附近的无线节点列表。
- * 扫描世界中所有 IWirelessNode 方块返回给客户端。
- *
- * @author Mgazul
  */
 public record RequestNodesPacket(BlockPos machinePos) implements CustomPacketPayload {
 
@@ -90,7 +87,6 @@ public record RequestNodesPacket(BlockPos machinePos) implements CustomPacketPay
                     }
                 }
 
-                // 构建节点列表
                 CompoundTag response = new CompoundTag();
                 ListTag nodeList = new ListTag();
                 int index = 0;

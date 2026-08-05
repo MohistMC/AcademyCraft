@@ -9,10 +9,6 @@ import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author Mgazul
- * @date 2026/5/31 02:46
- */
 public class TerminalDataCodec implements IAttachmentSerializer<CompoundTag, TerminalData> {
 
     @Override

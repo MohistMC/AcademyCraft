@@ -1,0 +1,11 @@
+{
+  "type": "academy:metal_forming",
+  "mode": "etch",
+  "input": {
+    "item": "academy:wafer"
+  },
+  "output": {
+    "count": 1,
+    "id": "academy:silbarn"
+  }
+}

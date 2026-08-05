@@ -14,8 +14,6 @@ import net.minecraft.resources.ResourceLocation;
 
 /**
  * GitHub 风格 Markdown 解析器。
- * 支持：标题 h1-h4、粗体、斜体、删除线、行内代码、代码块、无序列表、有序列表、
- * 引用、水平线、链接、图片、表格。
  */
 public class TutorialMdParser {
 

@@ -14,8 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
- * @author Mgazul
- * @date 2026/5/31 00:46
+ * 服务端→客户端：打开开发机技能树界面。
  */
 public record OpenDevGuiPacket(int typeOrdinal, int energy, int maxEnergy, Optional<BlockPos> mainPos) implements CustomPacketPayload {
 

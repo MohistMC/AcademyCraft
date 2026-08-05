@@ -15,9 +15,6 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 /**
  * 通知浮层 — 短暂显示系统消息（教程更新、能力解锁等）。
- * 类似于旧版 NotifyUI，使用原版渲染。
- *
- * @author Mgazul
  */
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(modid = AcademyCraft.MODID, value = Dist.CLIENT)
@@ -84,24 +81,19 @@ public class NotifyOverlay {
                 int notifH = 50;
                 int x = screenW - notifW - 20;
 
-                // Background
                 int bgColor = (int)(alpha * 200) << 24 | 0x0A1A30;
                 g.fill(x, y, x + notifW, y + notifH, bgColor);
-                // Border
                 int borderColor = (int)(alpha * 180) << 24 | 0x00BFFF;
                 g.renderOutline(x, y, notifW, notifH, borderColor);
 
-                // Icon (if present)
                 int textX = x + 8;
                 if (n.icon != null) {
                     g.blit(n.icon, x + 4, y + 4, 0, 0, 16, 16, 16, 16);
                     textX = x + 26;
                 }
 
-                // Title
                 int titleColor = (int)(alpha * 255) << 24 | 0xFFFFFF;
                 g.drawString(mc.font, n.title, textX, y + 6, titleColor, false);
-                // Content
                 int contentColor = (int)(alpha * 200) << 24 | 0xCCDDEE;
                 g.drawString(mc.font, n.content, textX, y + 24, contentColor, false);
 

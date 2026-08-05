@@ -39,7 +39,6 @@ public class ElectronBombEffect implements SkillEffect {
         Vec3 lookVec = player.getLookAngle();
         Vec3 endPos = eyePos.add(lookVec.scale(RANGE));
 
-        // 射线追踪找实体
         EntityHitResult hit = rayTraceEntities(player, eyePos, endPos);
         Vec3 impactPos;
         if (hit != null) {
@@ -48,13 +47,11 @@ public class ElectronBombEffect implements SkillEffect {
             impactPos = eyePos.add(lookVec.scale(RANGE));
         }
 
-        // 爆炸效果
         EffectHelper.glowBurst(level, impactPos.x, impactPos.y, impactPos.z, (int) (radius * 2), 0.3f, 0x88FFCC44, 12, radius / 2);
 
         level.playSound(null, impactPos.x, impactPos.y, impactPos.z,
                 AcademySounds.MD_BALLSHOOT, SoundSource.PLAYERS, 1.0f, 1.5f);
 
-        // AOE伤害
         AABB area = new AABB(
                 impactPos.x - radius, impactPos.y - radius, impactPos.z - radius,
                 impactPos.x + radius, impactPos.y + radius, impactPos.z + radius

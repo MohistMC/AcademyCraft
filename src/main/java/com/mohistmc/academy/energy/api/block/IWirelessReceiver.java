@@ -3,8 +3,6 @@ package com.mohistmc.academy.energy.api.block;
 /**
  * 无线接收器接口 —— 耗能设备（如 ImagFusor、MetalFormer、PhaseGen）。
  * 连接到节点后从节点获取能量。
- *
- * @author WeAthFolD (original), Mgazul (port)
  */
 public interface IWirelessReceiver extends IWirelessUser {
 

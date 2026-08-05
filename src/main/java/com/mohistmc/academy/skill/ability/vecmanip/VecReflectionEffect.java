@@ -17,16 +17,7 @@ import net.minecraft.world.phys.Vec3;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 
-/**
- * 矢量反射 —— 激活后在一段时间内反射弹射物和攻击
- * <p>
- * 参考旧代码 VecReflection.scala：
- * - 减少受到的伤害并反弹给攻击者
- * - 反射范围内的弹射物
- * - 持续消耗CP
- *
- * @author Mgazul
- */
+/** 矢量反射 —— 激活后在一段时间内反射弹射物和攻击 */
 public class VecReflectionEffect implements SkillEffect {
 
     @Override
@@ -44,14 +35,12 @@ public class VecReflectionEffect implements SkillEffect {
             data.setCurrentCp(data.getCurrentCp() - cp);
         }
 
-        // 给予短时间的反伤和抗性效果
         int duration = (int) lerpf(60, 120, exp);
         int amplifier = (int) lerpf(1, 3, exp);
 
         player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, duration, amplifier));
         player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, duration / 2, 1));
 
-        // 反射周围弹射物
         ServerLevel level = player.serverLevel();
         Vec3 playerPos = player.position();
         double range = 4.0;
@@ -62,7 +51,6 @@ public class VecReflectionEffect implements SkillEffect {
                 e -> e != player && e.isAlive() && e.isPickable());
 
         for (Entity e : nearby) {
-            // 击退周围实体
             Vec3 delta = e.position().subtract(playerPos).normalize().scale(1.2);
             e.setDeltaMovement(delta.x, Math.abs(delta.y) * 0.3, delta.z);
             e.hurtMarked = true;

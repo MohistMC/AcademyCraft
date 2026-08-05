@@ -87,12 +87,10 @@ public class PlayerAbilityDataCodec implements IAttachmentSerializer<CompoundTag
             data.setMisakaId(tag.getInt("misaka_id"));
         }
 
-        // 开发者模式
         if (tag.contains("dev_mode")) {
             data.setDevMode(tag.getBoolean("dev_mode"));
         }
 
-        // 冷却
         if (tag.contains("cooldowns")) {
             CompoundTag cdTag = tag.getCompound("cooldowns");
             for (String key : cdTag.getAllKeys()) {
@@ -163,10 +161,8 @@ public class PlayerAbilityDataCodec implements IAttachmentSerializer<CompoundTag
 
         tag.putInt("misaka_id", data.getMisakaId());
 
-        // 开发者模式
         tag.putBoolean("dev_mode", data.isDevMode());
 
-        // 冷却
         CompoundTag cdTag = new CompoundTag();
         data.cooldowns.forEach((skillId, ticks) -> {
             if (ticks > 0) cdTag.putInt(skillId, ticks);

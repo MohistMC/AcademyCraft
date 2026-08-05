@@ -13,12 +13,10 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * 风力猫引擎 —— 实现 IWirelessGenerator 向无线能源网络供电。
- *
  * @author Mgazul
  */
 public class CatEngineBlockEntity extends BlockEntity implements IWirelessGenerator {
 
-    // 动画
     public int time;
     public float rot;
     public float oRot;
@@ -26,7 +24,6 @@ public class CatEngineBlockEntity extends BlockEntity implements IWirelessGenera
     public boolean enable = false;
     public float rH = 0;
 
-    // 能源
     private static final int MAX_STORAGE = 3000;
     private static final double BANDWIDTH = 30;
     private float storedEnergy = 0;

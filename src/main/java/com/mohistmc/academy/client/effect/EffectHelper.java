@@ -5,7 +5,6 @@ import net.minecraft.world.level.Level;
 
 /**
  * 特效生成辅助工具。
- * 提供各职业常用特效的便捷方法。
  */
 public class EffectHelper {
 

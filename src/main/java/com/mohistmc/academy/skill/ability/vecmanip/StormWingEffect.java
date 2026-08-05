@@ -17,17 +17,7 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 
 import static com.mohistmc.academy.utils.MathUtils.lerpf;
 
-/**
- * 风暴之翼 —— 获得临时飞行能力，推开周围弱方块和实体
- * <p>
- * 参考旧代码 StormWing.scala：
- * - 蓄力阶段后进入飞行模式
- * - 熟练度<0.15时自动破坏周围弱方块
- * - 熟练度=1时推开周围实体
- * - 持续消耗CP
- *
- * @author Mgazul
- */
+/** 风暴之翼 —— 获得临时飞行能力，推开周围弱方块和实体 */
 public class StormWingEffect implements ChargingSkillEffect {
 
     @Override
@@ -58,7 +48,6 @@ public class StormWingEffect implements ChargingSkillEffect {
         int chargeTime = (int) lerpf(70, 30, exp);
 
         if (ticks >= chargeTime) {
-            // 进入飞行模式
             performFlightTick(player, data);
         }
         return true; // 持续能力，用户手动取消
@@ -72,13 +61,11 @@ public class StormWingEffect implements ChargingSkillEffect {
 
         if (ticks < chargeTime) return;
 
-        // 激活飞行
         performActivate(player, data);
     }
 
     @Override
     public void onChargingAbort(ServerPlayer player, PlayerAbilityData data) {
-        // 取消飞行
         player.getAbilities().mayfly = false;
         player.getAbilities().flying = false;
         player.onUpdateAbilities();

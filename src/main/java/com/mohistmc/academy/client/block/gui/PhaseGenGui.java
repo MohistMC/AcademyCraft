@@ -22,7 +22,6 @@ public class PhaseGenGui extends AcademyBaseUI<PhaseGenMenu> {
 
     public PhaseGenGui(PhaseGenMenu menu, Inventory inv, Component title) {
         super(menu, inv, title, WirelessState.DEFAULT);
-        setRenderEnergyTree(true);
     }
 
     @Override
@@ -40,6 +39,9 @@ public class PhaseGenGui extends AcademyBaseUI<PhaseGenMenu> {
         renderProgressBar(graphics);
 
         RenderSystem.disableBlend();
+
+        // 右侧能量信息面板
+        renderEnergyInfoPanel(graphics);
     }
 
     private void renderProgressBar(GuiGraphics graphics) {
@@ -57,7 +59,6 @@ public class PhaseGenGui extends AcademyBaseUI<PhaseGenMenu> {
         int barWidth = 24;
         int barHeight = 30;
 
-        // 背景
         graphics.fill(barX, barY, barX + barWidth, barY + barHeight, 0xFF2a2a3a);
 
         // 填充 - 从下到上

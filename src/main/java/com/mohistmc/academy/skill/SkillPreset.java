@@ -2,10 +2,6 @@ package com.mohistmc.academy.skill;
 
 import java.util.Arrays;
 
-/**
- * @author Mgazul
- * @date 2026/5/30 22:30
- */
 public class SkillPreset {
 
     public static final int SLOT_COUNT = 4;

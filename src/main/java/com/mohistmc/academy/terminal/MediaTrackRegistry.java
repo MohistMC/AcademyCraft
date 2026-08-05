@@ -8,10 +8,6 @@ import java.util.Map;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 
-/**
- * @author Mgazul
- * @date 2026/5/31 04:34
- */
 public class MediaTrackRegistry {
 
     private static final Logger LOGGER = LogUtils.getLogger();

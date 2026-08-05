@@ -17,8 +17,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * 客户端→服务端：断开机器与节点的连接。
- *
- * @author Mgazul
  */
 public record DisconnectFromNodePacket(BlockPos machinePos) implements CustomPacketPayload {
 
@@ -47,7 +45,6 @@ public record DisconnectFromNodePacket(BlockPos machinePos) implements CustomPac
                 if (data == null) return;
 
                 if (be instanceof IWirelessGenerator || be instanceof IWirelessReceiver) {
-                    // 通过 NodeConn 查找并移除
                     var conn = data.getNodeConnection(
                             be instanceof IWirelessGenerator gen ? gen
                                     : (com.mohistmc.academy.energy.api.block.IWirelessUser) be
