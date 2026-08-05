@@ -25,6 +25,11 @@ public abstract class BaseNodeGui<T extends BaseNodeMenu> extends AcademyBaseUI<
     private int animIndex = 0;
 
     @Override
+    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+        // 不显示物品栏标题
+    }
+
+    @Override
     public void renderBackground(GuiGraphics stack,  int mouseX, int mouseY, float p_97788_) {
         RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.enableBlend();
@@ -52,5 +57,8 @@ public abstract class BaseNodeGui<T extends BaseNodeMenu> extends AcademyBaseUI<
                 this.width, this.height, stack, EFFECT_NODE,
                 75 * animIndex, 0, 176, 750);
         RenderSystem.disableBlend();
+
+        // 右侧能量信息面板
+        renderEnergyInfoPanel(stack);
     }
 }

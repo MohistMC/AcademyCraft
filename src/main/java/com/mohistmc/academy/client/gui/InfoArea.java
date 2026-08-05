@@ -180,7 +180,7 @@ public final class InfoArea {
 
     /** 半透明面板（统一暗色细边框，避免白色高亮条） */
     public static void drawPanel(GuiGraphics gg, int px, int py, int pw, int ph) {
-        gg.fill(px, py, px + pw, py + ph, 0x80000000);
+        gg.fill(px, py, px + pw, py + ph, 0x50000000);
         gg.fill(px, py, px + pw, py + 1, 0x14FFFFFF);
         gg.fill(px, py + ph - 1, px + pw, py + ph, 0x14FFFFFF);
         gg.fill(px, py + 1, px + 1, py + ph - 1, 0x14FFFFFF);

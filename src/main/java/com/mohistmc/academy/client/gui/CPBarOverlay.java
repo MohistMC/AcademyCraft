@@ -14,27 +14,46 @@ import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 /**
- * CP 和 Overload 栏 HUD — 单色风格（CP: 白→黄→红, OL: 蓝→橙→红）。
+ * CP 和 Overload 栏 HUD —— 坐标与渲染方式对齐 Return CPBar。
  */
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(modid = AcademyCraft.MODID, value = Dist.CLIENT)
 public class CPBarOverlay {
 
-    private static final int TEX_WIDTH = 964;
-    private static final int TEX_HEIGHT = 147;
-    private static final int TEX_OL_Y = 21;   // OL 区域的起始像素
-    private static final int TEX_OL_H = 104;  // OL 区域的高度
-    private static final int TEX_CP_Y = 30;   // CP 区域的起始像素
-    private static final int TEX_CP_H = 84;   // CP 区域的高度
-    private static final int TEX_CP_X = 47;   // CP 区域左边距
-    private static final int TEX_CP_W = 883;  // CP 区域宽度
+    private static final float WIDTH = 964;
+    private static final float HEIGHT = 147;
+    private static final float SCALE = 0.2f;
+    private static final int MARGIN_RIGHT = 12;
+    private static final int MARGIN_TOP = 12;
 
-    private static final ResourceLocation TEX_CP_BG =
+    // OL 区域(顶部条)
+    private static final float OL_X0 = 0, OL_Y0 = 21, OL_W = 943, OL_H = 104;
+    // CP 区域
+    private static final float CP_X0 = 47, CP_Y0 = 30, CP_W = 883, CP_H = 84;
+
+    private static final ResourceLocation TEX_BACK_NORMAL =
             ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/cpbar/back_normal.png");
-    private static final ResourceLocation TEX_CP_FG =
-            ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/cpbar/cp.png");
-    private static final ResourceLocation TEX_OL_BG =
+    private static final ResourceLocation TEX_BACK_OVERLOAD =
             ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/cpbar/back_overload.png");
+    private static final ResourceLocation TEX_CP =
+            ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/cpbar/cp.png");
+    private static final ResourceLocation TEX_FRONT_OVERLOAD =
+            ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/cpbar/front_overload.png");
+    private static final ResourceLocation TEX_OVERLOAD_HIGHLIGHT =
+            ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/cpbar/highlight_overload.png");
+
+    /** CP 条颜色渐变：红 → 橙 → 白 */
+    private static final float[][] CP_COLORS = {
+            {0.0f, 0xf0 / 255f, 0x67 / 255f, 0x67 / 255f},
+            {0.35f, 0xff / 255f, 0xae / 255f, 0x44 / 255f},
+            {1.0f, 1.0f, 1.0f, 1.0f},
+    };
+    /** OL 条颜色渐变：青 → 橙 → 红 */
+    private static final float[][] OL_COLORS = {
+            {0.0f, 0xdf / 255f, 0xdf / 255f, 0xdf / 255f},
+            {0.55f, 0xf0 / 255f, 0xd4 / 255f, 0x9d / 255f},
+            {1.0f, 0xf5 / 255f, 0x64 / 255f, 0x64 / 255f},
+    };
 
     @SubscribeEvent
     public static void onRenderOverlay(RenderGuiLayerEvent.Post event) {
@@ -50,54 +69,114 @@ public class CPBarOverlay {
         GuiGraphics g = event.getGuiGraphics();
         int screenW = mc.getWindow().getGuiScaledWidth();
 
-        int hudWidth = screenW / 2 - 40;
-        int hudX = screenW - hudWidth - 30;
-        int hudY = 15;
-        float scale = (float) hudWidth / TEX_WIDTH;
+        float hudW = WIDTH * SCALE;
+        float hudX = screenW - hudW - MARGIN_RIGHT;
+        float hudY = MARGIN_TOP;
 
-        // ==== Draw BG ====
         g.pose().pushPose();
         g.pose().translate(hudX, hudY, 0);
-        g.pose().scale(scale, scale, 1.0f);
+        g.pose().scale(SCALE, SCALE, 1.0f);
 
-        // Render overload-bg if overloaded, otherwise normal
-        if (data.getCurrentOverload() >= data.getMaxOverload() && data.getMaxOverload() > 0) {
-            g.blit(TEX_OL_BG, 0, 0, 0, 0, TEX_WIDTH, TEX_HEIGHT, TEX_WIDTH, TEX_HEIGHT);
+        boolean overloaded = data.getMaxOverload() > 0
+                && data.getCurrentOverload() >= data.getMaxOverload();
+        if (overloaded) {
+            drawOverload(g);
         } else {
-            g.blit(TEX_CP_BG, 0, 0, 0, 0, TEX_WIDTH, TEX_HEIGHT, TEX_WIDTH, TEX_HEIGHT);
-
-            // Overload progress (blue/turquoise gradient area in the top band)
-            float olRatio = data.getMaxOverload() > 0
-                    ? Math.min(1.0f, data.getCurrentOverload() / data.getMaxOverload()) : 0;
-            if (olRatio > 0) {
-                int olFillW = (int) (TEX_CP_W * olRatio);
-                // Alpha overlay: blend blue transparency
-                g.fill(TEX_CP_X, TEX_OL_Y,
-                        TEX_CP_X + olFillW, TEX_OL_Y + TEX_OL_H,
-                        (int)(olRatio * 120) << 24 | 0x00BFFF);
-            }
-
-            // CP bar (white gradient, right-aligned)
-            float cpRatio = data.getMaxCp() > 0
-                    ? Math.min(1.0f, data.getCurrentCp() / data.getMaxCp()) : 0;
-            if (cpRatio > 0) {
-                int cpFillW = (int) (TEX_CP_W * cpRatio);
-                int cpRightX = TEX_CP_X + TEX_CP_W;
-                g.blit(TEX_CP_FG,
-                        cpRightX - cpFillW, TEX_CP_Y,
-                        cpRightX - cpFillW, TEX_CP_Y,
-                        cpFillW, TEX_CP_H,
-                        TEX_WIDTH, TEX_HEIGHT);
-            }
+            drawNormal(g, data);
+            drawCPBar(g, data);
         }
 
         g.pose().popPose();
+    }
 
-        // Draw CP/OL text numbers (outside the scaled pose)
-        String cpText = String.format("CP %.0f/%.0f", data.getCurrentCp(), data.getMaxCp());
-        String olText = String.format("OL %.0f/%.0f", data.getCurrentOverload(), data.getMaxOverload());
-        int textX = hudX + 8;
-        g.drawString(mc.font, cpText, textX, hudY + 16, 0xFFFFFFFF, false);
-        g.drawString(mc.font, olText, textX, hudY + 28, 0xFFAAAAAA, false);
+    /** 正常模式：背景 + OL 条（背景 alpha 0.8，与 Return setColor(1,1,1,.8) 一致） */
+    private static void drawNormal(GuiGraphics g, PlayerAbilityData data) {
+        com.mojang.blaze3d.systems.RenderSystem.enableBlend();
+        com.mojang.blaze3d.systems.RenderSystem.defaultBlendFunc();
+        g.setColor(1, 1, 1, 0.8f);
+        g.blit(TEX_BACK_NORMAL, 0, 0, 0, 0, (int) WIDTH, (int) HEIGHT, (int) WIDTH, (int) HEIGHT);
+        g.setColor(1, 1, 1, 1);
+
+        float olRatio = data.getMaxOverload() > 0
+                ? Math.min(1.0f, data.getCurrentOverload() / data.getMaxOverload()) : 0;
+        if (olRatio > 0) {
+            float[] col = autoLerp(OL_COLORS, olRatio);
+            float len = OL_W * olRatio;
+            float x = OL_X0 + OL_W - len;
+            g.fill((int) x, (int) OL_Y0, (int) (x + len), (int) (OL_Y0 + OL_H),
+                    colorOf(col[1], col[2], col[3], 0.8f));
+        }
+        com.mojang.blaze3d.systems.RenderSystem.disableBlend();
+    }
+
+    /** CP 条：右对齐填充，0.16~0.96 比例 */
+    private static void drawCPBar(GuiGraphics g, PlayerAbilityData data) {
+        float cpRatio = data.getMaxCp() > 0
+                ? Math.min(1.0f, data.getCurrentCp() / data.getMaxCp()) : 0;
+        if (cpRatio <= 0) return;
+
+        float[] col = autoLerp(CP_COLORS, cpRatio);
+        float prog = 0.16f + cpRatio * 0.8f;
+        float len = CP_W * prog;
+        float x = CP_X0 + (CP_W - len);
+
+        // 用 cp.png 纹理按比例右对齐绘制,叠加渐变着色
+        com.mojang.blaze3d.systems.RenderSystem.enableBlend();
+        com.mojang.blaze3d.systems.RenderSystem.defaultBlendFunc();
+        g.setColor(col[1], col[2], col[3], 1.0f);
+        g.blit(TEX_CP, (int) x, (int) CP_Y0, (int) x, (int) CP_Y0,
+                (int) len, (int) CP_H, (int) WIDTH, (int) HEIGHT);
+        g.setColor(1, 1, 1, 1);
+
+        // 职业图标：CP 条右侧正方形
+        var ability = Minecraft.getInstance().player.getData(
+                com.mohistmc.academy.skill.AcademyAttachments.PLAYER_ABILITY).getCurrentAbility();
+        if (ability != null) {
+            float iconSize = 64;
+            float iconX = CP_X0 + CP_W - iconSize;
+            float iconY = CP_Y0 + (CP_H - iconSize) / 2;
+            g.setColor(1, 1, 1, 0.8f);
+            g.blit(ability.getOverlayIcon(), (int) iconX, (int) iconY,
+                    0, 0, (int) iconSize, (int) iconSize, 64, 64);
+            g.setColor(1, 1, 1, 1);
+        }
+        com.mojang.blaze3d.systems.RenderSystem.disableBlend();
+    }
+
+    /** 过载模式：背景 + 前景 + 高亮呼吸 */
+    private static void drawOverload(GuiGraphics g) {
+        com.mojang.blaze3d.systems.RenderSystem.enableBlend();
+        com.mojang.blaze3d.systems.RenderSystem.defaultBlendFunc();
+        g.setColor(1, 1, 1, 0.8f);
+        g.blit(TEX_BACK_OVERLOAD, 0, 0, 0, 0, (int) WIDTH, (int) HEIGHT, (int) WIDTH, (int) HEIGHT);
+        g.setColor(1, 1, 1, 1);
+        g.blit(TEX_FRONT_OVERLOAD, 0, 0, 0, 0, (int) WIDTH, (int) HEIGHT, (int) WIDTH, (int) HEIGHT);
+        float breathe = 0.3f + 0.35f * (float) (Math.sin(System.currentTimeMillis() / 200.0) + 1);
+        g.setColor(1, 1, 1, breathe);
+        g.blit(TEX_OVERLOAD_HIGHLIGHT, 0, 0, 0, 0, (int) WIDTH, (int) HEIGHT, (int) WIDTH, (int) HEIGHT);
+        g.setColor(1, 1, 1, 1);
+        com.mojang.blaze3d.systems.RenderSystem.disableBlend();
+    }
+
+    /** 渐变颜色插值 */
+    private static float[] autoLerp(float[][] list, double prog) {
+        for (int i = 0; i < list.length; i++) {
+            if (list[i][0] >= prog) {
+                if (i == 0) return list[0];
+                float[] last = list[i - 1];
+                float f = (float) ((prog - last[0]) / (list[i][0] - last[0]));
+                return new float[]{
+                        0, lerp(last[1], list[i][1], f), lerp(last[2], list[i][2], f), lerp(last[3], list[i][3], f)};
+            }
+        }
+        return list[list.length - 1];
+    }
+
+    private static float lerp(float a, float b, float f) {
+        return a + (b - a) * f;
+    }
+
+    private static int colorOf(float r, float g, float b, float a) {
+        return ((int) (a * 255) << 24) | ((int) (r * 255) << 16) | ((int) (g * 255) << 8) | (int) (b * 255);
     }
 }

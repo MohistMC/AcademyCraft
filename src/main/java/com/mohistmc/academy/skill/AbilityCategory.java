@@ -1,9 +1,11 @@
 package com.mohistmc.academy.skill;
 
+import com.mohistmc.academy.AcademyCraft;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public record AbilityCategory(String id) {
@@ -25,6 +27,12 @@ public record AbilityCategory(String id) {
 
     public String getTranslationKey() {
         return "item.academy.factor_" + id;
+    }
+
+    /** CP 条混合用职业图标 */
+    public ResourceLocation getOverlayIcon() {
+        return ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID,
+                "textures/abilities/" + id + "/icon_overlay.png");
     }
 
     public static AbilityCategory fromId(String id) {

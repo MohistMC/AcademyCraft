@@ -7,9 +7,15 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.slf4j.Logger;
 
@@ -23,6 +29,33 @@ public class ServerListener {
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         LOGGER.info("HELLO from server starting");
+    }
+
+    // ==================== 物品获得记录(教程条件) ====================
+
+    @SubscribeEvent
+    public void onItemPickup(ItemEntityPickupEvent.Post event) {
+        ItemStack stack = event.getItemEntity().getItem();
+        if (!stack.isEmpty()) markObtained(event.getPlayer(), stack.getItem());
+    }
+
+    @SubscribeEvent
+    public void onItemCraft(PlayerEvent.ItemCraftedEvent event) {
+        markObtained(event.getEntity(), event.getCrafting().getItem());
+    }
+
+    @SubscribeEvent
+    public void onItemSmelt(PlayerEvent.ItemSmeltedEvent event) {
+        markObtained(event.getEntity(), event.getSmelting().getItem());
+    }
+
+    private static void markObtained(Player player, Item item) {
+        PlayerAbilityData data = player.getData(AcademyAttachments.PLAYER_ABILITY);
+        String itemId = BuiltInRegistries.ITEM.getKey(item).toString();
+        if (!data.hasObtained(itemId)) {
+            data.markObtained(itemId);
+            data.syncTo(player);
+        }
     }
 
     @SubscribeEvent

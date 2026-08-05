@@ -36,6 +36,13 @@ public class PlayerAbilityDataCodec implements IAttachmentSerializer<CompoundTag
             }
         }
 
+        if (tag.contains("obtained")) {
+            ListTag list = tag.getList("obtained", Tag.TAG_STRING);
+            for (int i = 0; i < list.size(); i++) {
+                data.markObtained(list.getString(i));
+            }
+        }
+
         if (tag.contains("proficiency")) {
             CompoundTag profTag = tag.getCompound("proficiency");
             for (String key : profTag.getAllKeys()) {
@@ -122,6 +129,12 @@ public class PlayerAbilityDataCodec implements IAttachmentSerializer<CompoundTag
             learnedList.add(net.minecraft.nbt.StringTag.valueOf(skillId));
         }
         tag.put("learned", learnedList);
+
+        ListTag obtainedList = new ListTag();
+        for (String itemId : data.getObtainedItems()) {
+            obtainedList.add(net.minecraft.nbt.StringTag.valueOf(itemId));
+        }
+        tag.put("obtained", obtainedList);
 
         CompoundTag profTag = new CompoundTag();
         for (String skillId : data.getLearnedSkills()) {

@@ -43,6 +43,9 @@ public class PlayerAbilityData {
     private final Set<String> loadedMedia = new HashSet<>();
     private int misakaId = -1;
 
+    /** 曾经获得过的物品(拾取/合成/烧炼记录),用于教程条件 */
+    private final Set<String> obtainedItems = new HashSet<>();
+
 
     // ==================== 开发者模式 ====================
     private boolean devMode = false;
@@ -296,6 +299,20 @@ public class PlayerAbilityData {
         this.misakaId = misakaId;
     }
 
+    // ==================== 获得物品记录(教程条件) ====================
+
+    public void markObtained(String itemId) {
+        obtainedItems.add(itemId);
+    }
+
+    public boolean hasObtained(String itemId) {
+        return obtainedItems.contains(itemId);
+    }
+
+    public Set<String> getObtainedItems() {
+        return obtainedItems;
+    }
+
     public boolean hasApp(String appId) {
         return installedApps.contains(appId);
     }
@@ -396,6 +413,12 @@ public class PlayerAbilityData {
         }
         tag.put("learned", learnedList);
 
+        ListTag obtainedList = new ListTag();
+        for (String itemId : obtainedItems) {
+            obtainedList.add(StringTag.valueOf(itemId));
+        }
+        tag.put("obtained", obtainedList);
+
         CompoundTag profTag = new CompoundTag();
         for (String skillId : learnedSkills) {
             profTag.putFloat(skillId, skillProficiency.getOrDefault(skillId, 0.0f));
@@ -461,6 +484,13 @@ public class PlayerAbilityData {
             ListTag list = tag.getList("learned", net.minecraft.nbt.Tag.TAG_STRING);
             for (int i = 0; i < list.size(); i++) {
                 data.learnSkill(list.getString(i));
+            }
+        }
+
+        if (tag.contains("obtained")) {
+            ListTag list = tag.getList("obtained", net.minecraft.nbt.Tag.TAG_STRING);
+            for (int i = 0; i < list.size(); i++) {
+                data.markObtained(list.getString(i));
             }
         }
         if (tag.contains("proficiency")) {
