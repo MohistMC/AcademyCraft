@@ -1,31 +1,25 @@
-<!-- Thanks for contributing to AcademyCraft! -->
+## 说明 / Description
 
-## What does this PR do?
+<!-- 这个 PR 做了什么？关联了哪个 Issue？ -->
 
-<!-- A clear and concise description of the change. -->
+## 类型 / Type
 
-## Related issue
+- [ ] 新功能 / Feature
+- [ ] 修复 / Bug fix
+- [ ] 文档 / Docs
+- [ ] 重构 / Refactor
+- [ ] 本地化 / Localization
 
-<!-- e.g. Fixes #16  /  Closes #8  /  none -->
+## 目标分支 / Target branch
 
-## Target branch
+<!-- 应为 1.21.1 -->
 
-<!-- Must be `1.21.1` for new work, or `1.12.2` for legacy fixes. -->
+## 测试 / Testing
 
-- [ ] Targets `1.21.1` (NeoForge, in development)
-- [ ] Targets `1.12.2` (legacy, critical fixes only)
+- [ ] 单人环境通过 / Single player
+- [ ] 多人环境通过（如涉及网络或存档）/ Multiplayer (if relevant)
+- [ ] 已更新 `zh_cn.json` 与 `ROADMAP.md`（如适用）
 
-## Checklist
+## 关联 Issue / Related
 
-- [ ] `./gradlew build` passes locally and in CI
-- [ ] I followed the existing code style (Java, 4-space indent)
-- [ ] I updated localization (`src/main/resources/assets/academy/lang/`) if user-facing strings changed
-- [ ] I added/updated a GameTest or manual test step if behavior changed
-
-## Test plan
-
-<!-- How did you verify this works? Client / server run, specific ability used, etc. -->
-
-## Notes for reviewers
-
-<!-- Anything non-obvious, design decisions, or risks. -->
+<!-- 例如：Closes #123 -->

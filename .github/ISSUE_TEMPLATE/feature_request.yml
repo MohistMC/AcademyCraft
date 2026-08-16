@@ -1,36 +1,41 @@
-name: Feature request
-description: Suggest a new ability, feature, or improvement for AcademyCraft
-title: "[Idea] "
+name: 新想法 / Feature Idea
+description: 提议新能力、机器或改进 / Propose a new ability, machine or improvement
 labels: ["enhancement"]
 body:
+  - type: input
+    id: title
+    attributes:
+      label: 想法名称 / Idea
+      placeholder: "例如：暗物质 Dark Matter"
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: 动机 / Why
+      description: 为什么需要它？解决什么痛点或使用场景？
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 方案设想 / Proposed approach
+      description: 你设想如何实现？是否对标原版 1.12.2 的某项内容？
   - type: dropdown
-    id: branch
+    id: scope
     attributes:
-      label: Which line should this target?
+      label: 范围 / Scope
       options:
-        - "1.21.1 (NeoForge, in development)"
-        - "1.12.2 (Forge, stable)"
-        - "Both / not sure"
+        - "新能力 / New ability"
+        - "新机器 / New machine"
+        - "系统/框架 / System or framework"
+        - "UI/特效/本地化 / UI, effect or localization"
+        - "其它 / Other"
     validations:
       required: true
-  - type: textarea
-    id: problem
+  - type: checkboxes
+    id: willing
     attributes:
-      label: What problem does this solve?
-      description: Is your request related to a problem? Describe it.
-    validations:
-      required: false
-  - type: textarea
-    id: solution
-    attributes:
-      label: Describe the solution you'd like
-      description: A clear and concise description of the ability / feature.
-    validations:
-      required: true
-  - type: textarea
-    id: context
-    attributes:
-      label: Additional context
-      description: References, lore from the Railgun/Index universe, mockups, etc.
-    validations:
-      required: false
+      label: 参与 / Involvement
+      options:
+        - label: "我愿意认领并实现这个想法 / I'd like to implement it"

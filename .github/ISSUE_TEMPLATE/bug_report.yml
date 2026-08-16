@@ -1,70 +1,54 @@
-name: Bug report
-description: Report a bug in AcademyCraft
-title: "[Bug] "
+name: Bug 报告 / Bug Report
+description: 报告一个可复现的问题 / Report a reproducible problem
 labels: ["bug"]
 body:
-  - type: dropdown
-    id: branch
+  - type: input
+    id: version
     attributes:
-      label: Which branch / version are you using?
-      description: The 1.21.1 line is a NeoForge rewrite still in development (v0.0.1). The 1.12.2 line is the stable release (1.1.6).
-      options:
-        - "1.21.1 (NeoForge, in development)"
-        - "1.12.2 (Forge, stable 1.1.6)"
-        - "Other / not sure"
+      label: 模组版本 / Mod version
+      description: 例如 1.1.7（1.21.1）
+      placeholder: "1.1.7"
     validations:
       required: true
-  - type: input
+  - type: dropdown
     id: mc-version
     attributes:
-      label: Minecraft version
-      placeholder: "e.g. 1.21.1"
+      label: Minecraft 版本 / Minecraft version
+      options:
+        - "1.21.1"
+        - "1.12.2 (legacy)"
+        - "其它 / Other"
     validations:
       required: true
-  - type: input
-    id: loader-version
+  - type: dropdown
+    id: environment
     attributes:
-      label: NeoForge / Forge version
-      placeholder: "e.g. 21.1.232"
-    validations:
-      required: false
-  - type: textarea
-    id: what-happened
-    attributes:
-      label: What happened?
-      description: A clear and concise description of the bug.
-    validations:
-      required: true
-  - type: textarea
-    id: reproduce
-    attributes:
-      label: Steps to reproduce
-      description: How can we reproduce the issue?
-      placeholder: |
-        1. Go to ...
-        2. Use ability ...
-        3. See error
+      label: 运行环境 / Environment
+      description: 涉及能力丢失/网络问题请务必选"跨服"
+      options:
+        - "单人 / Single player"
+        - "多人-开服端 / Dedicated server"
+        - "多人-客户端 / Multiplayer client"
+        - "跨服 (BungeeCord/Velocity) / Cross-server"
     validations:
       required: true
   - type: textarea
-    id: expected
+    id: desc
     attributes:
-      label: Expected behavior
-      description: What did you expect to happen?
+      label: 问题描述 / Description
+      description: 发生了什么？期望的行为是什么？
     validations:
-      required: false
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤 / Steps to reproduce
+      placeholder: "1. ... 2. ... 3. ..."
+    validations:
+      required: true
   - type: textarea
     id: logs
     attributes:
-      label: Relevant logs / crash report
-      description: Drag & drop or paste the latest.log / crash report. Avoid screenshots of text.
+      label: 日志 / Logs
+      description: 粘贴最新错误日志，建议使用 https://mclo.gs 或 paste 网站，不要直接截图长文本
       render: shell
-    validations:
-      required: false
-  - type: checkboxes
-    id: terms
-    attributes:
-      label: Checklist
-      options:
-        - label: I searched existing issues and this bug is not already reported.
-          required: true
