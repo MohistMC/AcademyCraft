@@ -138,6 +138,18 @@ class ShockContextC(par: ShockContext) extends ClientContext(par) {
 
   var timeProvider: () => Double = null
 
+  @Listener(channel=MSG_PERFORM, side=Array(Side.CLIENT))
+  def l_perform(ticks: Int) = if (isLocal) {
+    val init = GameTimer.getTime
+    timeProvider = () => {
+      val dt = GameTimer.getTime - init
+      dt / 0.3
+    }
+
+    anim = createPunchAnim()
+    anim.perform(0)
+  }
+
   @Listener(channel=MSG_GENERATE_EFFECT, side=Array(Side.CLIENT))
   def l_effect() = if (isLocal) {
     val init = GameTimer.getTime

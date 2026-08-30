@@ -9,13 +9,15 @@ import cn.academy.datapart.HandRenderOverrideData
 import cn.lambdalib2.s11n.network.NetworkMessage.Listener
 import cn.lambdalib2.util._
 import cn.lambdalib2.vis.animation.presets.CompTransformAnim
-import jdk.nashorn.internal.ir.BlockStatement
+import net.minecraft.block.Block
+import net.minecraft.client.Minecraft
+import net.minecraft.client.particle.ParticleDigging
 import net.minecraft.entity.Entity
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
-import net.minecraft.util.SoundCategory
+import net.minecraft.util.{EnumFacing, EnumParticleTypes, SoundCategory}
 import net.minecraft.util.math.{BlockPos, RayTraceResult, Vec3d}
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
@@ -242,6 +244,30 @@ class BlastwaveContextC(par: BlastwaveContext) extends ClientContext(par) {
     world.spawnEntity(effect)
   }
 
+
+  @Listener(channel=MSG_GENERATE_EFFECT_BLOCKS, side=Array(Side.CLIENT))
+  private def l_effectBlocks(pos: Vec3d) = {
+    for(i <- 0 until rangei(20, 40)) {
+      val pt = new BlockPos(
+        pos.x + 0.5 + ranged(-2.5, 2.5),
+        pos.y + 0.5 + ranged(-0.5, 1.5),
+        pos.z + 0.5 + ranged(-2.5, 2.5)
+      )
+      val is = world.getBlockState(pt)
+      if (is.getBlock != Blocks.AIR) {
+        def randvel() = ranged(-0.2, 0.2)
+        val particleManager = Minecraft.getMinecraft.effectRenderer
+        val particle = particleManager.spawnEffectParticle(
+          EnumParticleTypes.BLOCK_CRACK.getParticleID,
+          pt.getX + nextDouble(), pt.getY + nextDouble() * 0.5, pt.getZ + nextDouble(),
+          randvel(), 0.1 + nextDouble() * 0.2, randvel(),
+          Block.getIdFromBlock(is.getBlock),
+          EnumFacing.UP.ordinal()
+        ).asInstanceOf[ParticleDigging]
+        particle.setBlockPos(pt)
+      }
+    }
+  }
 
   @SideOnly(Side.CLIENT)
   @Listener(channel=MSG_MADEALIVE, side=Array(Side.CLIENT))
