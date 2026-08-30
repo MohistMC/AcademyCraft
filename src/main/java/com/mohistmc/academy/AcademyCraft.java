@@ -35,6 +35,7 @@ import com.mohistmc.academy.world.AcademyFluids;
 import com.mohistmc.academy.world.AcademyItems;
 import com.mohistmc.academy.world.AcademyMenus;
 import com.mohistmc.academy.world.AcademySounds;
+import com.mohistmc.academy.world.block.entity.MetalFomerBlockEntity;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -84,7 +85,7 @@ public class AcademyCraft {
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 AcademyBlockEntities.METAL_FORMER.get(),
-                (be, side) -> be.getHandlerForSide(side)
+                MetalFomerBlockEntity::getHandlerForSide
         );
     }
 

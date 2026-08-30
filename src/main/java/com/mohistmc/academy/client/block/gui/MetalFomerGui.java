@@ -25,7 +25,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 public class MetalFomerGui extends AcademyBaseUI<MetalFomerMenu> {
 
     private static final ResourceLocation UI_METAL_FORMER = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/ui/ui_metalformer.png");
-    private static final ResourceLocation TEX_PROGRESS = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/progress_metalformer.png");
+    private static final ResourceLocation TEX_PROGRESS = ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "textures/guis/progress/progress_metalformer.png");
 
     /** 与 Mode 枚举顺序对应：PLATE, INCISE, ETCH, REFINE（alpha-mask 白色剪影，渲染时染金色） */
     private static final ResourceLocation[] MODE_ICONS = {

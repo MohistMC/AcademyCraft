@@ -87,7 +87,9 @@ public class MetalFormingRecipe implements Recipe<MetalFormingRecipeInput> {
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.of(input);
+        NonNullList<Ingredient> ingredients = NonNullList.create();
+        ingredients.add(input);
+        return ingredients;
     }
 
     public static class Serializer implements RecipeSerializer<MetalFormingRecipe> {

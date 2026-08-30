@@ -15,4 +15,8 @@ public class Resources {
         }
         return layers;
     }
+
+    public static ResourceLocation id(String path) {
+        return ResourceLocation.fromNamespaceAndPath("academy", path);
+    }
 }
