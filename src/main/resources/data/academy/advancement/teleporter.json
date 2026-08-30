@@ -2,8 +2,8 @@
   "parent": "academy:first_skill",
   "display": {
     "icon": {"id": "academy:factor_teleporter"},
-    "title": "空间操纵者",
-    "description": "获得空间操纵者因子，折叠维度。",
+    "title": {"translate": "advancements.academy.teleporter"},
+    "description": {"translate": "advancements.academy.teleporter.desc"},
     "frame": "goal"
   },
   "criteria": {

@@ -2,8 +2,8 @@
   "parent": "academy:root",
   "display": {
     "icon": {"id": "academy:energy_unit"},
-    "title": "能量核心",
-    "description": "获得能量单元，为你的设备供能。",
+    "title": {"translate": "advancements.academy.energy_core"},
+    "description": {"translate": "advancements.academy.energy_core.desc"},
     "frame": "task"
   },
   "criteria": {

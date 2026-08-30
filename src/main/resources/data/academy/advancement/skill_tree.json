@@ -2,8 +2,8 @@
   "parent": "academy:first_terminal",
   "display": {
     "icon": {"id": "academy:app_skill_tree"},
-    "title": "技能图谱",
-    "description": "获得技能树应用，开始研习能力。",
+    "title": {"translate": "advancements.academy.skill_tree"},
+    "description": {"translate": "advancements.academy.skill_tree.desc"},
     "frame": "task"
   },
   "criteria": {

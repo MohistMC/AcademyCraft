@@ -2,8 +2,8 @@
   "parent": "academy:first_skill",
   "display": {
     "icon": {"id": "academy:factor_aerohand"},
-    "title": "空气操控者",
-    "description": "获得空气操控者因子，驾驭气流。",
+    "title": {"translate": "advancements.academy.aerohand"},
+    "description": {"translate": "advancements.academy.aerohand.desc"},
     "frame": "goal"
   },
   "criteria": {

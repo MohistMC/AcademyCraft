@@ -2,8 +2,8 @@
   "parent": "academy:first_skill",
   "display": {
     "icon": {"id": "academy:factor_electromaster"},
-    "title": "电磁使",
-    "description": "获得电磁使因子，掌控雷电之力。",
+    "title": {"translate": "advancements.academy.electromaster"},
+    "description": {"translate": "advancements.academy.electromaster.desc"},
     "frame": "goal"
   },
   "criteria": {

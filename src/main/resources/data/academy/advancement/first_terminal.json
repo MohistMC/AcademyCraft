@@ -2,8 +2,8 @@
   "parent": "academy:root",
   "display": {
     "icon": {"id": "academy:developer_portable"},
-    "title": "初识终端",
-    "description": "获得便携开发机，开启你的能力之旅。",
+    "title": {"translate": "advancements.academy.first_terminal"},
+    "description": {"translate": "advancements.academy.first_terminal.desc"},
     "frame": "task"
   },
   "criteria": {

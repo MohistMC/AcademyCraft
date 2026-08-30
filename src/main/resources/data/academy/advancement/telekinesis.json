@@ -2,8 +2,8 @@
   "parent": "academy:first_skill",
   "display": {
     "icon": {"id": "academy:factor_telekinesis"},
-    "title": "念力使",
-    "description": "获得念力使因子，以意念撼动物理。",
+    "title": {"translate": "advancements.academy.telekinesis"},
+    "description": {"translate": "advancements.academy.telekinesis.desc"},
     "frame": "goal"
   },
   "criteria": {

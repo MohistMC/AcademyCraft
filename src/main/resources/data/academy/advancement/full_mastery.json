@@ -2,8 +2,8 @@
   "parent": "academy:electromaster",
   "display": {
     "icon": {"id": "academy:reso_crystal"},
-    "title": "全能者",
-    "description": "集齐六大职业能力因子，登临能力之巅。",
+    "title": {"translate": "advancements.academy.full_mastery"},
+    "description": {"translate": "advancements.academy.full_mastery.desc"},
     "frame": "challenge"
   },
   "criteria": {
@@ -17,6 +17,6 @@
   "requirements": [["e", "m", "t", "v", "a", "k"]],
   "rewards": {
     "experience": 1000,
-    "title": "学院荣誉学员"
+    "title": {"translate": "advancements.academy.full_mastery.title"}
   }
 }

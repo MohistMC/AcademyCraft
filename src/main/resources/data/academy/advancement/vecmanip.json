@@ -2,8 +2,8 @@
   "parent": "academy:first_skill",
   "display": {
     "icon": {"id": "academy:factor_vecmanip"},
-    "title": "矢量操纵者",
-    "description": "获得矢量操纵者因子，偏转万物轨迹。",
+    "title": {"translate": "advancements.academy.vecmanip"},
+    "description": {"translate": "advancements.academy.vecmanip.desc"},
     "frame": "goal"
   },
   "criteria": {

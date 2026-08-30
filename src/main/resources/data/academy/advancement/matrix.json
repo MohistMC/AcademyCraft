@@ -2,8 +2,8 @@
   "parent": "academy:energy_core",
   "display": {
     "icon": {"id": "academy:matrix"},
-    "title": "矩阵降临",
-    "description": "获得矩阵核心，构建你的能量网络。",
+    "title": {"translate": "advancements.academy.matrix"},
+    "description": {"translate": "advancements.academy.matrix.desc"},
     "frame": "task"
   },
   "criteria": {

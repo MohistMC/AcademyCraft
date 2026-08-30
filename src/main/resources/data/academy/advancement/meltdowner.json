@@ -2,8 +2,8 @@
   "parent": "academy:first_skill",
   "display": {
     "icon": {"id": "academy:factor_meltdowner"},
-    "title": "原子崩坏者",
-    "description": "获得原子崩坏者因子，操纵辐射能量。",
+    "title": {"translate": "advancements.academy.meltdowner"},
+    "description": {"translate": "advancements.academy.meltdowner.desc"},
     "frame": "goal"
   },
   "criteria": {
