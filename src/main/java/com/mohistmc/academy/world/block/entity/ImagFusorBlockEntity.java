@@ -1,6 +1,8 @@
 package com.mohistmc.academy.world.block.entity;
 
-import com.mohistmc.academy.crafting.ImagFusorRecipes;
+import com.mohistmc.academy.crafting.AcademyRecipeTypes;
+import com.mohistmc.academy.crafting.ImagFusorRecipe;
+import com.mohistmc.academy.crafting.ImagFusorRecipeInput;
 import com.mohistmc.academy.energy.api.block.IWirelessReceiver;
 import com.mohistmc.academy.world.AcademyBlockEntities;
 import com.mohistmc.academy.world.AcademyItems;
@@ -96,18 +98,20 @@ public class ImagFusorBlockEntity extends AcademyContainerBlockEntity implements
             return;
         }
 
-        ImagFusorRecipes.IFRecipe recipe = ImagFusorRecipes.INSTANCE.getRecipe(input);
+        ImagFusorRecipe recipe = level.getRecipeManager()
+                .getRecipeFor(AcademyRecipeTypes.IMAG_FUSOR.get(), new ImagFusorRecipeInput(input), level)
+                .map(net.minecraft.world.item.crafting.RecipeHolder::value).orElse(null);
         if (recipe == null) {
             processingTime = 0;
             return;
         }
 
-        if (fluidAmount < recipe.phaseLiquid()) {
+        if (fluidAmount < recipe.getPhaseLiquid()) {
             processingTime = 0;
             return;
         }
 
-        ItemStack result = recipe.output();
+        ItemStack result = recipe.getOutput();
         if (!output.isEmpty() && (!ItemStack.isSameItem(output, result)
                 || output.getCount() >= output.getMaxStackSize())) {
             processingTime = 0;
@@ -117,7 +121,7 @@ public class ImagFusorBlockEntity extends AcademyContainerBlockEntity implements
         processingTime++;
         if (processingTime >= PROCESSING_DURATION) {
             processingTime = 0;
-            fluidAmount -= recipe.phaseLiquid();
+            fluidAmount -= recipe.getPhaseLiquid();
             input.shrink(1);
             if (output.isEmpty()) {
                 getItems().set(OUTPUT_SLOT, result.copy());

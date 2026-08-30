@@ -1,7 +1,7 @@
 package com.mohistmc.academy.support.jei;
 
 import com.mohistmc.academy.crafting.AcademyRecipeTypes;
-import com.mohistmc.academy.crafting.ImagFusorRecipes;
+import com.mohistmc.academy.crafting.ImagFusorRecipe;
 import com.mohistmc.academy.crafting.MetalFormingRecipe;
 import com.mohistmc.academy.utils.Resources;
 import com.mohistmc.academy.world.AcademyItems;
@@ -41,28 +41,24 @@ public class ACJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
 
-        registration.addRecipes(FusorCategory.TYPE, ImagFusorRecipes.INSTANCE.getAllRecipes());
-
-        // MetalForming recipes are data-driven and synced to the client's RecipeManager
+        // ImagFusor / MetalForming recipes are data-driven and synced to the client's RecipeManager
         var level = Minecraft.getInstance().level;
         if (level == null) {
-            LOGGER.warn("[AC-JEI] registerRecipes: Minecraft level is null, skipping metal forming recipes");
+            LOGGER.warn("[AC-JEI] registerRecipes: Minecraft level is null, skipping recipe registration");
             return;
         }
+
+        List<ImagFusorRecipe> imagFusor = level.getRecipeManager()
+                .getAllRecipesFor(AcademyRecipeTypes.IMAG_FUSOR.get())
+                .stream().map(RecipeHolder::value).toList();
+        registration.addRecipes(FusorCategory.TYPE, imagFusor);
 
         List<RecipeHolder<MetalFormingRecipe>> mfHolders = level.getRecipeManager()
                 .getAllRecipesFor(AcademyRecipeTypes.METAL_FORMING.get());
         List<MetalFormingRecipe> metalForming = mfHolders.stream().map(RecipeHolder::value).toList();
 
-        if (!mfHolders.isEmpty()) {
-            var sample = mfHolders.get(0).value();
-            LOGGER.info("[AC-JEI] sample output={} servings/empty={} ingEmpty={} mode={}",
-                    sample.getOutput(),
-                    sample.getOutput().isEmpty(),
-                    sample.getIngredients().isEmpty(),
-                    sample.getMode());
-        }
-        LOGGER.info("[AC-JEI] registerRecipes: registering {} metal forming recipes for {}", metalForming.size(), MetalFormerCategory.TYPE.getUid());
+        LOGGER.info("[AC-JEI] registerRecipes: registering {} imag fusor / {} metal forming recipes",
+                imagFusor.size(), metalForming.size());
         registration.addRecipes(MetalFormerCategory.TYPE, metalForming);
     }
 

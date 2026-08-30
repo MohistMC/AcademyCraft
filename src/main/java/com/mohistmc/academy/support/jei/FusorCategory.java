@@ -1,6 +1,6 @@
 package com.mohistmc.academy.support.jei;
 
-import com.mohistmc.academy.crafting.ImagFusorRecipes.IFRecipe;
+import com.mohistmc.academy.crafting.ImagFusorRecipe;
 import com.mohistmc.academy.utils.Resources;
 import com.mohistmc.academy.world.AcademyBlocks;
 import com.mohistmc.academy.world.AcademyItems;
@@ -15,9 +15,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-public class FusorCategory implements IRecipeCategory<IFRecipe> {
+public class FusorCategory implements IRecipeCategory<ImagFusorRecipe> {
 
-    public static final RecipeType<IFRecipe> TYPE = new RecipeType<>(Resources.id("imag_fusor"), IFRecipe.class);
+    public static final RecipeType<ImagFusorRecipe> TYPE = new RecipeType<>(Resources.id("imag_fusor"), ImagFusorRecipe.class);
 
     private static final int WIDTH = 115, HEIGHT = 66;
     private static final ResourceLocation BG = Resources.id("textures/guis/nei_fusor.png");
@@ -31,7 +31,7 @@ public class FusorCategory implements IRecipeCategory<IFRecipe> {
     }
 
     @Override
-    public RecipeType<IFRecipe> getRecipeType() {
+    public RecipeType<ImagFusorRecipe> getRecipeType() {
         return TYPE;
     }
 
@@ -51,9 +51,9 @@ public class FusorCategory implements IRecipeCategory<IFRecipe> {
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, IFRecipe recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, ImagFusorRecipe recipe, IFocusGroup focuses) {
 
-        builder.addSlot(RecipeIngredientRole.INPUT, 6, 37).addItemStack(recipe.input());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 94, 37).addItemStack(recipe.output());
+        builder.addSlot(RecipeIngredientRole.INPUT, 6, 37).addIngredients(recipe.getIngredients().get(0));
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 94, 37).addItemStack(recipe.getOutput());
     }
 }

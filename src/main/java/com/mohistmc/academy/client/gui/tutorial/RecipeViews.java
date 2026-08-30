@@ -3,7 +3,7 @@ package com.mohistmc.academy.client.gui.tutorial;
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.client.gui.GuiRenderHelper;
 import com.mohistmc.academy.crafting.AcademyRecipeTypes;
-import com.mohistmc.academy.crafting.ImagFusorRecipes;
+import com.mohistmc.academy.crafting.ImagFusorRecipe;
 import com.mohistmc.academy.crafting.MetalFormingRecipe;
 import com.mohistmc.academy.tutorial.ViewGroup;
 import java.util.ArrayList;
@@ -84,10 +84,15 @@ public final class RecipeViews {
             }
         }
 
-        for (ImagFusorRecipes.IFRecipe r : ImagFusorRecipes.INSTANCE.getAllRecipes()) {
-            if (sameItem(r.output(), target)) {
-                out.add(MachineView.fusor(new ItemStack[]{r.input()}, r.output(), r.phaseLiquid()));
-            }
+        for (RecipeHolder<ImagFusorRecipe> holder : rm.getAllRecipesFor(AcademyRecipeTypes.IMAG_FUSOR.get())) {
+            ImagFusorRecipe r = holder.value();
+            ItemStack o = r.getOutput();
+            if (o.isEmpty() || !sameItem(o, target)) continue;
+            ItemStack[] ins = r.getIngredients().stream()
+                    .filter(ing -> !ing.isEmpty())
+                    .map(ing -> ing.getItems().length == 0 ? ItemStack.EMPTY : ing.getItems()[0])
+                    .toArray(ItemStack[]::new);
+            out.add(MachineView.fusor(ins, o, r.getPhaseLiquid()));
         }
 
         for (RecipeHolder<MetalFormingRecipe> holder : rm.getAllRecipesFor(AcademyRecipeTypes.METAL_FORMING.get())) {

@@ -3,7 +3,6 @@ package com.mohistmc.academy;
 import com.mohistmc.academy.config.ACConfig;
 import com.mohistmc.academy.crafting.AcademyRecipeSerializers;
 import com.mohistmc.academy.crafting.AcademyRecipeTypes;
-import com.mohistmc.academy.crafting.MFIFRecipes;
 import com.mohistmc.academy.listener.ServerListener;
 import com.mohistmc.academy.network.ConnectToNodePacket;
 import com.mohistmc.academy.network.ConsoleCommandPacket;
@@ -93,7 +92,6 @@ public class AcademyCraft {
         SkillRegistry.init();
         AppRegistry.init();
         MediaTrackRegistry.init();
-        MFIFRecipes.init();
         LOGGER.info("AcademyCraft Skill Registry initialized with {} skills", SkillRegistry.getAllSkills().size());
     }
 

@@ -1,0 +1,11 @@
+{
+  "type": "academy:imag_fusor",
+  "input": {
+    "item": "academy:crystal_low"
+  },
+  "phaseLiquid": 3000,
+  "output": {
+    "count": 1,
+    "id": "academy:crystal_normal"
+  }
+}

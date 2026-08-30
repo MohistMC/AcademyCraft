@@ -15,4 +15,8 @@ public class AcademyRecipeTypes {
     public static final Supplier<RecipeType<MetalFormingRecipe>> METAL_FORMING =
             RECIPE_TYPES.register("metal_forming", () ->
                     RecipeType.simple(ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "metal_forming")));
+
+    public static final Supplier<RecipeType<ImagFusorRecipe>> IMAG_FUSOR =
+            RECIPE_TYPES.register("imag_fusor", () ->
+                    RecipeType.simple(ResourceLocation.fromNamespaceAndPath(AcademyCraft.MODID, "imag_fusor")));
 }

@@ -13,4 +13,7 @@ public class AcademyRecipeSerializers {
 
     public static final Supplier<RecipeSerializer<MetalFormingRecipe>> METAL_FORMING =
             SERIALIZERS.register("metal_forming", MetalFormingRecipe.Serializer::new);
+
+    public static final Supplier<RecipeSerializer<ImagFusorRecipe>> IMAG_FUSOR =
+            SERIALIZERS.register("imag_fusor", ImagFusorRecipe.Serializer::new);
 }
