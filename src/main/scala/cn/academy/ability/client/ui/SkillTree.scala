@@ -828,7 +828,7 @@ private object Common {
 
         console.enqueue(printTask(Console.localized("dev_begin")))
         console.enqueue(printTask(Console.localized("progress", fmt(0))))
-        send(NetDelegate.MSG_START_LEVEL, data, developer)
+        send(NetDelegate.MSG_START_LEVEL, data, data.getEntity, developer)
         data.reset()
 
         console.enqueue(new Task {
