@@ -21,6 +21,8 @@ public final class ACConfig {
         public static final ModConfigSpec.DoubleValue SKILL_DAMAGE_MULTIPLIER;
         public static final ModConfigSpec.DoubleValue SKILL_RANGE_MULTIPLIER;
         public static final ModConfigSpec.BooleanValue PVP_ENABLED;
+        public static final ModConfigSpec.BooleanValue CROSS_SERVER_SYNC;
+        public static final ModConfigSpec.ConfigValue<String> CROSS_SERVER_SYNC_DIR;
 
         static {
             ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -43,6 +45,20 @@ public final class ACConfig {
                     .define("pvpEnabled", true);
             builder.pop();
 
+            builder.push("crossServer");
+            CROSS_SERVER_SYNC = builder
+                    .comment("Enable cross-server (BungeeCord/Velocity) ability persistence. See Issue #16.")
+                    .comment("When enabled, each player's ability data is written to / read from a")
+                    .comment("shared directory so it survives switching between backend servers.")
+                    .comment("No effect on single-server (non-proxy) setups.")
+                    .define("crossServerSync", false);
+            CROSS_SERVER_SYNC_DIR = builder
+                    .comment("Directory shared by all backend servers for cross-server ability data.")
+                    .comment("Must be accessible by every backend (e.g. a mounted shared volume).")
+                    .comment("Empty = use '<runDir>/academy_cross_server'.")
+                    .define("crossServerSyncDir", "");
+            builder.pop();
+
             SPEC = builder.build();
         }
 
@@ -50,6 +66,8 @@ public final class ACConfig {
         public static double damageMul() { return SKILL_DAMAGE_MULTIPLIER.get(); }
         public static double rangeMul() { return SKILL_RANGE_MULTIPLIER.get(); }
         public static boolean pvpEnabled() { return PVP_ENABLED.get(); }
+        public static boolean crossServerSync() { return CROSS_SERVER_SYNC.get(); }
+        public static String crossServerSyncDir() { return CROSS_SERVER_SYNC_DIR.get(); }
     }
 
     // ==================== 客户端配置 ====================
