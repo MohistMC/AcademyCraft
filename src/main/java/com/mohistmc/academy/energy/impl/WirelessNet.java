@@ -39,6 +39,8 @@ public class WirelessNet {
 
     private boolean disposed = false;
 
+    private int tickCounter = 0;
+
     WirelessNet(WiWorldData data, VWMatrix matrix, String ssid, String pass) {
         this.data = data;
         this.matrix = matrix;
@@ -186,8 +188,11 @@ public class WirelessNet {
             return;
         }
 
-        // 随机打乱节点列表，避免总对同一个节点均衡
-        Collections.shuffle(nodes);
+        // 随机打乱节点列表，避免总对同一个节点均衡（限频，避免每 tick 无谓开销）
+        if (tickCounter % UPDATE_INTERVAL == 0) {
+            Collections.shuffle(nodes);
+        }
+        tickCounter++;
 
         double sum = 0, maxSum = 0;
         for (VWNode vn : nodes) {
