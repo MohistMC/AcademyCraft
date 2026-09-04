@@ -31,6 +31,9 @@ public class ACTutorial {
     private Condition condition = Conditions.alwaysTrue();
     private boolean defaultInstalled = true;
 
+    // 教程 md 资源为烘焙进包的只读内容，运行时不会变化，缓存避免每次调用重复读盘
+    private String cachedContent;
+
     private final List<ViewGroup> previewHandlers = new ArrayList<>();
 
     public ACTutorial(String id) {
@@ -57,15 +60,17 @@ public class ACTutorial {
     }
 
     public String getContent() {
+        if (cachedContent != null) return cachedContent;
         final String unknown = "![title]\nUNKNOWN \n![brief]\n![content]\n ";
         try {
             String lang = Minecraft.getInstance().getLanguageManager().getSelected();
             String s = readMd(lang);
             if (s == null) s = readMd("en_us");
-            return s == null ? unknown : s;
+            cachedContent = s == null ? unknown : s;
         } catch (Exception e) {
-            return unknown;
+            cachedContent = unknown;
         }
+        return cachedContent;
     }
 
     private String readMd(String lang) {
