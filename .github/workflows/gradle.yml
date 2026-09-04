@@ -31,10 +31,13 @@ jobs:
     # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
     - name: Setup Gradle
-      run: chmod +x ./gradlew
+      uses: gradle/actions/setup-gradle@v4
+      with:
+        # 仅默认分支回写缓存，PR 仅读取，避免缓存被轻易覆盖
+        cache-read-only: ${{ github.ref != 'refs/heads/1.21.1' }}
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew build
+      run: ./gradlew build --no-daemon
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v6
