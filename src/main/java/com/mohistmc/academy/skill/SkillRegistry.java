@@ -170,6 +170,17 @@ public class SkillRegistry {
         return SKILLS.get(id);
     }
 
+    /**
+     * 按职业解析技能。技能注册表中 brain_course / brain_course_advanced / mind_course
+     * 这三个通用被动技能在所有职业下使用相同 id 注册，全局按 id 查找会恒定返回最后注册
+     * 的职业（念力）实例，导致其它职业无法学习。按当前职业解析可得到正确的技能对象。
+     */
+    public static Skill getSkill(AbilityCategory category, String id) {
+        return getSkillsByCategory(category).stream()
+                .filter(s -> s.getId().equals(id))
+                .findFirst().orElse(null);
+    }
+
     public static SkillEffect getEffect(String id) {
         return EFFECTS.get(id);
     }

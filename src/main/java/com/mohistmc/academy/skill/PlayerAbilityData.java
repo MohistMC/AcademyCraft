@@ -379,7 +379,7 @@ public class PlayerAbilityData {
         if (!hasAbility()) return 0;
         int maxLevel = 0;
         for (String skillId : learnedSkills) {
-            Skill skill = SkillRegistry.getSkill(skillId);
+            Skill skill = SkillRegistry.getSkill(currentAbility, skillId);
             if (skill != null && skill.getCategory() == currentAbility) {
                 maxLevel = Math.max(maxLevel, skill.getLevel());
             }

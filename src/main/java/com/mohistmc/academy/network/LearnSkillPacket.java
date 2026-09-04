@@ -3,6 +3,7 @@ package com.mohistmc.academy.network;
 import com.mohistmc.academy.AcademyCraft;
 import com.mohistmc.academy.capability.EnergyItemHelper;
 import com.mohistmc.academy.capability.IFEnergyStorage;
+import com.mohistmc.academy.skill.AbilityCategory;
 import com.mohistmc.academy.skill.AcademyAttachments;
 import com.mohistmc.academy.skill.PlayerAbilityData;
 import com.mohistmc.academy.skill.Skill;
@@ -48,7 +49,13 @@ public record LearnSkillPacket(String skillId, int typeOrdinal, Optional<BlockPo
             PlayerAbilityData data = player.getData(AcademyAttachments.PLAYER_ABILITY);
             DevMachineType devType = DevMachineType.fromOrdinal(packet.typeOrdinal());
 
-            Skill skill = SkillRegistry.getSkill(packet.skillId());
+            AbilityCategory cat = data.getCurrentAbility();
+            if (cat == null) {
+                player.sendSystemMessage(Component.literal("§c请先选择能力职业"));
+                return;
+            }
+
+            Skill skill = SkillRegistry.getSkill(cat, packet.skillId());
             if (skill == null) {
                 player.sendSystemMessage(Component.literal("§c未知技能: " + packet.skillId()));
                 return;
