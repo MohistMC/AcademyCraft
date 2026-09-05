@@ -68,18 +68,18 @@ public class SkillRegistry {
         initialized = true;
 
         registerBuiltinEffects();
-        registerElectromasterSkills();
-        registerMeltdownerSkills();
-        registerTeleporterSkills();
-        registerVecmanipSkills();
-        registerAerohandSkills();
-        registerTelekinesisSkills();
+        registerAllSkills();
 
         bindEffects();
     }
 
     public static void registerSkill(Skill skill) {
-        SKILLS.put(skill.getId(), skill);
+        // 跨职业通用课(brain_course/brain_course_advanced/mind_course)在所有职业下用相同
+        // id 注册, 全局索引 SKILLS 无法区分职业, 故仅以 PUT-IF-ABSENT 保留首次注册的那一份,
+        // 消除原先"后注册覆盖前注册"的隐式且不确定行为。渲染类 getSkill(id) 对通用课走
+        // generic 翻译/图标路径, 任意职业副本显示完全一致; 职业敏感的查询统一走
+        // getSkill(AbilityCategory, id) (#26), 由 SKILLS_BY_CATEGORY 按职业正确解析。
+        SKILLS.putIfAbsent(skill.getId(), skill);
         SKILLS_BY_CATEGORY.computeIfAbsent(skill.getCategory(), k -> new ArrayList<>()).add(skill);
         SkillEffect effect = EFFECTS.get(skill.getId());
         if (effect != null) {
@@ -200,416 +200,147 @@ public class SkillRegistry {
     }
 
     // ==================== 内置职业注册 ====================
+    // ==================== 内置职业注册（数据驱动） ====================
+    // 原先 6 个 registerXxxSkills() 方法里约 410 行 new Skill.Builder(...) 样板
+    // 全部外置为下方固定大小的静态表 BUILTIN_SKILLS，由 registerAllSkills() 一次性
+    // 有界循环注册。注册顺序 / 字段与重构前逐字节一致，运行时行为不变。
 
-    private static void registerElectromasterSkills() {
-        AbilityCategory cat = AbilityCategory.ELECTROMASTER;
+    private record Req(String id, float ratio) {}
 
-        // 电弧激发
-        registerSkill(new Skill.Builder("arc_gen", cat, 1)
-                .cpCost(10).overload(5).build());
+    private record SkillDef(
+            String id,
+            AbilityCategory category,
+            int level,
+            SkillType type,
+            List<Req> reqs,
+            int anyLevel,
+            float cpCost,
+            float overload) {}
 
-        // 电流回冲
-        registerSkill(new Skill.Builder("charging", cat, 1)
-                .prereq("arc_gen", 0.3f)
-                .cpCost(5).overload(10).build());
+    private static final List<SkillDef> BUILTIN_SKILLS = buildSkillTable();
 
-        // 电磁牵引
-        registerSkill(new Skill.Builder("mag_movement", cat, 2)
-                .prereq("arc_gen", 1.0f)
-                .cpCost(8).overload(15).build());
+    private static List<SkillDef> buildSkillTable() {
+        List<SkillDef> defs = new ArrayList<>();
+        AbilityCategory c;
 
-        // 磁场控制
-        registerSkill(new Skill.Builder("mag_manip", cat, 2)
-                .prereq("mag_movement", 0.5f)
-                .cpCost(15).overload(20).build());
+        // ===== 电磁使 ELECTROMASTER =====
+        c = AbilityCategory.ELECTROMASTER;
+        defs.add(new SkillDef("arc_gen", c, 1, SkillType.ACTIVE, List.of(), 0, 10, 5));
+        defs.add(new SkillDef("charging", c, 1, SkillType.ACTIVE, List.of(new Req("arc_gen", 0.3f)), 0, 5, 10));
+        defs.add(new SkillDef("mag_movement", c, 2, SkillType.ACTIVE, List.of(new Req("arc_gen", 1.0f)), 0, 8, 15));
+        defs.add(new SkillDef("mag_manip", c, 2, SkillType.ACTIVE, List.of(new Req("mag_movement", 0.5f)), 0, 15, 20));
+        defs.add(new SkillDef("body_intensify", c, 3, SkillType.ACTIVE, List.of(new Req("arc_gen", 1.0f), new Req("charging", 1.0f)), 0, 30, 40));
+        defs.add(new SkillDef("mine_detect", c, 3, SkillType.ACTIVE, List.of(new Req("mag_manip", 1.0f)), 0, 20, 10));
+        defs.add(new SkillDef("brain_course", c, 3, SkillType.PASSIVE, List.of(), 3, 0, 0));
+        defs.add(new SkillDef("thunder_bolt", c, 4, SkillType.ACTIVE, List.of(new Req("charging", 0.7f)), 0, 40, 30));
+        defs.add(new SkillDef("railgun", c, 4, SkillType.ACTIVE, List.of(new Req("thunder_bolt", 0.3f), new Req("mag_manip", 1.0f)), 0, 80, 60));
+        defs.add(new SkillDef("brain_course_advanced", c, 4, SkillType.PASSIVE, List.of(), 4, 0, 0));
+        defs.add(new SkillDef("thunder_clap", c, 5, SkillType.ACTIVE, List.of(new Req("thunder_bolt", 1.0f)), 0, 100, 80));
+        defs.add(new SkillDef("mind_course", c, 5, SkillType.PASSIVE, List.of(), 5, 0, 0));
 
-        // 生物电强化
-        registerSkill(new Skill.Builder("body_intensify", cat, 3)
-                .prereq("arc_gen", 1.0f).prereq("charging", 1.0f)
-                .cpCost(30).overload(40).build());
+        // ===== 融解者 MELTDOWNER =====
+        c = AbilityCategory.MELTDOWNER;
+        defs.add(new SkillDef("electron_bomb", c, 1, SkillType.ACTIVE, List.of(), 0, 5, 2));
+        defs.add(new SkillDef("rad_intensify", c, 1, SkillType.PASSIVE, List.of(new Req("electron_bomb", 0.0f)), 0, 0, 0));
+        defs.add(new SkillDef("scatter_bomb", c, 2, SkillType.ACTIVE, List.of(new Req("electron_bomb", 0.8f)), 0, 25, 50));
+        defs.add(new SkillDef("light_shield", c, 2, SkillType.ACTIVE, List.of(new Req("electron_bomb", 0.5f)), 0, 40, 30));
+        defs.add(new SkillDef("meltdowner", c, 3, SkillType.ACTIVE, List.of(new Req("light_shield", 0.8f), new Req("scatter_bomb", 0.8f)), 0, 60, 50));
+        defs.add(new SkillDef("mine_ray_basic", c, 3, SkillType.ACTIVE, List.of(new Req("scatter_bomb", 0.5f)), 0, 10, 5));
+        defs.add(new SkillDef("brain_course", c, 3, SkillType.PASSIVE, List.of(), 3, 0, 0));
+        defs.add(new SkillDef("mine_ray_expert", c, 4, SkillType.ACTIVE, List.of(new Req("mine_ray_basic", 0.5f)), 0, 12, 5));
+        defs.add(new SkillDef("ray_barrage", c, 4, SkillType.ACTIVE, List.of(new Req("meltdowner", 0.3f)), 0, 50, 40));
+        defs.add(new SkillDef("jet_engine", c, 4, SkillType.ACTIVE, List.of(new Req("meltdowner", 1.0f)), 0, 35, 25));
+        defs.add(new SkillDef("brain_course_advanced", c, 4, SkillType.PASSIVE, List.of(), 4, 0, 0));
+        defs.add(new SkillDef("mine_ray_luck", c, 5, SkillType.ACTIVE, List.of(new Req("mine_ray_expert", 0.5f)), 0, 15, 5));
+        defs.add(new SkillDef("electron_missile", c, 5, SkillType.ACTIVE, List.of(new Req("ray_barrage", 0.5f)), 0, 70, 60));
+        defs.add(new SkillDef("mind_course", c, 5, SkillType.PASSIVE, List.of(), 5, 0, 0));
 
-        // 矿物探测
-        registerSkill(new Skill.Builder("mine_detect", cat, 3)
-                .prereq("mag_manip", 1.0f)
-                .cpCost(20).overload(10).build());
+        // ===== 传送者 TELEPORTER =====
+        c = AbilityCategory.TELEPORTER;
+        defs.add(new SkillDef("threatening_teleport", c, 1, SkillType.ACTIVE, List.of(), 0, 15, 10));
+        defs.add(new SkillDef("dim_folding_theorem", c, 1, SkillType.PASSIVE, List.of(new Req("threatening_teleport", 0.0f)), 0, 0, 0));
+        defs.add(new SkillDef("penetrate_teleport", c, 2, SkillType.ACTIVE, List.of(new Req("threatening_teleport", 0.3f)), 0, 20, 15));
+        defs.add(new SkillDef("mark_teleport", c, 2, SkillType.ACTIVE, List.of(new Req("threatening_teleport", 0.5f)), 0, 25, 15));
+        defs.add(new SkillDef("brain_course", c, 3, SkillType.PASSIVE, List.of(), 3, 0, 0));
+        defs.add(new SkillDef("location_teleport", c, 3, SkillType.ACTIVE, List.of(new Req("mark_teleport", 0.8f), new Req("penetrate_teleport", 0.8f)), 0, 80, 40));
+        defs.add(new SkillDef("flesh_ripping", c, 4, SkillType.ACTIVE, List.of(new Req("location_teleport", 0.5f)), 0, 50, 35));
+        defs.add(new SkillDef("brain_course_advanced", c, 4, SkillType.PASSIVE, List.of(), 4, 0, 0));
+        defs.add(new SkillDef("flashing", c, 5, SkillType.ACTIVE, List.of(new Req("flesh_ripping", 0.5f)), 0, 60, 30));
+        defs.add(new SkillDef("shift_tp", c, 5, SkillType.ACTIVE, List.of(new Req("location_teleport", 0.8f)), 0, 30, 20));
+        defs.add(new SkillDef("space_fluct", c, 5, SkillType.PASSIVE, List.of(new Req("flesh_ripping", 0.5f)), 0, 0, 0));
+        defs.add(new SkillDef("mind_course", c, 5, SkillType.PASSIVE, List.of(), 5, 0, 0));
 
-        // 大脑训练课程(被动)
-        registerSkill(new Skill.Builder("brain_course", cat, 3)
-                .type(SkillType.PASSIVE)
-                .anyLevelPrereq(3).build());
+        // ===== 矢量操作 VECMANIP =====
+        c = AbilityCategory.VECMANIP;
+        defs.add(new SkillDef("dir_shock", c, 1, SkillType.ACTIVE, List.of(), 0, 8, 5));
+        defs.add(new SkillDef("ground_shock", c, 1, SkillType.ACTIVE, List.of(), 0, 12, 10));
+        defs.add(new SkillDef("vec_accel", c, 2, SkillType.ACTIVE, List.of(new Req("ground_shock", 0.5f)), 0, 15, 10));
+        defs.add(new SkillDef("vec_deviation", c, 2, SkillType.PASSIVE, List.of(new Req("dir_shock", 0.5f)), 0, 0, 0));
+        defs.add(new SkillDef("dir_blast", c, 3, SkillType.ACTIVE, List.of(new Req("dir_shock", 1.0f), new Req("vec_accel", 0.5f)), 0, 30, 25));
+        defs.add(new SkillDef("storm_wing", c, 3, SkillType.ACTIVE, List.of(new Req("vec_accel", 0.8f)), 0, 25, 20));
+        defs.add(new SkillDef("brain_course", c, 3, SkillType.PASSIVE, List.of(), 3, 0, 0));
+        defs.add(new SkillDef("blood_retro", c, 4, SkillType.ACTIVE, List.of(new Req("dir_blast", 0.5f)), 0, 60, 40));
+        defs.add(new SkillDef("vec_reflection", c, 4, SkillType.ACTIVE, List.of(new Req("vec_deviation", 1.0f)), 0, 40, 30));
+        defs.add(new SkillDef("brain_course_advanced", c, 4, SkillType.PASSIVE, List.of(), 4, 0, 0));
+        defs.add(new SkillDef("plasma_cannon", c, 5, SkillType.ACTIVE, List.of(new Req("blood_retro", 0.5f), new Req("storm_wing", 0.8f)), 0, 120, 100));
+        defs.add(new SkillDef("mind_course", c, 5, SkillType.PASSIVE, List.of(), 5, 0, 0));
 
-        // 雷击之枪
-        registerSkill(new Skill.Builder("thunder_bolt", cat, 4)
-                .prereq("charging", 0.7f)
-                .cpCost(40).overload(30).build());
+        // ===== 念力操作 AEROHAND =====
+        c = AbilityCategory.AEROHAND;
+        defs.add(new SkillDef("volcanic_ball", c, 1, SkillType.ACTIVE, List.of(), 0, 10, 5));
+        defs.add(new SkillDef("ascending_air", c, 1, SkillType.PASSIVE, List.of(), 0, 0, 0));
+        defs.add(new SkillDef("air_blade", c, 2, SkillType.ACTIVE, List.of(new Req("volcanic_ball", 0.5f)), 0, 12, 15));
+        defs.add(new SkillDef("airflow", c, 2, SkillType.PASSIVE, List.of(new Req("ascending_air", 0.5f)), 0, 0, 0));
+        defs.add(new SkillDef("air_cooling", c, 3, SkillType.ACTIVE, List.of(new Req("ascending_air", 0.0f)), 0, 20, 20));
+        defs.add(new SkillDef("air_wall", c, 3, SkillType.ACTIVE, List.of(new Req("air_blade", 0.5f)), 0, 30, 25));
+        defs.add(new SkillDef("air_jet", c, 3, SkillType.ACTIVE, List.of(new Req("airflow", 0.1f)), 0, 15, 10));
+        defs.add(new SkillDef("brain_course", c, 3, SkillType.PASSIVE, List.of(), 3, 0, 0));
+        defs.add(new SkillDef("offense_armour", c, 4, SkillType.PASSIVE, List.of(new Req("air_wall", 1.0f)), 0, 0, 0));
+        defs.add(new SkillDef("bomber_lance", c, 4, SkillType.ACTIVE, List.of(new Req("air_wall", 0.5f)), 0, 50, 40));
+        defs.add(new SkillDef("brain_course_advanced", c, 4, SkillType.PASSIVE, List.of(), 4, 0, 0));
+        defs.add(new SkillDef("flying", c, 5, SkillType.PASSIVE, List.of(new Req("offense_armour", 0.5f)), 0, 0, 0));
+        defs.add(new SkillDef("storm_core", c, 5, SkillType.ACTIVE, List.of(new Req("air_wall", 1.0f)), 0, 60, 50));
+        defs.add(new SkillDef("aero_separator", c, 5, SkillType.ACTIVE, List.of(new Req("air_wall", 1.0f)), 0, 80, 60));
+        defs.add(new SkillDef("mind_course", c, 5, SkillType.PASSIVE, List.of(), 5, 0, 0));
 
-        // 超电磁炮
-        registerSkill(new Skill.Builder("railgun", cat, 4)
-                .prereq("thunder_bolt", 0.3f).prereq("mag_manip", 1.0f)
-                .cpCost(80).overload(60).build());
+        // ===== 念力使 TELEKINESIS =====
+        c = AbilityCategory.TELEKINESIS;
+        defs.add(new SkillDef("psycho_throwing", c, 1, SkillType.ACTIVE, List.of(), 0, 10, 5));
+        defs.add(new SkillDef("psycho_transmission", c, 1, SkillType.ACTIVE, List.of(), 0, 5, 5));
+        defs.add(new SkillDef("psycho_needling", c, 2, SkillType.ACTIVE, List.of(new Req("psycho_throwing", 0.5f)), 0, 12, 15));
+        defs.add(new SkillDef("insulation", c, 2, SkillType.PASSIVE, List.of(new Req("psycho_transmission", 0.0f)), 0, 0, 0));
+        defs.add(new SkillDef("cruise_bomb", c, 3, SkillType.ACTIVE, List.of(new Req("psycho_needling", 0.5f)), 0, 25, 20));
+        defs.add(new SkillDef("overload_thinking", c, 3, SkillType.ACTIVE, List.of(new Req("insulation", 0.0f)), 0, 0, 0));
+        defs.add(new SkillDef("perfect_paper", c, 3, SkillType.PASSIVE, List.of(new Req("insulation", 0.0f)), 0, 0, 0));
+        defs.add(new SkillDef("brain_course", c, 3, SkillType.PASSIVE, List.of(), 3, 0, 0));
+        defs.add(new SkillDef("psycho_slam", c, 4, SkillType.ACTIVE, List.of(new Req("cruise_bomb", 0.5f)), 0, 50, 40));
+        defs.add(new SkillDef("psycho_harden", c, 4, SkillType.PASSIVE, List.of(new Req("perfect_paper", 0.5f)), 0, 0, 0));
+        defs.add(new SkillDef("brain_course_advanced", c, 4, SkillType.PASSIVE, List.of(), 4, 0, 0));
+        defs.add(new SkillDef("liquid_shadow", c, 5, SkillType.PASSIVE, List.of(new Req("psycho_slam", 0.5f)), 0, 0, 0));
+        defs.add(new SkillDef("paper_drill", c, 5, SkillType.ACTIVE, List.of(new Req("perfect_paper", 1.0f)), 0, 60, 50));
+        defs.add(new SkillDef("mind_course", c, 5, SkillType.PASSIVE, List.of(), 5, 0, 0));
 
-        // 大脑训练课程(高级)(被动)
-        registerSkill(new Skill.Builder("brain_course_advanced", cat, 4)
-                .type(SkillType.PASSIVE)
-                .anyLevelPrereq(4).build());
-
-        // 终极落雷
-        registerSkill(new Skill.Builder("thunder_clap", cat, 5)
-                .prereq("thunder_bolt", 1.0f)
-                .cpCost(100).overload(80).build());
-
-        // 思维修养课程(被动)
-        registerSkill(new Skill.Builder("mind_course", cat, 5)
-                .type(SkillType.PASSIVE)
-                .anyLevelPrereq(5).build());
+        return defs;
     }
 
-    private static void registerMeltdownerSkills() {
-        AbilityCategory cat = AbilityCategory.MELTDOWNER;
-
-        // 电子弹
-        registerSkill(new Skill.Builder("electron_bomb", cat, 1)
-                .cpCost(5).overload(2).build());
-
-        // 辐射强化(被动)
-        registerSkill(new Skill.Builder("rad_intensify", cat, 1)
-                .type(SkillType.PASSIVE)
-                .prereq("electron_bomb", 0.0f).build());
-
-        // 散射弹
-        registerSkill(new Skill.Builder("scatter_bomb", cat, 2)
-                .prereq("electron_bomb", 0.8f)
-                .cpCost(25).overload(50).build());
-
-        // 光盾
-        registerSkill(new Skill.Builder("light_shield", cat, 2)
-                .prereq("electron_bomb", 0.5f)
-                .cpCost(40).overload(30).build());
-
-        // 原子崩坏
-        registerSkill(new Skill.Builder("meltdowner", cat, 3)
-                .prereq("light_shield", 0.8f).prereq("scatter_bomb", 0.8f)
-                .cpCost(60).overload(50).build());
-
-        // 矿物射线(基础)
-        registerSkill(new Skill.Builder("mine_ray_basic", cat, 3)
-                .prereq("scatter_bomb", 0.5f)
-                .cpCost(10).overload(5).build());
-
-        // 大脑训练课程(被动)
-        registerSkill(new Skill.Builder("brain_course", cat, 3)
-                .type(SkillType.PASSIVE)
-                .anyLevelPrereq(3).build());
-
-        // 矿物射线(专家)
-        registerSkill(new Skill.Builder("mine_ray_expert", cat, 4)
-                .prereq("mine_ray_basic", 0.5f)
-                .cpCost(12).overload(5).build());
-
-        // 射线弹幕
-        registerSkill(new Skill.Builder("ray_barrage", cat, 4)
-                .prereq("meltdowner", 0.3f)
-                .cpCost(50).overload(40).build());
-
-        // 喷射引擎
-        registerSkill(new Skill.Builder("jet_engine", cat, 4)
-                .prereq("meltdowner", 1.0f)
-                .cpCost(35).overload(25).build());
-
-        // 大脑训练课程(高级)(被动)
-        registerSkill(new Skill.Builder("brain_course_advanced", cat, 4)
-                .type(SkillType.PASSIVE)
-                .anyLevelPrereq(4).build());
-
-        // 矿物射线(幸运)
-        registerSkill(new Skill.Builder("mine_ray_luck", cat, 5)
-                .prereq("mine_ray_expert", 0.5f)
-                .cpCost(15).overload(5).build());
-
-        // 电子导弹
-        registerSkill(new Skill.Builder("electron_missile", cat, 5)
-                .prereq("ray_barrage", 0.5f)
-                .cpCost(70).overload(60).build());
-
-        // 思维修养课程(被动)
-        registerSkill(new Skill.Builder("mind_course", cat, 5)
-                .type(SkillType.PASSIVE)
-                .anyLevelPrereq(5).build());
+    /**
+     * 有界循环注册：遍历固定的 BUILTIN_SKILLS 表（一次性构建，大小恒定），对每个定义
+     * 用 Skill.Builder 还原出与重构前完全一致的 Skill 对象后注册。无递归 / 无
+     * while(true) / 无动态扩容，不会无限增值或 OOM。
+     */
+    private static void registerAllSkills() {
+        for (SkillDef d : BUILTIN_SKILLS) {
+            Skill.Builder b = new Skill.Builder(d.id, d.category, d.level);
+            b.type(d.type);
+            for (Req r : d.reqs) {
+                b.prereq(r.id, r.ratio);
+            }
+            if (d.anyLevel > 0) {
+                b.anyLevelPrereq(d.anyLevel);
+            }
+            b.cpCost(d.cpCost);
+            b.overload(d.overload);
+            registerSkill(b.build());
+        }
     }
-
-    private static void registerTeleporterSkills() {
-        AbilityCategory cat = AbilityCategory.TELEPORTER;
-
-        // 威胁传送
-        registerSkill(new Skill.Builder("threatening_teleport", cat, 1)
-                .cpCost(15).overload(10).build());
-
-        // 维度折叠定理(被动)
-        registerSkill(new Skill.Builder("dim_folding_theorem", cat, 1)
-                .type(SkillType.PASSIVE)
-                .prereq("threatening_teleport", 0.0f).build());
-
-        // 穿透传送
-        registerSkill(new Skill.Builder("penetrate_teleport", cat, 2)
-                .prereq("threatening_teleport", 0.3f)
-                .cpCost(20).overload(15).build());
-
-        // 标记传送
-        registerSkill(new Skill.Builder("mark_teleport", cat, 2)
-                .prereq("threatening_teleport", 0.5f)
-                .cpCost(25).overload(15).build());
-
-        // 大脑训练课程(被动)
-        registerSkill(new Skill.Builder("brain_course", cat, 3)
-                .type(SkillType.PASSIVE)
-                .anyLevelPrereq(3).build());
-
-        // 位置传送
-        registerSkill(new Skill.Builder("location_teleport", cat, 3)
-                .prereq("mark_teleport", 0.8f).prereq("penetrate_teleport", 0.8f)
-                .cpCost(80).overload(40).build());
-
-        // 撕裂肉体
-        registerSkill(new Skill.Builder("flesh_ripping", cat, 4)
-                .prereq("location_teleport", 0.5f)
-                .cpCost(50).overload(35).build());
-
-        // 大脑训练课程(高级)(被动)
-        registerSkill(new Skill.Builder("brain_course_advanced", cat, 4)
-                .type(SkillType.PASSIVE)
-                .anyLevelPrereq(4).build());
-
-        // 闪烁
-        registerSkill(new Skill.Builder("flashing", cat, 5)
-                .prereq("flesh_ripping", 0.5f)
-                .cpCost(60).overload(30).build());
-
-        // 位移传送
-        registerSkill(new Skill.Builder("shift_tp", cat, 5)
-                .prereq("location_teleport", 0.8f)
-                .cpCost(30).overload(20).build());
-
-        // 空间波动(被动)
-        registerSkill(new Skill.Builder("space_fluct", cat, 5)
-                .type(SkillType.PASSIVE)
-                .prereq("flesh_ripping", 0.5f).build());
-
-        // 思维修养课程(被动)
-        registerSkill(new Skill.Builder("mind_course", cat, 5)
-                .type(SkillType.PASSIVE)
-                .anyLevelPrereq(5).build());
-    }
-
-    private static void registerVecmanipSkills() {
-        AbilityCategory cat = AbilityCategory.VECMANIP;
-
-        // 定向冲击
-        registerSkill(new Skill.Builder("dir_shock", cat, 1)
-                .cpCost(8).overload(5).build());
-
-        // 地面冲击
-        registerSkill(new Skill.Builder("ground_shock", cat, 1)
-                .cpCost(12).overload(10).build());
-
-        // 矢量加速
-        registerSkill(new Skill.Builder("vec_accel", cat, 2)
-                .prereq("ground_shock", 0.5f)
-                .cpCost(15).overload(10).build());
-
-        // 矢量偏转(被动)
-        registerSkill(new Skill.Builder("vec_deviation", cat, 2)
-                .prereq("dir_shock", 0.5f)
-                .type(SkillType.PASSIVE).build());
-
-        // 定向爆破
-        registerSkill(new Skill.Builder("dir_blast", cat, 3)
-                .prereq("dir_shock", 1.0f).prereq("vec_accel", 0.5f)
-                .cpCost(30).overload(25).build());
-
-        // 风暴之翼
-        registerSkill(new Skill.Builder("storm_wing", cat, 3)
-                .prereq("vec_accel", 0.8f)
-                .cpCost(25).overload(20).build());
-
-        // 大脑训练课程(被动)
-        registerSkill(new Skill.Builder("brain_course", cat, 3)
-                .type(SkillType.PASSIVE)
-                .anyLevelPrereq(3).build());
-
-        // 血液回流
-        registerSkill(new Skill.Builder("blood_retro", cat, 4)
-                .prereq("dir_blast", 0.5f)
-                .cpCost(60).overload(40).build());
-
-        // 矢量反射
-        registerSkill(new Skill.Builder("vec_reflection", cat, 4)
-                .prereq("vec_deviation", 1.0f)
-                .cpCost(40).overload(30).build());
-
-        // 大脑训练课程(高级)(被动)
-        registerSkill(new Skill.Builder("brain_course_advanced", cat, 4)
-                .type(SkillType.PASSIVE)
-                .anyLevelPrereq(4).build());
-
-        // 等离子炮
-        registerSkill(new Skill.Builder("plasma_cannon", cat, 5)
-                .prereq("blood_retro", 0.5f).prereq("storm_wing", 0.8f)
-                .cpCost(120).overload(100).build());
-
-        // 思维修养课程(被动)
-        registerSkill(new Skill.Builder("mind_course", cat, 5)
-                .type(SkillType.PASSIVE)
-                .anyLevelPrereq(5).build());
-    }
-
-    private static void registerAerohandSkills() {
-        AbilityCategory cat = AbilityCategory.AEROHAND;
-
-        // 火山球
-        registerSkill(new Skill.Builder("volcanic_ball", cat, 1)
-                .cpCost(10).overload(5).build());
-
-        // 上升气流(被动)
-        registerSkill(new Skill.Builder("ascending_air", cat, 1)
-                .type(SkillType.PASSIVE)
-                .build());
-
-        // 空气刃
-        registerSkill(new Skill.Builder("air_blade", cat, 2)
-                .prereq("volcanic_ball", 0.5f)
-                .cpCost(12).overload(15).build());
-
-        // 气流(被动)
-        registerSkill(new Skill.Builder("airflow", cat, 2)
-                .type(SkillType.PASSIVE)
-                .prereq("ascending_air", 0.5f).build());
-
-        // 空气冷却
-        registerSkill(new Skill.Builder("air_cooling", cat, 3)
-                .prereq("ascending_air", 0.0f)
-                .cpCost(20).overload(20).build());
-
-        // 空气墙
-        registerSkill(new Skill.Builder("air_wall", cat, 3)
-                .prereq("air_blade", 0.5f)
-                .cpCost(30).overload(25).build());
-
-        // 空气喷射
-        registerSkill(new Skill.Builder("air_jet", cat, 3)
-                .prereq("airflow", 0.1f)
-                .cpCost(15).overload(10).build());
-
-        // 大脑训练课程(被动)
-        registerSkill(new Skill.Builder("brain_course", cat, 3)
-                .type(SkillType.PASSIVE)
-                .anyLevelPrereq(3).build());
-
-        // 攻击装甲(被动)
-        registerSkill(new Skill.Builder("offense_armour", cat, 4)
-                .type(SkillType.PASSIVE)
-                .prereq("air_wall", 1.0f).build());
-
-        // 轰炸长矛
-        registerSkill(new Skill.Builder("bomber_lance", cat, 4)
-                .prereq("air_wall", 0.5f)
-                .cpCost(50).overload(40).build());
-
-        // 大脑训练课程(高级)(被动)
-        registerSkill(new Skill.Builder("brain_course_advanced", cat, 4)
-                .type(SkillType.PASSIVE)
-                .anyLevelPrereq(4).build());
-
-        // 飞行(被动)
-        registerSkill(new Skill.Builder("flying", cat, 5)
-                .type(SkillType.PASSIVE)
-                .prereq("offense_armour", 0.5f).build());
-
-        // 风暴核心
-        registerSkill(new Skill.Builder("storm_core", cat, 5)
-                .prereq("air_wall", 1.0f)
-                .cpCost(60).overload(50).build());
-
-        // 空气分离器
-        registerSkill(new Skill.Builder("aero_separator", cat, 5)
-                .prereq("air_wall", 1.0f)
-                .cpCost(80).overload(60).build());
-
-        // 思维修养课程(被动)
-        registerSkill(new Skill.Builder("mind_course", cat, 5)
-                .type(SkillType.PASSIVE)
-                .anyLevelPrereq(5).build());
-    }
-
-    private static void registerTelekinesisSkills() {
-        AbilityCategory cat = AbilityCategory.TELEKINESIS;
-
-        // 念力投掷
-        registerSkill(new Skill.Builder("psycho_throwing", cat, 1)
-                .cpCost(10).overload(5).build());
-
-        // 念力传输
-        registerSkill(new Skill.Builder("psycho_transmission", cat, 1)
-                .cpCost(5).overload(5).build());
-
-        // 念力针
-        registerSkill(new Skill.Builder("psycho_needling", cat, 2)
-                .prereq("psycho_throwing", 0.5f)
-                .cpCost(12).overload(15).build());
-
-        // 绝缘(被动)
-        registerSkill(new Skill.Builder("insulation", cat, 2)
-                .type(SkillType.PASSIVE)
-                .prereq("psycho_transmission", 0.0f).build());
-
-        // 巡航炸弹
-        registerSkill(new Skill.Builder("cruise_bomb", cat, 3)
-                .prereq("psycho_needling", 0.5f)
-                .cpCost(25).overload(20).build());
-
-        // 过载思维
-        registerSkill(new Skill.Builder("overload_thinking", cat, 3)
-                .prereq("insulation", 0.0f)
-                .cpCost(0).overload(0).build());
-
-        // 完美纸张(被动)
-        registerSkill(new Skill.Builder("perfect_paper", cat, 3)
-                .type(SkillType.PASSIVE)
-                .prereq("insulation", 0.0f).build());
-
-        // 大脑训练课程(被动)
-        registerSkill(new Skill.Builder("brain_course", cat, 3)
-                .type(SkillType.PASSIVE)
-                .anyLevelPrereq(3).build());
-
-        // 念力猛击
-        registerSkill(new Skill.Builder("psycho_slam", cat, 4)
-                .prereq("cruise_bomb", 0.5f)
-                .cpCost(50).overload(40).build());
-
-        // 念力硬化(被动)
-        registerSkill(new Skill.Builder("psycho_harden", cat, 4)
-                .type(SkillType.PASSIVE)
-                .prereq("perfect_paper", 0.5f).build());
-
-        // 大脑训练课程(高级)(被动)
-        registerSkill(new Skill.Builder("brain_course_advanced", cat, 4)
-                .type(SkillType.PASSIVE)
-                .anyLevelPrereq(4).build());
-
-        // 液态阴影(被动)
-        registerSkill(new Skill.Builder("liquid_shadow", cat, 5)
-                .type(SkillType.PASSIVE)
-                .prereq("psycho_slam", 0.5f).build());
-
-        // 纸张钻头
-        registerSkill(new Skill.Builder("paper_drill", cat, 5)
-                .prereq("perfect_paper", 1.0f)
-                .cpCost(60).overload(50).build());
-
-        // 思维修养课程(被动)
-        registerSkill(new Skill.Builder("mind_course", cat, 5)
-                .type(SkillType.PASSIVE)
-                .anyLevelPrereq(5).build());
-    }
-
 }
