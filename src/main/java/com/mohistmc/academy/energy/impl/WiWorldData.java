@@ -67,6 +67,9 @@ public class WiWorldData extends SavedData {
 
     Level level;
 
+    /** 真实脏标记：仅当无线网络结构或状态实际变更时才需要存档 */
+    private boolean dirty = true;
+
     public WiWorldData() {}
 
     private void load(CompoundTag tag, HolderLookup.Provider provider) {
@@ -95,6 +98,7 @@ public class WiWorldData extends SavedData {
 
         WirelessNet net = new WirelessNet(this, vm, ssid, password);
         doAddNetwork(net);
+        markDirty();
         return true;
     }
 
@@ -148,6 +152,7 @@ public class WiWorldData extends SavedData {
     private void doRemoveNetwork(WirelessNet net) {
         netList.remove(net);
         net.onCleanup(this);
+        markDirty();
     }
 
     private void doAddNetwork(WirelessNet net) {
@@ -209,11 +214,13 @@ public class WiWorldData extends SavedData {
     private void doAddNode(NodeConn conn) {
         nodeList.add(conn);
         conn.onAdded(this);
+        markDirty();
     }
 
     private void doRemoveNode(NodeConn conn) {
         nodeList.remove(conn);
         conn.onCleanup(this);
+        markDirty();
     }
 
     private void loadNode(CompoundTag tag) {
@@ -284,11 +291,16 @@ public class WiWorldData extends SavedData {
         saveNode(nodeTag);
         tag.put("node", nodeTag);
 
+        dirty = false;
         return tag;
+    }
+
+    public void markDirty() {
+        dirty = true;
     }
 
     @Override
     public boolean isDirty() {
-        return true;
+        return dirty;
     }
 }

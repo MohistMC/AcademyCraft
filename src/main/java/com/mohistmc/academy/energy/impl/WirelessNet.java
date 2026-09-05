@@ -107,6 +107,7 @@ public class WirelessNet {
 
     void dispose() {
         disposed = true;
+        data.markDirty();
     }
 
     void onCreate(WiWorldData data) {
@@ -190,11 +191,13 @@ public class WirelessNet {
         Collections.shuffle(nodes);
 
         double sum = 0, maxSum = 0;
+        boolean changed = false;
         for (VWNode vn : nodes) {
             if (vn.isLoaded(level)) {
                 IWirelessNode node = vn.get(level);
                 if (node == null) {
                     removeNode(vn);
+                    changed = true;
                 } else {
                     sum += node.getEnergy();
                     maxSum += node.getMaxEnergy();
@@ -203,9 +206,12 @@ public class WirelessNet {
         }
 
         // 清理待删除节点
-        data.netLookup.keySet().removeAll(toRemoveNodes);
-        nodes.removeAll(toRemoveNodes);
-        toRemoveNodes.clear();
+        if (!toRemoveNodes.isEmpty()) {
+            data.netLookup.keySet().removeAll(toRemoveNodes);
+            nodes.removeAll(toRemoveNodes);
+            toRemoveNodes.clear();
+            changed = true;
+        }
 
         double percent = maxSum > 0 ? sum / maxSum : 0;
         double transferLeft = imat.getBandwidth();
@@ -230,9 +236,12 @@ public class WirelessNet {
             transferLeft -= Math.abs(delta);
             buffer += delta;
             node.setEnergy(cur + delta);
+            if (delta != 0) changed = true;
 
             if (transferLeft == 0) break;
         }
+
+        if (changed) data.markDirty();
     }
 
     private void debug(Object msg) {
